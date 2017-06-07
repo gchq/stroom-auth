@@ -1,0 +1,31 @@
+database:
+    driverClass: com.mysql.jdbc.Driver
+    user: ${STATS_DB_USER:- stroomuser}
+    password: ${STATS_DB_PASSWORD:- stroompassword1}
+    url: ${STATS_DB_URL:- jdbc:mysql://localhost:3307/stroom?useUnicode=yes&characterEncoding=UTF-8}
+
+    properties:
+        charSet: UTF-8
+        hibernate.dialect: org.hibernate.dialect.MySQLInnoDBDialect
+        #set to false for compatibility with stroom's legacy hibernate 4 configuration and schema
+        hibernate.id.new_generator_mappings: false
+        hibernate.show_sql: false
+
+
+jooq:
+  dialect: MYSQL
+  logExecutedSql: yes
+  renderSchema: yes
+  renderNameStyle: QUOTED
+  renderKeywordStyle: LOWER
+  renderFormatted: no
+  paramType: INDEXED
+  statementType: PREPARED_STATEMENT
+  executeLogging: no
+  executeWithOptimisticLocking: no
+  attachRecords: yes
+  updatablePrimaryKeys: no
+
+jwsExpirationTimeInMinutesInTheFuture: 5
+jwsIssuer: stroom
+jwsSecret: CHANGE_ME
