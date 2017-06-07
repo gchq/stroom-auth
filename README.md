@@ -1,9 +1,8 @@
 # stroom-auth
-
 Pre-release version of a Stroom authentication service.
 
 ## stroom-auth-svc
-This module provides an authentication resource.
+A service that accepts HTTP requests for authentication, and returns JWS tokens.
 
 ### Usage
 You can test the service by using HTTPie:
