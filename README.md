@@ -1,5 +1,7 @@
 # stroom-auth
 
+Pre-release version of a Stroom authentication service.
+
 ## stroom-auth-svc
 This module provides an authentication resource.
 
