@@ -29,7 +29,10 @@ import io.dropwizard.configuration.SubstitutingSourceProvider
 import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
+import org.eclipse.jetty.servlets.CrossOriginFilter
 import stroom.auth.svc.resource.AuthenticationResource
+import java.util.*
+import javax.servlet.DispatcherType
 
 
 class App : Application<Config>() {
@@ -50,6 +53,13 @@ class App : Application<Config>() {
         injector = Guice.createInjector(Module())
         val tokenGenerator = injector!!.getInstance(TokenGenerator::class.java)
         environment.jersey().register(AuthenticationResource(tokenGenerator))
+
+        // Enable CORS
+        val cors = environment.servlets().addFilter("CORS", CrossOriginFilter::class.java)
+        cors.setInitParameter("allowedOrigins", "*")
+        cors.setInitParameter("allowedHeaders", "*")
+        cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD")
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType::class.java), true, "/*")
     }
 
     override fun initialize(bootstrap: Bootstrap<Config>?) {

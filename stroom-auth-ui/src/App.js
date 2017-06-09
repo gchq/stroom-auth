@@ -1,25 +1,55 @@
-import React, { Component } from 'react';
-import logo from './logo.png';
-import './App.css';
+import React, { Component } from 'react'
+import logo from './logo.png'
+import './App.css'
+import {Row, Col, Navbar} from 'react-materialize'
+
+
+import Login from './Login'
 
 class App extends Component {
-  render() {
+
+  render() {    
+    var handleLogin = (username, password) => {
+      // Call the authentication service to get a token. 
+      // If successful we re-direct to Stroom, otherwise we display a message.
+      fetch(process.env.REACT_APP_STROOM_AUTH_SERVICE_URL, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: 'post',
+          mode: 'cors',
+          body: JSON.stringify({
+            username,
+            password
+          })
+        })
+        .then(result => result.text())
+        .then(token => {
+          var loginUrl = process.env.REACT_APP_STROOM_UI_URL + "/?token=" + token;
+          window.location.href = loginUrl;
+        })
+    }
+
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Please log in</h2>
-        </div>
-        <p className="App-intro">
-          <form>
-              Username: <input type="text" name="username"/>
-              Password: <input type="password" name="password"/>
-              <input type="submit" value="Submit"/>
-          </form>
-        </p>
+        <Navbar className="App-header">
+          <Row>
+            <Col s={1} className="App-logo" ><img src={logo} className="App-logo" alt="Stroom logo"/></Col>
+          </Row>
+        </Navbar>
+  
+        <Row>
+          <Col s={4}/>
+          <Col s={4}>
+              <Login onSubmit={handleLogin}/>
+          </Col>
+          <Col s={1}/>
+        </Row>
       </div>
     );
   }
 }
 
 export default App;
+

@@ -1,3 +1,11 @@
+server:
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 8081
+
 database:
     driverClass: com.mysql.jdbc.Driver
     user: ${STATS_DB_USER:- stroomuser}
@@ -11,6 +19,16 @@ database:
         hibernate.id.new_generator_mappings: false
         hibernate.show_sql: false
 
+logging:
+  level: ERROR
+  loggers:
+    stroom: DEBUG
+    io.dropwizard: INFO
+    org.eclipse.jetty: INFO
+  appenders:
+    - type: console
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      timeZone: UTC
 
 jooq:
   dialect: MYSQL
