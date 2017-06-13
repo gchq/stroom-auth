@@ -1,16 +1,20 @@
 server:
-  type: simple
-  applicationContextPath: /
-  adminContextPath: /admin
-  connector:
-    type: http
-    port: 8081
+    adminMinThreads: 1
+    adminMaxThreads: 10
+    adminContextPath: ${ADMIN_CONTEXT_PATH:- /}
+    applicationContextPath: /
+    applicationConnectors:
+        - type: http
+          port: 8096
+    adminConnectors:
+        - type: http
+          port: 8097
 
 database:
     driverClass: com.mysql.jdbc.Driver
-    user: ${STATS_DB_USER:- stroomuser}
-    password: ${STATS_DB_PASSWORD:- stroompassword1}
-    url: ${STATS_DB_URL:- jdbc:mysql://localhost:3307/stroom?useUnicode=yes&characterEncoding=UTF-8}
+    user: ${DB_USER:- stroomuser}
+    password: ${DB_PASSWORD:- stroompassword1}
+    url: ${DB_URL:- jdbc:mysql://localhost:3307/stroom?useUnicode=yes&characterEncoding=UTF-8}
 
     properties:
         charSet: UTF-8
@@ -46,4 +50,4 @@ jooq:
 
 jwsExpirationTimeInMinutesInTheFuture: 5
 jwsIssuer: stroom
-jwsSecret: CHANGE_ME
+jwsSecret: ${JWS_SECRET:- CHANGE_ME}
