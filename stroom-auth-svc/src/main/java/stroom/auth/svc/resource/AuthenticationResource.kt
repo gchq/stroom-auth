@@ -38,6 +38,18 @@ class AuthenticationResource(tokenGenerator : TokenGenerator) {
 
     private val LOGGER = LoggerFactory.getLogger(AuthenticationResource::class.java)
 
+    @GET
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Timed
+    fun welcome(): Response {
+        return Response
+                .status(Response.Status.OK)
+                .entity("Welcome to the authentication service")
+                .build()
+    }
+
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
