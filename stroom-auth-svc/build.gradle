@@ -26,6 +26,33 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+apply plugin: 'application'
+apply plugin: 'kotlin'
+mainClassName = 'stroom.auth.svc.App'
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": "Stroom Auth Service",
+                "Implementation-Version": version,
+                "Main-Class" : "stroom.auth.svc.App"
+        )
+    }
+
+    archiveName 'stroom-auth-service.jar'
+}
+
+shadowJar {
+    // Allows us to build fat jars with lots of files
+    zip64 true
+    mergeServiceFiles()
+    archiveName 'stroom-auth-service-all.jar'
+}
+
 dependencies {
     compile project(':stroom-persistence')
     compile deps.kotlin
