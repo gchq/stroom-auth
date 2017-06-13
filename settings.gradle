@@ -17,4 +17,5 @@
 rootProject.name = 'stroom-auth'
 include 'stroom-auth-svc'
 include 'stroom-persistence'
+include 'stroom-auth-ui'
 
