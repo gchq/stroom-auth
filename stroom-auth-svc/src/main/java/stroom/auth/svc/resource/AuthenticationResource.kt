@@ -23,18 +23,28 @@ import com.codahale.metrics.annotation.Timed
 import org.jooq.DSLContext
 import org.mindrot.jbcrypt.BCrypt
 import org.slf4j.LoggerFactory
+import stroom.auth.svc.Config
 import stroom.auth.svc.TokenGenerator
+import stroom.auth.svc.certificate.CertificateUtil
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 
 import stroom.models.Tables.*
+import java.net.URI
+import java.util.regex.Pattern
+import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.*
 import javax.ws.rs.core.Response
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-class AuthenticationResource(tokenGenerator : TokenGenerator) {
+class AuthenticationResource(
+        tokenGenerator : TokenGenerator,
+        config: Config) {
     private var tokenGenerator: TokenGenerator = tokenGenerator
+    private var config: Config = config
+    private val dnPattern: Pattern = Pattern.compile(config.certificateDnPattern)
+    private val redirectToLoginResponse = Response.seeOther(URI("TODO: redirect to login")).build()
 
     private val LOGGER = LoggerFactory.getLogger(AuthenticationResource::class.java)
 
@@ -48,6 +58,46 @@ class AuthenticationResource(tokenGenerator : TokenGenerator) {
                 .status(Response.Status.OK)
                 .entity("Welcome to the authentication service")
                 .build()
+    }
+
+    @GET
+    @Path("/checkCertificate")
+    @Timed
+    fun checkCertificate(@Context httpServletRequest: HttpServletRequest,
+                         @Context database: DSLContext) : Response {
+        val certificateDn = CertificateUtil.extractCertificateDN(httpServletRequest)
+        var response: Response
+        if(certificateDn == null) {
+            LOGGER.debug("No certificate in request. Redirecting to login.")
+            response = redirectToLoginResponse
+        }
+        else {
+            LOGGER.debug("Found certificate in request. DN: {}", certificateDn)
+            val username = CertificateUtil.extractUserIdFromDN(certificateDn, dnPattern)
+            if(username == null) {
+                LOGGER.debug("Cannot extract user from certificate. Redirecting to login.")
+                response = redirectToLoginResponse
+            }
+            else {
+                var user = database
+                        .selectFrom(USR)
+                        .where(USR.NAME.eq(username))
+                        .single()
+                val isAuthenticated = user != null
+                if (isAuthenticated) {
+                    val token = tokenGenerator.getToken(username)
+                    val redirectUrl = "http://localhost/stroom/?token=$token"
+                    response = Response
+                            .seeOther(URI(redirectUrl))
+                            .build()
+                } else {
+                    LOGGER.debug("Certificate does not contain a known user. Redirecting to login.")
+                    response = redirectToLoginResponse
+                }
+            }
+//            certificateAuthenticator.login(certificateDn, httpServletRequest.remoteHost)
+        }
+        return response
     }
 
     @POST

@@ -51,7 +51,7 @@ class App : Application<Config>() {
     override fun run(configuration: Config, environment: Environment) {
         injector = Guice.createInjector(Module())
         val tokenGenerator = injector!!.getInstance(TokenGenerator::class.java)
-        environment.jersey().register(AuthenticationResource(tokenGenerator))
+        environment.jersey().register(AuthenticationResource(tokenGenerator, configuration))
 
         val cors = environment.servlets().addFilter("CORS", CrossOriginFilter::class.java)
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType::class.java), true, "/*")

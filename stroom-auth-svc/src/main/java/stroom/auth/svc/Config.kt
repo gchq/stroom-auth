@@ -54,5 +54,10 @@ class Config : Configuration() {
     @NotNull
     @get:JsonProperty
     var jwsSecret = "CHANGE_ME"
+
+    @Valid
+    @NotNull
+    @get:JsonProperty
+    var certificateDnPattern = """CN=[^ ]+ [^ ]+ (?([a-zA-Z0-9]+))?"""
 }
 

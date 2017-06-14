@@ -51,3 +51,4 @@ jooq:
 jwsExpirationTimeInMinutesInTheFuture: 5
 jwsIssuer: stroom
 jwsSecret: ${JWS_SECRET:- CHANGE_ME}
+certificateDnPattern: CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?
