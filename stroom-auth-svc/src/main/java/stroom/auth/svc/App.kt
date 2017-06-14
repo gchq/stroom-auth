@@ -31,9 +31,8 @@ import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import org.eclipse.jetty.servlets.CrossOriginFilter
 import stroom.auth.svc.resource.AuthenticationResource
-import java.util.*
 import javax.servlet.DispatcherType
-
+import java.util.EnumSet
 
 class App : Application<Config>() {
     private var injector: Injector? = null
@@ -54,12 +53,13 @@ class App : Application<Config>() {
         val tokenGenerator = injector!!.getInstance(TokenGenerator::class.java)
         environment.jersey().register(AuthenticationResource(tokenGenerator))
 
-        // Enable CORS
         val cors = environment.servlets().addFilter("CORS", CrossOriginFilter::class.java)
-        cors.setInitParameter("allowedOrigins", "*")
-        cors.setInitParameter("allowedHeaders", "*")
-        cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD")
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType::class.java), true, "/*")
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS")
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*")
+        cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        cors.setInitParameter("allowedHeaders", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin")
+        cors.setInitParameter("allowCredentials", "true")
     }
 
     override fun initialize(bootstrap: Bootstrap<Config>?) {
