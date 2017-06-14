@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Card, Input, Row} from 'react-materialize'
+import { Button, Card, Input, Row } from 'react-materialize'
 import './Login.css'
 import createReactClass from 'create-react-class'
 
@@ -7,47 +7,47 @@ import PropTypes from 'prop-types'
 
 var Login = createReactClass({
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
-        username: "",
-        password: ""
-    };
+      username: '',
+      password: ''
+    }
   },
 
-  handleLogin: function(event) {
+  handleLogin: function (event) {
     event.preventDefault()
     this.props.onSubmit(this.state.username, this.state.password)
   },
 
-  updateUsernameValue: function(evt) {
+  updateUsernameValue: function (evt) {
     this.setState({
-        username: evt.target.value
+      username: evt.target.value
     })
   },
 
-  updatePasswordValue: function(evt) {
+  updatePasswordValue: function (evt) {
     this.setState({
-        password: evt.target.value
+      password: evt.target.value
     })
   },
 
-  render: function() {
+  render: function () {
     return (
-        <div>
+      <div>
         <form>
-            <Card title='Please log in' actions={[
-                    <Button key="submitButton" waves='light' className="Login-button" onClick={this.handleLogin} >Log in</Button>
-                ]}>
-                <Row>
-                    <Input label="Username" s={12} value={this.state.username} onChange={this.updateUsernameValue}/>    
-                </Row>
-                <Row>
-                    <Input type="password" label="Password" s={12} value={this.state.password} onChange={this.updatePasswordValue} />
-                </Row>
-            </Card>
+          <Card title='Please log in' actions={[
+            <Button key="submitButton" waves='light' className="Login-button" onClick={this.handleLogin} >Log in</Button>
+          ]}>
+            <Row>
+              <Input label="Username" s={12} value={this.state.username} onChange={this.updateUsernameValue} />
+            </Row>
+            <Row>
+              <Input type="password" label="Password" s={12} value={this.state.password} onChange={this.updatePasswordValue} />
+            </Row>
+          </Card>
         </form>
-        </div>
-    );
+      </div>
+    )
   }
 })
 

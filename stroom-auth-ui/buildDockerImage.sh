@@ -1,0 +1,1 @@
+docker build --tag gchq/stroom-auth-ui:latest .
