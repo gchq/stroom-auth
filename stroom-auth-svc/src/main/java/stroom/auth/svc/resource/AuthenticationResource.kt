@@ -44,7 +44,7 @@ class AuthenticationResource(
     private var tokenGenerator: TokenGenerator = tokenGenerator
     private var config: Config = config
     private val dnPattern: Pattern = Pattern.compile(config.certificateDnPattern)
-    private val redirectToLoginResponse = Response.seeOther(URI("TODO: redirect to login")).build()
+    private val redirectToLoginResponse = Response.seeOther(URI(config.loginUrl)).build()
 
     private val LOGGER = LoggerFactory.getLogger(AuthenticationResource::class.java)
 
@@ -86,7 +86,7 @@ class AuthenticationResource(
                 val isAuthenticated = user != null
                 if (isAuthenticated) {
                     val token = tokenGenerator.getToken(username)
-                    val redirectUrl = "http://localhost/stroom/?token=$token"
+                    val redirectUrl = "${config.stroomUrl}/?token=$token"
                     response = Response
                             .seeOther(URI(redirectUrl))
                             .build()

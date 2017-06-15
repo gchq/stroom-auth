@@ -59,5 +59,15 @@ class Config : Configuration() {
     @NotNull
     @get:JsonProperty
     var certificateDnPattern = """CN=[^ ]+ [^ ]+ (?([a-zA-Z0-9]+))?"""
+
+    @Valid
+    @NotNull
+    @get:JsonProperty
+    var loginUrl = ""
+
+    @Valid
+    @NotNull
+    @get:JsonProperty
+    var stroomUrl = ""
 }
 
