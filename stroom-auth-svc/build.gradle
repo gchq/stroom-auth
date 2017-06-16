@@ -58,10 +58,13 @@ dependencies {
     compile deps.kotlin
     compile deps.dropwizard_core
     compile deps.dropwizard_jooq
+    compile deps.dropwizard_auth
+    compile deps.dropwizard_auth_jwt
     compile deps.bcrypt
     compile deps.jose4j
     compile deps.guice
     compile deps.slf4j
+    compile deps.shiro_core
 
     runtime deps.mysql_connector
 

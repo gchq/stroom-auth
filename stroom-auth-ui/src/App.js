@@ -14,9 +14,6 @@ function handleErrors(response) {
 
 class App extends Component {
 
-
-
-
   render() {
     var handleLogin = (username, password) => {
       // Call the authentication service to get a token.

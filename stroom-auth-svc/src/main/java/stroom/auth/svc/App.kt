@@ -24,13 +24,19 @@ import com.bendb.dropwizard.jooq.JooqFactory
 import com.google.inject.Guice
 import com.google.inject.Injector
 import io.dropwizard.Application
+import io.dropwizard.auth.AuthDynamicFeature
+import io.dropwizard.auth.AuthValueFactoryProvider
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor
 import io.dropwizard.configuration.SubstitutingSourceProvider
 import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import org.eclipse.jetty.servlets.CrossOriginFilter
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature
 import stroom.auth.svc.resource.AuthenticationResource
+import stroom.auth.svc.resource.UserResource
+import stroom.auth.svc.security.AuthenticationFilter
+import stroom.auth.svc.security.User
 import javax.servlet.DispatcherType
 import java.util.EnumSet
 
@@ -48,18 +54,15 @@ class App : Application<Config>() {
     }
 
     @Throws(Exception::class)
-    override fun run(configuration: Config, environment: Environment) {
+    override fun run(config: Config, environment: Environment) {
+        configureAuthentication(config, environment)
+
         injector = Guice.createInjector(Module())
         val tokenGenerator = injector!!.getInstance(TokenGenerator::class.java)
-        environment.jersey().register(AuthenticationResource(tokenGenerator, configuration))
+        environment.jersey().register(AuthenticationResource(tokenGenerator, config))
+        environment.jersey().register(UserResource(config))
 
-        val cors = environment.servlets().addFilter("CORS", CrossOriginFilter::class.java)
-        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType::class.java), true, "/*")
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS")
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*")
-        cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        cors.setInitParameter("allowedHeaders", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin")
-        cors.setInitParameter("allowCredentials", "true")
+        configureCors(environment)
     }
 
     override fun initialize(bootstrap: Bootstrap<Config>?) {
@@ -76,4 +79,20 @@ class App : Application<Config>() {
             App().run(*args)
         }
     }
+}
+
+private fun configureAuthentication(config: Config, environment: Environment) {
+    environment.jersey().register(AuthDynamicFeature(AuthenticationFilter.get(config)))
+    environment.jersey().register(AuthValueFactoryProvider.Binder(User::class.java))
+    environment.jersey().register(RolesAllowedDynamicFeature::class.java)
+}
+
+private fun configureCors(environment: Environment){
+    val cors = environment.servlets().addFilter("CORS", CrossOriginFilter::class.java)
+    cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType::class.java), true, "/*")
+    cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS")
+    cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*")
+    cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    cors.setInitParameter("allowedHeaders", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin")
+    cors.setInitParameter("allowCredentials", "true")
 }

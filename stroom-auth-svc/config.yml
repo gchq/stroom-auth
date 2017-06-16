@@ -5,10 +5,19 @@ server:
     applicationContextPath: /
     applicationConnectors:
         - type: http
-          port: 8096
+          port: 8099
+        - type: https
+          port: 8445
+          keyStorePath: /home/jc064522/dev/gchq/certs/certs3/keystore.jks
+          keyStorePassword: changeit
+          trustStorePath: /home/jc064522/.sdkman/candidates/java/current/jre/lib/security/cacerts
+          #trustStorePassword: stroompassword1
+          #validateCerts: true
+          keyStoreType: JKS
+          supportedProtocols: [TLSv1, TLSv1.1, TLSv1.2]
     adminConnectors:
         - type: http
-          port: 8097
+          port: 8100
 
 database:
     driverClass: com.mysql.jdbc.Driver
@@ -27,8 +36,8 @@ logging:
   level: ERROR
   loggers:
     stroom: DEBUG
-    io.dropwizard: INFO
-    org.eclipse.jetty: INFO
+    io.dropwizard: DEBUG
+    org.eclipse.jetty: DEBUG
   appenders:
     - type: console
       logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"

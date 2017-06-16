@@ -44,7 +44,7 @@ object CertificateUtil {
      * "CN=some.server.co.uk, OU=servers, O=some organisation, C=GB"
      */
     fun extractCertificate(httpServletRequest: HttpServletRequest): java.security.cert.X509Certificate? {
-        val certs = httpServletRequest.getAttribute(CertificateUtil.SERVLET_CERT_ARG) as Array<Any>
+        val certs = httpServletRequest.getAttribute(CertificateUtil.SERVLET_CERT_ARG) as Array<Any>?
 
         return CertificateUtil.extractCertificate(certs)
     }
