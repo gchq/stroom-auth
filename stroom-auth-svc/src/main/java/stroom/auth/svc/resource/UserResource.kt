@@ -6,7 +6,8 @@ import org.jooq.DSLContext
 import org.slf4j.LoggerFactory
 import stroom.auth.svc.Config
 import stroom.auth.svc.security.User
-import stroom.models.Tables
+import stroom.db.auth.Tables
+import stroom.db.auth.tables.records.UsersRecord
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -25,13 +26,15 @@ class UserResource(config: Config) {
     @Timed
     fun getUser(@Auth user: User, @Context database: DSLContext) : Response {
 
-        var user = database
-                .selectFrom(Tables.USR)
-                .where(Tables.USR.NAME.eq(user.name))
+        var foundUser: UsersRecord = database
+                .selectFrom(Tables.USERS)
+                .where(Tables.USERS.NAME.eq(user.name))
                 .single()
+
 
         return Response
                 .status(Response.Status.OK)
+                .entity(foundUser)
                 .build()
     }
 
