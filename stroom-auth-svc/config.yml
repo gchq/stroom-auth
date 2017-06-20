@@ -20,24 +20,59 @@ server:
           port: 8100
 
 database:
-    driverClass: com.mysql.jdbc.Driver
+    driverClass: org.mariadb.jdbc.Driver
     user: ${DB_USER:- stroomuser}
     password: ${DB_PASSWORD:- stroompassword1}
-    url: ${DB_URL:- jdbc:mysql://localhost:3307/stroom?useUnicode=yes&characterEncoding=UTF-8}
-
+    url: ${DB_URL:- jdbc:mariadb://localhost:3309/auth
     properties:
         charSet: UTF-8
         hibernate.dialect: org.hibernate.dialect.MySQLInnoDBDialect
-        #set to false for compatibility with stroom's legacy hibernate 4 configuration and schema
-        hibernate.id.new_generator_mappings: false
         hibernate.show_sql: false
+
+#flyway:
+#  # The encoding of SQL migration. (default: UTF-8)
+#  encoding: UTF-8
+#  # The schemas managed by Flyway. (default: default schema of the connection)
+#  schemas:
+#  # The fully qualified class names of the callbacks for lifecycle notifications. (default: empty list)
+#  callbacks:
+#  # The name of the schema metadata table that will be used by Flyway. (default: schema_version)
+#  metaDataTableName: schema_version
+#  # The file name prefix for sql migration (default: V)
+#  sqlMigrationPrefix: V
+#  # The file name separator for sql migration (default: __)
+#  sqlMigrationSeparator: __
+#  # The file name suffix for sql migration (default: .sql)
+#  sqlMigrationSuffix: .sql
+#  # The prefix of every placeholder. (default: ${ )
+##  placeholderPrefix: ${
+##  # The suffix of every placeholder. (default: } )
+##  placeholderSuffix: }
+##  # The map of <placeholder, replacementValue> to apply to sql migration scripts. (default: empty map)
+#  placeholders:
+#  # Locations to scan recursively for migration. (default: db/migration)
+#  locations:
+#    - db/migration
+#  # The fully qualified class names of the custom MigrationResolvers to be used in addition to the built-in ones for resolving Migrations to apply. (default: empty list)
+#  resolvers:
+#  # Allows migration to be run "out of order". If you already have versions 1 and 3 applied, and now a version 2 is found, it will be applied too instead of being ignored. (default: false)
+#  outOfOrder: false
+#  # The description to tag an existing schema with when executing baseline. (default: << Flyway Baseline >>)
+#  baselineDescription: "<< Flyway Baseline >>"
+#  # Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. (default: false)
+#  # Be careful when enabling this as it removes the safety net that ensures Flyway does not migrate the wrong database in case of a configuration mistake!
+#  baselineOnMigrate: false
+#  # Whether to automatically call validate or not when running migrate. (default: true)
+#  validateOnMigrate: true
+
 
 logging:
   level: ERROR
   loggers:
     stroom: DEBUG
-    io.dropwizard: DEBUG
-    org.eclipse.jetty: DEBUG
+    io.dropwizard: INFO
+    org.eclipse.jetty: INFO
+    org.flywaydb: INFO
   appenders:
     - type: console
       logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"

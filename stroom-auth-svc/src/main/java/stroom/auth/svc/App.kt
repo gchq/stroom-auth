@@ -29,9 +29,12 @@ import io.dropwizard.auth.AuthValueFactoryProvider
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor
 import io.dropwizard.configuration.SubstitutingSourceProvider
 import io.dropwizard.db.DataSourceFactory
+import io.dropwizard.flyway.FlywayBundle
+import io.dropwizard.flyway.FlywayFactory
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import org.eclipse.jetty.servlets.CrossOriginFilter
+import org.flywaydb.core.Flyway
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature
 import stroom.auth.svc.resource.AuthenticationResource
 import stroom.auth.svc.resource.UserResource
@@ -53,6 +56,16 @@ class App : Application<Config>() {
         }
     }
 
+    private val flywayBundle = object : FlywayBundle<Config>() {
+        override fun getDataSourceFactory(config: Config): DataSourceFactory {
+            return config.dataSourceFactory
+        }
+
+        override fun getFlywayFactory(config: Config): FlywayFactory {
+            return config.flywayFactory
+        }
+    }
+
     @Throws(Exception::class)
     override fun run(config: Config, environment: Environment) {
         configureAuthentication(config, environment)
@@ -63,6 +76,8 @@ class App : Application<Config>() {
         environment.jersey().register(UserResource(config))
 
         configureCors(environment)
+
+        migrate(config, environment)
     }
 
     override fun initialize(bootstrap: Bootstrap<Config>?) {
@@ -70,7 +85,9 @@ class App : Application<Config>() {
         bootstrap!!.configurationSourceProvider = SubstitutingSourceProvider(
                 bootstrap.configurationSourceProvider,
                 EnvironmentVariableSubstitutor(false))
+
         bootstrap.addBundle(jooqBundle)
+        bootstrap.addBundle(flywayBundle)
     }
 
     companion object {
@@ -95,4 +112,10 @@ private fun configureCors(environment: Environment){
     cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     cors.setInitParameter("allowedHeaders", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin")
     cors.setInitParameter("allowCredentials", "true")
+}
+
+private fun migrate(config: Config, environment: Environment){
+    val dataSource = config.dataSourceFactory.build(environment.metrics(), "flywayDataSource")
+    val flyway = config.flywayFactory.build(dataSource)
+    flyway.migrate()
 }

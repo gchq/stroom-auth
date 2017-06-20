@@ -57,6 +57,7 @@ dependencies {
     compile project(':stroom-persistence')
     compile deps.kotlin
     compile deps.dropwizard_core
+    compile deps.dropwizard_flyway
     compile deps.dropwizard_jooq
     compile deps.dropwizard_auth
     compile deps.dropwizard_auth_jwt
@@ -65,8 +66,9 @@ dependencies {
     compile deps.guice
     compile deps.slf4j
     compile deps.shiro_core
+    compile deps.flyway_core
 
-    runtime deps.mysql_connector
+    runtime deps.mariadb_connector
 
     testCompile testDeps.junit
 }

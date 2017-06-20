@@ -23,6 +23,7 @@ import com.bendb.dropwizard.jooq.JooqFactory
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.dropwizard.Configuration
 import io.dropwizard.db.DataSourceFactory
+import io.dropwizard.flyway.FlywayFactory
 import java.nio.charset.Charset
 
 import javax.validation.Valid
@@ -34,6 +35,12 @@ class Config : Configuration() {
     @NotNull
     @get:JsonProperty("database")
     var dataSourceFactory = DataSourceFactory()
+
+    @Valid
+    @NotNull
+    @get:JsonProperty("flyway")
+    var flywayFactory = FlywayFactory()
+
 
     @Valid
     @NotNull

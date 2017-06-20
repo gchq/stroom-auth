@@ -29,7 +29,7 @@ import stroom.auth.svc.certificate.CertificateUtil
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 
-import stroom.models.Tables.*
+import stroom.db.auth.Tables.*
 import java.net.URI
 import java.util.regex.Pattern
 import javax.servlet.http.HttpServletRequest
@@ -80,8 +80,8 @@ class AuthenticationResource(
             }
             else {
                 var user = database
-                        .selectFrom(USR)
-                        .where(USR.NAME.eq(username))
+                        .selectFrom(USERS)
+                        .where(USERS.NAME.eq(username))
                         .single()
                 val isAuthenticated = user != null
                 if (isAuthenticated) {
@@ -107,11 +107,11 @@ class AuthenticationResource(
     @Timed
     fun authenticateAndReturnToken(@Context database: DSLContext, credentials: Credentials): Response {
         var user = database
-                .selectFrom(USR)
-                .where(USR.NAME.eq(credentials.username))
+                .selectFrom(USERS)
+                .where(USERS.NAME.eq(credentials.username))
                 .single()
 
-        val isPasswordCorrect = BCrypt.checkpw(credentials.password, user.passHash)
+        val isPasswordCorrect = BCrypt.checkpw(credentials.password, user.passwordHash)
 
         if(isPasswordCorrect) {
             LOGGER.debug("Login for {} succeeded", credentials.username)
