@@ -36,7 +36,7 @@ import stroom.db.auth.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = -1862510929;
+    private static final long serialVersionUID = 1385667895;
 
     /**
      * The reference instance of <code>auth.users</code>
@@ -62,19 +62,9 @@ public class Users extends TableImpl<UsersRecord> {
     public final TableField<UsersRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>auth.users.is_login_expired</code>.
-     */
-    public final TableField<UsersRecord, Byte> IS_LOGIN_EXPIRED = createField("is_login_expired", org.jooq.impl.SQLDataType.TINYINT.nullable(false), this, "");
-
-    /**
      * The column <code>auth.users.last_login</code>.
      */
     public final TableField<UsersRecord, Timestamp> LAST_LOGIN = createField("last_login", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
-
-    /**
-     * The column <code>auth.users.password_expiration</code>.
-     */
-    public final TableField<UsersRecord, Timestamp> PASSWORD_EXPIRATION = createField("password_expiration", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>auth.users.password_hash</code>.
