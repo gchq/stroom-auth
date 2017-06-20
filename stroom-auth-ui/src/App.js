@@ -7,7 +7,8 @@ import Login from './Login'
 
 function handleErrors(response) {
   if (!response.ok) {
-    throw Error(response.statusText)
+    console.log(response.statusText)
+    //TODO show error page
   }
   return response
 }
