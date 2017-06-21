@@ -61,6 +61,7 @@ ext.testDeps = [
     junit: "junit:junit:$testVersions.junit",
     assertj: 'org.assertj:assertj-core:3.8.0',
     dropwizard_testing: "io.dropwizard:dropwizard-testing:$versions.dropwizard",
-    fuel: 'com.github.kittinunf.fuel:fuel:1.7.0'
+    fuel: 'com.github.kittinunf.fuel:fuel:1.7.0',
+    moshi: 'com.squareup.moshi:moshi:1.5.0'
 ]
 

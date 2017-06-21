@@ -1,13 +1,12 @@
-package stroom.auth.svc.resource
+package stroom.auth.service.resources
 
 import com.codahale.metrics.annotation.Timed
 import io.dropwizard.auth.Auth
 import org.jooq.DSLContext
 import org.jooq.JSONFormat
 import org.slf4j.LoggerFactory
-import stroom.auth.svc.Config
-import stroom.auth.svc.security.User
-import stroom.db.auth.Tables
+import stroom.auth.service.Config
+import stroom.auth.service.security.User
 import stroom.db.auth.Tables.USERS
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -51,6 +50,8 @@ class UserResource(config: Config) {
                     .build()
         }
 
+        val orderByNameField = USERS.NAME
+
         val users = database
                 .select(USERS.ID,
                         USERS.NAME,
@@ -61,11 +62,14 @@ class UserResource(config: Config) {
                         USERS.CREATED_ON,
                         USERS.CREATED_BY_USER)
                 .from(USERS)
-                .orderBy(USERS.NAME)
+//                .orderBy(USERS.NAME)
+                .orderBy(orderByNameField)
                 .seekAfter(fromUsername)
                 .limit(usersPerPage)
                 .fetch()
                 .formatJSON(JSONFormat().header(false).recordFormat(JSONFormat.RecordFormat.OBJECT))
+
+        //TODO finish ordering
 
         return Response
                 .status(Response.Status.OK)
@@ -77,8 +81,7 @@ class UserResource(config: Config) {
     @Path("/me")
     @Timed
     fun getCurrentUser(@Auth user: User, @Context database: DSLContext) : Response {
-
-        val foundUser = database
+        val foundUserRecord = database
                 .select(
                         USERS.ID,
                         USERS.NAME,
@@ -90,14 +93,27 @@ class UserResource(config: Config) {
                         USERS.CREATED_BY_USER)
                 .from(USERS)
                 .where(USERS.NAME.eq(user.name))
-                .fetch()
-                .formatJSON(JSONFormat().header(false).recordFormat(JSONFormat.RecordFormat.OBJECT))
+                .fetchOne()
+
+        // We can use formatJSON() on Results (when using fetch()) but not yet on Records (when using fetchOne().
+        // The below is a work around. Something like formatJSON() should be available when using fetchOne() by Q3 2017.
+        // NB: This still means
+        // See https@ //github.com/jOOQ/jOOQ/issues/6354#issuecomment-310103896
+        val foundUserResult = database.newResult(USERS.ID,
+                USERS.NAME,
+                USERS.TOTAL_LOGIN_FAILURES,
+                USERS.LAST_LOGIN,
+                USERS.UPDATED_ON,
+                USERS.UPDATED_BY_USER,
+                USERS.CREATED_ON,
+                USERS.CREATED_BY_USER)
+        foundUserResult.add(foundUserRecord)
+        val foundUserJson = foundUserResult.formatJSON(
+                JSONFormat().header(false).recordFormat(JSONFormat.RecordFormat.OBJECT))
 
         return Response
                 .status(Response.Status.OK)
-                .entity(foundUser)
+                .entity(foundUserJson)
                 .build()
     }
-
-
 }
