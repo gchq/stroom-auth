@@ -53,26 +53,6 @@ shadowJar {
     archiveName 'stroom-auth-service-all.jar'
 }
 
-dependencies {
-    compile project(':stroom-persistence')
-    compile deps.kotlin
-    compile deps.dropwizard_core
-    compile deps.dropwizard_flyway
-    compile deps.dropwizard_jooq
-    compile deps.dropwizard_auth
-    compile deps.dropwizard_auth_jwt
-    compile deps.bcrypt
-    compile deps.jose4j
-    compile deps.guice
-    compile deps.slf4j
-    compile deps.shiro_core
-    compile deps.flyway_core
-
-    runtime deps.mariadb_connector
-
-    testCompile testDeps.junit
-}
-
 sourceSets {
     // This lets us use different directories for our integration tests.
     integrationTest {
@@ -104,4 +84,28 @@ integrationTest.mustRunAfter test
 // This means the reports from our integration tests won't over-write the reports from our unit tests.
 tasks.withType(Test) {
     reports.html.destination = file("${reporting.baseDir}/${name}")
+}
+
+dependencies {
+    compile project(':stroom-persistence')
+    compile deps.kotlin
+    compile deps.dropwizard_core
+    compile deps.dropwizard_flyway
+    compile deps.dropwizard_jooq
+    compile deps.dropwizard_auth
+    compile deps.dropwizard_auth_jwt
+    compile deps.bcrypt
+    compile deps.jose4j
+    compile deps.guice
+    compile deps.slf4j
+    compile deps.shiro_core
+    compile deps.flyway_core
+
+    runtime deps.mariadb_connector
+
+    testCompile testDeps.junit
+
+    integrationTestCompile testDeps.assertj
+    integrationTestCompile testDeps.dropwizard_testing
+    integrationTestCompile testDeps.fuel
 }
