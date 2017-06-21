@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package stroom.auth.service.certificate
+package stroom.auth.service.security
 
 import org.slf4j.LoggerFactory
 
@@ -43,10 +43,10 @@ object CertificateUtil {
      * Pull out the Subject from the certificate. E.g.
      * "CN=some.server.co.uk, OU=servers, O=some organisation, C=GB"
      */
-    fun extractCertificate(httpServletRequest: HttpServletRequest): java.security.cert.X509Certificate? {
-        val certs = httpServletRequest.getAttribute(CertificateUtil.SERVLET_CERT_ARG) as Array<Any>?
+    fun extractCertificate(httpServletRequest: HttpServletRequest): X509Certificate? {
+        val certs = httpServletRequest.getAttribute(SERVLET_CERT_ARG) as Array<Any>?
 
-        return CertificateUtil.extractCertificate(certs)
+        return extractCertificate(certs)
     }
 
     /**
@@ -56,10 +56,10 @@ object CertificateUtil {
      * @param certs
      * *            ARGS from the SERVLET request.
      */
-    fun extractCertificate(certs: Array<Any>?): java.security.cert.X509Certificate? {
+    fun extractCertificate(certs: Array<Any>?): X509Certificate? {
         if (certs != null) {
             for (certO in certs) {
-                if (certO is java.security.cert.X509Certificate) {
+                if (certO is X509Certificate) {
                     return certO
                 }
             }

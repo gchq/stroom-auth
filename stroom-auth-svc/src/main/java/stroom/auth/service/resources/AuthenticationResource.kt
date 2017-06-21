@@ -25,7 +25,7 @@ import org.mindrot.jbcrypt.BCrypt
 import org.slf4j.LoggerFactory
 import stroom.auth.service.Config
 import stroom.auth.service.TokenGenerator
-import stroom.auth.service.certificate.CertificateUtil
+import stroom.auth.service.security.CertificateUtil
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 
