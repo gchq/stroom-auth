@@ -1,4 +1,4 @@
-package stroom.auth.svc.security
+package stroom.auth.service.security
 
 import io.dropwizard.auth.AuthenticationException
 import io.dropwizard.auth.Authenticator

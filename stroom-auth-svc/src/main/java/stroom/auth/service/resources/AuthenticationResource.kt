@@ -17,15 +17,15 @@
  * along with Stroom-Stats.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package stroom.auth.svc.resource
+package stroom.auth.service.resources
 
 import com.codahale.metrics.annotation.Timed
 import org.jooq.DSLContext
 import org.mindrot.jbcrypt.BCrypt
 import org.slf4j.LoggerFactory
-import stroom.auth.svc.Config
-import stroom.auth.svc.TokenGenerator
-import stroom.auth.svc.certificate.CertificateUtil
+import stroom.auth.service.Config
+import stroom.auth.service.TokenGenerator
+import stroom.auth.service.certificate.CertificateUtil
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 

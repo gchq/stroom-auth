@@ -1,10 +1,10 @@
-package stroom.auth.svc.security;
+package stroom.auth.service.security;
 
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
-import stroom.auth.svc.Config;
+import stroom.auth.service.Config;
 
 public class AuthenticationFilter {
 

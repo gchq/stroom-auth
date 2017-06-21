@@ -32,14 +32,14 @@ plugins {
 
 apply plugin: 'application'
 apply plugin: 'kotlin'
-mainClassName = 'stroom.auth.svc.App'
+mainClassName = 'stroom.auth.service.App'
 
 jar {
     manifest {
         attributes(
                 "Implementation-Title": "Stroom Auth Service",
                 "Implementation-Version": version,
-                "Main-Class" : "stroom.auth.svc.App"
+                "Main-Class" : "stroom.auth.service.App"
         )
     }
 
@@ -71,4 +71,37 @@ dependencies {
     runtime deps.mariadb_connector
 
     testCompile testDeps.junit
+}
+
+sourceSets {
+    // This lets us use different directories for our integration tests.
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+configurations {
+    // This means our integration tests get all the dependencies from our tests and we don't need to specify them twice.
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+// This task lets us run the actual integration tests.
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+// These lines pull the integration test task into our build process.
+check.dependsOn integrationTest
+integrationTest.mustRunAfter test
+
+// This means the reports from our integration tests won't over-write the reports from our unit tests.
+tasks.withType(Test) {
+    reports.html.destination = file("${reporting.baseDir}/${name}")
 }

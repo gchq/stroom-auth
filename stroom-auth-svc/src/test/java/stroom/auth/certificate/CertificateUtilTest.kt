@@ -2,8 +2,8 @@ package stroom.auth.certificate
 
 import org.junit.Assert
 import org.junit.Test
-import stroom.auth.svc.certificate.CertificateUtil
-import stroom.auth.svc.certificate.extractCNFromDN
+import stroom.auth.service.certificate.CertificateUtil
+import stroom.auth.service.certificate.extractCNFromDN
 import java.util.regex.Pattern
 
 class TestCertificateUtil {

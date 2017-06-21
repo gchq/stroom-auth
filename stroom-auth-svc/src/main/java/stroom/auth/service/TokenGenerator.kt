@@ -17,7 +17,7 @@
  * along with Stroom-Stats.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package stroom.auth.svc
+package stroom.auth.service
 
 import jersey.repackaged.com.google.common.base.Throwables
 import org.jose4j.jws.AlgorithmIdentifiers.HMAC_SHA256

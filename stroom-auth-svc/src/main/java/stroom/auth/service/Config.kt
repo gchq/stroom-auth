@@ -17,7 +17,7 @@
  * along with Stroom-Stats.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package stroom.auth.svc
+package stroom.auth.service
 
 import com.bendb.dropwizard.jooq.JooqFactory
 import com.fasterxml.jackson.annotation.JsonProperty

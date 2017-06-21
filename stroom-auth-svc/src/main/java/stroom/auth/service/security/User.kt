@@ -1,4 +1,4 @@
-package stroom.auth.svc.security
+package stroom.auth.service.security
 
 import java.security.Principal
 

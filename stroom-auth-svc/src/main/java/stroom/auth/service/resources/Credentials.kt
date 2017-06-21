@@ -17,14 +17,14 @@
  * along with Stroom-Stats.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package stroom.auth.svc
+package stroom.auth.service.resources
 
-import com.google.inject.AbstractModule
+import com.fasterxml.jackson.annotation.JsonProperty
 
-class Module : AbstractModule() {
+class Credentials {
+    @get:JsonProperty("username")
+    var username = ""
 
-    override fun configure() {
-        bind(TokenGenerator::class.java)
-    }
-
+    @get:JsonProperty("password")
+    var password = ""
 }

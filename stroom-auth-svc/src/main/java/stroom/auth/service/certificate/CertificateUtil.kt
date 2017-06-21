@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package stroom.auth.svc.certificate
+package stroom.auth.service.certificate
 
 import org.slf4j.LoggerFactory
 

@@ -17,7 +17,7 @@
  * along with Stroom-Stats.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package stroom.auth.svc
+package stroom.auth.service
 
 import com.bendb.dropwizard.jooq.JooqBundle
 import com.bendb.dropwizard.jooq.JooqFactory
@@ -34,12 +34,11 @@ import io.dropwizard.flyway.FlywayFactory
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import org.eclipse.jetty.servlets.CrossOriginFilter
-import org.flywaydb.core.Flyway
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature
-import stroom.auth.svc.resource.AuthenticationResource
-import stroom.auth.svc.resource.UserResource
-import stroom.auth.svc.security.AuthenticationFilter
-import stroom.auth.svc.security.User
+import stroom.auth.service.resources.AuthenticationResource
+import stroom.auth.service.resources.UserResource
+import stroom.auth.service.security.AuthenticationFilter
+import stroom.auth.service.security.User
 import javax.servlet.DispatcherType
 import java.util.EnumSet
 
