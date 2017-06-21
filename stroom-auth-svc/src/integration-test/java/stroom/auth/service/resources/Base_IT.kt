@@ -19,6 +19,7 @@
 
 package stroom.auth.service.resources
 
+import com.github.kittinunf.fuel.core.Response
 import com.github.kittinunf.fuel.httpPost
 import io.dropwizard.testing.junit.DropwizardAppRule
 import org.assertj.core.api.Assertions
@@ -32,6 +33,7 @@ open abstract class Base_IT {
         private val LOGGER = LoggerFactory.getLogger(Base_IT::class.java)
 
         @ClassRule @JvmField val appRule = DropwizardAppRule(App::class.java, "config.yml")
+        val JSON_CONTENT_TYPE = mapOf("Content-Type" to "application/json")
 
         val app = appRule.getApplication<App>()
 
@@ -51,6 +53,22 @@ open abstract class Base_IT {
             LOGIN_URL          = "http://localhost:$appPort/authentication/login"
             BASE_TASKS_URL     = "http://localhost:$adminPort/admin/tasks/"
             HEALTH_CHECKS_URL  = "http://localhost:$adminPort/admin/healthcheck?pretty=true"
+        }
+
+
+        fun assertUnauthorised(response: Response){
+            Assertions.assertThat(response.httpStatusCode).isEqualTo(401)
+        }
+
+        fun assertBadRequest(response: Response){
+            Assertions.assertThat(response.httpStatusCode).isEqualTo(400)
+        }
+
+        fun jsonContentType(vararg pairs: Pair<String, String>): HashMap<String, String>{
+            var map = HashMap<String, String>()
+            pairs.forEach { (first, second) -> map.put(first, second) }
+            map.put("Content-Type", "application/json")
+            return map
         }
     }
 
