@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.*
 import javax.ws.rs.core.Response
 
-@Path("/")
+@Path("/authentication/")
 @Produces(MediaType.APPLICATION_JSON)
 class AuthenticationResource(
         tokenGenerator : TokenGenerator,
@@ -44,7 +44,6 @@ class AuthenticationResource(
     private var tokenGenerator: TokenGenerator = tokenGenerator
     private var config: Config = config
     private val dnPattern: Pattern = Pattern.compile(config.certificateDnPattern)
-    private val redirectToLoginResponse = Response.seeOther(URI(config.loginUrl)).build()
 
     private val LOGGER = LoggerFactory.getLogger(AuthenticationResource::class.java)
 
@@ -69,14 +68,14 @@ class AuthenticationResource(
         var response: Response
         if(certificateDn == null) {
             LOGGER.debug("No certificate in request. Redirecting to login.")
-            response = redirectToLoginResponse
+            response = redirectToLoginResponse()
         }
         else {
             LOGGER.debug("Found certificate in request. DN: {}", certificateDn)
             val username = CertificateUtil.extractUserIdFromDN(certificateDn, dnPattern)
             if(username == null) {
                 LOGGER.debug("Cannot extract user from certificate. Redirecting to login.")
-                response = redirectToLoginResponse
+                response = redirectToLoginResponse()
             }
             else {
                 var user = database
@@ -92,7 +91,7 @@ class AuthenticationResource(
                             .build()
                 } else {
                     LOGGER.debug("Certificate does not contain a known user. Redirecting to login.")
-                    response = redirectToLoginResponse
+                    response = redirectToLoginResponse()
                 }
             }
 //            certificateAuthenticator.login(certificateDn, httpServletRequest.remoteHost)
@@ -101,18 +100,32 @@ class AuthenticationResource(
     }
 
     @POST
-    @Path("/")
+    @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
-    fun authenticateAndReturnToken(@Context database: DSLContext, credentials: Credentials): Response {
+    fun authenticateAndReturnToken(@Context database: DSLContext, credentials: Credentials?): Response {
+        // We need to make sure the request has credentials
+        if(credentials == null || credentials.username.isBlank() || credentials.password.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Please provide both username and password").build()
+        }
+
+        // We need to make sure the user in the request exists
+        var results = database
+                .selectFrom(USERS)
+                .where(USERS.NAME.eq(credentials.username))
+                .fetch()
+        if(results.size != 1) {
+            LOGGER.debug("Request to log in with invalid username: ${credentials.username}")
+            return unauthorisedResponse()
+        }
+
+        // Now we can check the actual password
         var user = database
                 .selectFrom(USERS)
                 .where(USERS.NAME.eq(credentials.username))
                 .single()
-
         val isPasswordCorrect = BCrypt.checkpw(credentials.password, user.passwordHash)
-
         if(isPasswordCorrect) {
             LOGGER.debug("Login for {} succeeded", credentials.username)
             val token = tokenGenerator.getToken(credentials.username)
@@ -122,9 +135,20 @@ class AuthenticationResource(
                     .build()
         }
         else {
-            LOGGER.debug("Login for {} failed", credentials.username)
-            return Response.status(Response.Status.UNAUTHORIZED).build()
+            LOGGER.debug("Password for {} is incorrect", credentials.username)
+            return unauthorisedResponse()
         }
+    }
 
+    private fun redirectToLoginResponse(): Response {
+        return Response.seeOther(URI(config.loginUrl)).build()
+    }
+
+    private fun unauthorisedResponse(): Response {
+        return Response
+                .status(Response.Status.UNAUTHORIZED)
+                .entity("Invalid credentials")
+                .build()
     }
 }
+
