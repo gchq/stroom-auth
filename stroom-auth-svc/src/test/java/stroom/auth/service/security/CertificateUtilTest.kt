@@ -1,4 +1,4 @@
-package stroom.auth.certificate
+package stroom.auth.service.security
 
 import org.junit.Assert
 import org.junit.Test
