@@ -21,7 +21,7 @@ class UserResource_IT: Base_IT() {
     private var ME_URL = "http://localhost:$appPort/users/me"
 
     @Test
-    fun all_users() {
+    fun search_users() {
         val jwsToken = login()
         val url = ROOT_URL + "?fromUsername=&usersPerPage=10&orderBy=name"
         val (_, response) = url
@@ -34,7 +34,7 @@ class UserResource_IT: Base_IT() {
     }
 
     @Test
-    fun current_user() {
+    fun read_current_user() {
         val jwsToken = login()
         val (_, response) = ME_URL
                 .httpGet()
@@ -100,13 +100,6 @@ class UserResource_IT: Base_IT() {
                 .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
                 .responseString()
         response.assertBadRequest()
-    }
-
-
-
-
-    private fun allUsersUrl(): String {
-        return "http://localhost:$appPort/users/?tok"
     }
 
     private fun userListMapper(): JsonAdapter<List<User>> {

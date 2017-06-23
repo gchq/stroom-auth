@@ -24,7 +24,7 @@ class UserResource(config: Config) {
     @GET
     @Path("/")
     @Timed
-    fun getAllUsers(
+    fun search(
             @Auth authenticatedServiceUser: ServiceUser,
             @Context database: DSLContext,
             @QueryParam("fromUsername") fromUsername: String,
@@ -76,10 +76,44 @@ class UserResource(config: Config) {
                 .build()
     }
 
+    @POST
+    @Path("/")
+    @Timed
+    fun createUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, user: User?) : Response {
+        if(user == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Please supply a user with a username and password!").build()
+        }
+        else{
+            var message = ""
+            if(user.name.isNullOrBlank()){
+                message += "User's name cannot be empty! "
+            }
+            if(user.password.isNullOrBlank()) {
+                message += "User's password cannot be empty!"
+            }
+            if(message != "") {
+                return Response.status(Response.Status.BAD_REQUEST).entity(message).build()
+            }
+
+            val usersRecord =
+                    database.insertInto(USERS)
+                            .set(USERS.NAME, user.name)
+                            .set(USERS.PASSWORD_HASH, "TODO HASH")
+                            .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
+                            .set(USERS.CREATED_BY_USER, authenticatedServiceUser.name)
+                            .returning(USERS.ID)
+                            .fetchOne()
+
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(usersRecord.id).build()
+        }
+    }
+
     @GET
     @Path("/me")
     @Timed
-    fun getCurrentUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext) : Response {
+    fun readCurrentUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext) : Response {
         val foundUserRecord = database
                 .select(
                         USERS.ID,
@@ -113,40 +147,6 @@ class UserResource(config: Config) {
         return Response
                 .status(Response.Status.OK)
                 .entity(foundUserJson).build()
-    }
-
-    @POST
-    @Path("/")
-    @Timed
-    fun createUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, user: User?) : Response {
-        if(user == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Please supply a user with a username and password!").build()
-        }
-        else{
-            var message = ""
-            if(user.name.isNullOrBlank()){
-                message += "User's name cannot be empty! "
-            }
-            if(user.password.isNullOrBlank()) {
-                message += "User's password cannot be empty!"
-            }
-            if(message != "") {
-                return Response.status(Response.Status.BAD_REQUEST).entity(message).build()
-            }
-
-            val usersRecord =
-                    database.insertInto(USERS)
-                            .set(USERS.NAME, user.name)
-                            .set(USERS.PASSWORD_HASH, "TODO HASH")
-                            .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
-                            .set(USERS.CREATED_BY_USER, authenticatedServiceUser.name)
-                            .returning(USERS.ID)
-                            .fetchOne()
-
-            return Response
-                    .status(Response.Status.OK)
-                    .entity(usersRecord.id).build()
-        }
     }
 
 }
