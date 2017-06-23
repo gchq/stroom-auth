@@ -6,6 +6,7 @@ import org.junit.Test
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
+import org.assertj.core.api.Assertions.fail
 import java.lang.reflect.Type
 
 
@@ -20,7 +21,7 @@ class UserResource_IT: Base_IT() {
     @Test
     fun current_user() {
         val jwsToken = login()
-        val (request, response) = ME_URL
+        val (_, response) = ME_URL
                 .httpGet()
                 .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
                 .responseString()
@@ -29,7 +30,11 @@ class UserResource_IT: Base_IT() {
 
         val user = mapper().fromJson(userJson)
 
-        assertThat(user).isNotNull
+        if(user != null) {
+            assertThat(user[0].name).isEqualTo("admin")
+        }
+        else fail("No users found")
+
     }
 
     private fun allUsersUrl(): String {
