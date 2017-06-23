@@ -28,7 +28,7 @@ class AuthenticationResource_IT : Base_IT() {
                 .body("{\"username\" : \"BAD\", \"password\" : \"admin\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
-        assertUnauthorised(response)
+        response.assertUnauthorised()
     }
 
     @Test
@@ -38,7 +38,7 @@ class AuthenticationResource_IT : Base_IT() {
                 .body("{\"username\" : \"admin\", \"password\" : \"BAD\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
-        assertUnauthorised(response)
+        response.assertUnauthorised()
     }
 
     @Test
@@ -48,7 +48,7 @@ class AuthenticationResource_IT : Base_IT() {
                 .body("{\"username\" : \"BAD\", \"password\" : \"BAD\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
-        assertUnauthorised(response)
+        response.assertUnauthorised()
     }
 
     @Test
@@ -58,7 +58,7 @@ class AuthenticationResource_IT : Base_IT() {
                 .body("{\"username\" : \"BAD\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
-        assertBadRequest(response)
+        response.assertBadRequest()
     }
 
     @Test
@@ -68,7 +68,7 @@ class AuthenticationResource_IT : Base_IT() {
                 .body("{\"password\" : \"BAD\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
-        assertBadRequest(response)
+        response.assertBadRequest()
     }
 
     @Test
@@ -77,6 +77,6 @@ class AuthenticationResource_IT : Base_IT() {
                 .httpPost()
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
-        assertBadRequest(response)
+        response.assertBadRequest()
     }
 }

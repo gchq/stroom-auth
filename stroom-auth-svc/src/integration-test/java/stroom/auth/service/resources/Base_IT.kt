@@ -23,6 +23,7 @@ import com.github.kittinunf.fuel.core.Response
 import com.github.kittinunf.fuel.httpPost
 import io.dropwizard.testing.junit.DropwizardAppRule
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.BeforeClass
 import org.junit.ClassRule
 import org.slf4j.LoggerFactory
@@ -56,12 +57,21 @@ open abstract class Base_IT {
         }
 
 
-        fun assertUnauthorised(response: Response){
-            Assertions.assertThat(response.httpStatusCode).isEqualTo(401)
+        fun Response.assertUnauthorised(){
+            assertThat(this.httpStatusCode).isEqualTo(401)
         }
 
-        fun assertBadRequest(response: Response){
-            Assertions.assertThat(response.httpStatusCode).isEqualTo(400)
+        fun Response.assertBadRequest(){
+            assertThat(this.httpStatusCode).isEqualTo(400)
+        }
+
+        fun Response.assertOk() {
+            assertThat(this.httpStatusCode).isEqualTo(200)
+        }
+
+        fun Response.assertBodyNotNull() {
+            val body = String(this.data)
+            assertThat(body).isNotNull()
         }
 
         fun jsonContentType(vararg pairs: Pair<String, String>): HashMap<String, String>{

@@ -6,12 +6,11 @@ import org.jooq.DSLContext
 import org.jooq.JSONFormat
 import org.slf4j.LoggerFactory
 import stroom.auth.service.Config
-import stroom.auth.service.security.User
+import stroom.auth.service.security.ServiceUser
 import stroom.db.auth.Tables.USERS
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.QueryParam
+import java.sql.Timestamp
+import java.time.Instant
+import javax.ws.rs.*
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
@@ -26,7 +25,7 @@ class UserResource(config: Config) {
     @Path("/")
     @Timed
     fun getAllUsers(
-            @Auth authenticatedUser: User,
+            @Auth authenticatedServiceUser: ServiceUser,
             @Context database: DSLContext,
             @QueryParam("fromUsername") fromUsername: String,
             @QueryParam("usersPerPage") usersPerPage: Int,
@@ -80,7 +79,7 @@ class UserResource(config: Config) {
     @GET
     @Path("/me")
     @Timed
-    fun getCurrentUser(@Auth user: User, @Context database: DSLContext) : Response {
+    fun getCurrentUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext) : Response {
         val foundUserRecord = database
                 .select(
                         USERS.ID,
@@ -92,7 +91,7 @@ class UserResource(config: Config) {
                         USERS.CREATED_ON,
                         USERS.CREATED_BY_USER)
                 .from(USERS)
-                .where(USERS.NAME.eq(user.name))
+                .where(USERS.NAME.eq(authenticatedServiceUser.name))
                 .fetchOne()
 
         // We can use formatJSON() on Results (when using fetch()) but not yet on Records (when using fetchOne().
@@ -113,7 +112,30 @@ class UserResource(config: Config) {
 
         return Response
                 .status(Response.Status.OK)
-                .entity(foundUserJson)
-                .build()
+                .entity(foundUserJson).build()
     }
+
+    @POST
+    @Path("/")
+    @Timed
+    fun createUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, user: User?) : Response {
+        if(user == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Please supply a user").build()
+        }
+
+        val usersRecord =
+                database.insertInto(USERS)
+                    .set(USERS.NAME, user.name)
+                    .set(USERS.PASSWORD_HASH, "TODO HASH")
+                    .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
+                    .set(USERS.CREATED_BY_USER, authenticatedServiceUser.name)
+                    .returning(USERS.ID)
+                    .fetchOne()
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(usersRecord.id).build()
+    }
+
+
 }
