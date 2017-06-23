@@ -38,7 +38,7 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature
 import stroom.auth.service.resources.AuthenticationResource
 import stroom.auth.service.resources.UserResource
 import stroom.auth.service.security.AuthenticationFilter
-import stroom.auth.service.security.User
+import stroom.auth.service.security.ServiceUser
 import javax.servlet.DispatcherType
 import java.util.EnumSet
 
@@ -99,7 +99,7 @@ class App : Application<Config>() {
 
 private fun configureAuthentication(config: Config, environment: Environment) {
     environment.jersey().register(AuthDynamicFeature(AuthenticationFilter.get(config)))
-    environment.jersey().register(AuthValueFactoryProvider.Binder(User::class.java))
+    environment.jersey().register(AuthValueFactoryProvider.Binder(ServiceUser::class.java))
     environment.jersey().register(RolesAllowedDynamicFeature::class.java)
 }
 

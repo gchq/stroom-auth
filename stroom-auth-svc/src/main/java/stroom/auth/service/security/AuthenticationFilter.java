@@ -8,7 +8,7 @@ import stroom.auth.service.Config;
 
 public class AuthenticationFilter {
 
-  public static JwtAuthFilter<User> get(Config config)  {
+  public static JwtAuthFilter<ServiceUser> get(Config config)  {
     final JwtConsumer consumer = new JwtConsumerBuilder()
         .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
         .setRequireExpirationTime() // the JWT must have an expiration time
@@ -18,7 +18,7 @@ public class AuthenticationFilter {
         .setExpectedIssuer("stroom")
         .build();
 
-    return new JwtAuthFilter.Builder<User>()
+    return new JwtAuthFilter.Builder<ServiceUser>()
         .setJwtConsumer(consumer)
         .setRealm("realm")
         .setPrefix("Bearer")
