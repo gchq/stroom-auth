@@ -65,6 +65,46 @@ class UserResource_IT: Base_IT() {
         response.assertBodyNotNull()
     }
 
+    @Test
+    fun create_user_missing_user() {
+        val jwsToken = login()
+        val (_, response) = ROOT_URL
+                .httpPost()
+                .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
+                .responseString()
+        response.assertBadRequest()
+    }
+
+    @Test
+    fun create_user_missing_name() {
+        val jwsToken = login()
+        val user = User("", password = "testPassword")
+        val serializedUser = userMapper().toJson(user)
+        val (_, response) = ROOT_URL
+                .httpPost()
+                .body(serializedUser)
+                .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
+                .responseString()
+        response.assertBadRequest()
+
+    }
+
+    @Test
+    fun create_user_missing_password() {
+        val jwsToken = login()
+        val user = User(name = Instant.now().toString(), password = "")
+        val serializedUser = userMapper().toJson(user)
+        val (_, response) = ROOT_URL
+                .httpPost()
+                .body(serializedUser)
+                .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
+                .responseString()
+        response.assertBadRequest()
+    }
+
+
+
+
     private fun allUsersUrl(): String {
         return "http://localhost:$appPort/users/?tok"
     }

@@ -120,22 +120,33 @@ class UserResource(config: Config) {
     @Timed
     fun createUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, user: User?) : Response {
         if(user == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Please supply a user").build()
+            return Response.status(Response.Status.BAD_REQUEST).entity("Please supply a user with a username and password!").build()
         }
+        else{
+            var message = ""
+            if(user.name.isNullOrBlank()){
+                message += "User's name cannot be empty! "
+            }
+            if(user.password.isNullOrBlank()) {
+                message += "User's password cannot be empty!"
+            }
+            if(message != "") {
+                return Response.status(Response.Status.BAD_REQUEST).entity(message).build()
+            }
 
-        val usersRecord =
-                database.insertInto(USERS)
-                    .set(USERS.NAME, user.name)
-                    .set(USERS.PASSWORD_HASH, "TODO HASH")
-                    .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
-                    .set(USERS.CREATED_BY_USER, authenticatedServiceUser.name)
-                    .returning(USERS.ID)
-                    .fetchOne()
+            val usersRecord =
+                    database.insertInto(USERS)
+                            .set(USERS.NAME, user.name)
+                            .set(USERS.PASSWORD_HASH, "TODO HASH")
+                            .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
+                            .set(USERS.CREATED_BY_USER, authenticatedServiceUser.name)
+                            .returning(USERS.ID)
+                            .fetchOne()
 
-        return Response
-                .status(Response.Status.OK)
-                .entity(usersRecord.id).build()
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(usersRecord.id).build()
+        }
     }
-
 
 }
