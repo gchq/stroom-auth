@@ -2,9 +2,9 @@ package stroom.auth.service.resources
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import stroom.db.auth.tables.Users
 import stroom.db.auth.tables.records.UsersRecord
 import java.sql.Timestamp
+import kotlin.reflect.full.memberProperties
 
 class UserMapperTest {
 
@@ -41,5 +41,14 @@ class UserMapperTest {
         assertThat(updatedRecord.updatedByUser).isEqualTo("New updating user")
         assertThat(updatedRecord.createdOn).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-03T00:00:00.000Z"))
         assertThat(updatedRecord.createdByUser).isEqualTo("New creating user")
+    }
+
+    @Test
+    fun updateReminder() {
+        // This test will fail if you add a property to the Users class.
+        // To make it pass you'll need to updated the count, below.
+        // It exists to remind you to add a mapping in UserMapper.
+        val currentNumberOfPropertiesOnUser = 10
+        assertThat(User::class.memberProperties.size).isEqualTo(currentNumberOfPropertiesOnUser)
     }
 }
