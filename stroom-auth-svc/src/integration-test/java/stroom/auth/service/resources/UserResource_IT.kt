@@ -122,6 +122,31 @@ class UserResource_IT: Base_IT() {
         response.assertBadRequest()
     }
 
+    @Test
+    fun create_user_with_duplicate_name() {
+        val jwsToken = login()
+        val nameToBeReused = Instant.now().toString()
+        val user = User(name = nameToBeReused, password = "testPassword")
+        val serializedUser = userMapper().toJson(user)
+        val (_, response) = ROOT_URL
+                .httpPost()
+                .body(serializedUser)
+                .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
+                .responseString()
+        response.assertOk()
+        response.assertBodyNotNull()
+
+        val duplicateUser = User(name = nameToBeReused, password = "testPassword")
+        val duplicateSerializedUser = userMapper().toJson(duplicateUser)
+        val (_, duplicateUserResponse) = ROOT_URL
+                .httpPost()
+                .body(duplicateSerializedUser)
+                .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
+                .responseString()
+
+        duplicateUserResponse.assertBadRequest()
+    }
+
 
     @Test
     fun update_user() {

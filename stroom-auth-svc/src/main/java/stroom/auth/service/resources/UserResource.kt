@@ -116,6 +116,13 @@ class UserResource(config: Config) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(message).build()
             }
 
+            val countOfSameName = database.selectCount().from(USERS).where(USERS.NAME.eq(user.name)).fetchOne(0, Int::class.java)
+            if(countOfSameName > 0) {
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity("A user with this name already exists. Please try another name.").build()
+            }
+
             val usersRecord =
                     database.insertInto(USERS)
                             .set(USERS.NAME, user.name)
