@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response
 @Produces(MediaType.APPLICATION_JSON)
 class UserResource(config: Config) {
     private var config: Config = config
-    private val LOGGER = LoggerFactory.getLogger(AuthenticationResource::class.java)
+    private val logger = LoggerFactory.getLogger(AuthenticationResource::class.java)
 
     @GET
     @Path("/")
@@ -81,17 +81,19 @@ class UserResource(config: Config) {
     @Timed
     fun createUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, user: User?) : Response {
         if(user == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Please supply a user with a username and password!").build()
+            return Response.status(Response.Status.BAD_REQUEST).entity(UserValidationError.NO_USER).build()
         }
         else{
-            var message = ""
+            var messages = ArrayList<UserValidationError>()
             if(user.name.isNullOrBlank()){
-                message += "User's name cannot be empty! "
+                messages.add(UserValidationError.NO_NAME)
             }
             if(user.password.isNullOrBlank()) {
-                message += "User's password cannot be empty!"
+                messages.add(UserValidationError.NO_PASSWORD)
             }
-            if(message != "") {
+            if(messages.size != 0) {
+                var message = ""
+                messages.forEach { message += it.message }
                 return Response.status(Response.Status.BAD_REQUEST).entity(message).build()
             }
 
@@ -147,6 +149,70 @@ class UserResource(config: Config) {
         return Response
                 .status(Response.Status.OK)
                 .entity(foundUserJson).build()
+    }
+
+    @GET
+    @Path("{id}")
+    @Timed
+    fun getUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, @PathParam("id") userId: Int) : Response {
+        val foundUserRecord = database
+                .select(
+                        USERS.ID,
+                        USERS.NAME,
+                        USERS.TOTAL_LOGIN_FAILURES,
+                        USERS.LAST_LOGIN,
+                        USERS.UPDATED_ON,
+                        USERS.UPDATED_BY_USER,
+                        USERS.CREATED_ON,
+                        USERS.CREATED_BY_USER)
+                .from(USERS)
+                .where(USERS.ID.eq(userId))
+                .fetchOne()
+
+        // We can use formatJSON() on Results (when using fetch()) but not yet on Records (when using fetchOne().
+        // The below is a work around. Something like formatJSON() should be available when using fetchOne() by Q3 2017.
+        // NB: This still means
+        // See https@ //github.com/jOOQ/jOOQ/issues/6354#issuecomment-310103896
+        val foundUserResult = database.newResult(USERS.ID,
+                USERS.NAME,
+                USERS.TOTAL_LOGIN_FAILURES,
+                USERS.LAST_LOGIN,
+                USERS.UPDATED_ON,
+                USERS.UPDATED_BY_USER,
+                USERS.CREATED_ON,
+                USERS.CREATED_BY_USER)
+        foundUserResult.add(foundUserRecord)
+        val foundUserJson = foundUserResult.formatJSON(
+                JSONFormat().header(false).recordFormat(JSONFormat.RecordFormat.OBJECT))
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(foundUserJson).build()
+    }
+
+
+    @PUT
+    @Path("{id}")
+    @Timed
+    fun updateUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, user: User, @PathParam("id") userId: Int ): Response {
+        if (user == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(UserValidationError.NO_USER).build()
+        } else {
+            if (userId == null) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(UserValidationError.MISSING_ID).build()
+            }
+
+            val usersRecord = database.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne()
+            val updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord)
+
+            database
+                    .update(USERS)
+                    .set(updatedUsersRecord)
+                    .where(USERS.ID.eq(userId))
+                    .execute()
+
+            return Response.status(Response.Status.OK).build()
+        }
     }
 
 }
