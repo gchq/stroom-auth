@@ -46,6 +46,7 @@ ext.deps = [
     flyway_core: "org.flywaydb:flyway-core:4.0.3",
     kotlin_gradle_plugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
     kotlin: "org.jetbrains.kotlin:kotlin-stdlib-jre8:$versions.kotlin",
+    kotlin_reflect: "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin",
     mariadb_connector: 'org.mariadb.jdbc:mariadb-java-client:2.0.2',
     jooq: "org.jooq:jooq:$versions.jooq",
     jooq_meta: "org.jooq:jooq-meta:$versions.jooq",
@@ -54,7 +55,7 @@ ext.deps = [
     jose4j: "org.bitbucket.b_c:jose4j:0.5.2",
     guice: "com.google.inject:guice:4.0",
     slf4j: "org.slf4j:slf4j-api:1.7.21",
-    shiro_core: "org.apache.shiro:shiro-core:$versions.shiro"
+    shiro_core: "org.apache.shiro:shiro-core:$versions.shiro",
 ]
 
 ext.testDeps = [

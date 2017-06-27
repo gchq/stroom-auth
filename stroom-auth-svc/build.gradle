@@ -100,12 +100,13 @@ dependencies {
     compile deps.slf4j
     compile deps.shiro_core
     compile deps.flyway_core
+    compile deps.kotlin_reflect
 
     runtime deps.mariadb_connector
 
     testCompile testDeps.junit
+    testCompile testDeps.assertj
 
-    integrationTestCompile testDeps.assertj
     integrationTestCompile testDeps.dropwizard_testing
     integrationTestCompile testDeps.fuel
     integrationTestCompile testDeps.moshi
