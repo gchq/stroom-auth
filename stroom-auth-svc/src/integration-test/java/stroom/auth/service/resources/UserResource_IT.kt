@@ -2,6 +2,7 @@ package stroom.auth.service.resources
 
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.fuel.httpPut
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import com.squareup.moshi.Moshi
@@ -100,6 +101,53 @@ class UserResource_IT: Base_IT() {
                 .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
                 .responseString()
         response.assertBadRequest()
+    }
+
+
+    @Test
+    fun update_user() {
+        val jwsToken = login()
+        val user = User(name = Instant.now().toString(), password = "testPassword")
+
+        // First create a user to update
+        var userId = createUser(user, jwsToken)
+        user.name = "New name"
+        val serialisedUser = userMapper().toJson(user)
+
+        val url = ROOT_URL + userId
+        val (_, updateResponse) = url
+                .httpPut()
+                .body(serialisedUser)
+                .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
+                .responseString()
+        updateResponse.assertOk()
+
+        var updatedUser = getUser(userId, jwsToken)
+        assertThat(updatedUser?.name).isEqualTo("New name")
+    }
+
+    private fun createUser(user: User, jwsToken: String): Int {
+        val serializedUser = userMapper().toJson(user)
+        val (_, creationResponse) = ROOT_URL
+                .httpPost()
+                .body(serializedUser)
+                .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
+                .responseString()
+        return Integer.parseInt(String(creationResponse.data))
+    }
+
+    private fun getUser(userId: Int, jwsToken: String) : User? {
+        val url = ROOT_URL + userId
+        val (_, response) = url
+                .httpGet()
+                .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
+                .responseString()
+        val userJson = String(response.data)
+        val users = userListMapper().fromJson(userJson)
+        if(users != null) {
+            return users[0]
+        }
+        else return null
     }
 
     private fun userListMapper(): JsonAdapter<List<User>> {
