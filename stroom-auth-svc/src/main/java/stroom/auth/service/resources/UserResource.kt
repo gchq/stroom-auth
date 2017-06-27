@@ -219,7 +219,7 @@ class UserResource(config: Config) {
 
     @PUT
     @Path("{id}")
-    @Timed
+    @Timed //TODO does this need user?
     fun updateUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, user: User, @PathParam("id") userId: Int ): Response {
         if (user == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity(UserValidationError.NO_USER).build()
@@ -239,6 +239,14 @@ class UserResource(config: Config) {
 
             return Response.status(Response.Status.OK).build()
         }
+    }
+
+    @DELETE
+    @Path("{id}")
+    @Timed
+    fun deleteUser(@Auth authenticatedServiceUser: ServiceUser, @Context database: DSLContext, @PathParam("id") userId: Int) : Response {
+        database.deleteFrom(USERS).where(USERS.ID.eq(userId)).execute()
+        return Response.status(Response.Status.OK).build()
     }
 
 }
