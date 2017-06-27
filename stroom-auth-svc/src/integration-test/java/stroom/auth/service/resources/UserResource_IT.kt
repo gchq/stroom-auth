@@ -130,7 +130,7 @@ class UserResource_IT: Base_IT() {
 
         // First create a user to update
         var userId = createUser(user, jwsToken)
-        user.name = "New name"
+        user.name = "New name" + Instant.now().toString()
         val serialisedUser = userMapper().toJson(user)
 
         val url = ROOT_URL + userId
@@ -142,7 +142,7 @@ class UserResource_IT: Base_IT() {
         updateResponse.assertOk()
 
         var updatedUser = getUser(userId, jwsToken)
-        assertThat(updatedUser?.name).isEqualTo("New name")
+        assertThat(updatedUser?.name).isEqualTo(user.name)
     }
 
     private fun createUser(user: User, jwsToken: String): Int {
