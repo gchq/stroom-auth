@@ -31,8 +31,14 @@ import io.dropwizard.configuration.SubstitutingSourceProvider
 import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.flyway.FlywayBundle
 import io.dropwizard.flyway.FlywayFactory
+import io.dropwizard.jetty.HttpConnectorFactory
+import io.dropwizard.jetty.HttpsConnectorFactory
+import io.dropwizard.lifecycle.ServerLifecycleListener
+import io.dropwizard.server.DefaultServerFactory
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
+import org.eclipse.jetty.server.HttpConnection
+import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlets.CrossOriginFilter
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature
 import stroom.auth.service.resources.AuthenticationResource
@@ -68,6 +74,8 @@ class App : Application<Config>() {
     @Throws(Exception::class)
     override fun run(config: Config, environment: Environment) {
         configureAuthentication(config, environment)
+
+        environment.lifecycle().addServerLifecycleListener(ServerLifecycleListener { server: Server? ->  })
 
         injector = Guice.createInjector(Module())
         val tokenGenerator = injector!!.getInstance(TokenGenerator::class.java)

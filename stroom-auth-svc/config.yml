@@ -98,3 +98,8 @@ jwsSecret: ${JWS_SECRET:- CHANGE_ME}
 certificateDnPattern: CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?
 loginUrl: http://localhost/login
 stroomUrl: http://localhost/stroom
+advertisedHttpHost: ${ADVERTISED_HTTP_HOST:- http://localhost}
+advertisedHttpPort: ${ADVERTISED_HTTP_PORT:- 8099}
+advertisedHttpsHost: ${ADVERTISED_HTTPS_HOST:- https://localhost}
+advertisedHttpsPort: ${ADVERTISED_HTTPS_PORT:- 8100}
+zookeeperQUorum: {$ZOOKEEPER_QUORUM:- http://localhost:2181}

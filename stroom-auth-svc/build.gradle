@@ -101,6 +101,7 @@ dependencies {
     compile deps.shiro_core
     compile deps.flyway_core
     compile deps.kotlin_reflect
+    compile deps.curator_service_discovery
 
     runtime deps.mariadb_connector
 

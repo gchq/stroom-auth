@@ -24,12 +24,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.dropwizard.Configuration
 import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.flyway.FlywayFactory
+import io.dropwizard.jetty.HttpConnectorFactory
+import io.dropwizard.jetty.HttpsConnectorFactory
+import io.dropwizard.server.DefaultServerFactory
+import org.apache.curator.retry.BoundedExponentialBackoffRetry
 import java.nio.charset.Charset
 
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 class Config : Configuration() {
+
+    lateinit var curator: Curator
 
     @Valid
     @NotNull
@@ -78,8 +84,60 @@ class Config : Configuration() {
     @get:JsonProperty
     var stroomUrl = ""
 
+    @Valid
+    @NotNull
+    @get:JsonProperty
+    var advertisedHost = ""
+
+    var httpPort: Int? = null
+        get() = (serverFactory as DefaultServerFactory).applicationConnectors
+                     .filterIsInstance<HttpConnectorFactory>()
+                     .map { it.port }
+                     .first()
+
+
+
+    var httpsPort: Int? = null
+        get() = (serverFactory as DefaultServerFactory).applicationConnectors
+                    .filterIsInstance<HttpsConnectorFactory>()
+                    .map { it.port }
+                    .first()
+
     fun jwsSecretAsBytes(): ByteArray {
         return jwsSecret.toByteArray(Charset.defaultCharset())
+    }
+
+    class Curator {
+        @Valid
+        @NotNull
+        @get:JsonProperty
+        var zookeeperQuorum = ""
+
+        @Valid
+        @NotNull
+        @get:JsonProperty
+        var baseSleepTime = 5_000
+
+        @Valid
+        @NotNull
+        @get:JsonProperty
+        var maxSleepTime = 300_000
+
+        @Valid
+        @NotNull
+        @get:JsonProperty
+        var retryLimit = 100
+
+        @Valid
+        @NotNull
+        @get:JsonProperty
+        var zookeeperBasePath = ""
+
+        var retryPolicy: BoundedExponentialBackoffRetry? = null
+            get() = BoundedExponentialBackoffRetry(
+                    this.baseSleepTime,
+                    this.maxSleepTime,
+                    this.retryLimit)
     }
 }
 
