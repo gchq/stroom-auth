@@ -1,9 +1,10 @@
 //TODO delete the actions and action types because they're not doing anything
 export const USERNAME_CHANGE = 'login/USERNAME_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
+export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
 
 const initialState = {
-  jwsToken: ''
+  token: ''
 }
 
 export default (state = initialState, action) => {
@@ -14,8 +15,20 @@ export default (state = initialState, action) => {
         username: action.username
       }
 
+    case TOKEN_CHANGE: 
+      return {
+        ...state,
+        token: action.token
+      }
     default:
       return state
+  }
+}
+
+export function changeToken(token) {
+  return {
+    type: TOKEN_CHANGE,
+    token: token
   }
 }
 
@@ -40,8 +53,9 @@ export const attempLogin = (username, password) => {
       // .then(handleErrors)
       .then(result => result.text())
       .then(token => {
-        var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
-        window.location.href = loginUrl
+        dispatch(changeToken(token))
+        // var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
+        // window.location.href = loginUrl
       })
     
     //TODO dispatch somewhere in the above. Should save the token just in case.

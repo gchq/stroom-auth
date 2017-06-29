@@ -34,7 +34,7 @@ import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-@Path("/users")
+@Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 class UserResource(config: Config) {
     private var config: Config = config
