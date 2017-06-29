@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
-import { Route, Redirect, NavLink, withRouter } from 'react-router-dom'
+import { Route, Redirect, NavLink, withRouter, Switch } from 'react-router-dom'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -19,6 +19,7 @@ import Logout from '../../containers/logout'
 import About from '../../containers/about'
 import User from '../../containers/user'
 import UserSearch from '../../containers/userSearch'
+import PathNotFound from '../../containers/pathNotFound'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
 import { goToStroom } from '../../modules/sidebar'
 
@@ -58,30 +59,36 @@ class App extends Component {
             ) : (<div/>)}
 
             <Grid item xs={10}>
-              <Route exact path="/" component={this.props.token !== '' ? UserSearch : Login} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/logout" component={Logout} />
-              <Route exact path="/about" component={About} onEnter={() => this.checkAuth()}/>
-              <Route exact path="/user" render={() => (
-                this.isLoggedIn() ? (
-                  <User />
-                ) : (
-                  // We record the referrer because Login needs it to redirect back to after a successful login.
-                  <Redirect to={{
-                    pathname: '/login',
-                    state: {referrer:'/user'}}}/>
-                )
-              )}/>
-              <Route exact path="/userSearch" render={() => (
-                this.isLoggedIn() ? (
-                  <UserSearch />
-                ) : (
-                  // We record the referrer because Login needs it to redirect back to after a successful login.
-                  <Redirect to={{
-                    pathname: '/login',
-                    state: {referrer:'/userSearch'}}}/>
-                )
-              )}/>
+              <Switch>
+                <Route exact path="/" component={this.props.token !== '' ? UserSearch : Login} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/logout" component={Logout} />
+                <Route exact path="/about" component={About}/>
+
+                <Route path="/user" render={() => (
+                  this.isLoggedIn() ? (
+                    <User />
+                  ) : (
+                    // We record the referrer because Login needs it to redirect back to after a successful login.
+                    <Redirect to={{
+                      pathname: '/login',
+                      state: {referrer:'/user'}}}/>
+                  )
+                )}/>
+
+                <Route exact path="/userSearch" render={() => (
+                  this.isLoggedIn() ? (
+                    <UserSearch />
+                  ) : (
+                    // We record the referrer because Login needs it to redirect back to after a successful login.
+                    <Redirect to={{
+                      pathname: '/login',
+                      state: {referrer:'/userSearch'}}}/>
+                  )
+                )}/>
+
+                <Route component={PathNotFound}/>
+              </Switch>
             </Grid>
           </Grid>
         </main>
