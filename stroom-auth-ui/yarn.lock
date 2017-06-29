@@ -5299,6 +5299,10 @@ react-redux@^5.0.5:
     loose-envify "^1.1.0"
     prop-types "^15.5.10"
 
+react-referer@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-referer/-/react-referer-1.0.1.tgz#cab65ea4b09a6d2c07b6bdd8f505f347ed508955"
+
 react-router-dom@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-4.1.1.tgz#3021ade1f2c160af97cf94e25594c5f294583025"

@@ -32,9 +32,8 @@ export function changeToken(token) {
   }
 }
 
-export const attempLogin = (username, password) => {
+export const attempLogin = (username, password, referer, routerHistory) => {
   return dispatch => {
-
     var loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     // Call the authentication service to get a token.
     // If successful we re-direct to Stroom, otherwise we display a message.
@@ -54,8 +53,14 @@ export const attempLogin = (username, password) => {
       .then(result => result.text())
       .then(token => {
         dispatch(changeToken(token))
-        // var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
-        // window.location.href = loginUrl
+        if(referer){
+          //TODO Redirect to referer, including authorisation header and token, as is convention.
+          var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
+          window.location.href = loginUrl
+        }
+        else{
+          routerHistory.push('/')
+        }
       })
     
     //TODO dispatch somewhere in the above. Should save the token just in case.

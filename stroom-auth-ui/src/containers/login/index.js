@@ -1,5 +1,9 @@
 import React from 'react'
 
+import PropTypes, {object} from 'prop-types'
+
+import reactReferer from 'react-referer';
+
 import { Button, Card, Input, Row, Col } from 'react-materialize'
 
 import { bindActionCreators } from 'redux'
@@ -10,14 +14,22 @@ import {attempLogin} from '../../modules/login'
 import './Login.css'
 
 class Login extends React.Component {
+  //TODO: if there's a referer then redirect to the referer after login
 
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      referer: reactReferer.referer()
     }
+
   }
+
+  login(username, password) {
+    //TODO get current page. If it's the same as referrer don't pass the referrer.
+    this.props.attempLogin(this.state.username, this.state.password, this.state.referer, this.context.router.history)
+  }      
 
   render() {
     return(
@@ -27,7 +39,7 @@ class Login extends React.Component {
             <div>
               <form>
                 <Card title='Please log in' actions={[
-                  <Button key="submitButton" type="button" waves='light' className="Login-button" onClick={ () => this.props.attempLogin(this.state.username, this.state.password)} onSubmit={ () => this.props.attempLogin}>Log in</Button>
+                  <Button key="submitButton" type="button" waves='light' className="Login-button" onClick={ () => this.login(this.props.username, this.props.password)} onSubmit={ () => this.login(this.props.username, this.props.password)}>Log in</Button>
                 ]}>
                   <Row>
                    <Input label="Username" s={12} 
@@ -46,6 +58,12 @@ class Login extends React.Component {
     )
   }
 }
+
+Login.contextTypes = {
+  router: PropTypes.shape({
+    history: object.isRequired,
+  }),
+};
 
 const mapStateToProps = state => ({
   // Nothing to save to state
