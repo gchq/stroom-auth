@@ -93,12 +93,7 @@ export const performUserSearch = (jwsToken) => {
       dispatch(showSearchLoader(false))
       dispatch(updateResults(data))
     })
-    .catch(error => handleErrors(error, dispatch))
-    //TODO show spinner
-    //TODO do fetch for data
-    console.log(";ljkhl;kh")
-
-    
+    .catch(error => handleErrors(error, dispatch))    
   }
 }
 

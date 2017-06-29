@@ -55,12 +55,15 @@ class UserResource(config: Config) {
                 .status(Response.Status.BAD_REQUEST)
                 .entity("Unknown orderBy field")
                 .build()
-        if(usersPerPage <=0 || usersPerPage >= 100) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity("usersPerPage must be between 0-100")
-                    .build()
-        }
+
+        // The validation below is disabled because we're not implementing client-side paging.
+//        if(usersPerPage <=0 || usersPerPage >= 100) {
+//            return Response
+//                    .status(Response.Status.BAD_REQUEST)
+//                    .entity("usersPerPage must be between 0-100")
+//                    .build()
+//        }
+
         if(database.select(USERS.ID).from(USERS).fetch().isEmpty()) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
