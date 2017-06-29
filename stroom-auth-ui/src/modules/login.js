@@ -32,7 +32,7 @@ export function changeToken(token) {
   }
 }
 
-export const attempLogin = (username, password, referer, routerHistory) => {
+export const attempLogin = (username, password, referrer) => {
   return dispatch => {
     var loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     // Call the authentication service to get a token.
@@ -53,16 +53,14 @@ export const attempLogin = (username, password, referer, routerHistory) => {
       .then(result => result.text())
       .then(token => {
         dispatch(changeToken(token))
-        if(referer){
-          //TODO Redirect to referer, including authorisation header and token, as is convention.
+        if(referrer === "stroom"){
+          //TODO use authorisation header
           var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
           window.location.href = loginUrl
         }
         else{
-          routerHistory.push('/')
+          // TODO redirect to the root of the user service
         }
-      })
-    
-    //TODO dispatch somewhere in the above. Should save the token just in case.
+      })    
   }
 }

@@ -1,8 +1,6 @@
 import React from 'react'
-
 import PropTypes, {object} from 'prop-types'
-
-import reactReferer from 'react-referer';
+import queryString from 'query-string'
 
 import { Button, Card, Input, Row, Col } from 'react-materialize'
 
@@ -14,21 +12,18 @@ import {attempLogin} from '../../modules/login'
 import './Login.css'
 
 class Login extends React.Component {
-  //TODO: if there's a referer then redirect to the referer after login
 
   constructor(props, context) {
     super(props, context)
     this.state = {
       username: '',
       password: '',
-      referer: reactReferer.referer()
     }
-
   }
 
   login(username, password) {
-    //TODO get current page. If it's the same as referrer don't pass the referrer.
-    this.props.attempLogin(this.state.username, this.state.password, this.state.referer, this.context.router.history)
+    const parsed = queryString.parse(this.props.location.search);
+    this.props.attempLogin(this.state.username, this.state.password, parsed.referrer)
   }      
 
   render() {
