@@ -33,7 +33,7 @@ class UserMapperTest {
         usersRecord.id = 1
         usersRecord.email = "email"
         usersRecord.passwordHash = "hash"
-        usersRecord.state = 0
+        usersRecord.state = "enabled"
         usersRecord.firstName = "first name"
         usersRecord.lastName = "last name"
         usersRecord.comments = "comments"
@@ -49,7 +49,7 @@ class UserMapperTest {
         user.id = 2
         user.email = "new email"
         user.password_hash = "new hash"
-        user.state = 1
+        user.state = "disabled"
         user.first_name = "new first name"
         user.last_name = "new last name"
         user.comments = "new comments"
@@ -65,7 +65,7 @@ class UserMapperTest {
         assertThat(updatedRecord.id).isEqualTo(2)
         assertThat(updatedRecord.email).isEqualTo("new email")
         assertThat(updatedRecord.passwordHash).isEqualTo("new hash")
-        assertThat(updatedRecord.state).isEqualTo(1)
+        assertThat(updatedRecord.state).isEqualTo("disabled")
         assertThat(updatedRecord.firstName).isEqualTo("new first name")
         assertThat(updatedRecord.lastName).isEqualTo("new last name")
         assertThat(updatedRecord.comments).isEqualTo("new comments")

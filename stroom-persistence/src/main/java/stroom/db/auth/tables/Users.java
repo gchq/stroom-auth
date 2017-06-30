@@ -36,7 +36,7 @@ import stroom.db.auth.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = -43891023;
+    private static final long serialVersionUID = 197801977;
 
     /**
      * The reference instance of <code>auth.users</code>
@@ -69,7 +69,7 @@ public class Users extends TableImpl<UsersRecord> {
     /**
      * The column <code>auth.users.state</code>.
      */
-    public final TableField<UsersRecord, Integer> STATE = createField("state", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+    public final TableField<UsersRecord, String> STATE = createField("state", org.jooq.impl.SQLDataType.VARCHAR.length(10).defaultValue(org.jooq.impl.DSL.field("enabled", org.jooq.impl.SQLDataType.VARCHAR)), this, "");
 
     /**
      * The column <code>auth.users.first_name</code>.

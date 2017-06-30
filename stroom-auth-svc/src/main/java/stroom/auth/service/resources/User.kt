@@ -32,7 +32,7 @@ class User {
     var last_name: String? = null
     var comments: String? = null
     var email: String? = null
-    var state: Int? = null
+    var state: String? = null
     var password: String? = null
     var password_hash: String? = null
     var login_failures: Int? = null
