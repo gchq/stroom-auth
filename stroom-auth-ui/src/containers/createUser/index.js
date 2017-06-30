@@ -8,6 +8,7 @@ import FlatButton from 'material-ui/FlatButton'
 import { MenuItem } from 'material-ui/Menu'
 import { SelectField, TextField } from 'redux-form-material-ui'
 
+import UserFields from '../userFields'
 import './CreateUserForm.css'
 import { onSubmit } from '../../modules/user'
 import { required, email } from '../../validations'
@@ -19,66 +20,14 @@ const UserCreateForm = props => {
       <div>
         <h2>Please enter the details of the new user</h2>
         <form onSubmit={handleSubmit}>
+          <UserFields/>
           <div>
-            <Field 
-              className="CreateUserForm-field"
-              name="email"
-              component={TextField}
-              hintText="Email"
-              validate={[required]}
-              warn={email}
-            />
-          </div>
-          <div>
-            <Field
-              className="CreateUserForm-field"
-              name="password"
-              component={TextField}
-              hintText="Password"
-              validate={[required]}
-            />
-          </div>
-          <div>
-            <Field
-              className="CreateUserForm-field"
-              name="first_name"
-              component={TextField}
-              hintText="First Name"
-            />
-          </div>
-          <div>
-            <Field
-              className="CreateUserForm-field"
-              name="last_name"
-              component={TextField}
-              hintText="Last Name"
-            />
-          </div>
-          <div>
-            <Field
-              className="CreateUserForm-field"
-              name="comments"
-              component={TextField}
-              hintText="Comments"
-            />
-          </div>
-
-          <div>
-            <Field name="state" component={ SelectField } hintText="The state of this user account">
-              <MenuItem value="enabled" primaryText="Enabled"/>
-              <MenuItem value="disabled" primaryText="Disabled"/>
-              <MenuItem value="locked" primaryText="Locked"/>
-            </Field>
-          </div>
-
-          <div>
-            <FlatButton 
-              color="primary" className="User-button" 
-              disabled={pristine || submitting}
-              type="submit">
-                Save changes to user
-            </FlatButton>
-    
+          <FlatButton 
+            color="primary" className="User-button" 
+            disabled={pristine || submitting}
+            type="submit">
+              Create the user
+          </FlatButton>
           </div>
         </form>
       </div>

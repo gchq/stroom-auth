@@ -22,6 +22,7 @@ import User from '../../containers/user'
 import UserSearch from '../../containers/userSearch'
 import PathNotFound from '../../containers/pathNotFound'
 import UserCreateForm from '../../containers/createUser'
+import UserEditForm from '../../containers/editUser'
 //import EditUser from '../../containers/editUser'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
 import { goToStroom } from '../../modules/sidebar'
@@ -77,7 +78,7 @@ class App extends Component {
 
                 <Route exact path="/user/:userId" render={(route) => (
                   this.isLoggedIn() ? (
-                    <User userId={route.match.params.userId}/>
+                    <UserEditForm userId={route.match.params.userId}/>
                   ) : (
                     // We record the referrer because Login needs it to redirect back to after a successful login.
                     <Redirect to={{
