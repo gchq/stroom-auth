@@ -97,8 +97,39 @@ export function showLoader(showLoader){
   }
 }
 
-export const attempLogin = (email, password, referrer) => {
+// export const attempLogin = (email, password, referrer) => {
+//   return dispatch => {
+//     // We're re-attempting a login so we should remove any old errors
+//     dispatch(errorRemove())
+
+//     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
+//     dispatch(showLoader(true))
+
+//     var loginServiceUrl = process.env.REACT_APP_LOGIN_URL
+//     // Call the authentication service to get a token.
+//     // If successful we re-direct to Stroom, otherwise we display a message.
+//     fetch(loginServiceUrl, {
+//       headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json'
+//       },
+//       method: 'post',
+//       mode: 'cors',
+//       body: JSON.stringify({
+//         email,
+//         password
+//       })
+//     })
+//       .then(handleStatus)
+//       .then(getBody)
+//       .then(jwsToken => processToken(jwsToken, dispatch, referrer))
+//       .catch(error => handleErrors(error, dispatch))
+//   }
+// }
+
+export const onSubmit = (credentials) => {
   return dispatch => {
+    const { email, password } = credentials
     // We're re-attempting a login so we should remove any old errors
     dispatch(errorRemove())
 
@@ -122,7 +153,8 @@ export const attempLogin = (email, password, referrer) => {
     })
       .then(handleStatus)
       .then(getBody)
-      .then(jwsToken => processToken(jwsToken, dispatch, referrer))
+      // .then(jwsToken => processToken(jwsToken, dispatch, referrer))
+      .then(jwsToken => processToken(jwsToken, dispatch, null))
       .catch(error => handleErrors(error, dispatch))
   }
 }

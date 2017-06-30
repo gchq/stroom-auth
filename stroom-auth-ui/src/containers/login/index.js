@@ -2,66 +2,84 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes, {object} from 'prop-types'
+import { Field, reduxForm } from 'redux-form'
 
 import Card, { CardActions, CardContent } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 
-// import Typography from 'material-ui/Typography'
-import CircularProgress from 'material-ui/CircularProgress';
-import TextField from 'material-ui/TextField'
-// import Grid from 'material-ui/Grid'
+import CircularProgress from 'material-ui/CircularProgress'
+import { TextField } from 'redux-form-material-ui'
 
-
+import { required, email } from '../../validations'
 import {attempLogin} from '../../modules/login'
+import { onSubmit } from '../../modules/login'
 
 import './Login.css'
 
-class Login extends Component {
+// class Login extends Component {
+const LoginForm = props => {
 
-  constructor(props, context) {
-    super(props, context)
-    // Try and get the referrer, or if there isn't one use '/'. E.g. one might use the following to set the referrer.
-    // <Redirect to={{
-    //    pathname: '/login',
-    //    state: {referrer:'/user'}}}/>
-    const referrer = this.context.router.history.location.state !== undefined ? this.context.router.history.location.state.referrer : ''
+  // constructor(props, context) {
+  //   super(props, context)
+  //   // Try and get the referrer, or if there isn't one use '/'. E.g. one might use the following to set the referrer.
+  //   // <Redirect to={{
+  //   //    pathname: '/login',
+  //   //    state: {referrer:'/user'}}}/>
+  //   const referrer = this.context.router.history.location.state !== undefined ? this.context.router.history.location.state.referrer : ''
 
-    this.state = {
-      email: '',
-      password: '',
-      referrer
-    }
-  }
+  //   this.state = {
+  //     email: '',
+  //     password: '',
+  //     referrer
+  //   }
+  // }
 
-  login(email, password) {
-    this.props.attempLogin(this.state.email, this.state.password, this.state.referrer)
-  }
+  // login(email, password) {
+  //   this.props.attempLogin(this.state.email, this.state.password, this.state.referrer)
+  // }
+  const {handleSubmit, pristine, submitting } = props
 
-  render() {
-    const isLoggedIn = this.props.token !== ''
- 
     return (
-
           <Card className='Login-card'>
-            { isLoggedIn ? (
-                <Card title='You are already logged in. Why not try going somewhere else?' />
-              ) : (
-            <form>
+            <form onSubmit={handleSubmit}>
 
                   <p>
                   Please log in</p>
                 <br/>
-                <TextField label="Email" className='User-loginForm'
+                  <Field 
+                    className="User-loginForm"
+                    name="email"
+                    component={TextField}
+                    hintText="Email"
+                    validate={[required]}
+                    warn={email}
+                  />
+
+                  <Field 
+                    className="User-loginForm"
+                    name="password"
+                    component={TextField}
+                    hintText="Password"
+                    validate={[required]}
+                  />
+                {/*<TextField label="Email" className='User-loginForm'
                   value={this.state.email} 
                   onChange={ (e) => this.setState({email: e.target.value})}/>
 
                 <TextField type="password" label="Password" 
                   value={this.state.password} 
-                  onChange={ (e) => this.setState({password: e.target.value})}/>
+                  onChange={ (e) => this.setState({password: e.target.value})}/>*/}
 
 
               <CardActions>
-                <FlatButton color="primary" className="User-button" 
+                <FlatButton 
+                  color="primary" className="User-button" 
+                  disabled={pristine || submitting}
+                  type="submit">
+                    Log in
+                </FlatButton>
+
+                {/*<FlatButton color="primary" className="User-button" 
                   onClick={ () => this.login(this.props.email, this.props.password)} 
                   onSubmit={ () => this.login(this.props.email, this.props.password)}>
                     Log in
@@ -71,24 +89,26 @@ class Login extends Component {
                     <div color='error'><p> {this.props.errorText}</p></div>
                 ) : (
                   <div/>
-                )}
+                )}*/}
               </CardActions>
 
             </form>
-            )}
           </Card>
-
     )
   }
-}
 
-Login.contextTypes = {
+const ReduxLoginForm = reduxForm({
+  form: 'LoginForm'
+})(LoginForm)
+
+
+LoginForm.contextTypes = {
   router: PropTypes.shape({
     history: object.isRequired,
   }),
 }
 
-Login.propTypes ={
+LoginForm.propTypes ={
   token: PropTypes.string.isRequired,
   errorStatus: PropTypes.number,
   errorText: PropTypes.string,
@@ -104,9 +124,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   attempLogin,
+  onSubmit
 }, dispatch)
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login)
+)(ReduxLoginForm)
