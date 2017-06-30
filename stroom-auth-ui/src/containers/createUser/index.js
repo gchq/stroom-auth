@@ -3,85 +3,85 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Field, reduxForm } from 'redux-form'
 
-import Card, { CardActions, CardContent } from 'material-ui/Card'
-import TextField from 'material-ui/TextField'
+import Card from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
+import { MenuItem } from 'material-ui/Menu'
+import { SelectField, TextField } from 'redux-form-material-ui'
 
-import { onSubmit } from '../../modules/user'
 import './CreateUserForm.css'
+import { onSubmit } from '../../modules/user'
 import { required, email } from '../../validations'
-import { renderInput, renderUserStateMenu } from '../../fieldRenderers'
-import UserStateMenu from '../userStateMenu'
 
 const UserCreateForm = props => {
-  const {handleSubmit, pristine, reset, submitting } = props
+  const {handleSubmit, pristine, submitting } = props
   return (
     <Card className="CreateUserForm-card">
       <div>
-<h2>          Please enter the details of the new user</h2>
-    <form onSubmit={handleSubmit}>
-      <div>
-        <Field 
-          className="CreateUserForm-field"
-          name="email"
-          component={renderInput}
-          label="Email"
-          validate={[required]}
-          warn={email}
-        />
-      </div>
-      <div>
-        <Field
-          className="CreateUserForm-field"
-          name="password"
-          component={renderInput}
-          label=""
-          validate={[required]}
-        />
-      </div>
-      <div>
-        <Field
-          className="CreateUserForm-field"
-          name="first_name"
-          component={renderInput}
-          label="First Name"
-        />
-      </div>
-      <div>
-        <Field
-          className="CreateUserForm-field"
-          name="last_name"
-          component={renderInput}
-          label="Last Name"
-        />
-      </div>
-      <div>
-        <Field
-          className="CreateUserForm-field"
-          name="comments"
-          component={renderInput}
-          label="Comments"
-        />
-      </div>
-      <div>
-        <Field
-          className="CreateUserForm-field"
-          name="state"
-          component={renderUserStateMenu}
-          label="State"/>
-      </div>
+        <h2>Please enter the details of the new user</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <Field 
+              className="CreateUserForm-field"
+              name="email"
+              component={TextField}
+              hintText="Email"
+              validate={[required]}
+              warn={email}
+            />
+          </div>
+          <div>
+            <Field
+              className="CreateUserForm-field"
+              name="password"
+              component={TextField}
+              hintText="Password"
+              validate={[required]}
+            />
+          </div>
+          <div>
+            <Field
+              className="CreateUserForm-field"
+              name="first_name"
+              component={TextField}
+              hintText="First Name"
+            />
+          </div>
+          <div>
+            <Field
+              className="CreateUserForm-field"
+              name="last_name"
+              component={TextField}
+              hintText="Last Name"
+            />
+          </div>
+          <div>
+            <Field
+              className="CreateUserForm-field"
+              name="comments"
+              component={TextField}
+              hintText="Comments"
+            />
+          </div>
 
-      <div>
-        <FlatButton 
-          color="primary" className="User-button" 
-          disabled={pristine || submitting}
-          type="submit">
-            Save changes to user
-        </FlatButton>
- 
+          <div>
+            <Field name="state" component={ SelectField } hintText="The state of this user account">
+              <MenuItem value="enabled" primaryText="Enabled"/>
+              <MenuItem value="disabled" primaryText="Disabled"/>
+              <MenuItem value="locked" primaryText="Locked"/>
+            </Field>
+          </div>
+
+          <div>
+            <FlatButton 
+              color="primary" className="User-button" 
+              disabled={pristine || submitting}
+              type="submit">
+                Save changes to user
+            </FlatButton>
+    
+          </div>
+        </form>
       </div>
-    </form>
-    </div>
     </Card>
   )
 }
