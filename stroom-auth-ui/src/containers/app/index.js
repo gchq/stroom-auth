@@ -20,6 +20,7 @@ import About from '../../containers/about'
 import User from '../../containers/user'
 import UserSearch from '../../containers/userSearch'
 import PathNotFound from '../../containers/pathNotFound'
+//import EditUser from '../../containers/editUser'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
 import { goToStroom } from '../../modules/sidebar'
 
@@ -65,9 +66,20 @@ class App extends Component {
                 <Route exact path="/logout" component={Logout} />
                 <Route exact path="/about" component={About}/>
 
-                <Route path="/user" render={() => (
+                <Route exact path="/user" render={() => (
                   this.isLoggedIn() ? (
                     <User />
+                  ) : (
+                    // We record the referrer because Login needs it to redirect back to after a successful login.
+                    <Redirect to={{
+                      pathname: '/login',
+                      state: {referrer:'/user'}}}/>
+                  )
+                )}/>
+
+                <Route exact path="/user/:userId" render={(route) => (
+                  this.isLoggedIn() ? (
+                    <User userId={route.match.params.userId}/>
                   ) : (
                     // We record the referrer because Login needs it to redirect back to after a successful login.
                     <Redirect to={{

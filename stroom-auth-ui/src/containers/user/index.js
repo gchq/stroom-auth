@@ -12,7 +12,7 @@ import { Input } from 'react-materialize'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import {attemptCreate} from '../../modules/user'
+import {attemptCreate, loadUser, saveChanges} from '../../modules/user'
 
 import './User.css'
 
@@ -26,15 +26,35 @@ class User extends React.Component {
     }
   }
 
-  render() {
+  componentDidUpdate(){
+    console.log("CDU")
+  }
+
+  render(props) {
+    var isEditing = false
+    if(this.props && this.props.userId){
+      isEditing = true
+      this.state.username = ''
+      this.state.username = ''
+      //TODO: dispatch to get the user
+      //TODO: clear state
+    }
+   
     return (
       <Card >
         <form>
 
           <CardContent>
-            <Typography type="headline" component="h2">
-              Please enter the details of the new user
-            </Typography>
+            {isEditing ? (
+              <Typography type="headline" component="h2">
+                Update the user's details below
+              </Typography>
+            ) : (
+              <Typography type="headline" component="h2">
+                Please enter the details of the new user
+              </Typography>
+            )}
+
             <br/>
             <Input label="Username" className='User-loginForm'
               value={this.state.username} 
@@ -47,10 +67,17 @@ class User extends React.Component {
 
           <CardActions>
             <Divider/>
-            <Button color="primary" className="User-button" 
-              onClick={ () => this.props.attemptCreate(this.state.username, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
-                Create user
-            </Button>
+            {isEditing ? (
+              <Button color="primary" className="User-button" 
+                onClick={ () => this.props.saveChanges(this.state.username, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
+                  Save changes to user
+              </Button>
+            ) : (
+              <Button color="primary" className="User-button" 
+                onClick={ () => this.props.attemptCreate(this.state.username, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
+                  Create user
+              </Button>
+            )}
             {this.props.showCreateLoader ? (<CircularProgress/>) : (<div/>)}
             {this.props.errorText !== '' ? (
                 <div color='error'><p> {this.props.errorText}</p></div>
@@ -67,12 +94,15 @@ class User extends React.Component {
 const mapStateToProps = state => ({
   token: state.login.token,
   showCreateLoader: state.user.showCreateLoader,
+  username: state.user.username,
+  password: state.user.password,
   errorStatus: state.user.errorStatus,
   errorText: state.user.errorText,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   attemptCreate,
+  saveChanges
 }, dispatch)
 
 export default connect(

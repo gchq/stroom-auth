@@ -109,6 +109,18 @@ export const attemptCreate = (name, password, jwsToken) => {
   }
 }
 
+export const saveChanges = (name, password, jwsToken) => {
+  return dispatch => {
+    console.log("TODO: save changes")
+  }
+}
+
+export const loadUser = (userId, jwsToken) => {
+  return dispatch => {
+    //TODO load the user and put it into the store
+  }
+}
+
 function handleStatus(response) {
   if(response.status === 200){
     return Promise.resolve(response)
