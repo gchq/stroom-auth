@@ -17,7 +17,7 @@ TODO: add password change facility
 */
 
 const UserFields = props => {
-  const {showCalculatedFields } = props
+  const { showCalculatedFields } = props
   return (
       <div className="container">
           <div className="left-container">
@@ -40,12 +40,12 @@ const UserFields = props => {
                 <label>Password</label>
               </div>
               <div className="input-container">
-                <TextField
-                  disabled={true}
-                  value={"placeholder"}
+                <Field
                   className="CreateUserForm-field"
                   name="password"
                   type="password"
+                  component={TextField}
+                  validate={[required]}
                 />
               </div>
             </div>
