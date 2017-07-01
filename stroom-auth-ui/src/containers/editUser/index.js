@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, {object} from 'prop-types'
 
 import UserEditUi from './UserEditUi'
 import { fetchUser } from '../../modules/user'
@@ -14,7 +14,7 @@ class UserEditForm extends Component {
   }
 
   async componentDidMount() {
-    const userId = this.props.userId
+    const userId = this.context.router.route.match.params.userId
     this.context.store.dispatch(fetchUser(userId))
 
     //TODO get user from API and put into store
@@ -29,7 +29,10 @@ class UserEditForm extends Component {
 }
 
 UserEditForm.contextTypes = {
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
+  router: PropTypes.shape({
+    history: object.isRequired,
+  }),
 }
 
 export default UserEditForm
