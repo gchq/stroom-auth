@@ -1,7 +1,8 @@
 
 # ---- Base Node ----
-FROM alpine:3.5 AS base
-RUN apk add --no-cache nodejs-current tini
+FROM alpine:3.6 AS base
+RUN apk add --no-cache nodejs-current yarn tini
+RUN yarn global add serve
 WORKDIR /root/app
 # Set tini as entrypoint
 ENTRYPOINT ["/sbin/tini", "--"]
@@ -9,7 +10,7 @@ ENTRYPOINT ["/sbin/tini", "--"]
 # ---- Dependencies ----
 FROM base AS dependencies
 COPY package.json package.json
-RUN npm install
+RUN yarn install
 
 
 # ---- Build ----
@@ -18,12 +19,11 @@ COPY --from=dependencies /root/app/node_modules /root/app/node_modules
 COPY src src
 COPY public public
 COPY .env.production .env.production
-RUN npm run build
+RUN yarn build
 
 
 # ---- Release ----
 FROM base AS release
-RUN npm install -g serve
 COPY --from=build /root/app/build/. .
 EXPOSE 5000
-CMD serve -s .
+CMD serve --single --cors .
