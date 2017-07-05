@@ -5,7 +5,7 @@ import { Button, Card, Input, Row, Col } from 'react-materialize'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import {attempLogin} from './modules/login'
+import {attempLogin} from '../../modules/login'
 
 import './Login.css'
 
