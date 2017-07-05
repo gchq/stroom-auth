@@ -4,8 +4,8 @@ import { Route } from 'react-router-dom'
 
 import './App.css'
 import logo from './logo.png'
-import Login from './containers/login'
-import About from './containers/about'
+import Login from '../../containers/login'
+import About from '../../containers/about'
 
 
 class App extends Component {
