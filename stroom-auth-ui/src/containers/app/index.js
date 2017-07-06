@@ -6,7 +6,7 @@ import './App.css'
 import logo from './logo.png'
 import Login from '../../containers/login'
 import About from '../../containers/about'
-
+import User from '../../containers/user'
 
 class App extends Component {
 
@@ -22,6 +22,7 @@ class App extends Component {
         <main>
           <Route exact path="/login/" component={Login} />
           <Route exact path="/login/about-us" component={About} />
+          <Route exact path="/login/user" component={User} />
         </main>
       </div>
     )

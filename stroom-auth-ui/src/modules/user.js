@@ -1,17 +1,22 @@
-//TODO delete the actions and action types because they're not doing anything
-export const USERNAME_CHANGE = 'login/USERNAME_CHANGE'
-export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
+export const CREATE_REQUEST = 'user/CREATE_REQUEST'
+export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
 
 const initialState = {
-  jwsToken: ''
+  user: '',
+  password: ''
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case USERNAME_CHANGE:
+    case CREATE_REQUEST:
       return {
         ...state,
-        username: action.username
+        //TODO mark something as 'creating'
+      }
+    case CREATE_RESPONSE:
+      return {
+        ...state
+        //TODO change creating to 'created' or something similar
       }
 
     default:
@@ -19,13 +24,14 @@ export default (state = initialState, action) => {
   }
 }
 
-export const attempLogin = (username, password) => {
+export const attemptCreate = (username, password) => {
   return dispatch => {
+    // Do a POST of the data to create a thing.
 
-    var loginServiceUrl = process.env.REACT_APP_LOGIN_URL
+    var userServiceUrl = process.env.REACT_APP_USER_URL
     // Call the authentication service to get a token.
     // If successful we re-direct to Stroom, otherwise we display a message.
-    fetch(loginServiceUrl, {
+    fetch(userServiceUrl, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -39,9 +45,9 @@ export const attempLogin = (username, password) => {
     })
       // .then(handleErrors)
       .then(result => result.text())
-      .then(token => {
-        var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
-        window.location.href = loginUrl
+      .then(whatsThisGoingToBe => {
+        //TODO dispatch the ending action to disable the spinner
+        console.log(whatsThisGoingToBe)
       })
     
     //TODO dispatch somewhere in the above. Should save the token just in case.
