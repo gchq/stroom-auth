@@ -7,6 +7,8 @@ import { Button, Card, Input, Row, Col } from 'react-materialize'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
+import reactReferer from 'react-referer'
+
 import {attempLogin} from '../../modules/login'
 
 import './Login.css'
@@ -18,12 +20,13 @@ class Login extends React.Component {
     this.state = {
       username: '',
       password: '',
+      referrer: this.context.router.history.location.state !== undefined ? this.context.router.history.location.state.referrer : ''
     }
   }
 
   login(username, password) {
     const parsed = queryString.parse(this.props.location.search);
-    this.props.attempLogin(this.state.username, this.state.password, parsed.referrer)
+    this.props.attempLogin(this.state.username, this.state.password, this.state.referrer)
   }      
 
   render() {

@@ -37,7 +37,9 @@ class App extends Component {
             this.isLoggedIn(router) ? (
               <User />
             ) : (
-              <Redirect to="/login"/>
+              <Redirect to={{
+                pathname: '/login',
+                state: {referrer:'/user'}}}/>
             )
           )}/>
         </main>
@@ -52,8 +54,6 @@ App.propTypes ={
   token: PropTypes.string.isRequired
 }
 
-
-
 const mapStateToProps = state => ({
   token: state.login.token
 })
@@ -65,6 +65,3 @@ export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
 )(App))
-
-// export default App
-

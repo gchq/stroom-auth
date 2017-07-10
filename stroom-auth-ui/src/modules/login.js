@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux'
+
 export const USERNAME_CHANGE = 'login/USERNAME_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
 export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
@@ -57,8 +59,11 @@ export const attempLogin = (username, password, referrer) => {
           var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
           window.location.href = loginUrl
         }
-        else{
-          // TODO redirect to the root of the user service
+        else if(referrer === "") {
+          dispatch(push('/'))
+        }
+        else {
+          dispatch(push(referrer))
         }
       })    
   }
