@@ -37,6 +37,7 @@ class App extends Component {
             this.isLoggedIn(router) ? (
               <User />
             ) : (
+              // We record the referrer because Login needs it to redirect back to after a successful login.
               <Redirect to={{
                 pathname: '/login',
                 state: {referrer:'/user'}}}/>

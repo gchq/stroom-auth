@@ -20,12 +20,12 @@ class Login extends React.Component {
     this.state = {
       username: '',
       password: '',
+      // Try and get the referrer, or if there isn't one use '/'
       referrer: this.context.router.history.location.state !== undefined ? this.context.router.history.location.state.referrer : ''
     }
   }
 
   login(username, password) {
-    const parsed = queryString.parse(this.props.location.search);
     this.props.attempLogin(this.state.username, this.state.password, this.state.referrer)
   }      
 
@@ -37,7 +37,11 @@ class Login extends React.Component {
             <div>
               <form>
                 <Card title='Please log in' actions={[
-                  <Button key="submitButton" type="button" waves='light' className="Login-button" onClick={ () => this.login(this.props.username, this.props.password)} onSubmit={ () => this.login(this.props.username, this.props.password)}>Log in</Button>
+                  <Button key="submitButton" type="button" waves='light' className="Login-button" 
+                    onClick={ () => this.login(this.props.username, this.props.password)} 
+                    onSubmit={ () => this.login(this.props.username, this.props.password)}>
+                      Log in
+                  </Button>
                 ]}>
                   <Row>
                    <Input label="Username" s={12} 
