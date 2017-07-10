@@ -20,7 +20,10 @@ class Login extends React.Component {
     this.state = {
       username: '',
       password: '',
-      // Try and get the referrer, or if there isn't one use '/'
+      // Try and get the referrer, or if there isn't one use '/'. E.g. one might use the following to set the referrer.
+      // <Redirect to={{
+      //    pathname: '/login',
+      //    state: {referrer:'/user'}}}/>
       referrer: this.context.router.history.location.state !== undefined ? this.context.router.history.location.state.referrer : ''
     }
   }
