@@ -61,7 +61,6 @@ Login.contextTypes = {
 };
 
 const mapStateToProps = state => ({
-  // Nothing to save to state
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

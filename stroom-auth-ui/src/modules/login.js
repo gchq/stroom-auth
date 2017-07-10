@@ -1,4 +1,3 @@
-//TODO delete the actions and action types because they're not doing anything
 export const USERNAME_CHANGE = 'login/USERNAME_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
 export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
