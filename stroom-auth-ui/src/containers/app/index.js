@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Row, Col, Navbar, NavItem } from 'react-materialize'
+import { Navbar } from 'react-materialize'
 import { Route, Redirect, NavLink, withRouter } from 'react-router-dom'
 
 import { bindActionCreators } from 'redux'
@@ -9,8 +9,10 @@ import { connect } from 'react-redux'
 import './App.css'
 import logo from './logo.png'
 import Login from '../../containers/login'
+import Logout from '../../containers/logout'
 import About from '../../containers/about'
 import User from '../../containers/user'
+import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
 
 const applicationRoot = '/login'
 
@@ -25,13 +27,13 @@ class App extends Component {
       <div className="App">
         <Navbar brand={<img src={logo} className="App-logo" alt="Stroom logo" />} right className="App-header">
           <li><NavLink to="user">User</NavLink></li>
-          <li><NavLink to="login">Login</NavLink></li>
-          <li><NavLink to="about">About</NavLink></li>
+          <li><LogOutAndInNavLink/></li>
         </Navbar>
         
         
         <main>
           <Route exact path="/login" component={Login} />
+          <Route exact path="/logout" component={Logout} />
           <Route exact path="/about" component={About} onEnter={() => this.checkAuth()}/>
           <Route exact path="/user" render={(router) => (
             this.isLoggedIn(router) ? (
@@ -51,7 +53,7 @@ class App extends Component {
 
 App.contextTypes = { store: PropTypes.object };
 
-App.propTypes ={
+App.propTypes = {
   token: PropTypes.string.isRequired
 }
 

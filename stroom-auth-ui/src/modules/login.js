@@ -3,6 +3,7 @@ import { push } from 'react-router-redux'
 export const USERNAME_CHANGE = 'login/USERNAME_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
 export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
+export const DELETE_TOKEN = 'login/DELETE_TOKEN'
 
 const initialState = {
   token: ''
@@ -20,6 +21,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         token: action.token
+      }
+    case DELETE_TOKEN:
+      return {
+        ...state,
+        token: ''
       }
     default:
       return state
@@ -53,7 +59,7 @@ export const attempLogin = (username, password, referrer) => {
       // .then(handleErrors)
       .then(result => result.text())
       .then(token => {
-        dispatch(changeToken(token))
+        dispatch(changeToken(token))        
         if(referrer === "stroom"){
           //TODO use authorisation header
           var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
@@ -67,4 +73,16 @@ export const attempLogin = (username, password, referrer) => {
         }
       })    
   }
+}
+
+export function deleteToken() {
+  return {
+    type: DELETE_TOKEN
+  }
+}
+
+export const logout = () => {
+    return dispatch => {
+      dispatch(deleteToken())
+    }
 }
