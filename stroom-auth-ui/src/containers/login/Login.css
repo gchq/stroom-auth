@@ -5,3 +5,7 @@
 .Login-error {
     color: #FF4747;
 }
+
+.Login-submitButtonRow {
+    margin-bottom: 0px;
+}

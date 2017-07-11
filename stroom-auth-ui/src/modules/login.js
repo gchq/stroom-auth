@@ -7,11 +7,13 @@ export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
 export const TOKEN_DELETE = 'login/TOKEN_DELETE'
 export const ERROR_ADD = 'login/ERROR_ADD'
 export const ERROR_REMOVE = 'login/ERROR_REMOVE'
+export const SHOW_LOADER = 'login/SHOW_LOADER'
 
 const initialState = {
   token: '',
-  errorStatus: '',
-  errorText: ''
+  errorStatus: -1,
+  errorText: '',
+  showLoader: false
 }
 
 export default (state = initialState, action) => {
@@ -41,8 +43,13 @@ export default (state = initialState, action) => {
     case ERROR_REMOVE:
       return {
         ...state,
-        errorStatus: '',
+        errorStatus: -1,
         errorText: ''
+      }
+    case SHOW_LOADER:
+      return {
+        ...state,
+        showLoader: action.showLoader
       }
     default:
       return state
@@ -83,10 +90,20 @@ export function errorRemove(){
   }
 }
 
+export function showLoader(showLoader){
+  return {
+    type: SHOW_LOADER,
+    showLoader
+  }
+}
+
 export const attempLogin = (username, password, referrer) => {
   return dispatch => {
     // We're re-attempting a login so we should remove any old errors
     dispatch(errorRemove())
+
+    // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
+    dispatch(showLoader(true))
 
     var loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     // Call the authentication service to get a token.
@@ -123,21 +140,23 @@ function getBody(response) {
 }
 
 function processToken(token, dispatch, referrer){
-  dispatch(changeToken(token))        
-        if(referrer === "stroom"){
-          //TODO use authorisation header
-          var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
-          window.location.href = loginUrl
-        }
-        else if(referrer === "") {
-          dispatch(push('/'))
-        }
-        else {
-          dispatch(push(referrer))
-        }
+  dispatch(changeToken(token))
+  dispatch(showLoader(false))        
+  if(referrer === "stroom"){
+    //TODO use authorisation header
+    var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
+    window.location.href = loginUrl
+  }
+  else if(referrer === "") {
+    dispatch(push('/'))
+  }
+  else {
+    dispatch(push(referrer))
+  }
 }
 
 function handleErrors(error, dispatch) {
+  dispatch(showLoader(false))
   if(error.status === 401){
     dispatch(errorAdd(error.status, 'Those credentials are not valid. Please try again.'))
   }

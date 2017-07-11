@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router'
 import PropTypes, {object} from 'prop-types'
 import queryString from 'query-string'
 
-import { Button, Card, Input, Row, Col } from 'react-materialize'
+import { Button, Card, Input, Row, Col, Preloader } from 'react-materialize'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -43,16 +43,24 @@ class Login extends Component {
           <Col s={4} />
           <Col s={4}>
             <div>
-              {isLoggedIn ? (
+              { isLoggedIn ? (
                 <Card title='You are already logged in. Why not try going somewhere else?' />
               ) : (
                 <form>
                   <Card title='Please log in' actions={[
-                    <Button key="submitButton" type="button" waves='light' className="Login-button" 
-                      onClick={ () => this.login(this.props.username, this.props.password)} 
-                      onSubmit={ () => this.login(this.props.username, this.props.password)}>
-                        Log in
-                    </Button>
+                    <Row className="Login-submitButtonRow" key="submitButton">
+                      <Col s={6}>
+                        <Button type="button" waves='light' className="Login-button" 
+                          onClick={ () => this.login(this.props.username, this.props.password)} 
+                          onSubmit={ () => this.login(this.props.username, this.props.password)}>
+                            Log in
+                        </Button>
+                      </Col>
+                      <Col s={4}>
+                        {this.props.showLoader ? (<Preloader size='small'/>) : (<div/>)}
+                      </Col>
+                    </Row>
+
                   ]}>
                     <Row>
                       <Input label="Username" s={12} 
@@ -87,13 +95,17 @@ Login.contextTypes = {
 }
 
 Login.propTypes ={
-  token: PropTypes.string.isRequired
+  token: PropTypes.string.isRequired,
+  errorStatus: PropTypes.number,
+  errorTest: PropTypes.string,
+  showLoader: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
     token: state.login.token,
     errorStatus: state.login.errorStatus,
-    errorText: state.login.errorText
+    errorText: state.login.errorText,
+    showLoader: state.login.showLoader
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
