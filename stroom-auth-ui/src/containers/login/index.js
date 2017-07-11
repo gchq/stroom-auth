@@ -62,10 +62,16 @@ class Login extends Component {
                       <Input type="password" label="Password" s={12} 
                         value={this.state.password} onChange={ (e) => this.setState({password: e.target.value})}/>
                     </Row>
+                    {this.props.errorText !== '' ? (
+                      <Row>
+                        <div className="Login-error"><p> {this.props.errorText}</p></div>
+                      </Row>
+                    ) : (
+                      <div/>
+                    )}
                   </Card>
                 </form>
               )}
-              
             </div>
              </Col>
           <Col s={1} />
@@ -85,7 +91,9 @@ Login.propTypes ={
 }
 
 const mapStateToProps = state => ({
-    token: state.login.token
+    token: state.login.token,
+    errorStatus: state.login.errorStatus,
+    errorText: state.login.errorText
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

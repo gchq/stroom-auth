@@ -1,3 +1,7 @@
 .Login-button {
     background-color: #1e88e5;
 }
+
+.Login-error {
+    color: #FF4747;
+}

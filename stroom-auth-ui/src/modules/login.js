@@ -58,6 +58,9 @@ export function changeToken(token) {
 
 export const attempLogin = (username, password, referrer) => {
   return dispatch => {
+    // We're re-attempting a login so we should remove any old errors
+    dispatch(errorRemove())
+    
     var loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     // Call the authentication service to get a token.
     // If successful we re-direct to Stroom, otherwise we display a message.
@@ -110,7 +113,7 @@ function processToken(token, dispatch, referrer){
 function handleErrors(error, dispatch) {
   if(error.status === 401){
     //TODO dispatch login error
-    dispatch(errorAdd(error.status, 'Those credentials were not accepted. Please try again.'))
+    dispatch(errorAdd(error.status, 'Those credentials are not valid. Please try again.'))
   }
   else { 
     dispatch(errorAdd(error.status, error.message))
