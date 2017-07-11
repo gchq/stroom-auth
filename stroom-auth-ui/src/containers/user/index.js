@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Card, Input, Row, Col } from 'react-materialize'
+import { Button, Card, Input, Row, Col, Preloader } from 'react-materialize'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -54,10 +54,17 @@ class User extends React.Component {
               <div>
                 <form>
                   <Card title='Please enter the details of the new user' actions={[
-                    <Button key="submitButton" type="button" waves='light' className="Login-button" 
-                      onClick={ () => this.props.attemptCreate(this.state.username, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
-                        Create user
-                    </Button>
+                    <Row key="submitButton" >  
+                      <Col s={6}>
+                        <Button type="button" waves='light' className="Login-button" 
+                          onClick={ () => this.props.attemptCreate(this.state.username, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
+                            Create user
+                        </Button>
+                      </Col>
+                      <Col s={4}>
+                        {this.props.showCreateLoader ? (<Preloader size='small'/>) : (<div/>)}
+                      </Col>
+                    </Row>
                   ]}>
                     <Row>
                       <Input label="Username" s={12} 
@@ -78,7 +85,8 @@ class User extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  token: state.login.token
+  token: state.login.token,
+  showCreateLoader: state.user.showCreateLoader
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
