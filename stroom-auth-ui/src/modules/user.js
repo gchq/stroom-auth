@@ -98,10 +98,10 @@ export const attemptCreate = (name, password, jwsToken) => {
       })
       .then(handleStatus)
       .then(getBody)
-      .then(whatsThisGoingToBe => {
+      .then(newUserId => {
         dispatch(showCreateLoader(false))
-        //TODO dispatch the ending action to disable the spinner
-        console.log(whatsThisGoingToBe)
+        //TODO Redirect to the editing page, using the ID in the response.
+        console.log(newUserId)
       })
       .catch(error => handleErrors(error, dispatch))
     
