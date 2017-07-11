@@ -74,6 +74,13 @@ class User extends React.Component {
                       <Input type="password" label="Password" s={12} 
                         value={this.state.password} onChange={ (e) => this.setState({password: e.target.value})}/>
                     </Row>
+                    {this.props.errorText !== '' ? (
+                      <Row key="errorText">
+                        <div className="Login-error"><p> {this.props.errorText}</p></div>
+                      </Row>
+                    ) : (
+                      <div/>
+                    )}
                   </Card>
                 </form>
               </div>
@@ -86,7 +93,9 @@ class User extends React.Component {
 
 const mapStateToProps = state => ({
   token: state.login.token,
-  showCreateLoader: state.user.showCreateLoader
+  showCreateLoader: state.user.showCreateLoader,
+  errorStatus: state.user.errorStatus,
+  errorText: state.user.errorText,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

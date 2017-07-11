@@ -97,7 +97,7 @@ Login.contextTypes = {
 Login.propTypes ={
   token: PropTypes.string.isRequired,
   errorStatus: PropTypes.number,
-  errorTest: PropTypes.string,
+  errorText: PropTypes.string,
   showLoader: PropTypes.bool
 }
 

@@ -66,8 +66,17 @@ export function errorAdd(status, text){
   }
 }
 
+export function errorRemove(){
+  return {
+    type: ERROR_REMOVE
+  }
+}
+
 export const attemptCreate = (name, password, jwsToken) => {
   return dispatch => {
+    // We're re-attempting a login so we should remove any old errors
+    dispatch(errorRemove())
+
     dispatch(showCreateLoader(true))
 
 
@@ -88,7 +97,7 @@ export const attemptCreate = (name, password, jwsToken) => {
         })
       })
       .then(handleStatus)
-      .then(result => result.text())
+      .then(getBody)
       .then(whatsThisGoingToBe => {
         dispatch(showCreateLoader(false))
         //TODO dispatch the ending action to disable the spinner
@@ -103,9 +112,16 @@ export const attemptCreate = (name, password, jwsToken) => {
 function handleStatus(response) {
   if(response.status === 200){
     return Promise.resolve(response)
-  } else {
+  } else if(response.status == 409) {
+    return Promise.reject(new HttpError(response.status, 'This user already exists - please use a different username.'))
+  }
+  else {
     return Promise.reject(new HttpError(response.status, response.statusText))
   }
+}
+
+function getBody(response) {
+  return response.text()
 }
 
 function handleErrors(error, dispatch) {
