@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
   }
 }
 
-export const attemptCreate = (username, password) => {
+export const attemptCreate = (name, password, jwsToken) => {
   return dispatch => {
     // Do a POST of the data to create a thing.
 
@@ -34,12 +34,13 @@ export const attemptCreate = (username, password) => {
     fetch(userServiceUrl, {
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
       },
       method: 'post',
       mode: 'cors',
       body: JSON.stringify({
-        username,
+        name,
         password
       })
     })

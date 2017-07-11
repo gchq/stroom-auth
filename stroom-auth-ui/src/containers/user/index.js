@@ -54,7 +54,10 @@ class User extends React.Component {
               <div>
                 <form>
                   <Card title='Please enter the details of the new user' actions={[
-                    <Button key="submitButton" type="button" waves='light' className="Login-button" onClick={ () => this.props.attemptCreate(this.state.username, this.state.password)} onSubmit={ () => this.props.attemptCreate}>Create user</Button>
+                    <Button key="submitButton" type="button" waves='light' className="Login-button" 
+                      onClick={ () => this.props.attemptCreate(this.state.username, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
+                        Create user
+                    </Button>
                   ]}>
                     <Row>
                       <Input label="Username" s={12} 
@@ -75,6 +78,7 @@ class User extends React.Component {
 }
 
 const mapStateToProps = state => ({
+  token: state.login.token
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
