@@ -1,15 +1,12 @@
 import React, { Component } from 'react'
-import { Route, Redirect } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes, {object} from 'prop-types'
-import queryString from 'query-string'
 
 import Card, { CardActions, CardContent } from 'material-ui/Card'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 import { CircularProgress } from 'material-ui/Progress'
-import Divider from 'material-ui/Divider'
 import { Input } from 'react-materialize'
 import Grid from 'material-ui/Grid'
 

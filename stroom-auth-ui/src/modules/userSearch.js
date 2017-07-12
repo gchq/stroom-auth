@@ -77,7 +77,7 @@ export const performUserSearch = (jwsToken) => {
     dispatch(errorRemove())
     dispatch(showSearchLoader(true))
 
-    var userSearchUrl = process.env.REACT_APP_USER_URL + '/?fromUsername=&usersPerPage=10&orderBy=id'
+    var userSearchUrl = process.env.REACT_APP_USER_URL + '/?fromUsername=&usersPerPage=100&orderBy=id'
     fetch(userSearchUrl, {
       headers: {
         'Accept': 'application/json',

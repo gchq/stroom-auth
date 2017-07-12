@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
-import { Route, Redirect, NavLink, withRouter, Link } from 'react-router-dom'
+import { Route, Redirect, NavLink, withRouter } from 'react-router-dom'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import AppBar from 'material-ui/AppBar'
 import Grid from 'material-ui/Grid'
-import Toolbar from 'material-ui/Toolbar';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+import Toolbar from 'material-ui/Toolbar'
+import List, { ListItem, ListItemText } from 'material-ui/List'
+import Divider from 'material-ui/Divider'
 import Paper from 'material-ui/Paper'
 
 import './App.css'
@@ -20,8 +20,6 @@ import About from '../../containers/about'
 import User from '../../containers/user'
 import UserSearch from '../../containers/userSearch'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
-
-
 import { goToStroom } from '../../modules/sidebar'
 
 class App extends Component {

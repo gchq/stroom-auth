@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import { withStyles, createStyleSheet } from 'material-ui/styles'
-import Card, { CardActions, CardContent } from 'material-ui/Card'
 import Paper from 'material-ui/Paper'
 import { CircularProgress } from 'material-ui/Progress'
-import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 
 import ReactTable from 'react-table'
