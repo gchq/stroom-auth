@@ -112,7 +112,7 @@ export const attemptCreate = (name, password, jwsToken) => {
 function handleStatus(response) {
   if(response.status === 200){
     return Promise.resolve(response)
-  } else if(response.status == 409) {
+  } else if(response.status === 409) {
     return Promise.reject(new HttpError(response.status, 'This user already exists - please use a different username.'))
   }
   else {

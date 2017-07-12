@@ -1,10 +1,16 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Navbar } from 'react-materialize'
+import PropTypes, { object } from 'prop-types'
 import { Route, Redirect, NavLink, withRouter } from 'react-router-dom'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+
+import AppBar from 'material-ui/AppBar'
+import Grid from 'material-ui/Grid'
+import Toolbar from 'material-ui/Toolbar';
+import List, { ListItem, ListItemText } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper'
 
 import './App.css'
 import logo from './logo.png'
@@ -15,9 +21,6 @@ import User from '../../containers/user'
 import UserSearch from '../../containers/userSearch'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
 
-
-const applicationRoot = '/login'
-
 class App extends Component {
 
   isLoggedIn(router){
@@ -27,44 +30,70 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Navbar brand={<img src={logo} className="App-logo" alt="Stroom logo" />} right className="App-header">
-          <li><NavLink to="user">Create a user</NavLink></li>
-          <li><NavLink to="userSearch">Search for users</NavLink></li>
-          <li><LogOutAndInNavLink/></li>
-        </Navbar>
-        
-        
+        <AppBar position="static" className="App-header" color="primary">
+          <Toolbar >
+            <img src={logo} className="App-logo" alt="Stroom logo"/>
+          </Toolbar>
+        </AppBar>
+
         <main>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/logout" component={Logout} />
-          <Route exact path="/about" component={About} onEnter={() => this.checkAuth()}/>
-          <Route exact path="/user" render={(router) => (
-            this.isLoggedIn(router) ? (
-              <User />
-            ) : (
-              // We record the referrer because Login needs it to redirect back to after a successful login.
-              <Redirect to={{
-                pathname: '/login',
-                state: {referrer:'/user'}}}/>
-            )
-          )}/>
-          <Route exact path="/userSearch" render={(router) => (
-            this.isLoggedIn(router) ? (
-              <UserSearch />
-            ) : (
-              // We record the referrer because Login needs it to redirect back to after a successful login.
-              <Redirect to={{
-                pathname: '/login',
-                state: {referrer:'/userSearch'}}}/>
-            )
-          )}/>
+          <Grid className='App-leftNav' container justify="center">
+            {this.props.token !== '' ? (
+            <Grid item xs={2}>
+                <Paper>
+                  <List>
+                    <NavLink to='user'>
+                      <ListItem button><ListItemText primary="Create a user" /></ListItem>
+                    </NavLink>
+                    <NavLink to='userSearch'>
+                      <ListItem button><ListItemText primary="List users" /></ListItem>
+                    </NavLink>
+                    <Divider/>
+                    <LogOutAndInNavLink/>
+                  </List>
+                </Paper>
+            </Grid>
+            ) : (<div/>)}
+
+            <Grid item xs={10}>
+              <Route exact path="/" component={this.props.token !== '' ? UserSearch : Login} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/logout" component={Logout} />
+              <Route exact path="/about" component={About} onEnter={() => this.checkAuth()}/>
+              <Route exact path="/user" render={(router) => (
+                this.isLoggedIn(router) ? (
+                  <User />
+                ) : (
+                  // We record the referrer because Login needs it to redirect back to after a successful login.
+                  <Redirect to={{
+                    pathname: '/login',
+                    state: {referrer:'/user'}}}/>
+                )
+              )}/>
+              <Route exact path="/userSearch" render={(router) => (
+                this.isLoggedIn(router) ? (
+                  <UserSearch />
+                ) : (
+                  // We record the referrer because Login needs it to redirect back to after a successful login.
+                  <Redirect to={{
+                    pathname: '/login',
+                    state: {referrer:'/userSearch'}}}/>
+                )
+              )}/>
+            </Grid>
+          </Grid>
         </main>
       </div>
     )
   }
 }
 
-App.contextTypes = { store: PropTypes.object };
+App.contextTypes = { 
+  store: PropTypes.object,
+  router: PropTypes.shape({
+    history: object.isRequired,
+  }),
+}
 
 App.propTypes = {
   token: PropTypes.string.isRequired

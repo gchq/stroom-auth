@@ -8,8 +8,6 @@ import { Button, Card, Input, Row, Col, Preloader } from 'react-materialize'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import reactReferer from 'react-referer'
-
 import {attempLogin} from '../../modules/login'
 
 import './Login.css'

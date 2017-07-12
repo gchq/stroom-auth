@@ -13,3 +13,8 @@
 .App-intro {
   font-size: large;
 }
+
+.App-leftNav{
+  height:600px;
+  padding:10px;
+}

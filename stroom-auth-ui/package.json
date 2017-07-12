@@ -6,6 +6,8 @@
   "dependencies": {
     "create-react-class": "^15.5.3",
     "global": "^4.3.2",
+    "material-ui": "^1.0.0-alpha.21",
+    "material-ui-icons": "^1.0.0-alpha.19",
     "prop-types": "^15.5.10",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
@@ -15,6 +17,7 @@
     "react-router-dom": "^4.1.1",
     "react-router-redux": "next",
     "react-table": "^6.4.0",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.7.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
