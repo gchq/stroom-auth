@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import Card, { CardActions, CardContent } from 'material-ui/Card'
+import Paper from 'material-ui/Paper'
 import { CircularProgress } from 'material-ui/Progress'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
@@ -47,7 +48,14 @@ class UserSearch extends Component {
 
   render() {
     return (
-          <Card>
+          <Paper className='UserSearch-main'>
+            <Typography type="headline" component="h2">
+              This is a list of all stored users
+            </Typography>
+            <Typography type="body1">
+              It excludes those who might have logged in using certificates or LDAP credentials.
+            </Typography>
+            <br/>
             {this.props.showSearchLoader ? (
               <CircularProgress/>
             ) : (
@@ -56,7 +64,7 @@ class UserSearch extends Component {
               columns={columns}
               showPagination={false}/>
             )}
-          </Card>    
+          </Paper>    
     )
   }
 }
