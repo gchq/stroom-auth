@@ -52,7 +52,7 @@ class User extends React.Component {
             </Button>
             {this.props.showCreateLoader ? (<CircularProgress/>) : (<div/>)}
             {this.props.errorText !== '' ? (
-                <div className="User-error"><p> {this.props.errorText}</p></div>
+                <div color='error'><p> {this.props.errorText}</p></div>
             ) : (
               <div/>
             )}

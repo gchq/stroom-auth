@@ -5,3 +5,7 @@
 .Login-submitButtonRow {
     margin-bottom: 0px;
 }
+
+.Login-card {
+    width: 300px;
+}

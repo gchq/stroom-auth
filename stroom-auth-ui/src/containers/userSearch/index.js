@@ -1,27 +1,22 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, Preloader } from 'react-materialize'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+
+import { withStyles, createStyleSheet } from 'material-ui/styles'
+import Card, { CardActions, CardContent } from 'material-ui/Card'
+import { CircularProgress } from 'material-ui/Progress'
+import Button from 'material-ui/Button'
+import Typography from 'material-ui/Typography'
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 
 import { performUserSearch } from '../../modules/userSearch'
-
-const data = [{
-    id: '1',
-    name: 'SomeGuy',
-    totalLoginFailures: 5,
-    lastLogin: '2017-01-01', 
-    updatedOn: '2017-01-02', 
-    updatedBy: 'anAdmin', 
-    createdOn: '2017-01-03', 
-    createdBy: 'anotherAdmin'
-  }]
+import './UserSearch.css'
 
 const columns = [{
   Header: 'Id',
-  accessor: 'id' 
+  accessor: 'id'
 }, {
   Header: 'Name',
   accessor: 'name'
@@ -52,27 +47,16 @@ class UserSearch extends Component {
 
   render() {
     return (
-      <Row>
-        <Col s={1}/>
-        <Col s={12}>
           <Card>
             {this.props.showSearchLoader ? (
-               <Row>
-                <Col s={6}/>
-                <Col s={2}><Preloader size='big'/></Col>
-                <Col s={5}/>
-              </Row>
-              ) : (
-                <ReactTable
-                data={this.props.results}
-                columns={columns}/>
-              )
-            }
-
-          </Card>
-        </Col>
-        <Col s={1}/>
-      </Row>
+              <CircularProgress/>
+            ) : (
+              <ReactTable
+              data={this.props.results}
+              columns={columns}
+              showPagination={false}/>
+            )}
+          </Card>    
     )
   }
 }

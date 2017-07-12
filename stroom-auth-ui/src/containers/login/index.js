@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import PropTypes, {object} from 'prop-types'
 import queryString from 'query-string'
 
-import { Button, Card, Input, Row, Col, Preloader } from 'react-materialize'
-
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import Card, { CardActions, CardContent } from 'material-ui/Card'
+import Button from 'material-ui/Button'
+import Typography from 'material-ui/Typography'
+import { CircularProgress } from 'material-ui/Progress'
+import Divider from 'material-ui/Divider'
+import { Input } from 'react-materialize'
+import Grid from 'material-ui/Grid'
 
 import {attempLogin} from '../../modules/login'
 
@@ -37,51 +42,50 @@ class Login extends Component {
     const isLoggedIn = this.props.token !== ''
  
     return (
-      <Row>
-          <Col s={4} />
-          <Col s={4}>
-            <div>
-              { isLoggedIn ? (
+      <Grid container>
+        <Grid item xs={4}/>
+        <Grid item xs={4}>
+          <Card className='Login-card'>
+            { isLoggedIn ? (
                 <Card title='You are already logged in. Why not try going somewhere else?' />
               ) : (
-                <form>
-                  <Card title='Please log in' actions={[
-                    <Row className="Login-submitButtonRow" key="submitButton">
-                      <Col s={6}>
-                        <Button type="button" waves='light' className="Login-button" 
-                          onClick={ () => this.login(this.props.username, this.props.password)} 
-                          onSubmit={ () => this.login(this.props.username, this.props.password)}>
-                            Log in
-                        </Button>
-                      </Col>
-                      <Col s={4}>
-                        {this.props.showLoader ? (<Preloader size='small'/>) : (<div/>)}
-                      </Col>
-                    </Row>
+            <form>
 
-                  ]}>
-                    <Row>
-                      <Input label="Username" s={12} 
-                        value={this.state.username} onChange={ (e) => this.setState({username: e.target.value})}/>
-                    </Row>
-                    <Row>
-                      <Input type="password" label="Password" s={12} 
-                        value={this.state.password} onChange={ (e) => this.setState({password: e.target.value})}/>
-                    </Row>
-                    {this.props.errorText !== '' ? (
-                      <Row>
-                        <div color="error"><p> {this.props.errorText}</p></div>
-                      </Row>
-                    ) : (
-                      <div/>
-                    )}
-                  </Card>
-                </form>
-              )}
-            </div>
-             </Col>
-          <Col s={1} />
-      </Row>
+              <CardContent>
+                <Typography type="headline" component="h2">
+                  Please log in
+                </Typography>
+                <br/>
+                <Input label="Username" className='User-loginForm'
+                  value={this.state.username} 
+                  onChange={ (e) => this.setState({username: e.target.value})}/>
+
+                <Input type="password" label="Password" 
+                  value={this.state.password} 
+                  onChange={ (e) => this.setState({password: e.target.value})}/>
+
+              </CardContent>
+
+              <CardActions>
+                <Button color="primary" className="User-button" 
+                  onClick={ () => this.login(this.props.username, this.props.password)} 
+                  onSubmit={ () => this.login(this.props.username, this.props.password)}>
+                    Log in
+                </Button>
+                {this.props.showCreateLoader ? (<CircularProgress/>) : (<div/>)}
+                {this.props.errorText !== '' ? (
+                    <div color='error'><p> {this.props.errorText}</p></div>
+                ) : (
+                  <div/>
+                )}
+              </CardActions>
+
+            </form>
+            )}
+          </Card>
+        </Grid>
+        <Grid item xs={4}/>
+      </Grid>
     )
   }
 }
