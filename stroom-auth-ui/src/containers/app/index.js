@@ -45,10 +45,10 @@ class App extends Component {
             <Grid item xs={2}>
                 <Paper>
                   <List>
-                    <NavLink to='user'>
+                    <NavLink to='/user'>
                       <ListItem button><ListItemText primary="Create a user" /></ListItem>
                     </NavLink>
-                    <NavLink to='userSearch'>
+                    <NavLink to='/userSearch'>
                       <ListItem button><ListItemText primary="List users" /></ListItem>
                     </NavLink>
                     <ListItem button onClick={() => this.props.goToStroom(this.props.token)}><ListItemText primary="Go to Stroom" /></ListItem>

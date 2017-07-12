@@ -1,3 +1,4 @@
+import { push } from 'react-router-redux'
 import { HttpError } from '../ErrorTypes'
 
 export const CREATE_REQUEST = 'user/CREATE_REQUEST'
@@ -100,8 +101,7 @@ export const attemptCreate = (name, password, jwsToken) => {
       .then(getBody)
       .then(newUserId => {
         dispatch(showCreateLoader(false))
-        //TODO Redirect to the editing page, using the ID in the response.
-        console.log(newUserId)
+        dispatch(push(`/user/${newUserId}`))
       })
       .catch(error => handleErrors(error, dispatch))
     
@@ -128,7 +128,7 @@ function handleErrors(error, dispatch) {
   dispatch(showCreateLoader(false))
   if(error.status === 401){
     //TODO: Consider logging the user out here - their token might be invalid.
-    dispatch(errorAdd(error.status, 'Could not authentication. Please try logging in again.'))
+    dispatch(errorAdd(error.status, 'Could not authenticate. Please try logging in again.'))
   }
   else { 
     dispatch(errorAdd(error.status, error.message))

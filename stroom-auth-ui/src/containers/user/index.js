@@ -57,9 +57,7 @@ class User extends React.Component {
             ) : (
               <div/>
             )}
-            <p>TODO: Include creation confirmation here?</p>
           </CardActions>
-
         </form>
       </Card>
     )

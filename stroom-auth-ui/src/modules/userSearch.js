@@ -121,7 +121,7 @@ function handleErrors(error, dispatch) {
   dispatch(showSearchLoader(false))
   if(error.status === 401){
     //TODO: Consider logging the user out here - their token might be invalid.
-    dispatch(errorAdd(error.status, 'Could not authentication. Please try logging in again.'))
+    dispatch(errorAdd(error.status, 'Could not authenticate. Please try logging in again.'))
   }
   else { 
     dispatch(errorAdd(error.status, error.message))
