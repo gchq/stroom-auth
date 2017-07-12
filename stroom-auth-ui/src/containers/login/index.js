@@ -70,7 +70,7 @@ class Login extends Component {
                     </Row>
                     {this.props.errorText !== '' ? (
                       <Row>
-                        <div className="Login-error"><p> {this.props.errorText}</p></div>
+                        <div color="error"><p> {this.props.errorText}</p></div>
                       </Row>
                     ) : (
                       <div/>
