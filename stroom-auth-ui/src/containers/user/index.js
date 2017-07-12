@@ -35,6 +35,7 @@ class User extends React.Component {
             <Typography type="headline" component="h2">
               Please enter the details of the new user
             </Typography>
+            <br/>
             <Input label="Username" className='User-loginForm'
               value={this.state.username} 
               onChange={ (e) => this.setState({username: e.target.value})}/>

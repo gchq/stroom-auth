@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
-import { Route, Redirect, NavLink, withRouter } from 'react-router-dom'
+import { Route, Redirect, NavLink, withRouter, Link } from 'react-router-dom'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -21,9 +21,12 @@ import User from '../../containers/user'
 import UserSearch from '../../containers/userSearch'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
 
+
+import { goToStroom } from '../../modules/sidebar'
+
 class App extends Component {
 
-  isLoggedIn(router){
+  isLoggedIn(){
     return this.props.token ? true : false
   }
 
@@ -48,6 +51,7 @@ class App extends Component {
                     <NavLink to='userSearch'>
                       <ListItem button><ListItemText primary="List users" /></ListItem>
                     </NavLink>
+                    <ListItem button onClick={() => this.props.goToStroom(this.props.token)}><ListItemText primary="Go to Stroom" /></ListItem>
                     <Divider/>
                     <LogOutAndInNavLink/>
                   </List>
@@ -60,8 +64,8 @@ class App extends Component {
               <Route exact path="/login" component={Login} />
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/about" component={About} onEnter={() => this.checkAuth()}/>
-              <Route exact path="/user" render={(router) => (
-                this.isLoggedIn(router) ? (
+              <Route exact path="/user" render={() => (
+                this.isLoggedIn() ? (
                   <User />
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
@@ -70,8 +74,8 @@ class App extends Component {
                     state: {referrer:'/user'}}}/>
                 )
               )}/>
-              <Route exact path="/userSearch" render={(router) => (
-                this.isLoggedIn(router) ? (
+              <Route exact path="/userSearch" render={() => (
+                this.isLoggedIn() ? (
                   <UserSearch />
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
@@ -104,6 +108,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+  goToStroom
 }, dispatch)
 
 export default withRouter(connect(
