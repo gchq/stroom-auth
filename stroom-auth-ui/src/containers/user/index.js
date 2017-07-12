@@ -4,9 +4,6 @@ import { Button, Card, Input, Row, Col, Preloader } from 'react-materialize'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
-
 import {attemptCreate} from '../../modules/user'
 
 import './User.css'

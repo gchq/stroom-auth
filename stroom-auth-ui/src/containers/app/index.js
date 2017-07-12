@@ -12,7 +12,9 @@ import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import About from '../../containers/about'
 import User from '../../containers/user'
+import UserSearch from '../../containers/userSearch'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
+
 
 const applicationRoot = '/login'
 
@@ -26,7 +28,8 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar brand={<img src={logo} className="App-logo" alt="Stroom logo" />} right className="App-header">
-          <li><NavLink to="user">User</NavLink></li>
+          <li><NavLink to="user">Create a user</NavLink></li>
+          <li><NavLink to="userSearch">Search for users</NavLink></li>
           <li><LogOutAndInNavLink/></li>
         </Navbar>
         
@@ -43,6 +46,16 @@ class App extends Component {
               <Redirect to={{
                 pathname: '/login',
                 state: {referrer:'/user'}}}/>
+            )
+          )}/>
+          <Route exact path="/userSearch" render={(router) => (
+            this.isLoggedIn(router) ? (
+              <UserSearch />
+            ) : (
+              // We record the referrer because Login needs it to redirect back to after a successful login.
+              <Redirect to={{
+                pathname: '/login',
+                state: {referrer:'/userSearch'}}}/>
             )
           )}/>
         </main>
