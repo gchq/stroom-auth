@@ -27,22 +27,22 @@ const columns = [{
   accessor: 'name'
 }, {
   Header: 'Total login failures',
-  accessor: 'totalLoginFailures'
+  accessor: 'total_login_failures'
 }, {
   Header: 'Last login',
-  accessor: 'lastLogin'
+  accessor: 'last_ogin'
 }, {
   Header: 'Updated on',
-  accessor: 'updatedOn'
+  accessor: 'updated_on'
 }, {
   Header: 'Updated by',
-  accessor: 'updatedBy'
+  accessor: 'updated_by_user'
 }, {
   Header: 'Created on',
-  accessor: 'createdOn'
+  accessor: 'created_on'
 }, {
   Header: 'Created by',
-  accessor: 'createdBy'
+  accessor: 'created_by_user'
 }]
 
 class UserSearch extends Component {
@@ -64,7 +64,7 @@ class UserSearch extends Component {
               </Row>
               ) : (
                 <ReactTable
-                data={data}
+                data={this.props.results}
                 columns={columns}/>
               )
             }
@@ -80,8 +80,9 @@ class UserSearch extends Component {
 const mapStateToProps = state => ({
   token: state.login.token,
   showSearchLoader: state.userSearch.showSearchLoader,
+  results: state.userSearch.results,
   errorStatus: state.user.errorStatus,
-  errorText: state.user.errorText,
+  errorText: state.user.errorText
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
