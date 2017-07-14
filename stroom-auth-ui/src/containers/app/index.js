@@ -13,7 +13,7 @@ import Divider from 'material-ui/Divider'
 import Paper from 'material-ui/Paper'
 
 import './App.css'
-import logo from './logo.png'
+import logo from './logo.svg'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import About from '../../containers/about'
