@@ -13,30 +13,32 @@ import { performUserSearch } from '../../modules/userSearch'
 import './UserSearch.css'
 
 const columns = [{
-  Header: 'Id',
+  Header: 'Actions',
   accessor: 'id'
 }, {
   Header: 'Email',
   accessor: 'email'
 }, {
-  Header: 'Total login failures',
-  accessor: 'total_login_failures'
+  Header: 'State',
+  accessor: 'state'
 }, {
   Header: 'Last login',
   accessor: 'last_ogin'
 }, {
-  Header: 'Updated on',
-  accessor: 'updated_on'
+  Header: 'Login failures',
+  accessor: 'login_failures'
 }, {
   Header: 'Updated by',
   accessor: 'updated_by_user'
 }, {
-  Header: 'Created on',
-  accessor: 'created_on'
+  Header: 'Updated',
+  accessor: 'updated_on'
 }, {
-  Header: 'Created by',
-  accessor: 'created_by_user'
+  Header: 'Comments',
+  accessor: 'comments'
 }]
+
+//email, state, last login, login failures, updated by, updated dt, comments, possibly name
 
 class UserSearch extends Component {
   componentDidMount() {
