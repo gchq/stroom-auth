@@ -77,7 +77,7 @@ export const performUserSearch = (jwsToken) => {
     dispatch(errorRemove())
     dispatch(showSearchLoader(true))
 
-    var userSearchUrl = process.env.REACT_APP_USER_URL + '/?fromUsername=&usersPerPage=100&orderBy=id'
+    var userSearchUrl = process.env.REACT_APP_USER_URL + '/?fromEmail=&usersPerPage=100&orderBy=id'
     fetch(userSearchUrl, {
       headers: {
         'Accept': 'application/json',
@@ -101,7 +101,7 @@ function handleStatus(response) {
   if(response.status === 200){
     return Promise.resolve(response)
   } else if(response.status === 409) {
-    return Promise.reject(new HttpError(response.status, 'This user already exists - please use a different username.'))
+    return Promise.reject(new HttpError(response.status, 'This user already exists - please use a different email address.'))
   }
   else {
     return Promise.reject(new HttpError(response.status, response.statusText))

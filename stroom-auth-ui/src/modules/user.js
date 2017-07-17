@@ -73,7 +73,7 @@ export function errorRemove(){
   }
 }
 
-export const attemptCreate = (name, password, jwsToken) => {
+export const attemptCreate = (email, password, jwsToken) => {
   return dispatch => {
     // We're re-attempting a login so we should remove any old errors
     dispatch(errorRemove())
@@ -93,7 +93,7 @@ export const attemptCreate = (name, password, jwsToken) => {
         method: 'post',
         mode: 'cors',
         body: JSON.stringify({
-          name,
+          email,
           password
         })
       })
@@ -109,7 +109,7 @@ export const attemptCreate = (name, password, jwsToken) => {
   }
 }
 
-export const saveChanges = (name, password, jwsToken) => {
+export const saveChanges = (email, password, jwsToken) => {
   return dispatch => {
     console.log("TODO: save changes")
   }
@@ -125,7 +125,7 @@ function handleStatus(response) {
   if(response.status === 200){
     return Promise.resolve(response)
   } else if(response.status === 409) {
-    return Promise.reject(new HttpError(response.status, 'This user already exists - please use a different username.'))
+    return Promise.reject(new HttpError(response.status, 'This user already exists - please use a different email address.'))
   }
   else {
     return Promise.reject(new HttpError(response.status, response.statusText))

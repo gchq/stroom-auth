@@ -21,7 +21,7 @@ class User extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: '',
+      email: '',
       password: ''
     }
   }
@@ -34,8 +34,8 @@ class User extends React.Component {
     var isEditing = false
     if(this.props && this.props.userId){
       isEditing = true
-      this.state.username = ''
-      this.state.username = ''
+      this.state.email = ''
+      this.state.password = ''
       //TODO: dispatch to get the user
       //TODO: clear state
     }
@@ -56,9 +56,9 @@ class User extends React.Component {
             )}
 
             <br/>
-            <Input label="Username" className='User-loginForm'
-              value={this.state.username} 
-              onChange={ (e) => this.setState({username: e.target.value})}/>
+            <Input label="Email" className='User-loginForm'
+              value={this.state.email} 
+              onChange={ (e) => this.setState({email: e.target.value})}/>
 
             <Input type="password" label="Password" 
               value={this.state.password} 
@@ -69,12 +69,12 @@ class User extends React.Component {
             <Divider/>
             {isEditing ? (
               <Button color="primary" className="User-button" 
-                onClick={ () => this.props.saveChanges(this.state.username, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
+                onClick={ () => this.props.saveChanges(this.state.email, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
                   Save changes to user
               </Button>
             ) : (
               <Button color="primary" className="User-button" 
-                onClick={ () => this.props.attemptCreate(this.state.username, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
+                onClick={ () => this.props.attemptCreate(this.state.email, this.state.password, this.props.token)} onSubmit={ () => this.props.attemptCreate}>
                   Create user
               </Button>
             )}
@@ -94,7 +94,7 @@ class User extends React.Component {
 const mapStateToProps = state => ({
   token: state.login.token,
   showCreateLoader: state.user.showCreateLoader,
-  username: state.user.username,
+  email: state.user.email,
   password: state.user.password,
   errorStatus: state.user.errorStatus,
   errorText: state.user.errorText,

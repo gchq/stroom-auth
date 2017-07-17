@@ -1,7 +1,7 @@
 import { push } from 'react-router-redux'
 import { HttpError } from '../ErrorTypes'
 
-export const USERNAME_CHANGE = 'login/USERNAME_CHANGE'
+export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
 export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
 export const TOKEN_DELETE = 'login/TOKEN_DELETE'
@@ -18,10 +18,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case USERNAME_CHANGE:
+    case EMAIL_CHANGE:
       return {
         ...state,
-        username: action.username
+        email: action.email
       }
 
     case TOKEN_CHANGE: 
@@ -97,7 +97,7 @@ export function showLoader(showLoader){
   }
 }
 
-export const attempLogin = (username, password, referrer) => {
+export const attempLogin = (email, password, referrer) => {
   return dispatch => {
     // We're re-attempting a login so we should remove any old errors
     dispatch(errorRemove())
@@ -116,7 +116,7 @@ export const attempLogin = (username, password, referrer) => {
       method: 'post',
       mode: 'cors',
       body: JSON.stringify({
-        username,
+        email,
         password
       })
     })

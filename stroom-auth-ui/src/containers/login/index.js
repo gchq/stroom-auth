@@ -25,14 +25,14 @@ class Login extends Component {
     const referrer = this.context.router.history.location.state !== undefined ? this.context.router.history.location.state.referrer : ''
 
     this.state = {
-      username: '',
+      email: '',
       password: '',
       referrer
     }
   }
 
-  login(username, password) {
-    this.props.attempLogin(this.state.username, this.state.password, this.state.referrer)
+  login(email, password) {
+    this.props.attempLogin(this.state.email, this.state.password, this.state.referrer)
   }
 
   render() {
@@ -53,9 +53,9 @@ class Login extends Component {
                   Please log in
                 </Typography>
                 <br/>
-                <Input label="Username" className='User-loginForm'
-                  value={this.state.username} 
-                  onChange={ (e) => this.setState({username: e.target.value})}/>
+                <Input label="Email" className='User-loginForm'
+                  value={this.state.email} 
+                  onChange={ (e) => this.setState({email: e.target.value})}/>
 
                 <Input type="password" label="Password" 
                   value={this.state.password} 
@@ -65,8 +65,8 @@ class Login extends Component {
 
               <CardActions>
                 <Button color="primary" className="User-button" 
-                  onClick={ () => this.login(this.props.username, this.props.password)} 
-                  onSubmit={ () => this.login(this.props.username, this.props.password)}>
+                  onClick={ () => this.login(this.props.email, this.props.password)} 
+                  onSubmit={ () => this.login(this.props.email, this.props.password)}>
                     Log in
                 </Button>
                 {this.props.showCreateLoader ? (<CircularProgress/>) : (<div/>)}
