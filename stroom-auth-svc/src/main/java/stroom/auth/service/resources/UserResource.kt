@@ -46,9 +46,9 @@ class UserResource(config: Config) {
     fun search(
             @Auth authenticatedServiceUser: ServiceUser,
             @Context database: DSLContext,
-            @QueryParam("fromEmail") fromEmail: String,
-            @QueryParam("usersPerPage") usersPerPage: Int,
-            @QueryParam("orderBy") orderBy: String) : Response {
+            @QueryParam("fromEmail") fromEmail: String?,
+            @QueryParam("usersPerPage") usersPerPage: Int?,
+            @QueryParam("orderBy") orderBy: String?) : Response {
 
         val orderByField = USERS.field(orderBy) ?:
             return Response
@@ -87,7 +87,7 @@ class UserResource(config: Config) {
 //                .orderBy(USERS.NAME)
                 .orderBy(orderByEmailField)
                 .seekAfter(fromEmail)
-                .limit(usersPerPage)
+                .limit(usersPerPage.let { 1000 })
                 .fetch()
                 .formatJSON(JSONFormat().header(false).recordFormat(JSONFormat.RecordFormat.OBJECT))
 
