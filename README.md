@@ -8,9 +8,9 @@ A service that accepts HTTP requests for authentication, and returns JWS tokens.
 You can interrogate the service using HTTPie. 
 
 #### Getting a JWS token
-You can use this token to make requests to secured endpoints. The default username and password is `admin:admin`.
+You can use this token to make requests to secured endpoints. The default email and password is `admin:admin`.
 ```
-$ http POST localhost:8099/authentication/login username=admin password=admin 
+$ http POST localhost:8099/authentication/login email=admin password=admin 
 ```
 
 #### Getting all users
@@ -18,11 +18,11 @@ In the below you'd have to paste your JWS token.
 
 The following would get all users, with 10 per page.
 ```
-$ http GET 'http://localhost:8099/user/?fromUsername=&usersPerPage=10&orderBy=id' Authorization:"Bearer <TOKEN>"
+$ http GET 'http://localhost:8099/user/?fromEmail=&usersPerPage=10&orderBy=id' Authorization:"Bearer <TOKEN>"
 ```
 The following would get users from testUser, with 10 per page.
 ```
-$ http GET 'http://localhost:8099/user/?fromUsername=testUser&usersPerPage=2&orderBy=id' Authorization:"Bearer <TOKEN>"
+$ http GET 'http://localhost:8099/user/?fromEmail=testUser&usersPerPage=2&orderBy=id' Authorization:"Bearer <TOKEN>"
 ```
 
 ## stroom-persistence

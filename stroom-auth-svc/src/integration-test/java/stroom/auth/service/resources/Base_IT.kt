@@ -65,6 +65,10 @@ open abstract class Base_IT {
             assertThat(this.httpStatusCode).isEqualTo(400)
         }
 
+        fun Response.assertConflict(){
+            assertThat(this.httpStatusCode).isEqualTo(409)
+        }
+
         fun Response.assertOk() {
             assertThat(this.httpStatusCode).isEqualTo(200)
         }
@@ -85,7 +89,7 @@ open abstract class Base_IT {
     fun login(): String {
         val (request, response, result) = LOGIN_URL
                 .httpPost()
-                .body("{\"username\" : \"admin\", \"password\" : \"admin\"}")
+                .body("{\"email\" : \"admin@\", \"password\" : \"admin\"}")
                 .header(mapOf("Content-Type" to "application/json"))
                 .responseString()
 

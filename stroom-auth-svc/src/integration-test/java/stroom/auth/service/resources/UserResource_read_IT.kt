@@ -31,7 +31,7 @@ class UserResource_read_IT: UserResource_IT() {
     @Test
     fun search_users() {
         val jwsToken = login()
-        val url = ROOT_URL + "?fromUsername=&usersPerPage=10&orderBy=name"
+        val url = ROOT_URL + "?fromEmail=&usersPerPage=10&orderBy=email"
         val (_, response) = url
                 .httpGet()
                 .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
@@ -54,7 +54,7 @@ class UserResource_read_IT: UserResource_IT() {
         val user = userListMapper().fromJson(userJson)
 
         if(user != null) {
-            assertThat(user[0].name).isEqualTo("admin")
+            assertThat(user[0].email).isEqualTo("admin@")
         }
         else fail("No users found")
     }

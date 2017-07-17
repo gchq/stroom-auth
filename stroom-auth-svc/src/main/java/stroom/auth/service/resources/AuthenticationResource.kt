@@ -72,31 +72,33 @@ class AuthenticationResource(
         }
         else {
             LOGGER.debug("Found certificate in request. DN: {}", certificateDn)
-            val username = CertificateUtil.extractUserIdFromDN(certificateDn, dnPattern)
-            if(username == null) {
+            val certificateUsername = CertificateUtil.extractUserIdFromDN(certificateDn, dnPattern)
+            if(certificateUsername == null) {
                 LOGGER.debug("Cannot extract user from certificate. Redirecting to login.")
                 response = redirectToLoginResponse()
             }
             else {
-                var user = database
-                        .selectFrom(USERS)
-                        .where(USERS.NAME.eq(username))
-                        .single()
-                val isAuthenticated = user != null
-                if (isAuthenticated) {
-                    val token = tokenGenerator.getToken(username)
-                    val redirectUrl = "${config.stroomUrl}/?token=$token"
-                    response = Response
-                            .seeOther(URI(redirectUrl))
-                            .build()
-                } else {
-                    LOGGER.debug("Certificate does not contain a known user. Redirecting to login.")
-                    response = redirectToLoginResponse()
-                }
+                //TODO Users table might need a property to hold the DN.
+//                var user = database
+//                        .selectFrom(USERS)
+//                        .where(USERS.USERNAME.eq(certificateUsername))
+//                        .single()
+//                val isAuthenticated = user != null
+//                if (isAuthenticated) {
+//                    val token = tokenGenerator.getToken(certificateUsername)
+//                    val redirectUrl = "${config.stroomUrl}/?token=$token"
+//                    response = Response
+//                            .seeOther(URI(redirectUrl))
+//                            .build()
+//                } else {
+//                    LOGGER.debug("Certificate does not contain a known user. Redirecting to login.")
+//                    response = redirectToLoginResponse()
+//                }
             }
 //            certificateAuthenticator.login(certificateDn, httpServletRequest.remoteHost)
         }
-        return response
+//        return response
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
     }
 
     @POST
@@ -106,36 +108,36 @@ class AuthenticationResource(
     @Timed
     fun authenticateAndReturnToken(@Context database: DSLContext, credentials: Credentials?): Response {
         // We need to make sure the request has credentials
-        if(credentials == null || credentials.username.isBlank() || credentials.password.isBlank()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Please provide both username and password").build()
+        if(credentials == null || credentials.email.isBlank() || credentials.password.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Please provide both email and password").build()
         }
 
         // We need to make sure the user in the request exists
         var results = database
                 .selectFrom(USERS)
-                .where(USERS.NAME.eq(credentials.username))
+                .where(USERS.EMAIL.eq(credentials.email))
                 .fetch()
         if(results.size != 1) {
-            LOGGER.debug("Request to log in with invalid username: ${credentials.username}")
+            LOGGER.debug("Request to log in with invalid email: ${credentials.email}")
             return unauthorisedResponse()
         }
 
         // Now we can check the actual password
         var user = database
                 .selectFrom(USERS)
-                .where(USERS.NAME.eq(credentials.username))
+                .where(USERS.EMAIL.eq(credentials.email))
                 .single()
         val isPasswordCorrect = BCrypt.checkpw(credentials.password, user.passwordHash)
         if(isPasswordCorrect) {
-            LOGGER.debug("Login for {} succeeded", credentials.username)
-            val token = tokenGenerator.getToken(credentials.username)
+            LOGGER.debug("Login for {} succeeded", credentials.email)
+            val token = tokenGenerator.getToken(credentials.email)
             return Response
                     .status(Response.Status.OK)
                     .entity(token)
                     .build()
         }
         else {
-            LOGGER.debug("Password for {} is incorrect", credentials.username)
+            LOGGER.debug("Password for {} is incorrect", credentials.email)
             return unauthorisedResponse()
         }
     }

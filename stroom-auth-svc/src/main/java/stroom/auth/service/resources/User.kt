@@ -22,16 +22,21 @@ package stroom.auth.service.resources
 class User {
     constructor()
 
-    constructor(name: String, password: String) {
-        this.name = name
+    constructor(email: String, password: String) {
+        this.email = email
         this.password = password
     }
 
     var id: Int? = null
-    var name: String? = null
+    var first_name: String? = null
+    var last_name: String? = null
+    var comments: String? = null
+    var email: String? = null
+    var state: Int? = null
     var password: String? = null
     var password_hash: String? = null
-    var total_login_failures: Int? = null
+    var login_failures: Int? = null
+    var login_count: Int? = null
     var last_login: String? = null
     var updated_on: String? = null
     var updated_by_user: String? = null
@@ -40,7 +45,7 @@ class User {
 }
 
 enum class UserValidationError(val message: String) {
-    NO_USER("Please supply a user with a username and password. "),
+    NO_USER("Please supply a user with an email address and a password. "),
     NO_NAME("User's name cannot be empty. "),
     NO_PASSWORD("User's password cannot be empty. "),
     MISSING_ID("Please supply an ID for the user. ")

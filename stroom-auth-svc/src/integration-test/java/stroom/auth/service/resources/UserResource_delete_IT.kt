@@ -28,7 +28,7 @@ class UserResource_delete_IT : UserResource_IT() {
     @Test
     fun delete_user() {
         val jwsToken = login()
-        val user = User(name = Instant.now().toString(), password = "testPassword")
+        val user = User(email = Instant.now().toString(), password = "testPassword")
         var userId = createUser(user, jwsToken)
         val url = ROOT_URL + userId
         val (_, response) = url

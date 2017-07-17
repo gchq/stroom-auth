@@ -19,7 +19,6 @@
 
 package stroom.auth.service.resources
 
-import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPut
 import org.assertj.core.api.Assertions
 import org.junit.Test
@@ -30,11 +29,11 @@ class UserResource_update_IT : UserResource_IT() {
     @Test
     fun update_user() {
         val jwsToken = login()
-        val user = User(name = Instant.now().toString(), password = "testPassword")
+        val user = User(email = Instant.now().toString(), password = "testPassword")
 
         // First create a user to update
         var userId = createUser(user, jwsToken)
-        user.name = "New name" + Instant.now().toString()
+        user.email = "New email" + Instant.now().toString()
         val serialisedUser = userMapper().toJson(user)
 
         val url = ROOT_URL + userId
@@ -46,7 +45,7 @@ class UserResource_update_IT : UserResource_IT() {
         updateResponse.assertOk()
 
         var updatedUser = getUser(userId, jwsToken)
-        Assertions.assertThat(updatedUser?.name).isEqualTo(user.name)
+        Assertions.assertThat(updatedUser?.email).isEqualTo(user.email)
     }
 
     //TODO add additional update user tests, e.g. validation issues

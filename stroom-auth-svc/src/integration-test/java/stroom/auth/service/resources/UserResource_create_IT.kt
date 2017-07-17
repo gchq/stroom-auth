@@ -27,7 +27,7 @@ class UserResource_create_IT : UserResource_IT() {
     @Test
     fun create_user() {
         val jwsToken = login()
-        val user = User(name = Instant.now().toString(), password = "testPassword")
+        val user = User(email = Instant.now().toString(), password = "testPassword")
         val serializedUser = userMapper().toJson(user)
         val (_, response) = ROOT_URL
                 .httpPost()
@@ -65,7 +65,7 @@ class UserResource_create_IT : UserResource_IT() {
     @Test
     fun create_user_missing_password() {
         val jwsToken = login()
-        val user = User(name = Instant.now().toString(), password = "")
+        val user = User(email = Instant.now().toString(), password = "")
         val serializedUser = userMapper().toJson(user)
         val (_, response) = ROOT_URL
                 .httpPost()
@@ -78,8 +78,8 @@ class UserResource_create_IT : UserResource_IT() {
     @Test
     fun create_user_with_duplicate_name() {
         val jwsToken = login()
-        val nameToBeReused = Instant.now().toString()
-        val user = User(name = nameToBeReused, password = "testPassword")
+        val emailToBeReused = Instant.now().toString()
+        val user = User(email = emailToBeReused, password = "testPassword")
         val serializedUser = userMapper().toJson(user)
         val (_, response) = ROOT_URL
                 .httpPost()
@@ -89,7 +89,7 @@ class UserResource_create_IT : UserResource_IT() {
         response.assertOk()
         response.assertBodyNotNull()
 
-        val duplicateUser = User(name = nameToBeReused, password = "testPassword")
+        val duplicateUser = User(email = emailToBeReused, password = "testPassword")
         val duplicateSerializedUser = userMapper().toJson(duplicateUser)
         val (_, duplicateUserResponse) = ROOT_URL
                 .httpPost()
@@ -97,6 +97,6 @@ class UserResource_create_IT : UserResource_IT() {
                 .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
                 .responseString()
 
-        duplicateUserResponse.assertBadRequest()
+        duplicateUserResponse.assertConflict()
     }
 }

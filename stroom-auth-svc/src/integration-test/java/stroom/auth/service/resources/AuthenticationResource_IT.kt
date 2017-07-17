@@ -44,7 +44,7 @@ class AuthenticationResource_IT : Base_IT() {
     fun incorrect_credentials_1() {
         val (_, response) = LOGIN_URL
                 .httpPost()
-                .body("{\"username\" : \"BAD\", \"password\" : \"admin\"}")
+                .body("{\"email\" : \"BAD\", \"password\" : \"admin\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
         response.assertUnauthorised()
@@ -54,7 +54,7 @@ class AuthenticationResource_IT : Base_IT() {
     fun incorrect_credentials_2() {
         val (_, response) = LOGIN_URL
                 .httpPost()
-                .body("{\"username\" : \"admin\", \"password\" : \"BAD\"}")
+                .body("{\"email\" : \"admin\", \"password\" : \"BAD\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
         response.assertUnauthorised()
@@ -64,7 +64,7 @@ class AuthenticationResource_IT : Base_IT() {
     fun incorrect_credentials_3() {
         val (_, response) = LOGIN_URL
                 .httpPost()
-                .body("{\"username\" : \"BAD\", \"password\" : \"BAD\"}")
+                .body("{\"email\" : \"BAD\", \"password\" : \"BAD\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
         response.assertUnauthorised()
@@ -74,7 +74,7 @@ class AuthenticationResource_IT : Base_IT() {
     fun missing_credentials_1() {
         val (_, response) = LOGIN_URL
                 .httpPost()
-                .body("{\"username\" : \"BAD\"}")
+                .body("{\"email\" : \"BAD\"}")
                 .header(JSON_CONTENT_TYPE)
                 .responseString()
         response.assertBadRequest()

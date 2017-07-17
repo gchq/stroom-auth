@@ -36,7 +36,7 @@ import stroom.db.auth.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = 1385667895;
+    private static final long serialVersionUID = -402580377;
 
     /**
      * The reference instance of <code>auth.users</code>
@@ -57,14 +57,9 @@ public class Users extends TableImpl<UsersRecord> {
     public final TableField<UsersRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>auth.users.name</code>.
+     * The column <code>auth.users.email</code>.
      */
-    public final TableField<UsersRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
-
-    /**
-     * The column <code>auth.users.last_login</code>.
-     */
-    public final TableField<UsersRecord, Timestamp> LAST_LOGIN = createField("last_login", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
+    public final TableField<UsersRecord, String> EMAIL = createField("email", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
      * The column <code>auth.users.password_hash</code>.
@@ -72,9 +67,39 @@ public class Users extends TableImpl<UsersRecord> {
     public final TableField<UsersRecord, String> PASSWORD_HASH = createField("password_hash", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>auth.users.total_login_failures</code>.
+     * The column <code>auth.users.state</code>.
      */
-    public final TableField<UsersRecord, Integer> TOTAL_LOGIN_FAILURES = createField("total_login_failures", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+    public final TableField<UsersRecord, Byte> STATE = createField("state", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
+
+    /**
+     * The column <code>auth.users.first_name</code>.
+     */
+    public final TableField<UsersRecord, String> FIRST_NAME = createField("first_name", org.jooq.impl.SQLDataType.VARCHAR.length(255), this, "");
+
+    /**
+     * The column <code>auth.users.last_name</code>.
+     */
+    public final TableField<UsersRecord, String> LAST_NAME = createField("last_name", org.jooq.impl.SQLDataType.VARCHAR.length(255), this, "");
+
+    /**
+     * The column <code>auth.users.comments</code>.
+     */
+    public final TableField<UsersRecord, String> COMMENTS = createField("comments", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>auth.users.login_failures</code>.
+     */
+    public final TableField<UsersRecord, Integer> LOGIN_FAILURES = createField("login_failures", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+
+    /**
+     * The column <code>auth.users.login_count</code>.
+     */
+    public final TableField<UsersRecord, Integer> LOGIN_COUNT = createField("login_count", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+
+    /**
+     * The column <code>auth.users.last_login</code>.
+     */
+    public final TableField<UsersRecord, Timestamp> LAST_LOGIN = createField("last_login", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>auth.users.created_on</code>.
@@ -147,7 +172,7 @@ public class Users extends TableImpl<UsersRecord> {
      */
     @Override
     public List<UniqueKey<UsersRecord>> getKeys() {
-        return Arrays.<UniqueKey<UsersRecord>>asList(Keys.KEY_USERS_PRIMARY, Keys.KEY_USERS_NAME);
+        return Arrays.<UniqueKey<UsersRecord>>asList(Keys.KEY_USERS_PRIMARY, Keys.KEY_USERS_EMAIL);
     }
 
     /**

@@ -46,7 +46,7 @@ class UserResource(config: Config) {
     fun search(
             @Auth authenticatedServiceUser: ServiceUser,
             @Context database: DSLContext,
-            @QueryParam("fromUsername") fromUsername: String,
+            @QueryParam("fromEmail") fromEmail: String,
             @QueryParam("usersPerPage") usersPerPage: Int,
             @QueryParam("orderBy") orderBy: String) : Response {
 
@@ -67,16 +67,17 @@ class UserResource(config: Config) {
         if(database.select(USERS.ID).from(USERS).fetch().isEmpty()) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("fromUsername does not refer to a user that exists in the database")
+                    .entity("fromEmail does not refer to a user that exists in the database")
                     .build()
         }
 
-        val orderByNameField = USERS.NAME
+        val orderByEmailField = USERS.EMAIL
 
+        //TODO replace with selectFrom so we don't have to specify each property individually
         val users = database
                 .select(USERS.ID,
-                        USERS.NAME,
-                        USERS.TOTAL_LOGIN_FAILURES,
+                        USERS.EMAIL,
+                        USERS.LOGIN_FAILURES,
                         USERS.LAST_LOGIN,
                         USERS.UPDATED_ON,
                         USERS.UPDATED_BY_USER,
@@ -84,8 +85,8 @@ class UserResource(config: Config) {
                         USERS.CREATED_BY_USER)
                 .from(USERS)
 //                .orderBy(USERS.NAME)
-                .orderBy(orderByNameField)
-                .seekAfter(fromUsername)
+                .orderBy(orderByEmailField)
+                .seekAfter(fromEmail)
                 .limit(usersPerPage)
                 .fetch()
                 .formatJSON(JSONFormat().header(false).recordFormat(JSONFormat.RecordFormat.OBJECT))
@@ -107,7 +108,7 @@ class UserResource(config: Config) {
         }
         else{
             var messages = ArrayList<UserValidationError>()
-            if(user.name.isNullOrBlank()){
+            if(user.email.isNullOrBlank()){
                 messages.add(UserValidationError.NO_NAME)
             }
             if(user.password.isNullOrBlank()) {
@@ -119,7 +120,7 @@ class UserResource(config: Config) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(message).build()
             }
 
-            val countOfSameName = database.selectCount().from(USERS).where(USERS.NAME.eq(user.name)).fetchOne(0, Int::class.java)
+            val countOfSameName = database.selectCount().from(USERS).where(USERS.EMAIL.eq(user.email)).fetchOne(0, Int::class.java)
             if(countOfSameName > 0) {
                 return Response
                         .status(Response.Status.CONFLICT)
@@ -128,7 +129,7 @@ class UserResource(config: Config) {
 
             val usersRecord =
                     database.insertInto(USERS)
-                            .set(USERS.NAME, user.name)
+                            .set(USERS.EMAIL, user.email)
                             .set(USERS.PASSWORD_HASH, "TODO HASH")
                             .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
                             .set(USERS.CREATED_BY_USER, authenticatedServiceUser.name)
@@ -148,15 +149,15 @@ class UserResource(config: Config) {
         val foundUserRecord = database
                 .select(
                         USERS.ID,
-                        USERS.NAME,
-                        USERS.TOTAL_LOGIN_FAILURES,
+                        USERS.EMAIL,
+                        USERS.LOGIN_FAILURES,
                         USERS.LAST_LOGIN,
                         USERS.UPDATED_ON,
                         USERS.UPDATED_BY_USER,
                         USERS.CREATED_ON,
                         USERS.CREATED_BY_USER)
                 .from(USERS)
-                .where(USERS.NAME.eq(authenticatedServiceUser.name))
+                .where(USERS.EMAIL.eq(authenticatedServiceUser.name))
                 .fetchOne()
 
         // We can use formatJSON() on Results (when using fetch()) but not yet on Records (when using fetchOne().
@@ -164,8 +165,8 @@ class UserResource(config: Config) {
         // NB: This still means
         // See https@ //github.com/jOOQ/jOOQ/issues/6354#issuecomment-310103896
         val foundUserResult = database.newResult(USERS.ID,
-                USERS.NAME,
-                USERS.TOTAL_LOGIN_FAILURES,
+                USERS.EMAIL,
+                USERS.LOGIN_FAILURES,
                 USERS.LAST_LOGIN,
                 USERS.UPDATED_ON,
                 USERS.UPDATED_BY_USER,
@@ -187,8 +188,8 @@ class UserResource(config: Config) {
         val foundUserRecord = database
                 .select(
                         USERS.ID,
-                        USERS.NAME,
-                        USERS.TOTAL_LOGIN_FAILURES,
+                        USERS.EMAIL,
+                        USERS.LOGIN_FAILURES,
                         USERS.LAST_LOGIN,
                         USERS.UPDATED_ON,
                         USERS.UPDATED_BY_USER,
@@ -198,25 +199,30 @@ class UserResource(config: Config) {
                 .where(USERS.ID.eq(userId))
                 .fetchOne()
 
-        // We can use formatJSON() on Results (when using fetch()) but not yet on Records (when using fetchOne().
-        // The below is a work around. Something like formatJSON() should be available when using fetchOne() by Q3 2017.
-        // NB: This still means
-        // See https@ //github.com/jOOQ/jOOQ/issues/6354#issuecomment-310103896
-        val foundUserResult = database.newResult(USERS.ID,
-                USERS.NAME,
-                USERS.TOTAL_LOGIN_FAILURES,
-                USERS.LAST_LOGIN,
-                USERS.UPDATED_ON,
-                USERS.UPDATED_BY_USER,
-                USERS.CREATED_ON,
-                USERS.CREATED_BY_USER)
-        foundUserResult.add(foundUserRecord)
-        val foundUserJson = foundUserResult.formatJSON(
-                JSONFormat().header(false).recordFormat(JSONFormat.RecordFormat.OBJECT))
+        if(foundUserRecord == null) {
+            return Response.status(Response.Status.NOT_FOUND).build()
+        }
+        else {
+            // We can use formatJSON() on Results (when using fetch()) but not yet on Records (when using fetchOne().
+            // The below is a work around. Something like formatJSON() should be available when using fetchOne() by Q3 2017.
+            // NB: This still means
+            // See https@ //github.com/jOOQ/jOOQ/issues/6354#issuecomment-310103896
+            val foundUserResult = database.newResult(USERS.ID,
+                    USERS.EMAIL,
+                    USERS.LOGIN_FAILURES,
+                    USERS.LAST_LOGIN,
+                    USERS.UPDATED_ON,
+                    USERS.UPDATED_BY_USER,
+                    USERS.CREATED_ON,
+                    USERS.CREATED_BY_USER)
+            foundUserResult.add(foundUserRecord)
+            val foundUserJson = foundUserResult.formatJSON(
+                    JSONFormat().header(false).recordFormat(JSONFormat.RecordFormat.OBJECT))
 
-        return Response
-                .status(Response.Status.OK)
-                .entity(foundUserJson).build()
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(foundUserJson).build()
+        }
     }
 
 

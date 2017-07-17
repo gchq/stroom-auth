@@ -32,8 +32,8 @@ import java.lang.reflect.Type
  */
 open class UserResource_IT: Base_IT() {
 
-    protected var ROOT_URL = "http://localhost:$appPort/users/"
-    protected var ME_URL = "http://localhost:$appPort/users/me"
+    protected var ROOT_URL = "http://localhost:$appPort/user/"
+    protected var ME_URL = "http://localhost:$appPort/user/me"
 
     protected fun createUser(user: User, jwsToken: String): Int {
         val serializedUser = userMapper().toJson(user)
@@ -53,9 +53,12 @@ open class UserResource_IT: Base_IT() {
                 .header(jsonContentType("Authorization" to "Bearer $jwsToken"))
                 .responseString()
         val userJson = String(response.data)
-        val users = userListMapper().fromJson(userJson)
-        if(users != null) {
-            return users[0]
+        if(response.httpStatusCode !== 404) {
+            val users = userListMapper().fromJson(userJson)
+            if (users != null) {
+                return users[0]
+            }
+            else return null
         }
         else return null
     }

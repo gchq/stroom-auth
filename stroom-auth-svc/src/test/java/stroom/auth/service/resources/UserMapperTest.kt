@@ -29,22 +29,32 @@ class UserMapperTest {
 
     @Test
     fun testMappings(){
-        var usersRecord = UsersRecord(
-                1,
-                "name",
-                null,
-                "hash",
-                0,
-                Timestamp(System.currentTimeMillis()),
-                "Creating user",
-                Timestamp(System.currentTimeMillis()),
-                "Updating user")
+        var usersRecord = UsersRecord()
+        usersRecord.id = 1
+        usersRecord.email = "email"
+        usersRecord.passwordHash = "hash"
+        usersRecord.state = 0
+        usersRecord.firstName = "first name"
+        usersRecord.lastName = "last name"
+        usersRecord.comments = "comments"
+        usersRecord.loginFailures = 2
+        usersRecord.loginCount = 4
+        usersRecord.lastLogin = Timestamp(System.currentTimeMillis())
+        usersRecord.updatedOn = Timestamp(System.currentTimeMillis())
+        usersRecord.updatedByUser = "updating user"
+        usersRecord.createdOn = Timestamp(System.currentTimeMillis())
+        usersRecord.createdByUser = "creating user"
 
         var user = User()
-        user.id = 1
-        user.name = "new name"
+        user.id = 2
+        user.email = "new email"
         user.password_hash = "new hash"
-        user.total_login_failures = 2
+        user.state = 1
+        user.first_name = "new first name"
+        user.last_name = "new last name"
+        user.comments = "new comments"
+        user.login_failures = 3
+        user.login_count = 5
         user.last_login = "2017-01-01T00:00:00.000Z"
         user.updated_on = "2017-01-02T00:00:00.000Z"
         user.updated_by_user = "New updating user"
@@ -52,9 +62,15 @@ class UserMapperTest {
         user.created_by_user = "New creating user"
 
         val updatedRecord = UserMapper.updateUserRecordWithUser(user, usersRecord)
-        assertThat(updatedRecord.name).isEqualTo("new name")
+        assertThat(updatedRecord.id).isEqualTo(2)
+        assertThat(updatedRecord.email).isEqualTo("new email")
         assertThat(updatedRecord.passwordHash).isEqualTo("new hash")
-        assertThat(updatedRecord.totalLoginFailures).isEqualTo(2)
+        assertThat(updatedRecord.state).isEqualTo(1)
+        assertThat(updatedRecord.firstName).isEqualTo("new first name")
+        assertThat(updatedRecord.lastName).isEqualTo("new last name")
+        assertThat(updatedRecord.comments).isEqualTo("new comments")
+        assertThat(updatedRecord.loginFailures).isEqualTo(3)
+        assertThat(updatedRecord.loginCount).isEqualTo(5)
         assertThat(updatedRecord.lastLogin).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-01T00:00:00.000Z"))
         assertThat(updatedRecord.updatedOn).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-02T00:00:00.000Z"))
         assertThat(updatedRecord.updatedByUser).isEqualTo("New updating user")
@@ -67,7 +83,8 @@ class UserMapperTest {
         // This test will fail if you add a property to the Users class.
         // To make it pass you'll need to updated the count, below.
         // It exists to remind you to add a mapping in UserMapper.
-        val currentNumberOfPropertiesOnUser = 10
+        // The count is one more than the number in UserRecord, because it has a 'password' property.
+        val currentNumberOfPropertiesOnUser = 15
         assertThat(User::class.memberProperties.size).isEqualTo(currentNumberOfPropertiesOnUser)
     }
 }

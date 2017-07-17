@@ -22,8 +22,8 @@ package stroom.auth.service.resources
 import com.fasterxml.jackson.annotation.JsonProperty
 
 class Credentials {
-    @get:JsonProperty("username")
-    var username = ""
+    @get:JsonProperty("email")
+    var email = ""
 
     @get:JsonProperty("password")
     var password = ""
