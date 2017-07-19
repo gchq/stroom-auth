@@ -3,7 +3,7 @@ CREATE TABLE users (
     id 				      MEDIUMINT NOT NULL AUTO_INCREMENT,
     email                 VARCHAR(255) NOT NULL,
     password_hash         VARCHAR(255) NOT NULL,
-    state                 TINYINT DEFAULT 0, -- 0 = enabled, 1 = disabled, 2 = locked
+    state                 INT DEFAULT 0, -- 0 = enabled, 1 = disabled, 2 = locked
     first_name            VARCHAR(255),
     last_name             VARCHAR(255),
     comments              TEXT NULL,

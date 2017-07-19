@@ -5,7 +5,7 @@ INSERT INTO users (
     created_on,
     created_by_user)
 VALUES (
-    "admin@",
+    "admin",
     "$2a$10$THzPVeDX70fBaFPjZoY1fOXnCCAezhhYV/LO09w.3JKIybPgRMSiW",
     "Built-in admin user",
     CURRENT_TIMESTAMP,
