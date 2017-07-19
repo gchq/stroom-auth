@@ -4,11 +4,13 @@ import { connect } from 'react-redux'
 import PropTypes, {object} from 'prop-types'
 
 import Card, { CardActions, CardContent } from 'material-ui/Card'
-import Button from 'material-ui/Button'
-import Typography from 'material-ui/Typography'
-import { CircularProgress } from 'material-ui/Progress'
-import { Input } from 'react-materialize'
-import Grid from 'material-ui/Grid'
+import FlatButton from 'material-ui/FlatButton'
+
+// import Typography from 'material-ui/Typography'
+import CircularProgress from 'material-ui/CircularProgress';
+import TextField from 'material-ui/TextField'
+// import Grid from 'material-ui/Grid'
+
 
 import {attempLogin} from '../../modules/login'
 
@@ -39,36 +41,31 @@ class Login extends Component {
     const isLoggedIn = this.props.token !== ''
  
     return (
-      <Grid container>
-        <Grid item xs={4}/>
-        <Grid item xs={4}>
+
           <Card className='Login-card'>
             { isLoggedIn ? (
                 <Card title='You are already logged in. Why not try going somewhere else?' />
               ) : (
             <form>
 
-              <CardContent>
-                <Typography type="headline" component="h2">
-                  Please log in
-                </Typography>
+                  <p>
+                  Please log in</p>
                 <br/>
-                <Input label="Email" className='User-loginForm'
+                <TextField label="Email" className='User-loginForm'
                   value={this.state.email} 
                   onChange={ (e) => this.setState({email: e.target.value})}/>
 
-                <Input type="password" label="Password" 
+                <TextField type="password" label="Password" 
                   value={this.state.password} 
                   onChange={ (e) => this.setState({password: e.target.value})}/>
 
-              </CardContent>
 
               <CardActions>
-                <Button color="primary" className="User-button" 
+                <FlatButton color="primary" className="User-button" 
                   onClick={ () => this.login(this.props.email, this.props.password)} 
                   onSubmit={ () => this.login(this.props.email, this.props.password)}>
                     Log in
-                </Button>
+                </FlatButton>
                 {this.props.showCreateLoader ? (<CircularProgress/>) : (<div/>)}
                 {this.props.errorText !== '' ? (
                     <div color='error'><p> {this.props.errorText}</p></div>
@@ -80,9 +77,7 @@ class Login extends Component {
             </form>
             )}
           </Card>
-        </Grid>
-        <Grid item xs={4}/>
-      </Grid>
+
     )
   }
 }

@@ -73,45 +73,45 @@ export function errorRemove(){
   }
 }
 
-export const attemptCreate = (email, password, first_name, last_name, comments, state, jwsToken) => {
-  return dispatch => {
-    // We're re-attempting a login so we should remove any old errors
-    dispatch(errorRemove())
+// export const attemptCreate = (email, password, first_name, last_name, comments, state, jwsToken) => {
+//   return dispatch => {
+//     // We're re-attempting a login so we should remove any old errors
+//     dispatch(errorRemove())
 
-    dispatch(showCreateLoader(true))
+//     dispatch(showCreateLoader(true))
 
 
-    var userServiceUrl = process.env.REACT_APP_USER_URL
-    // Call the authentication service to get a token.
-    // If successful we re-direct to Stroom, otherwise we display a message.
-    fetch(userServiceUrl, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization' : 'Bearer ' + jwsToken
-        },
-        method: 'post',
-        mode: 'cors',
-        body: JSON.stringify({
-          email,
-          password,
-          first_name,
-          last_name,
-          comments,
-          state
-        })
-      })
-      .then(handleStatus)
-      .then(getBody)
-      .then(newUserId => {
-        dispatch(showCreateLoader(false))
-        dispatch(push(`/user/${newUserId}`))
-      })
-      .catch(error => handleErrors(error, dispatch))
+//     var userServiceUrl = process.env.REACT_APP_USER_URL
+//     // Call the authentication service to get a token.
+//     // If successful we re-direct to Stroom, otherwise we display a message.
+//     fetch(userServiceUrl, {
+//         headers: {
+//           'Accept': 'application/json',
+//           'Content-Type': 'application/json',
+//           'Authorization' : 'Bearer ' + jwsToken
+//         },
+//         method: 'post',
+//         mode: 'cors',
+//         body: JSON.stringify({
+//           email,
+//           password,
+//           first_name,
+//           last_name,
+//           comments,
+//           state
+//         })
+//       })
+//       .then(handleStatus)
+//       .then(getBody)
+//       .then(newUserId => {
+//         dispatch(showCreateLoader(false))
+//         dispatch(push(`/user/${newUserId}`))
+//       })
+//       .catch(error => handleErrors(error, dispatch))
     
-    //TODO dispatch somewhere in the above. Should save the token just in case.
-  }
-}
+//     //TODO dispatch somewhere in the above. Should save the token just in case.
+//   }
+// }
 
 export const saveChanges = (email, password, jwsToken) => {
   return dispatch => {
@@ -148,5 +148,49 @@ function handleErrors(error, dispatch) {
   }
   else { 
     dispatch(errorAdd(error.status, error.message))
+  }
+}
+
+
+export const onSubmit  = (newUser, param1, param2, param3) => {
+  return (dispatch, getState) => {
+
+    const jwsToken = getState().login.token
+    const { email, password, first_name, last_name, comments, state } = newUser
+      // We're re-attempting a login so we should remove any old errors
+    dispatch(errorRemove())
+
+    dispatch(showCreateLoader(true))
+
+
+    var userServiceUrl = process.env.REACT_APP_USER_URL
+    // Call the authentication service to get a token.
+    // If successful we re-direct to Stroom, otherwise we display a message.
+    fetch(userServiceUrl, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization' : 'Bearer ' + jwsToken
+        },
+        method: 'post',
+        mode: 'cors',
+        body: JSON.stringify({
+          email,
+          password,
+          first_name,
+          last_name,
+          comments,
+          state
+        })
+      })
+      .then(handleStatus)
+      .then(getBody)
+      .then(newUserId => {
+        dispatch(showCreateLoader(false))
+        dispatch(push(`/user/${newUserId}`))
+      })
+      .catch(error => handleErrors(error, dispatch))
+    
+    //TODO dispatch somewhere in the above. Should save the token just in case.
   }
 }

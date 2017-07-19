@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import AppBar from 'material-ui/AppBar'
-import Grid from 'material-ui/Grid'
+// import Grid from 'material-ui/Grid'
 import Toolbar from 'material-ui/Toolbar'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Divider from 'material-ui/Divider'
@@ -17,9 +17,11 @@ import logo from './logo.svg'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import About from '../../containers/about'
+import NewUser from '../../containers/newUser'
 import User from '../../containers/user'
 import UserSearch from '../../containers/userSearch'
 import PathNotFound from '../../containers/pathNotFound'
+import UserCreateForm from '../../containers/createUser'
 //import EditUser from '../../containers/editUser'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
 import { goToStroom } from '../../modules/sidebar'
@@ -40,35 +42,31 @@ class App extends Component {
         </AppBar>
 
         <main>
-          <Grid className='App-leftNav' container justify="center">
             {this.props.token !== '' ? (
-            <Grid item xs={2}>
                 <Paper>
                   <List>
-                    <NavLink to='/user'>
-                      <ListItem button><ListItemText primary="Create a user" /></ListItem>
+                    <NavLink to='/newUser'>
+                      <ListItem primaryText="Create a user"/>
                     </NavLink>
                     <NavLink to='/userSearch'>
-                      <ListItem button><ListItemText primary="List users" /></ListItem>
+                      <ListItem primaryText="List users"/>
                     </NavLink>
-                    <ListItem button onClick={() => this.props.goToStroom(this.props.token)}><ListItemText primary="Go to Stroom" /></ListItem>
+                    <ListItem onClick={() => this.props.goToStroom(this.props.token)} primaryText="Go to stroom"/>
                     <Divider/>
                     <LogOutAndInNavLink/>
                   </List>
                 </Paper>
-            </Grid>
             ) : (<div/>)}
 
-            <Grid item xs={10}>
               <Switch>
                 <Route exact path="/" component={this.props.token !== '' ? UserSearch : Login} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/logout" component={Logout} />
                 <Route exact path="/about" component={About}/>
-
+                <Route exact path="/newUser" component={NewUser}/>
                 <Route exact path="/user" render={() => (
                   this.isLoggedIn() ? (
-                    <User />
+                    <UserCreateForm />
                   ) : (
                     // We record the referrer because Login needs it to redirect back to after a successful login.
                     <Redirect to={{
@@ -101,8 +99,6 @@ class App extends Component {
 
                 <Route component={PathNotFound}/>
               </Switch>
-            </Grid>
-          </Grid>
         </main>
       </div>
     )

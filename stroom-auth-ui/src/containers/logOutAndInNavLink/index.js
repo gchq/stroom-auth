@@ -17,11 +17,11 @@ class LogOutAndInNavLink extends Component {
         {isLoggedIn ? (
 
           <NavLink to="logout">
-            <ListItem button><ListItemText primary="Log out" /></ListItem>
+            <ListItem primaryText="Log out"/>
           </NavLink>
         ) : (
           <NavLink to="login">
-            <ListItem button><ListItemText primary="Log in" /></ListItem>
+            <ListItem primaryText="Log in"/>
           </NavLink>
         )}
       </div>

@@ -3,8 +3,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import Paper from 'material-ui/Paper'
-import { CircularProgress } from 'material-ui/Progress'
-import Typography from 'material-ui/Typography'
+import CircularProgress from 'material-ui/CircularProgress'
+// import Typography from 'material-ui/Typography'
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
@@ -46,12 +46,12 @@ class UserSearch extends Component {
   render() {
     return (
           <Paper className='UserSearch-main'>
-            <Typography type="headline" component="h2">
-              This is a list of all stored users
-            </Typography>
-            <Typography type="body1">
-              It excludes those who might have logged in using certificates or LDAP credentials.
-            </Typography>
+            {/* <Typography type="headline" component="h2"> */}
+              <h2>This is a list of all stored users</h2>
+            {/* </Typography> */}
+            {/* <Typography type="body1"> */}
+              <p>It excludes those who might have logged in using certificates or LDAP credentials.</p>
+            {/* </Typography> */}
             <br/>
             {this.props.showSearchLoader ? (
               <CircularProgress/>
