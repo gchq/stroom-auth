@@ -73,7 +73,7 @@ export function errorRemove(){
   }
 }
 
-export const attemptCreate = (email, password, jwsToken) => {
+export const attemptCreate = (email, password, first_name, last_name, comments, state, jwsToken) => {
   return dispatch => {
     // We're re-attempting a login so we should remove any old errors
     dispatch(errorRemove())
@@ -94,7 +94,11 @@ export const attemptCreate = (email, password, jwsToken) => {
         mode: 'cors',
         body: JSON.stringify({
           email,
-          password
+          password,
+          first_name,
+          last_name,
+          comments,
+          state
         })
       })
       .then(handleStatus)

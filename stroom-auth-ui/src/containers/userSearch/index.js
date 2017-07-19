@@ -38,8 +38,6 @@ const columns = [{
   accessor: 'comments'
 }]
 
-//email, state, last login, login failures, updated by, updated dt, comments, possibly name
-
 class UserSearch extends Component {
   componentDidMount() {
     this.props.performUserSearch(this.props.token)
