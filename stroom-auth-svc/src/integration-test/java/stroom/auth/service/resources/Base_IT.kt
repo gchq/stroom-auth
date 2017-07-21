@@ -89,7 +89,7 @@ open abstract class Base_IT {
     fun login(): String {
         val (request, response, result) = LOGIN_URL
                 .httpPost()
-                .body("{\"email\" : \"admin@\", \"password\" : \"admin\"}")
+                .body("{\"email\" : \"admin\", \"password\" : \"admin\"}")
                 .header(mapOf("Content-Type" to "application/json"))
                 .responseString()
 

@@ -27,7 +27,7 @@ class UserResource_create_IT : UserResource_IT() {
     @Test
     fun create_user() {
         val jwsToken = login()
-        val user = User(email = Instant.now().toString(), password = "testPassword")
+        val user = User(Instant.now().toString(), "testPassword")
         val serializedUser = userMapper().toJson(user)
         val (_, response) = ROOT_URL
                 .httpPost()
@@ -51,7 +51,7 @@ class UserResource_create_IT : UserResource_IT() {
     @Test
     fun create_user_missing_name() {
         val jwsToken = login()
-        val user = User("", password = "testPassword")
+        val user = User("", "testPassword")
         val serializedUser = userMapper().toJson(user)
         val (_, response) = ROOT_URL
                 .httpPost()
@@ -65,7 +65,7 @@ class UserResource_create_IT : UserResource_IT() {
     @Test
     fun create_user_missing_password() {
         val jwsToken = login()
-        val user = User(email = Instant.now().toString(), password = "")
+        val user = User(Instant.now().toString(),  "")
         val serializedUser = userMapper().toJson(user)
         val (_, response) = ROOT_URL
                 .httpPost()
@@ -79,7 +79,7 @@ class UserResource_create_IT : UserResource_IT() {
     fun create_user_with_duplicate_name() {
         val jwsToken = login()
         val emailToBeReused = Instant.now().toString()
-        val user = User(email = emailToBeReused, password = "testPassword")
+        val user = User( emailToBeReused,  "testPassword")
         val serializedUser = userMapper().toJson(user)
         val (_, response) = ROOT_URL
                 .httpPost()
@@ -89,7 +89,7 @@ class UserResource_create_IT : UserResource_IT() {
         response.assertOk()
         response.assertBodyNotNull()
 
-        val duplicateUser = User(email = emailToBeReused, password = "testPassword")
+        val duplicateUser = User( emailToBeReused, "testPassword")
         val duplicateSerializedUser = userMapper().toJson(duplicateUser)
         val (_, duplicateUserResponse) = ROOT_URL
                 .httpPost()

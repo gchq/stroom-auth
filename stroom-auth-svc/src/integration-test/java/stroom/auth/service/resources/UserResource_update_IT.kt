@@ -29,7 +29,7 @@ class UserResource_update_IT : UserResource_IT() {
     @Test
     fun update_user() {
         val jwsToken = login()
-        val user = User(email = Instant.now().toString(), password = "testPassword")
+        val user = User(Instant.now().toString(), "testPassword")
 
         // First create a user to update
         var userId = createUser(user, jwsToken)

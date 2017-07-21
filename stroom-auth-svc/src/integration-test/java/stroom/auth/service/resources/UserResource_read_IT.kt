@@ -54,7 +54,7 @@ class UserResource_read_IT: UserResource_IT() {
         val user = userListMapper().fromJson(userJson)
 
         if(user != null) {
-            assertThat(user[0].email).isEqualTo("admin@")
+            assertThat(user[0].email).isEqualTo("admin")
         }
         else fail("No users found")
     }
