@@ -58,8 +58,14 @@ class UserSearch extends Component {
             ) : (
               <ReactTable
               data={this.props.results}
+              className='-striped -highlight'
               columns={columns}
-              showPagination={false}/>
+              defaultSorted={[{
+                id:'email',
+                desc: true
+              }]}
+              showPagination={false}
+              filterable={true}/>
             )}
           </Paper>    
     )
