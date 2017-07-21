@@ -1,18 +1,20 @@
 import { push } from 'react-router-redux'
 import { HttpError } from '../ErrorTypes'
+import { initialize } from 'redux-form'
 
 export const CREATE_REQUEST = 'user/CREATE_REQUEST'
 export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
 export const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER'
 export const ERROR_ADD = 'user/ERROR_ADD'
 export const ERROR_REMOVE = 'user/ERROR_REMOVE'
+export const SAVE_USER_TO_EDIT_FORM = 'user/SAVE_USER_TO_EDIT_FORM'
 
 const initialState = {
   user: '',
   password: '',
   showCreateLoader: false,
   errorStatus: -1,
-  errorText: '',
+  errorText: ''
 }
 
 export default (state = initialState, action) => {
@@ -45,6 +47,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         showCreateLoader: action.showCreateLoader
+      }
+
+    case SAVE_USER_TO_EDIT_FORM:
+      return {
+        ...state,
+        userBeingEdited: action.user
       }
 
     default:
@@ -140,6 +148,10 @@ function getBody(response) {
   return response.text()
 }
 
+function getJsonBody(response) {
+  return response.json()
+}
+
 function handleErrors(error, dispatch) {
   dispatch(showCreateLoader(false))
   if(error.status === 401){
@@ -152,7 +164,7 @@ function handleErrors(error, dispatch) {
 }
 
 
-export const onSubmit  = (newUser, param1, param2, param3) => {
+export const onSubmit  = (newUser) => {
   return (dispatch, getState) => {
 
     const jwsToken = getState().login.token
@@ -162,10 +174,7 @@ export const onSubmit  = (newUser, param1, param2, param3) => {
 
     dispatch(showCreateLoader(true))
 
-
     var userServiceUrl = process.env.REACT_APP_USER_URL
-    // Call the authentication service to get a token.
-    // If successful we re-direct to Stroom, otherwise we display a message.
     fetch(userServiceUrl, {
         headers: {
           'Accept': 'application/json',
@@ -191,6 +200,32 @@ export const onSubmit  = (newUser, param1, param2, param3) => {
       })
       .catch(error => handleErrors(error, dispatch))
     
-    //TODO dispatch somewhere in the above. Should save the token just in case.
+  }
+}
+
+
+export const fetchUser = (userId) => {
+  return (dispatch, getState) => {
+    const jwsToken = getState().login.token
+    //TODO: remove any errors
+    //TODO: show loading spinner
+    var userServiceUrl = process.env.REACT_APP_USER_URL + "/" + userId
+    fetch(userServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
+      },
+      method: 'get',
+      mode: 'cors'
+    })
+    .then(handleStatus)
+    .then(getJsonBody)
+    .then(user => {
+      dispatch(showCreateLoader(false))
+      // Use the redux-form action creator to re-initialize the form with this user
+      dispatch(initialize("UserEditForm", user[0]))
+    })
+    .catch(error => handleErrors(error, dispatch))
   }
 }

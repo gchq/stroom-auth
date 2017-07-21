@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 
-import UserEditUi from './UserEditUi';
+import UserEditUi from './UserEditUi'
+import { fetchUser } from '../../modules/user'
 
-class UserEditUi extends Component {
+class UserEditForm extends Component {
   constructor() {
     super()
     this.state = {
@@ -12,21 +13,24 @@ class UserEditUi extends Component {
   }
 
   async componentDidMount() {
+    const userId = this.props.userId
+    this.context.store.dispatch(fetchUser(userId))
+
     //TODO get user from API and put into store
     //TODO Load from store? How?
   }
 
   render() {
     return (
-      <div style={styles.root}>
-        
+      <div>
+        <UserEditUi/>
       </div>
     )
   }
 }
 
-UserEditUi.contextTypes = {
+UserEditForm.contextTypes = {
   store: React.PropTypes.object.isRequired
 }
 
-export default UserEditUi
+export default UserEditForm

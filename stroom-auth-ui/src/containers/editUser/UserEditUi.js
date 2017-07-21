@@ -46,6 +46,7 @@ const ReduxUserEditForm = reduxForm({
 
 
 const mapStateToProps = state => ({
+  initialValues: state.user.userBeingEdited
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
