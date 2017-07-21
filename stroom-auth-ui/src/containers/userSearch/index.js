@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { NavLink} from 'react-router-dom'
 
 import Paper from 'material-ui/Paper'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -9,12 +10,18 @@ import CircularProgress from 'material-ui/CircularProgress'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 
+import IconButton from 'material-ui/IconButton'
+import ImageEdit from 'material-ui/svg-icons/image/edit'
+
 import { performUserSearch } from '../../modules/userSearch'
 import './UserSearch.css'
 
 const columns = [{
   Header: 'Actions',
-  accessor: 'id'
+  accessor: 'id',
+  Cell: row => (
+    <NavLink to={`/user/${row.value}`}><IconButton className='UserSearch-tableButton'><ImageEdit/></IconButton></NavLink>
+  )
 }, {
   Header: 'Email',
   accessor: 'email'
