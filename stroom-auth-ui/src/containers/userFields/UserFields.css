@@ -1,0 +1,34 @@
+.container {
+  display: flex;
+}
+
+.left-container {
+  width: 450px;
+}
+
+.right-container {
+  width: 450px;
+}
+
+.field-container {
+   display: flex;
+}
+
+.label-container {
+  /* A bit of padding here helps align the label with the input. */
+  padding-bottom:10px;
+   width:100px; 
+}
+
+/* This makes any labels container within aligned to the bottom. 
+We need this because otherwise the label will sit too high. */
+.label-container:after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: bottom;
+}
+
+.input-container {
+   width: 250px; 
+}

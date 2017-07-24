@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { Field, reduxForm } from 'redux-form'
 
 import Card, { CardActions, CardContent } from 'material-ui/Card'
-import FlatButton from 'material-ui/FlatButton'
+import RaisedButton from 'material-ui/RaisedButton'
 import CircularProgress from 'material-ui/CircularProgress'
 import Divider from 'material-ui/Divider'
 import List, { ListItem, ListItemText } from 'material-ui/List';
@@ -29,12 +29,12 @@ const UserEditForm = props => {
           <h2>Update the user's details below</h2>
           <UserFields/>
 
-            <FlatButton 
-            color="primary" className="User-button" 
+            <RaisedButton 
+            primary={true} className="User-button" 
             disabled={pristine || submitting}
             type="submit">
               Update the user
-          </FlatButton>
+          </RaisedButton>
       </form>
     </Card>
   )

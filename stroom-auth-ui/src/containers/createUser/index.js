@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { Field, reduxForm } from 'redux-form'
 
 import Card from 'material-ui/Card'
-import FlatButton from 'material-ui/FlatButton'
+import RaisedButton from 'material-ui/RaisedButton'
 import { MenuItem } from 'material-ui/Menu'
 import { SelectField, TextField } from 'redux-form-material-ui'
 
@@ -22,12 +22,12 @@ const UserCreateForm = props => {
         <form onSubmit={handleSubmit}>
           <UserFields/>
           <div>
-          <FlatButton 
-            color="primary" className="User-button" 
+          <RaisedButton 
+            primary={true} className="User-button" 
             disabled={pristine || submitting}
             type="submit">
               Create the user
-          </FlatButton>
+          </RaisedButton>
           </div>
         </form>
       </div>
