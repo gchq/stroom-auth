@@ -1,5 +1,6 @@
 import React from 'react'
 import { Field } from 'redux-form'
+import PropTypes from 'prop-types'
 
 import FlatButton from 'material-ui/FlatButton'
 import { MenuItem } from 'material-ui/Menu'
@@ -8,8 +9,8 @@ import { SelectField, TextField } from 'redux-form-material-ui'
 import { required, email } from '../../validations'
 import './UserFields.css'
 
-export default props => {
-  const {pristine, submitting } = props
+const UserFields = props => {
+  const {pristine, submitting, showCalculatedFields } = props
   return (
       <div className="container">
           <div className="left-container">
@@ -91,6 +92,7 @@ export default props => {
             </div>
           </div>
 
+          {showCalculatedFields ? (
           <div className="right-container">
             <div className="field-container">
               <div className="label-container">
@@ -190,6 +192,14 @@ export default props => {
               </div>
             </div>
           </div>
+          ) : (<div/>)}
     </div>
   )
 }
+
+
+UserFields.propTypes ={
+  showCalculatedFields: PropTypes.bool.isRequired
+}
+
+export default UserFields

@@ -21,13 +21,13 @@ import {saveChanges} from '../../modules/user'
 import './EditUser.css'
 
 const UserEditForm = props => {
-  const {saveChanges, pristine, submitting } = props
+  const {saveChanges, pristine, submitting, showCalculatedFields } = props
   return (
     <Card >
       <form onSubmit={saveChanges}>
 
           <h2>Update the user's details below</h2>
-          <UserFields/>
+          <UserFields showCalculatedFields={true}/>
 
             <RaisedButton 
             primary={true} className="User-button" 

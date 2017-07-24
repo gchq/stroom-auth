@@ -20,7 +20,7 @@ const UserCreateForm = props => {
       <div>
         <h2>Please enter the details of the new user</h2>
         <form onSubmit={handleSubmit}>
-          <UserFields/>
+          <UserFields showCalculatedFields={false}/>
           <div>
           <RaisedButton 
             primary={true} className="User-button" 
