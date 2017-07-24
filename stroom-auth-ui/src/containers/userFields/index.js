@@ -102,7 +102,7 @@ const UserFields = props => {
                 <Field
                   disabled={true}
                   className="CreateUserForm-field"
-                  name="loginFailures"
+                  name="login_failures"
                   component={TextField}
                 />
               </div>
@@ -116,7 +116,7 @@ const UserFields = props => {
                 <Field
                   disabled={true}
                   className="CreateUserForm-field"
-                  name="loginCount"
+                  name="login_count"
                   component={TextField}
                 />
               </div>
@@ -130,7 +130,7 @@ const UserFields = props => {
                 <Field
                   disabled={true}
                   className="CreateUserForm-field"
-                  name="lastLogin"
+                  name="last_login"
                   component={TextField}
                 />
               </div>
@@ -144,7 +144,7 @@ const UserFields = props => {
                 <Field
                   disabled={true}
                   className="CreateUserForm-field"
-                  name="updatedOn"
+                  name="updated_on"
                   component={TextField}
                 />
               </div>
@@ -158,7 +158,7 @@ const UserFields = props => {
                 <Field
                   disabled={true}
                   className="CreateUserForm-field"
-                  name="updatedByUser"
+                  name="updated_by_user"
                   component={TextField}
                 />
               </div>
@@ -172,7 +172,7 @@ const UserFields = props => {
                 <Field
                   disabled={true}
                   className="CreateUserForm-field"
-                  name="createdOn"
+                  name="created_on"
                   component={TextField}
                 />
               </div>
@@ -186,7 +186,7 @@ const UserFields = props => {
                 <Field
                   disabled={true}
                   className="CreateUserForm-field"
-                  name="createdByUser"
+                  name="created_by_user"
                   component={TextField}
                 />
               </div>

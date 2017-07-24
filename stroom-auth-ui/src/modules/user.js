@@ -221,11 +221,31 @@ export const fetchUser = (userId) => {
     })
     .then(handleStatus)
     .then(getJsonBody)
+    .then(getUser)
+    .then(modifyDataForDisplay)
     .then(user => {
       dispatch(showCreateLoader(false))
       // Use the redux-form action creator to re-initialize the form with this user
-      dispatch(initialize("UserEditForm", user[0]))
+      dispatch(initialize("UserEditForm", user))
     })
     .catch(error => handleErrors(error, dispatch))
   }
+}
+
+function getUser(user) {
+  //TODO check that there is a user and throw an error if there isn't one
+  return user[0]
+}
+
+function modifyDataForDisplay(user) {
+  if(!user.last_login){
+    user.last_login = "Never logged in"
+  }
+  if(!user.updated_on){
+    user.updated_on = "Never been updated"
+  }
+  if(!user.updated_by_user) {
+    user.updated_by_user = "Never been updated"
+  }
+  return user
 }
