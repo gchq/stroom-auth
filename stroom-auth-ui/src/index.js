@@ -4,29 +4,22 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
-// import createPalette from 'material-ui/styles/palette'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
-// import blue from 'material-ui/colors/blue'
-// import amber from 'material-ui/colors/amber'
-// import red from 'material-ui/colors/red'
+import {blue600, amber900} from 'material-ui/styles/colors'
+
+import { MuiThemeProvider } from 'material-ui/styles'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 import registerServiceWorker from './registerServiceWorker'
 import App from './containers/app'
 import store, { history } from './store'
 import './index.css'
 
-// const theme = createMuiTheme({
-//   // palette: createPalette({
-//   //   primary: blue,
-//   //   accent: amber,
-//   //   error: red
-//   // }),
-//     palette:{
-//     primary: blue,
-//     accent: amber,
-//     error: red
-//   },
-// })
+const theme = getMuiTheme({
+  palette: {
+    primary1Color: blue600,
+    accent1Color: amber900,
+  }
+})
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -39,7 +32,7 @@ const target = document.querySelector('#root')
 render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
-      <MuiThemeProvider /*theme={theme}*/>
+      <MuiThemeProvider muiTheme={theme}>
         <App />
       </MuiThemeProvider>
     </ConnectedRouter>
