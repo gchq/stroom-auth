@@ -25,7 +25,7 @@ public final class UserMapper {
     if(user.getFirst_name() != null) userMap.put("first_name", user.getFirst_name());
     if(user.getLast_name() != null) userMap.put("last_name", user.getLast_name());
     if(user.getComments() != null) userMap.put("comments", user.getComments());
-    if(user.getLogin_count() != null) userMap.put("login_count", user.getLast_login());
+    if(user.getLogin_count() != null) userMap.put("login_count", user.getLogin_count());
     if(user.getLogin_failures() != null) userMap.put("login_failures", user.getLogin_failures());
     if(user.getLast_login()!= null) userMap.put("last_login", convertISO8601ToTimestamp(user.getLast_login()));
     if(user.getCreated_on() != null) userMap.put("created_on", convertISO8601ToTimestamp(user.getCreated_on()));

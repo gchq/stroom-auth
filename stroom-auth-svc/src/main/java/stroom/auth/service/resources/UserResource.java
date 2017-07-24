@@ -148,7 +148,12 @@ public final class UserResource {
       Result foundUserResult = database.newResult(
           USERS.ID,
           USERS.EMAIL,
+          USERS.FIRST_NAME,
+          USERS.LAST_NAME,
+          USERS.COMMENTS,
+          USERS.STATE,
           USERS.LOGIN_FAILURES,
+          USERS.LOGIN_COUNT,
           USERS.LAST_LOGIN,
           USERS.UPDATED_ON,
           USERS.UPDATED_BY_USER,
