@@ -14,7 +14,17 @@
   font-size: large;
 }
 
-.App-leftNav{
+.App-leftNav {
   height:600px;
   padding:10px;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.nav-container {
+    padding: 15px;
+}
+
