@@ -19,10 +19,6 @@ const LoginForm = props => {
   const {handleSubmit, pristine, submitting } = props
     return (
       <div>
-        <br/> 
-        <br/>
-        <br/> 
-        <br/>
         <Card className='Login-card'>
           <form onSubmit={handleSubmit}>
             <div>

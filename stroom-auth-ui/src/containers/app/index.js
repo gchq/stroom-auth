@@ -44,31 +44,27 @@ class App extends Component {
                     iconElementLeft={<div/>}
           />
         ) : (<div/>)}
-        {/* <AppBar position="static" className="App-header" color="primary">
-          <Toolbar >
-            <img src={logo} className="App-logo" alt="Stroom logo"/>
-          </Toolbar>
-        </AppBar> */}
 
-        <main>
+        <main className="main">
           <div className="container">
-            <div className="nav-container">
-              {this.props.token !== '' ? (
-                  <Card>
-                    <List>
-                      <NavLink to='/newUser'>
-                        <ListItem primaryText="Create a user"/>
-                      </NavLink>
-                      <NavLink to='/userSearch'>
-                        <ListItem primaryText="List users"/>
-                      </NavLink>
-                      <ListItem onClick={() => this.props.goToStroom(this.props.token)} primaryText="Go to stroom"/>
-                      <Divider/>
-                      <LogOutAndInNavLink/>
-                    </List>
-                  </Card>
-              ) : (<div/>)}
-            </div>
+            {this.props.token !== '' ? (
+              <div className="nav-container">
+
+                <Card>
+                  <List>
+                    <NavLink to='/newUser'>
+                      <ListItem primaryText="Create a user"/>
+                    </NavLink>
+                    <NavLink to='/userSearch'>
+                      <ListItem primaryText="List users"/>
+                    </NavLink>
+                    <ListItem onClick={() => this.props.goToStroom(this.props.token)} primaryText="Go to stroom"/>
+                    <Divider/>
+                    <LogOutAndInNavLink/>
+                  </List>
+                </Card>
+              </div>
+            ) : (<div/>)}
 
             <div className="main-container">
               <Switch>
