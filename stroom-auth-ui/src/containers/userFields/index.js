@@ -9,6 +9,14 @@ import { SelectField, TextField } from 'redux-form-material-ui'
 import { required, email } from '../../validations'
 import './UserFields.css'
 
+/*
+This can display all user fields, or not. 
+
+The password field never has the real password. It can't be edited and is
+there to complete the picture for the user.
+TODO: add password change facility
+*/
+
 const UserFields = props => {
   const {pristine, submitting, showCalculatedFields } = props
   return (
@@ -33,11 +41,12 @@ const UserFields = props => {
                 <label>Password</label>
               </div>
               <div className="input-container">
-                <Field
+                <TextField
+                  disabled={true}
+                  value={"placeholder"}
                   className="CreateUserForm-field"
                   name="password"
-                  component={TextField}
-                  validate={[required]}
+                  type="password"
                 />
               </div>
             </div>
@@ -74,6 +83,7 @@ const UserFields = props => {
                   className="CreateUserForm-field"
                   name="comments"
                   component={TextField}
+                  multiLine={true}
                 />
               </div>
             </div>
