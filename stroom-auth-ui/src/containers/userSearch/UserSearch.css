@@ -1,5 +1,9 @@
 .UserSearch-main {
-  padding: 10px;
+  padding: 0px;
+}
+
+.UserSearch-content {
+  padding: 0px;
 }
 
 /* We need the button to be small so it doesn't make the cell in the table too big */
@@ -11,4 +15,9 @@
 
 .UserSearch-table {
   height: 500px;
+}
+
+p.warning {
+  font-style: italic;
+  padding: 3px;
 }

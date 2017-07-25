@@ -48,3 +48,7 @@
   /* We need the buttons to align horizontally */
   display:flex;
 }
+
+.UserSearch-appButton {
+  margin:0px !important;
+}

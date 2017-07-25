@@ -5,7 +5,8 @@ import { NavLink} from 'react-router-dom'
 
 import Paper from 'material-ui/Paper'
 import CircularProgress from 'material-ui/CircularProgress'
-// import Typography from 'material-ui/Typography'
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
+import RaisedButton from 'material-ui/RaisedButton'
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
@@ -53,29 +54,32 @@ class UserSearch extends Component {
   render() {
     return (
           <Paper className='UserSearch-main'>
-            {/* <Typography type="headline" component="h2"> */}
-              <h2>This is a list of all stored users</h2>
-            {/* </Typography> */}
-            {/* <Typography type="body1"> */}
-              <p>It excludes those who might have logged in using certificates or LDAP credentials.</p>
-            {/* </Typography> */}
-            <br/>
-            {this.props.showSearchLoader ? (
-              <CircularProgress/>
-            ) : (
+            <Toolbar>
+              <ToolbarGroup>
+                <ToolbarTitle text="Users" />
+              </ToolbarGroup>
+              <ToolbarGroup>
+                <NavLink to='/newUser'>
+                  <RaisedButton label="Create" primary={true} className="UserSearch-appButton"/>
+                </NavLink>
+              </ToolbarGroup>
+            </Toolbar>
+            <div className="UserSearch-content">
               <div>
-              <ReactTable
-                data={this.props.results}
-                className='-striped -highlight UserSearch-table'
-                columns={columns}
-                defaultSorted={[{
-                  id:'email',
-                  desc: true
-                }]}
-                showPagination={false}
-                filterable={true}/>
+                <ReactTable
+                  data={this.props.results}
+                  className='-striped -highlight UserSearch-table'
+                  columns={columns}
+                  defaultSorted={[{
+                    id:'email',
+                    desc: true
+                  }]}
+                  showPagination={false}
+                  filterable={true}
+                  loading={this.props.showSearchLoader}/>
+                <p className="warning">This list is for user accounts only. It excludes those users who might have logged in using certificates or LDAP credentials.</p>
               </div>
-            )}
+            </div>
           </Paper>    
     )
   }
