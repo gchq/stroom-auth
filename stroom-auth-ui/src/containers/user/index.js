@@ -12,9 +12,7 @@ export class UserCreate extends Component {
 
     render() {
     return (
-      <div>
         <UserLayout/>
-      </div>
     )
   }
 }
@@ -31,9 +29,7 @@ export class UserEdit extends Component {
 
     render() {
     return (
-      <div>
         <UserLayout/>
-      </div>
     )
   }
 }
@@ -50,9 +46,7 @@ export class UserSearch extends Component {
 
     render() {
     return (
-      <div>
         <UserLayout/>
-      </div>
     )
   }
 }

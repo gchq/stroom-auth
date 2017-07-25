@@ -7,10 +7,12 @@ export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
 export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
 export const TOKEN_DELETE = 'login/TOKEN_DELETE'
 export const SHOW_LOADER = 'login/SHOW_LOADER'
+export const SHOW_UNAUTHORIZED_DIALOG = 'login/SHOW_UNAUTHORIZED_DIALOG'
 
 const initialState = {
   token: '',
-  showLoader: false
+  showLoader: false,
+  showUnauthorizedDialog: false
 }
 
 export default (state = initialState, action) => {
@@ -36,6 +38,12 @@ export default (state = initialState, action) => {
         ...state,
         showLoader: action.showLoader
       }
+
+    case SHOW_UNAUTHORIZED_DIALOG:
+    return { 
+      ...state,
+      showUnauthorizedDialog: action.showUnauthorizedDialog
+    }
     default:
       return state
   }
@@ -71,9 +79,21 @@ export function showLoader(showLoader){
 export const checkForRememberMeToken = (dispatch) => {
   const token = localStorage.getItem('token')
   if(token){
-    // return dispatch => {
       dispatch(changeToken(token))
-    // }
+  }
+}
+
+export const requestWasUnauthorized = (showUnauthorizedDialog) => {
+  return {
+    type: SHOW_UNAUTHORIZED_DIALOG,
+    showUnauthorizedDialog
+  }
+}
+
+export const handleSessionTimeout = () => {
+  return dispatch => { 
+    dispatch(logout())
+    dispatch(requestWasUnauthorized(false))
   }
 }
 

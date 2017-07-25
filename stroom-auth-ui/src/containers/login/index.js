@@ -10,7 +10,6 @@ import { checkForRememberMeToken } from '../../modules/login'
 
 class Login extends Component {
   componentWillMount() {
-    // this.context.store.dispatch(checkForRememberMeToken)
     checkForRememberMeToken(this.context.store.dispatch)
   }
 

@@ -23,9 +23,7 @@ class UserEditForm extends Component {
 
   render() {
     return (
-      <div>
-        <UserEditUi/>
-      </div>
+      <UserEditUi/>
     )
   }
 }

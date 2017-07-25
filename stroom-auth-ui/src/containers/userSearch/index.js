@@ -19,7 +19,7 @@ import { performUserSearch } from '../../modules/userSearch'
 import './UserSearch.css'
 
 const columns = [{
-  Header: 'Actions',
+  Header: '',
   accessor: 'id',
   Cell: row => (
     <NavLink to={`/user/${row.value}`}><IconButton className='UserSearch-tableButton'><ImageEdit/></IconButton></NavLink>

@@ -1,4 +1,5 @@
 import { HttpError } from '../ErrorTypes'
+import { requestWasUnauthorized } from './login'
 
 export const SHOW_SEARCH_LOADER = 'userSearch/SHOW_SEARCH_LOADER'
 export const ERROR_ADD = 'userSearch/ERROR_ADD'
@@ -115,6 +116,7 @@ function getBody(response) {
 function handleErrors(error, dispatch) {
   dispatch(showSearchLoader(false))
   if(error.status === 401){
+    dispatch(requestWasUnauthorized(true))
     //TODO: Consider logging the user out here - their token might be invalid.
     dispatch(errorAdd(error.status, 'Could not authenticate. Please try logging in again.'))
   }
