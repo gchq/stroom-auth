@@ -11,6 +11,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import {fullWhite} from 'material-ui/styles/colors'
 import Add from 'material-ui-icons/Add'
 import Search from 'material-ui-icons/Search'
+import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
@@ -32,7 +33,11 @@ const UserLayout = props => {
     <Paper className='User-main'>
       <Toolbar>
         <ToolbarGroup>
-          <ToolbarTitle text="Users" />
+          <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
+          <KeyboardArrowRight className="UserLayout-toolbarSeparator"/>
+          {showSearch ? (<ToolbarTitle text="Search" className="UserLayout-toolbarTitle"/>) : (undefined)}
+          {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
+          {showEdit ? (<ToolbarTitle text="Edit" className="UserLayout-toolbarTitle"/>) : (undefined)}
         </ToolbarGroup>
         <ToolbarGroup>
           {showCreateButton ? (

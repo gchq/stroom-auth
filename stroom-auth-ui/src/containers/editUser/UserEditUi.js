@@ -16,10 +16,7 @@ const UserEditForm = props => {
   return (
     <Card >
       <form onSubmit={saveChanges}>
-
-          <h2>Update the user's details below</h2>
           <UserFields showCalculatedFields={true}/>
-
             <RaisedButton 
             primary={true} className="User-button" 
             disabled={pristine || submitting}

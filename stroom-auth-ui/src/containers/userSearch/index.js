@@ -55,16 +55,6 @@ class UserSearch extends Component {
   render() {
     return (
           <Paper className='UserSearch-main'>
-            <Toolbar>
-              <ToolbarGroup>
-                <ToolbarTitle text="Users" />
-              </ToolbarGroup>
-              <ToolbarGroup>
-                <NavLink to='/newUser'>
-                  <RaisedButton label="Create" primary={true} className="UserSearch-appButton" icon={<Add color={fullWhite}/>}/>
-                </NavLink>
-              </ToolbarGroup>
-            </Toolbar>
             <div className="UserSearch-content">
               <div>
                 <ReactTable

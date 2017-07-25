@@ -6,3 +6,12 @@
     border-bottom: 0px;
     width:400px;
 }
+
+.UserLayout-toolbarSeparator {
+    padding-right:16px;
+}
+
+.UserLayout-toolbarTitle {
+    /* The default colourings for the toolbar and title is low-contrast grey-on-grey. Changing for improved accessibility. */
+    color:black !important;
+}
