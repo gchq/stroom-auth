@@ -55,9 +55,10 @@ export function deleteToken() {
 }
 
 export const logout = () => {
-    return dispatch => {
-      dispatch(deleteToken())
-    }
+  localStorage.removeItem('token')
+  return dispatch => {
+    dispatch(deleteToken())
+  }
 }
 
 export function showLoader(showLoader){
@@ -67,9 +68,18 @@ export function showLoader(showLoader){
   }
 }
 
+export const checkForRememberMeToken = (dispatch) => {
+  const token = localStorage.getItem('token')
+  if(token){
+    // return dispatch => {
+      dispatch(changeToken(token))
+    // }
+  }
+}
+
 export const login = (credentials) => {
   return dispatch => {
-    const { email, password } = credentials
+    const { email, password, rememberMe } = credentials
 
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))
@@ -94,7 +104,7 @@ export const login = (credentials) => {
       .then(getBody)
       //TODO restore referrer
       // .then(jwsToken => processToken(jwsToken, dispatch, referrer))
-      .then(jwsToken => processToken(jwsToken, dispatch, null))
+      .then(jwsToken => processToken(jwsToken, dispatch, rememberMe, null))
   }
 }
 
@@ -113,7 +123,17 @@ function getBody(response) {
   return response.text()
 }
 
-function processToken(token, dispatch, referrer){
+function processToken(token, dispatch, rememberMe, referrer){
+  if(rememberMe){
+    const existingToken = localStorage.getItem('token')
+    if(existingToken !== token) {
+      localStorage.setItem('token', token)
+    }
+  }
+  else {
+    localStorage.removeItem('token')
+  }
+
   dispatch(changeToken(token))
   dispatch(showLoader(false))        
   if(referrer === "stroom"){

@@ -28,9 +28,11 @@ class App extends Component {
 
   isLoggedIn(){
     return this.props.token ? true : false
+    // return localStorage.getItem('token') ? true : false
   }
 
   render() {
+    // const token = localStorage.getItem('token')
     return (
       <div className="App">
         {this.isLoggedIn() ? (

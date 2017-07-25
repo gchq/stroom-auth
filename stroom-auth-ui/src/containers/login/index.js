@@ -1,77 +1,53 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import Card from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-import Avatar from 'material-ui/Avatar'
+import LoginUI from './LoginUI'
+import { fetchUser } from '../../modules/user'
+import { checkForRememberMeToken } from '../../modules/login'
 
-import { Field, reduxForm } from 'redux-form'
-import { TextField } from 'redux-form-material-ui'
+class Login extends Component {
+  componentWillMount() {
+    // this.context.store.dispatch(checkForRememberMeToken)
+    checkForRememberMeToken(this.context.store.dispatch)
+  }
 
-import './Login.css'
-import icon from '../../icon.png'
-import { required, email } from '../../validations'
-import {login as onSubmit} from '../../modules/login'
-
-const LoginForm = props => {
-  const {handleSubmit, pristine, submitting } = props
+  render() {
+    const { token } = this.props
     return (
       <div>
-        <Card className='Login-card'>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <div className="LoginForm-iconContainer">
-                <Avatar
-                  className="LoginForm-icon"
-                  src={icon}
-                  size={100}
-                />
-              </div>
-              <div>
-              <Field 
-                name="email"
-                component={TextField}
-                hintText="Email"
-                validate={[required]}
-                warn={email}
-                className="LoginForm-input"
-              />
-              </div>
-              <Field 
-                name="password"
-                component={TextField}
-                hintText="Password"
-                validate={[required]}
-                className="LoginForm-input"
-              />
-              <br/>
-              <br/>
-              <RaisedButton 
-                primary={true}
-                disabled={pristine || submitting}
-                type="submit"
-                fullWidth={true}
-                label="Sign in"/>
-            </div>
-          </form>
-        </Card>
+        {token ? (
+          <Redirect to={{
+            pathname: '/',
+            state: {referrer:'/login'}
+          }}/>
+        ): (
+          <LoginUI/>
+        )}
       </div>
     )
   }
+}
 
-const ReduxLoginForm = reduxForm({
-  form: 'LoginForm'
-})(LoginForm)
+Login.PropTypes = {
+  token: PropTypes.string.isRequired
+}
+
+Login.contextTypes = {
+  store: PropTypes.object.isRequired
+}
 
 const mapStateToProps = state => ({
+  token: state.login.token
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  onSubmit
+  checkForRememberMeToken
 }, dispatch)
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ReduxLoginForm)
+)(Login)
