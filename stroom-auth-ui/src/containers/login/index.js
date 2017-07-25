@@ -13,7 +13,8 @@ import Avatar from 'material-ui/Avatar'
 import './Login.css'
 import icon from '../../icon.png'
 import { required, email } from '../../validations'
-import { onSubmit } from '../../modules/login'
+// import { login as onSubmit } from '../../modules/login'
+import {login as onSubmit} from '../../modules/login'
 
 const LoginForm = props => {
   const {handleSubmit, pristine, submitting } = props
@@ -66,24 +67,8 @@ const ReduxLoginForm = reduxForm({
   form: 'LoginForm'
 })(LoginForm)
 
-LoginForm.contextTypes = {
-  router: PropTypes.shape({
-    history: object.isRequired,
-  }),
-}
-
-LoginForm.propTypes ={
-  token: PropTypes.string.isRequired,
-  errorStatus: PropTypes.number,
-  errorText: PropTypes.string,
-  showLoader: PropTypes.bool
-}
-
+// export default ReduxLoginForm
 const mapStateToProps = state => ({
-  token: state.login.token,
-  errorStatus: state.login.errorStatus,
-  errorText: state.login.errorText,
-  showLoader: state.login.showLoader
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

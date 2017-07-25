@@ -1,5 +1,6 @@
 import { push } from 'react-router-redux'
 import { HttpError } from '../ErrorTypes'
+import { SubmissionError } from 'redux-form'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
@@ -97,7 +98,7 @@ export function showLoader(showLoader){
   }
 }
 
-export const onSubmit = (credentials) => {
+export const login = (credentials) => {
   return dispatch => {
     const { email, password } = credentials
     // We're re-attempting a login so we should remove any old errors
@@ -109,7 +110,8 @@ export const onSubmit = (credentials) => {
     var loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     // Call the authentication service to get a token.
     // If successful we re-direct to Stroom, otherwise we display a message.
-    fetch(loginServiceUrl, {
+    // It's essential we return the promise, otherwise any errors we get won't be handled.
+    return fetch(loginServiceUrl, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -123,15 +125,18 @@ export const onSubmit = (credentials) => {
     })
       .then(handleStatus)
       .then(getBody)
+      //TODO restore referrer
       // .then(jwsToken => processToken(jwsToken, dispatch, referrer))
       .then(jwsToken => processToken(jwsToken, dispatch, null))
-      .catch(error => handleErrors(error, dispatch))
   }
 }
 
 function handleStatus(response) {
   if(response.status === 200){
     return Promise.resolve(response)
+  } 
+  else if(response.status === 401 ){
+    throw new SubmissionError({password: 'Bad credentials'})
   } else {
     return Promise.reject(new HttpError(response.status, response.statusText))
   }
@@ -149,7 +154,7 @@ function processToken(token, dispatch, referrer){
     var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
     window.location.href = loginUrl
   }
-  else if(referrer === "") {
+  else if(!referrer) {
     dispatch(push('/'))
   }
   else {
