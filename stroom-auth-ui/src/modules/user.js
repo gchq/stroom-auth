@@ -8,6 +8,7 @@ export const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER'
 export const ERROR_ADD = 'user/ERROR_ADD'
 export const ERROR_REMOVE = 'user/ERROR_REMOVE'
 export const SAVE_USER_TO_EDIT_FORM = 'user/SAVE_USER_TO_EDIT_FORM'
+export const CHANGE_VISIBLE_CONTAINER = 'user/CHANGE_VISIBLE_CONTAINER'
 
 const initialState = {
   user: '',
@@ -55,6 +56,12 @@ export default (state = initialState, action) => {
         userBeingEdited: action.user
       }
 
+    case CHANGE_VISIBLE_CONTAINER:
+      return {
+        ...state,
+        show: action.show
+      }
+
     default:
       return state
   }
@@ -78,6 +85,13 @@ export function errorAdd(status, text){
 export function errorRemove(){
   return {
     type: ERROR_REMOVE
+  }
+}
+
+export function changeVisibleContainer(container) {
+  return {
+    type: CHANGE_VISIBLE_CONTAINER,
+    show: container
   }
 }
 

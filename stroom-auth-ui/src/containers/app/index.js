@@ -12,8 +12,8 @@ import logo from './logo.svg'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import About from '../../containers/about'
+import User, {UserCreate, UserEdit, UserSearch} from '../../containers/user'
 import NewUser from '../../containers/newUser'
-import UserSearch from '../../containers/userSearch'
 import PathNotFound from '../../containers/pathNotFound'
 import UserCreateForm from '../../containers/createUser'
 import UserEditForm from '../../containers/editUser'
@@ -35,52 +35,43 @@ class App extends Component {
       <div className="App">
         {this.isLoggedIn() ? (
         <AppBar
-          title={<img src={logo} className="App-logo" alt="Stroom logo"/>}
-                    iconElementLeft={<div/>}
-                    iconElementRight= {
-                      <div className="App-appBar-buttons">
-                        <FlatButton onClick={() => this.props.goToStroom(this.props.token)} label="Go to Stroom" primary={true} labelStyle={{color:'white'}}
-                          icon={<img src={iconBlue} alt="Stroom logo"/>}/>
-                        <NavLink to='/userSearch'>
-                          <FlatButton label="Users" labelStyle={{color:'white'}} icon={<Person color={fullWhite}/>}/>
-                        </NavLink>
-                        <LogOutAndInNavLink/>
-                      </div>
-                    }
+          title={
+            <img src={logo} className="App-logo" alt="Stroom logo"/>}
+              iconElementLeft={<div/>}
+              iconElementRight= {
+                <div className="App-appBar-buttons">
+                  <FlatButton onClick={() => this.props.goToStroom(this.props.token)} label="Go to Stroom" primary={true} labelStyle={{color:'white'}}
+                    icon={<img src={iconBlue} alt="Stroom logo"/>}/>
+                  <NavLink to='/userSearch'>
+                    <FlatButton label="Users" labelStyle={{color:'white'}} icon={<Person color={fullWhite}/>}/>
+                  </NavLink>
+                  <LogOutAndInNavLink/>
+                </div>
+              }
           />
         ) : (<div/>)}
 
         <main className={this.isLoggedIn() ? "main" : "main-login"}>
           <div className="container">
-            {/* {this.props.token !== '' ? (
-              <div className="nav-container">
-
-                <Card>
-                  <List>
-                    <NavLink to='/newUser'>
-                      <ListItem primaryText="Create a user"/>
-                    </NavLink>
-                    <NavLink to='/userSearch'>
-                      <ListItem primaryText="List users"/>
-                    </NavLink>
-                    <ListItem onClick={() => this.props.goToStroom(this.props.token)} primaryText="Go to stroom"/>
-                    <Divider/>
-                    <LogOutAndInNavLink/>
-                  </List>
-                </Card>
-              </div>
-            ) : (<div/>)} */}
-
             <div>
               <Switch>
-                <Route exact path="/" component={this.props.token !== '' ? UserSearch : Login} />
+                <Route exact path="/" render={() => (
+                  this.isLoggedIn() ? (
+                    <UserSearch/> 
+                  ) : (
+                    <Redirect to={{
+                      pathname: '/login',
+                      state: {referrer:'/user'}}}/>
+                  )
+                )} />
+
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/logout" component={Logout} />
                 <Route exact path="/about" component={About}/>
                 <Route exact path="/newUser" component={NewUser}/>
                 <Route exact path="/user" render={() => (
                   this.isLoggedIn() ? (
-                    <UserCreateForm />
+                    <UserCreate/>
                   ) : (
                     // We record the referrer because Login needs it to redirect back to after a successful login.
                     <Redirect to={{
@@ -91,7 +82,7 @@ class App extends Component {
 
                 <Route exact path="/user/:userId" render={(route) => (
                   this.isLoggedIn() ? (
-                    <UserEditForm userId={route.match.params.userId}/>
+                    <UserEdit/>
                   ) : (
                     // We record the referrer because Login needs it to redirect back to after a successful login.
                     <Redirect to={{
@@ -102,7 +93,7 @@ class App extends Component {
 
                 <Route exact path="/userSearch" render={() => (
                   this.isLoggedIn() ? (
-                    <UserSearch />
+                    <UserSearch/>
                   ) : (
                     // We record the referrer because Login needs it to redirect back to after a successful login.
                     <Redirect to={{
