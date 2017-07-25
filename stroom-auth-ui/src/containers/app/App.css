@@ -28,13 +28,19 @@
     padding: 15px;
 }
 
-.main {
-  padding-top: 70px;
+.main-login {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
 }
+
+.main {
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
 
 .App-appBar-buttons {
   /* Align the buttons with the main Stroom logo */

@@ -58,7 +58,7 @@ class App extends Component {
           />
         ) : (<div/>)}
 
-        <main className="main">
+        <main className={this.isLoggedIn() ? "main" : "main-login"}>
           <div className="container">
             {/* {this.props.token !== '' ? (
               <div className="nav-container">
