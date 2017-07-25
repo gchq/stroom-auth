@@ -17,7 +17,7 @@ import {login as onSubmit} from '../../modules/login'
 const LoginForm = props => {
   const {handleSubmit, pristine, submitting } = props
     return (
-      <div>
+      <div className='LoginForm-container'>
         <Card className='Login-card'>
           <form onSubmit={handleSubmit}>
             <div>

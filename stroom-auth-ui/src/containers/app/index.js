@@ -55,8 +55,8 @@ class App extends Component {
           />
         ) : (<div/>)}
 
-        <main className={this.isLoggedIn() ? "main" : "main-login"}>
-          <div className="container">
+        <main className='main'>
+          <div className={this.isLoggedIn() ? 'container' : 'container-login'}>
             <Switch>
               <Route exact path="/" render={() => (
                 this.isLoggedIn() ? (

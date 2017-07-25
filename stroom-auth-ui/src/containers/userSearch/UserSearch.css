@@ -13,11 +13,8 @@
   height:0px !important;
 }
 
-.UserSearch-table {
-  height: 500px;
-}
-
 p.warning {
   font-style: italic;
-  padding: 3px;
+  padding: 3px; 
+  margin-bottom: 0px;
 }

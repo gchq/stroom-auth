@@ -30,7 +30,7 @@ const UserLayout = props => {
   var showCreateButton = showSearch || showEdit
   var showSearchButton = showEdit || showCreate
   return (
-    <Paper className='User-main'>
+    <Paper className='UserLayout-main'>
       <Toolbar>
         <ToolbarGroup>
           <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>

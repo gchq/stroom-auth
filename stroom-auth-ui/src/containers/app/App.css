@@ -4,43 +4,23 @@
    margin-left: 10px;
 }
 
-.App-header {
-  background-color: #1e88e5;
-  height: 70px;
-  color: white;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-.App-leftNav {
-  height:600px;
-  padding:10px;
-}
-
 .container {
-  display: flex;
-  justify-content: center;
+  width: 100%; 
+  height: 100%; 
 }
 
-.nav-container {
-    padding: 15px;
+/* This centers the login box */
+.container-login {
+  display: flex;  
+  align-items: center; 
+  justify-content: center;  
+  height: 100vh; 
 }
 
-.main-login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
+/* This just adds some padding to the content */
 .main {
-  padding-top: 20px;
-  display: flex;
-  justify-content: center;
+  padding:10px;  
 }
-
 
 .App-appBar-buttons {
   /* Align the buttons with the main Stroom logo */
