@@ -1,9 +1,8 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import PropTypes, {object} from 'prop-types'
 
-import Card, { CardActions } from 'material-ui/Card'
+import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import Avatar from 'material-ui/Avatar'
 

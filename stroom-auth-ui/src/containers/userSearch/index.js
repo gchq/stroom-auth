@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 import { NavLink} from 'react-router-dom'
 
 import Paper from 'material-ui/Paper'
-import CircularProgress from 'material-ui/CircularProgress'
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar'
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import ReactTable from 'react-table'

@@ -4,9 +4,6 @@ import PropTypes from 'prop-types'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Menu, { MenuItem } from 'material-ui/Menu'
 
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-
 export default class UserStateMenu extends Component {
   constructor(props) {
     super(props)

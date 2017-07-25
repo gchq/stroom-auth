@@ -2,7 +2,6 @@ import React from 'react'
 import { Field } from 'redux-form'
 import PropTypes from 'prop-types'
 
-import FlatButton from 'material-ui/FlatButton'
 import { MenuItem } from 'material-ui/Menu'
 import { SelectField, TextField } from 'redux-form-material-ui'
 
@@ -18,7 +17,7 @@ TODO: add password change facility
 */
 
 const UserFields = props => {
-  const {pristine, submitting, showCalculatedFields } = props
+  const {showCalculatedFields } = props
   return (
       <div className="container">
           <div className="left-container">

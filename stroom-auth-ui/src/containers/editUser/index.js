@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 
 import UserEditUi from './UserEditUi'
 import { fetchUser } from '../../modules/user'
@@ -30,7 +31,7 @@ class UserEditForm extends Component {
 }
 
 UserEditForm.contextTypes = {
-  store: React.PropTypes.object.isRequired
+  store: PropTypes.object.isRequired
 }
 
 export default UserEditForm

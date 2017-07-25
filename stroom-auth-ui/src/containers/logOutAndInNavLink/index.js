@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
 
-import { ListItem, ListItemText } from 'material-ui/List'
 import FlatButton from 'material-ui/FlatButton'
 import ExitToApp from 'material-ui-icons/ExitToApp'
 import {fullWhite} from 'material-ui/styles/colors'

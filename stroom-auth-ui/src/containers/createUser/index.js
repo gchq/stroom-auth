@@ -1,17 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Field, reduxForm } from 'redux-form'
+import { reduxForm } from 'redux-form'
 
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import { MenuItem } from 'material-ui/Menu'
-import { SelectField, TextField } from 'redux-form-material-ui'
 
 import UserFields from '../userFields'
 import './CreateUserForm.css'
 import { onSubmit } from '../../modules/user'
-import { required, email } from '../../validations'
 
 const UserCreateForm = props => {
   const {handleSubmit, pristine, submitting } = props
