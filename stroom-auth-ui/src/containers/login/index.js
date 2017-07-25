@@ -49,12 +49,11 @@ const LoginForm = props => {
               <br/>
               <br/>
               <RaisedButton 
-                primar={true}
+                primary={true}
                 disabled={pristine || submitting}
                 type="submit"
-                fullWidth={true}>
-                  Log in
-              </RaisedButton>
+                fullWidth={true}
+                label="Sign in"/>
             </div>
           </form>
         </Card>
