@@ -5,10 +5,10 @@ import PropTypes, {object} from 'prop-types'
 
 import Card, { CardActions } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
+import Avatar from 'material-ui/Avatar'
 
 import { Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
-import Avatar from 'material-ui/Avatar'
 
 import './Login.css'
 import icon from '../../icon.png'

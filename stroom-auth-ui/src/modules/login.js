@@ -10,8 +10,6 @@ export const SHOW_LOADER = 'login/SHOW_LOADER'
 
 const initialState = {
   token: '',
-  errorStatus: -1,
-  errorText: '',
   showLoader: false
 }
 
