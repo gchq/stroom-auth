@@ -13,6 +13,8 @@ import 'react-table/react-table.css'
 
 import IconButton from 'material-ui/IconButton'
 import ImageEdit from 'material-ui/svg-icons/image/edit'
+import {fullWhite} from 'material-ui/styles/colors'
+import Add from 'material-ui-icons/Add'
 
 import { performUserSearch } from '../../modules/userSearch'
 import './UserSearch.css'
@@ -60,7 +62,7 @@ class UserSearch extends Component {
               </ToolbarGroup>
               <ToolbarGroup>
                 <NavLink to='/newUser'>
-                  <RaisedButton label="Create" primary={true} className="UserSearch-appButton"/>
+                  <RaisedButton label="Create" primary={true} className="UserSearch-appButton" icon={<Add color={fullWhite}/>}/>
                 </NavLink>
               </ToolbarGroup>
             </Toolbar>
