@@ -29,8 +29,16 @@
 }
 
 .main {
+  padding-top: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
+}
+
+.App-appBar-buttons {
+  /* Align the buttons with the main Stroom logo */
+  padding-top:6px;
+  /* We need the buttons to align horizontally */
+  display:flex;
 }

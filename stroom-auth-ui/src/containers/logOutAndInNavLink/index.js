@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
 
-import { ListItem, ListItemText } from 'material-ui/List';
+import { ListItem, ListItemText } from 'material-ui/List'
+import FlatButton from 'material-ui/FlatButton'
+import ExitToApp from 'material-ui-icons/ExitToApp'
+import {fullWhite} from 'material-ui/styles/colors'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -17,11 +20,11 @@ class LogOutAndInNavLink extends Component {
         {isLoggedIn ? (
 
           <NavLink to="logout">
-            <ListItem primaryText="Log out"/>
+            <FlatButton label="Log out" labelStyle={{color:'white'}} icon={<ExitToApp color={fullWhite}/>}/>
           </NavLink>
         ) : (
           <NavLink to="login">
-            <ListItem primaryText="Log in"/>
+            <FlatButton label="Log in" labelStyle={{color:'white'}}/>
           </NavLink>
         )}
       </div>

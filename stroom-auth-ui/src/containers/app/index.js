@@ -25,9 +25,12 @@ import UserSearch from '../../containers/userSearch'
 import PathNotFound from '../../containers/pathNotFound'
 import UserCreateForm from '../../containers/createUser'
 import UserEditForm from '../../containers/editUser'
-//import EditUser from '../../containers/editUser'
+import FlatButton from 'material-ui/FlatButton'
 import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
+import Person from 'material-ui-icons/Person'
+import {fullWhite} from 'material-ui/styles/colors'
 import { goToStroom } from '../../modules/sidebar'
+import iconBlue from './../../icon-blue-small.png'
 
 class App extends Component {
 
@@ -42,12 +45,22 @@ class App extends Component {
         <AppBar
           title={<img src={logo} className="App-logo" alt="Stroom logo"/>}
                     iconElementLeft={<div/>}
+                    iconElementRight= {
+                      <div className="App-appBar-buttons">
+                        <FlatButton onClick={() => this.props.goToStroom(this.props.token)} label="Go to Stroom" primary={true} labelStyle={{color:'white'}}
+                          icon={<img src={iconBlue} alt="Stroom logo"/>}/>
+                        <NavLink to='/userSearch'>
+                          <FlatButton label="Users" labelStyle={{color:'white'}} icon={<Person color={fullWhite}/>}/>
+                        </NavLink>
+                        <LogOutAndInNavLink/>
+                      </div>
+                    }
           />
         ) : (<div/>)}
 
         <main className="main">
           <div className="container">
-            {this.props.token !== '' ? (
+            {/* {this.props.token !== '' ? (
               <div className="nav-container">
 
                 <Card>
@@ -64,9 +77,9 @@ class App extends Component {
                   </List>
                 </Card>
               </div>
-            ) : (<div/>)}
+            ) : (<div/>)} */}
 
-            <div className="main-container">
+            <div>
               <Switch>
                 <Route exact path="/" component={this.props.token !== '' ? UserSearch : Login} />
                 <Route exact path="/login" component={Login} />

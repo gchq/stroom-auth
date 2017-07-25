@@ -63,16 +63,18 @@ class UserSearch extends Component {
             {this.props.showSearchLoader ? (
               <CircularProgress/>
             ) : (
+              <div>
               <ReactTable
-              data={this.props.results}
-              className='-striped -highlight'
-              columns={columns}
-              defaultSorted={[{
-                id:'email',
-                desc: true
-              }]}
-              showPagination={false}
-              filterable={true}/>
+                data={this.props.results}
+                className='-striped -highlight UserSearch-table'
+                columns={columns}
+                defaultSorted={[{
+                  id:'email',
+                  desc: true
+                }]}
+                showPagination={false}
+                filterable={true}/>
+              </div>
             )}
           </Paper>    
     )
