@@ -6,8 +6,6 @@ export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
 export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
 export const TOKEN_DELETE = 'login/TOKEN_DELETE'
-export const ERROR_ADD = 'login/ERROR_ADD'
-export const ERROR_REMOVE = 'login/ERROR_REMOVE'
 export const SHOW_LOADER = 'login/SHOW_LOADER'
 
 const initialState = {
@@ -34,18 +32,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         token: ''
-      }
-    case ERROR_ADD:
-      return {
-        ...state,
-        errorStatus: action.status,
-        errorText: action.text
-      }
-    case ERROR_REMOVE:
-      return {
-        ...state,
-        errorStatus: -1,
-        errorText: ''
       }
     case SHOW_LOADER:
       return {
@@ -76,21 +62,6 @@ export const logout = () => {
     }
 }
 
-
-export function errorAdd(status, text){
-  return {
-    type: ERROR_ADD,
-    status,
-    text
-  }
-}
-
-export function errorRemove(){
-  return {
-    type: ERROR_REMOVE
-  }
-}
-
 export function showLoader(showLoader){
   return {
     type: SHOW_LOADER,
@@ -101,8 +72,6 @@ export function showLoader(showLoader){
 export const login = (credentials) => {
   return dispatch => {
     const { email, password } = credentials
-    // We're re-attempting a login so we should remove any old errors
-    dispatch(errorRemove())
 
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))
@@ -159,15 +128,5 @@ function processToken(token, dispatch, referrer){
   }
   else {
     dispatch(push(referrer))
-  }
-}
-
-function handleErrors(error, dispatch) {
-  dispatch(showLoader(false))
-  if(error.status === 401){
-    dispatch(errorAdd(error.status, 'Those credentials are not valid. Please try again.'))
-  }
-  else { 
-    dispatch(errorAdd(error.status, error.message))
   }
 }

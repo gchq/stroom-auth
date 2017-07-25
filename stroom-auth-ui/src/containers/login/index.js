@@ -13,7 +13,6 @@ import Avatar from 'material-ui/Avatar'
 import './Login.css'
 import icon from '../../icon.png'
 import { required, email } from '../../validations'
-// import { login as onSubmit } from '../../modules/login'
 import {login as onSubmit} from '../../modules/login'
 
 const LoginForm = props => {
@@ -67,7 +66,6 @@ const ReduxLoginForm = reduxForm({
   form: 'LoginForm'
 })(LoginForm)
 
-// export default ReduxLoginForm
 const mapStateToProps = state => ({
 })
 
