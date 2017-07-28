@@ -1,8 +1,9 @@
 package stroom.auth.service.security;
 
-import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.regex.Pattern;
 
 public final class CertificateUtilTest {
     @Test

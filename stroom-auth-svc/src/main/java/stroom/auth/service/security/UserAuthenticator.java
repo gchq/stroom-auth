@@ -2,9 +2,10 @@ package stroom.auth.service.security;
 
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
-import java.util.Optional;
 import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.jwt.consumer.JwtContext;
+
+import java.util.Optional;
 
 public class UserAuthenticator implements Authenticator<JwtContext, ServiceUser> {
 

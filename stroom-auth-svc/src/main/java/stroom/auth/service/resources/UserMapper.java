@@ -1,14 +1,13 @@
 package stroom.auth.service.resources;
 
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-
 import com.google.common.base.Preconditions;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
 
 public final class UserMapper {
 

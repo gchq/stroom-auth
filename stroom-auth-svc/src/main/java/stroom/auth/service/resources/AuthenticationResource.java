@@ -1,22 +1,6 @@
 package stroom.auth.service.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.regex.Pattern;
-import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.google.common.base.Strings;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -29,6 +13,22 @@ import stroom.auth.service.Config;
 import stroom.auth.service.TokenGenerator;
 import stroom.auth.service.security.CertificateUtil;
 import stroom.db.auth.tables.records.UsersRecord;
+
+import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 import static stroom.db.auth.Tables.USERS;
 

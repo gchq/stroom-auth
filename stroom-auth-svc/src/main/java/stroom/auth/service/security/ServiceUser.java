@@ -1,10 +1,9 @@
 package stroom.auth.service.security;
 
-import java.security.Principal;
-
 import com.google.common.base.Preconditions;
 
 import javax.validation.constraints.NotNull;
+import java.security.Principal;
 
 public final class ServiceUser implements Principal {
 

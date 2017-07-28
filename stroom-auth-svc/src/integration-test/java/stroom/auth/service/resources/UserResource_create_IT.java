@@ -1,11 +1,11 @@
 package stroom.auth.service.resources;
 
-import java.time.Instant;
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
+
+import java.time.Instant;
 
 public final class UserResource_create_IT extends UserResource_IT {
   @Test

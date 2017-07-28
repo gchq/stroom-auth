@@ -1,13 +1,13 @@
 package stroom.auth.service.resources;
 
 
-import java.io.IOException;
-import java.time.Instant;
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
