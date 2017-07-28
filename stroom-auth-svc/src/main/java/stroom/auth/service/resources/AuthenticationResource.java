@@ -11,6 +11,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -31,6 +32,8 @@ import stroom.db.auth.tables.records.UsersRecord;
 
 import static stroom.db.auth.Tables.USERS;
 
+@Path("/authentication/")
+@Produces(MediaType.APPLICATION_JSON)
 public final class AuthenticationResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationResource.class);
 
@@ -86,8 +89,8 @@ public final class AuthenticationResource {
             @Context @NotNull DSLContext database, @Nullable Credentials credentials) {
         Response response;
         if(credentials == null
-                && Strings.isNullOrEmpty(credentials.getEmail())
-                && Strings.isNullOrEmpty(credentials.getPassword())) {
+                || Strings.isNullOrEmpty(credentials.getEmail())
+                || Strings.isNullOrEmpty(credentials.getPassword())) {
             return Response.status(Status.BAD_REQUEST).entity("Please provide both email and password").build();
         }
 
