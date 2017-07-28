@@ -1,12 +1,11 @@
 package stroom.auth.service;
 
 import java.nio.charset.Charset;
-import java.security.Key;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.validation.constraints.NotNull;
 
 import jersey.repackaged.com.google.common.base.Preconditions;
-import org.jetbrains.annotations.NotNull;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.keys.HmacKey;

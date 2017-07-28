@@ -4,8 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
 import io.dropwizard.auth.Auth;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -19,6 +17,8 @@ import stroom.auth.service.Config;
 import stroom.auth.service.security.ServiceUser;
 import stroom.db.auth.tables.records.UsersRecord;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -38,6 +38,7 @@ import static stroom.db.auth.Tables.USERS;
 public final class UserResource {
   private final Config config;
   private final Logger logger;
+
 
   @GET
   @Path("/")

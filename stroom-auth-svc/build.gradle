@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-buildscript {
-    ext.kotlin_version = '1.1.2-2'
-
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 plugins {
     id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
 apply plugin: 'application'
-apply plugin: 'kotlin'
 mainClassName = 'stroom.auth.service.App'
 
 jar {
@@ -88,7 +75,6 @@ tasks.withType(Test) {
 
 dependencies {
     compile project(':stroom-persistence')
-    compile deps.kotlin
     compile deps.dropwizard_core
     compile deps.dropwizard_flyway
     compile deps.dropwizard_jooq
@@ -100,7 +86,6 @@ dependencies {
     compile deps.slf4j
     compile deps.shiro_core
     compile deps.flyway_core
-    compile deps.kotlin_reflect
     compile deps.curator_service_discovery
 
     runtime deps.mariadb_connector
@@ -109,6 +94,6 @@ dependencies {
     testCompile testDeps.assertj
 
     integrationTestCompile testDeps.dropwizard_testing
-    integrationTestCompile testDeps.fuel
     integrationTestCompile testDeps.moshi
+    integrationTestCompile testDeps.unirest
 }

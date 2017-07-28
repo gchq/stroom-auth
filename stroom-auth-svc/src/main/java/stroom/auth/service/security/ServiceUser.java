@@ -3,7 +3,8 @@ package stroom.auth.service.security;
 import java.security.Principal;
 
 import com.google.common.base.Preconditions;
-import org.jetbrains.annotations.NotNull;
+
+import javax.validation.constraints.NotNull;
 
 public final class ServiceUser implements Principal {
 

@@ -1,7 +1,8 @@
 package stroom.auth.service.resources;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jetbrains.annotations.NotNull;
+
+import javax.validation.constraints.NotNull;
 
 public final class Credentials {
   @NotNull

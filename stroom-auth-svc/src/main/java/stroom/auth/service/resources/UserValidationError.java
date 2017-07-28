@@ -1,6 +1,7 @@
 package stroom.auth.service.resources;
 
-import org.jetbrains.annotations.NotNull;
+
+import javax.validation.constraints.NotNull;
 
 public enum UserValidationError {
   NO_USER("Please supply a user with an email address and a password. "),

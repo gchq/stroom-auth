@@ -18,8 +18,6 @@ import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import stroom.auth.service.resources.AuthenticationResource;
 import stroom.auth.service.resources.UserResource;
 import stroom.auth.service.security.AuthenticationFilter;
@@ -33,38 +31,34 @@ import java.util.EnumSet;
 public final class App extends Application<Config>  {
     private Injector injector;
 
-    public final void main(@NotNull String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         new App().run(args);
     }
 
     private final JooqBundle jooqBundle = new JooqBundle<Config>() {
-        @NotNull
-        public DataSourceFactory getDataSourceFactory(@NotNull Config configuration) {
+        public DataSourceFactory getDataSourceFactory(Config configuration) {
             return configuration.getDataSourceFactory();
         }
 
-        @NotNull
-        public JooqFactory getJooqFactory(@NotNull Config configuration) {
+        public JooqFactory getJooqFactory(Config configuration) {
             return configuration.getJooqFactory();
         }
 
     };
 
     private final FlywayBundle flywayBundle = new FlywayBundle<Config>() {
-        @NotNull
-        public DataSourceFactory getDataSourceFactory(@NotNull Config config) {
+        public DataSourceFactory getDataSourceFactory(Config config) {
             return config.getDataSourceFactory();
         }
 
 
-        @NotNull
-        public FlywayFactory getFlywayFactory(@NotNull Config config) {
+        public FlywayFactory getFlywayFactory(Config config) {
             return config.getFlywayFactory();
         }
     };
 
     @Override
-    public void run(@NotNull Config config, @NotNull Environment environment) throws Exception {
+    public void run(Config config, Environment environment) throws Exception {
         configureAuthentication(config, environment);
 //        environment.lifecycle().addServerLifecycleListener((ServerLifecycleListener) null.INSTANCE);
         this.injector = Guice.createInjector(new stroom.auth.service.Module());
@@ -77,7 +71,7 @@ public final class App extends Application<Config>  {
     }
 
 
-    public void initialize(@Nullable Bootstrap bootstrap) {
+    public void initialize(Bootstrap bootstrap) {
         // This allows us to use templating in the YAML configuration.
         bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
                 bootstrap.getConfigurationSourceProvider(),

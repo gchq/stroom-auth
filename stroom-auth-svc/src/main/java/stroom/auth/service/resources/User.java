@@ -2,9 +2,9 @@ package stroom.auth.service.resources;
 
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
 public final class User {
