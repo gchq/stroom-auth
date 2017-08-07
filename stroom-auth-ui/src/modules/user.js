@@ -175,10 +175,6 @@ export const saveChanges = (editedUser) => {
   return (dispatch, getState) => {
      const jwsToken = getState().login.token
   const { id, email, password, first_name, last_name, comments, state } = editedUser
-    // We're re-attempting a login so we should remove any old errors
-  dispatch(errorRemove())
-
-  dispatch(showCreateLoader(true))
 
   var userServiceUrl = `${process.env.REACT_APP_USER_URL}/${id}`
   fetch(userServiceUrl, {
@@ -199,9 +195,7 @@ export const saveChanges = (editedUser) => {
       })
     })
     .then(handleStatus)
-    .then(getBody)
     .then(() => {
-      dispatch(showCreateLoader(false))
       dispatch(push(`/user/${id}`))
     })
     .catch(error => handleErrors(error, dispatch))
