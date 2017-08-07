@@ -2,7 +2,7 @@ import { push } from 'react-router-redux'
 import { HttpError } from '../ErrorTypes'
 import { initialize } from 'redux-form'
 
-import { requestWasUnauthorized } from './login'
+import { handleErrors, getBody, getJsonBody } from './common'
 
 export const CREATE_REQUEST = 'user/CREATE_REQUEST'
 export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
@@ -97,46 +97,6 @@ export function changeVisibleContainer(container) {
   }
 }
 
-// export const attemptCreate = (email, password, first_name, last_name, comments, state, jwsToken) => {
-//   return dispatch => {
-//     // We're re-attempting a login so we should remove any old errors
-//     dispatch(errorRemove())
-
-//     dispatch(showCreateLoader(true))
-
-
-//     var userServiceUrl = process.env.REACT_APP_USER_URL
-//     // Call the authentication service to get a token.
-//     // If successful we re-direct to Stroom, otherwise we display a message.
-//     fetch(userServiceUrl, {
-//         headers: {
-//           'Accept': 'application/json',
-//           'Content-Type': 'application/json',
-//           'Authorization' : 'Bearer ' + jwsToken
-//         },
-//         method: 'post',
-//         mode: 'cors',
-//         body: JSON.stringify({
-//           email,
-//           password,
-//           first_name,
-//           last_name,
-//           comments,
-//           state
-//         })
-//       })
-//       .then(handleStatus)
-//       .then(getBody)
-//       .then(newUserId => {
-//         dispatch(showCreateLoader(false))
-//         dispatch(push(`/user/${newUserId}`))
-//       })
-//       .catch(error => handleErrors(error, dispatch))
-    
-//     //TODO dispatch somewhere in the above. Should save the token just in case.
-//   }
-// }
-
 export const loadUser = (userId, jwsToken) => {
   return dispatch => {
     //TODO load the user and put it into the store
@@ -154,23 +114,6 @@ function handleStatus(response) {
   }
 }
 
-function getBody(response) {
-  return response.text()
-}
-
-function getJsonBody(response) {
-  return response.json()
-}
-
-function handleErrors(error, dispatch) {
-  dispatch(showCreateLoader(false))
-  if(error.status === 401){
-    dispatch(requestWasUnauthorized(true))
-  }
-  else { 
-    dispatch(errorAdd(error.status, error.message))
-  }
-}
 
 export const saveChanges = (editedUser) => {
   return (dispatch, getState) => {

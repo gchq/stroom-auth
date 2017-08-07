@@ -1,5 +1,5 @@
 import { HttpError } from '../ErrorTypes'
-import { requestWasUnauthorized } from './login'
+import { handleErrors, getJsonBody } from './common'
 
 export const SHOW_SEARCH_LOADER = 'userSearch/SHOW_SEARCH_LOADER'
 export const ERROR_ADD = 'userSearch/ERROR_ADD'
@@ -89,7 +89,7 @@ export const performUserSearch = (jwsToken) => {
       mode: 'cors'
     })
     .then(handleStatus)
-    .then(getBody)
+    .then(getJsonBody)
     .then(data => {
       dispatch(showSearchLoader(false))
       dispatch(updateResults(data))
@@ -106,21 +106,5 @@ function handleStatus(response) {
   }
   else {
     return Promise.reject(new HttpError(response.status, response.statusText))
-  }
-}
-
-function getBody(response) {
-  return response.json()
-}
-
-function handleErrors(error, dispatch) {
-  dispatch(showSearchLoader(false))
-  if(error.status === 401){
-    dispatch(requestWasUnauthorized(true))
-    //TODO: Consider logging the user out here - their token might be invalid.
-    dispatch(errorAdd(error.status, 'Could not authenticate. Please try logging in again.'))
-  }
-  else { 
-    dispatch(errorAdd(error.status, error.message))
   }
 }
