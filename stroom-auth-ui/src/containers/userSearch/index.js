@@ -30,9 +30,9 @@ class UserSearch extends Component {
     this.props.performUserSearch(this.props.token)
   }
 
-  toggleRow(id, event, isInputChecked ) {
+  toggleRow(id) {
     // Tell the redux store so the control buttons get displayed correctly
-    this.props.changeSelectedRow(id, isInputChecked)
+    this.props.changeSelectedRow(id)
   }
 
   render() {
@@ -41,8 +41,7 @@ class UserSearch extends Component {
       Header: '',
       accessor: 'id',
       Cell: row => (
-        <Checkbox checked={this.props.selectedUserRowId === row.value} 
-          onCheck={() => this.toggleRow(row.value) }/>
+        <Checkbox checked={this.props.selectedUserRowId === row.value}/>
       )
     }, {
       Header: 'Email',
