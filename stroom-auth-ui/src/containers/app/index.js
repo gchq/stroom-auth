@@ -8,6 +8,11 @@ import { connect } from 'react-redux'
 import AppBar from 'material-ui/AppBar'
 import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
+import IconButton from 'material-ui/IconButton'
+import ExitToApp from 'material-ui-icons/ExitToApp'
+import Lock from 'material-ui-icons/Lock'
 
 import './App.css'
 import logo from './logo.svg'
@@ -21,8 +26,9 @@ import PathNotFound from '../../containers/pathNotFound'
 import UserCreateForm from '../../containers/createUser'
 import UserEditForm from '../../containers/editUser'
 import FlatButton from 'material-ui/FlatButton'
-import LogOutAndInNavLink from '../../containers/logOutAndInNavLink'
+import ChangePassword from '../../containers/changePassword'
 import Person from 'material-ui-icons/Person'
+import MoreVert from 'material-ui-icons/MoreVert'
 import {fullWhite} from 'material-ui/styles/colors'
 
 import { goToStroom } from '../../modules/sidebar'
@@ -47,9 +53,28 @@ class App extends Component {
                   <FlatButton onClick={() => this.props.goToStroom(this.props.token)} label="Go to Stroom" primary={true} labelStyle={{color:'white'}}
                     icon={<img src={iconBlue} alt="Stroom logo"/>}/>
                   <NavLink to='/userSearch'>
-                    <FlatButton label="Users" labelStyle={{color:'white'}} icon={<Person color={fullWhite}/>}/>
+                    <FlatButton label="Search users" labelStyle={{color:'white'}} icon={<Person color={fullWhite}/>}/>
                   </NavLink>
-                  <LogOutAndInNavLink/>
+                  
+                  <IconMenu
+                    iconButtonElement={
+                      <IconButton className="App-iconButton" labelStyle={{color:'white'}}><MoreVert color={fullWhite}/></IconButton>
+                    }>
+                    {this.isLoggedIn() ? (
+                      <div>
+                      <NavLink to="/changepassword">
+                        <MenuItem primaryText="Change password" leftIcon={<Lock/>}/>
+                      </NavLink>
+                      <NavLink to="/logout">
+                        <MenuItem primaryText="Log out" leftIcon={<ExitToApp/>}/>
+                      </NavLink>
+                      </div>
+                    ) : (
+                      <NavLink to="/login">
+                        <MenuItem primaryText="Log in"/>
+                      </NavLink>
+                    )}
+                  </IconMenu>
                 </div>
               }
           />
@@ -72,6 +97,18 @@ class App extends Component {
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/about" component={About}/>
               <Route exact path="/newUser" component={NewUser}/>
+
+              <Route exact path="/changepassword" render={(route) => (
+                this.isLoggedIn() ? (
+                  <ChangePassword/>
+                ) : (
+                   // We record the referrer because Login needs it to redirect back to after a successful login.
+                  <Redirect to={{
+                    pathname: '/login',
+                    state: {referrer:route.location.pathname}}}/>
+                )
+              )}/>
+
               <Route exact path="/user" render={() => (
                 this.isLoggedIn() ? (
                   <UserCreate/>

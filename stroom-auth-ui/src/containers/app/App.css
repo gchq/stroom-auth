@@ -32,3 +32,8 @@
 .UserSearch-appButton {
   margin:0px !important;
 }
+
+.App-iconButton {
+  height:10px !important;
+  padding:7px !important;
+}
