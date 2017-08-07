@@ -15,7 +15,6 @@ const UserCreateForm = props => {
   return (
     <Card className="CreateUserForm-card">
       <div>
-        <h2>Please enter the details of the new user</h2>
         <form onSubmit={handleSubmit}>
           <UserFields showCalculatedFields={false} constrainPasswordEditing={false}/>
           <div>

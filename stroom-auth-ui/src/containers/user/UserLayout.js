@@ -33,7 +33,9 @@ const UserLayout = props => {
     <Paper className='UserLayout-main'>
       <Toolbar>
         <ToolbarGroup>
-          <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
+          <NavLink to='/userSearch'>
+            <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
+          </NavLink>
           <KeyboardArrowRight className="UserLayout-toolbarSeparator"/>
           {showSearch ? (<ToolbarTitle text="Search" className="UserLayout-toolbarTitle"/>) : (undefined)}
           {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
