@@ -4,14 +4,14 @@ import { connect } from 'react-redux'
 
 import Card, { CardContent } from 'material-ui/Card'
 
+import './PathNotFound.css'
+
 class PathNotFound extends Component {
   render() {
     return (
-      <Card >
-        <CardContent>
+      <Card className="PathNotFound-card">
           <h3>Page not found!</h3>
           <p>There's nothing here I'm afraid.</p>
-        </CardContent>
       </Card>
     )
   }
