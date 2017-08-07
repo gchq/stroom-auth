@@ -72,6 +72,10 @@ public final class Config extends Configuration {
     @JsonProperty
     private Integer httpsPort;
 
+    @Nullable
+    @JsonProperty
+    private Integer failedLoginLockThreshold = 3;
+
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
     }
@@ -135,4 +139,7 @@ public final class Config extends Configuration {
         return jwsSecret.getBytes();
     }
 
+    public Integer getFailedLoginLockThreshold() {
+        return this.failedLoginLockThreshold;
+    }
 }

@@ -109,15 +109,47 @@ public final class AuthenticationResource {
                 .where(new Condition[]{USERS.EMAIL.eq(credentials.getEmail())})
                 .fetchOne();
 
+        // Don't let them in if the account is locked or disabled.
+        if(user.getState().equals(User.UserState.DISABLED.getStateText())
+            || user.getState().equals(User.UserState.LOCKED.getStateText())){
+            LOGGER.debug("Account {} tried to log in but it is disabled or locked.", credentials.getEmail());
+            return unauthorisedAndLockedOrDisabledResponse();
+        }
+
         boolean isPasswordCorrect = BCrypt.checkpw(credentials.getPassword(), user.getPasswordHash());
         if(isPasswordCorrect) {
             this.LOGGER.debug("Login for {} succeeded", credentials.getEmail());
+
+            // We reset the failed login count if we have a successful login
+            user.setLoginFailures(0);
+            user.setLoginCount(user.getLoginCount() + 1);
+            database
+                    .update((Table) USERS)
+                    .set(user)
+                    .where(new Condition[]{USERS.EMAIL.eq(credentials.getEmail())}).execute();
+
             String token = this.tokenGenerator.getToken(credentials.getEmail());
             response = Response.status(Status.OK).entity(token).build();
             return response;
         } else {
-            this.LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
-            return unauthorisedResponse();
+            // If the password is wrong we need to increment the failed login count,
+            // check if we need to locked the account, and save.
+            user.setLoginFailures(user.getLoginFailures() + 1);
+            boolean shouldLock = user.getLoginFailures() >= this.config.getFailedLoginLockThreshold();
+
+            if(shouldLock){
+                user.setState(User.UserState.LOCKED.getStateText());
+            }
+
+            database
+                    .update((Table) USERS)
+                    .set(user)
+                    .where(new Condition[]{USERS.EMAIL.eq(credentials.getEmail())}).execute();
+
+            LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
+            LOGGER.debug("Account {} has had too many failed access attempts and is locked", credentials.getEmail());
+
+            return shouldLock ? unauthorisedAndNowLockedResponse() : unauthorisedResponse();
         }
     }
 
@@ -127,5 +159,13 @@ public final class AuthenticationResource {
 
     private static final Response unauthorisedResponse() {
         return Response.status(Status.UNAUTHORIZED).entity("Invalid credentials").build();
+    }
+
+    private static final Response unauthorisedAndNowLockedResponse() {
+        return Response.status(Status.UNAUTHORIZED).entity("Too many failed attempts - this account is now locked").build();
+    }
+
+    private static final Response unauthorisedAndLockedOrDisabledResponse() {
+        return Response.status(Status.UNAUTHORIZED).entity("This account is locked or disabled").build();
     }
 }

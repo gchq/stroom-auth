@@ -99,3 +99,4 @@ certificateDnPattern: CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?
 loginUrl: http://localhost/login
 stroomUrl: http://localhost/stroom
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://localhost}
+failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 2}

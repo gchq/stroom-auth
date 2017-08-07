@@ -158,7 +158,7 @@ function handleStatus(response) {
     return Promise.resolve(response)
   } 
   else if(response.status === 401 ){
-    throw new SubmissionError({password: 'Bad credentials'})
+    throw new SubmissionError({password: 'Invalid login'})
   } else {
     return Promise.reject(new HttpError(response.status, response.statusText))
   }

@@ -214,4 +214,20 @@ public final class User {
     boolean isValid = validationErrors.size() == 0;
     return Pair.of(isValid, validationMessages);
   }
+
+  public enum UserState{
+    ENABLED("enabled"),
+    DISABLED("disabled"),
+    LOCKED("locked");
+
+    private String stateText;
+
+    UserState(String stateText){
+      this.stateText = stateText;
+    }
+
+    public String getStateText(){
+      return this.stateText;
+    }
+  }
 }
