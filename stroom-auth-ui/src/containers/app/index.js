@@ -91,7 +91,7 @@ class App extends Component {
                   // TODO We need to get the userId here, somehow
                   <Redirect to={{
                     pathname: '/login',
-                    state: {referrer:'/user'}}}/>
+                    state: {referrer:route.location.pathname}}}/>
                 )
               )}/>
 

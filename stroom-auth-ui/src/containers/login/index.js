@@ -15,11 +15,15 @@ class Login extends Component {
 
   render() {
     const { token } = this.props
+    var referrer = '/'
+    if(this.props.location.state){
+      referrer = this.props.location.state.referrer
+    }
     return (
       <div>
         {token ? (
           <Redirect to={{
-            pathname: '/',
+            pathname: referrer,
             state: {referrer:'/login'}
           }}/>
         ): (
