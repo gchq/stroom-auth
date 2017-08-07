@@ -2,6 +2,8 @@ import { push } from 'react-router-redux'
 import { HttpError } from '../ErrorTypes'
 import { initialize } from 'redux-form'
 
+import { requestWasUnauthorized } from './login'
+
 export const CREATE_REQUEST = 'user/CREATE_REQUEST'
 export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
 export const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER'
@@ -163,8 +165,7 @@ function getJsonBody(response) {
 function handleErrors(error, dispatch) {
   dispatch(showCreateLoader(false))
   if(error.status === 401){
-    //TODO: Consider logging the user out here - their token might be invalid.
-    dispatch(errorAdd(error.status, 'Could not authenticate. Please try logging in again.'))
+    dispatch(requestWasUnauthorized(true))
   }
   else { 
     dispatch(errorAdd(error.status, error.message))

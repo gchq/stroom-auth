@@ -88,7 +88,6 @@ class App extends Component {
                   <UserEdit/>
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
-                  // TODO We need to get the userId here, somehow
                   <Redirect to={{
                     pathname: '/login',
                     state: {referrer:route.location.pathname}}}/>
