@@ -10,7 +10,7 @@ export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
 export const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER'
 export const SAVE_USER_TO_EDIT_FORM = 'user/SAVE_USER_TO_EDIT_FORM'
 export const CHANGE_VISIBLE_CONTAINER = 'user/CHANGE_VISIBLE_CONTAINER'
-export const TOGGLE_PASSWORD_CHANGED_MESSAGE_VISIBILITY = 'user/TOGGLE_PASSWORD_CHANGED_MESSAGE_VISIBILITY'
+export const TOGGLE_ALERT_VISIBILITY = 'user/TOGGLE_ALERT_VISIBILITY'
 
 const initialState = {
   user: '',
@@ -47,14 +47,14 @@ export default (state = initialState, action) => {
         ...state,
         show: action.show
       }
-    
-    case TOGGLE_PASSWORD_CHANGED_MESSAGE_VISIBILITY:
-      const showPasswordChangedMessage = !state.showPasswordChangedMessage
-        return {
-          ...state,
-          showPasswordChangedMessage: showPasswordChangedMessage
-        }
       
+    case TOGGLE_ALERT_VISIBILITY:
+      const showAlert = !state.showAlert
+      return {
+        ...state,
+        showAlert: showAlert,
+        alertText: action.alertText
+      }
 
     default:
       return state
@@ -75,9 +75,10 @@ export function changeVisibleContainer(container) {
   }
 }
 
-export function togglePasswordChangedMessageVisibility() {
+export function toggleAlertVisibility(alertText) {
   return {
-    type: TOGGLE_PASSWORD_CHANGED_MESSAGE_VISIBILITY
+    type: TOGGLE_ALERT_VISIBILITY,
+    alertText: alertText
   }
 }
 
@@ -119,6 +120,7 @@ export const saveChanges = (editedUser) => {
     .then(handleStatus)
     .then(() => {
       dispatch(push(`/user/${id}`))
+      dispatch(toggleAlertVisibility('User has been updated'))
     })
     .catch(error => handleErrors(error, dispatch))
   }
@@ -155,6 +157,7 @@ export const createUser  = (newUser) => {
       .then(newUserId => {
         dispatch(showCreateLoader(false))
         dispatch(push(`/user/${newUserId}`))
+        dispatch(toggleAlertVisibility('Your changes have been saved'))
       })
       .catch(error => handleErrors(error, dispatch))
     
@@ -256,7 +259,7 @@ export const changePassword = (userId) => {
     })
     .then(handleStatus)
     .then(() => {
-      dispatch(togglePasswordChangedMessageVisibility())
+      dispatch(toggleAlertVisibility("Your password has been changed"))
     })
     .catch(error => handleErrors(error, dispatch))
   }

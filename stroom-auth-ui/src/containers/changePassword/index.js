@@ -12,11 +12,11 @@ import { TextField } from 'redux-form-material-ui'
 
 import { required } from '../../validations'
 
-import { changePasswordForCurrentUser as onSubmit, togglePasswordChangedMessageVisibility } from '../../modules/user'
+import { changePasswordForCurrentUser as onSubmit, toggleAlertVisibility } from '../../modules/user'
 import './ChangePassword.css'
 
 const ChangePassword = props => {
-    const {handleSubmit, pristine, submitting, togglePasswordChangedMessageVisibility, showPasswordChangedMessage } = props
+    const {handleSubmit, pristine, submitting, showAlert, alertText, toggleAlertVisibility } = props
     return (
       <Card className="ChangePassword-main">
         <div>
@@ -39,10 +39,10 @@ const ChangePassword = props => {
             </form>
 
             <Snackbar
-                open={showPasswordChangedMessage}
-                message="Your password has been changed"
+                open={showAlert}
+                message={alertText}
                 autoHideDuration={4000}
-                onRequestClose={() => togglePasswordChangedMessageVisibility()}
+                onRequestClose={() => toggleAlertVisibility()}
             />
         </div>
       </Card>
@@ -55,12 +55,13 @@ const ReduxChangePassword = reduxForm({
 })(ChangePassword)
 
 const mapStateToProps = state => ({
-    showPasswordChangedMessage: state.user.showPasswordChangedMessage
+    showAlert: state.user.showAlert,
+    alertText: state.user.alertText
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit, 
-  togglePasswordChangedMessageVisibility
+  toggleAlertVisibility
 }, dispatch)
 
 export default connect(
