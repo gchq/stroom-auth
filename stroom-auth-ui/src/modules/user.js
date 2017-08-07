@@ -7,17 +7,13 @@ import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
 export const CREATE_REQUEST = 'user/CREATE_REQUEST'
 export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
 export const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER'
-export const ERROR_ADD = 'user/ERROR_ADD'
-export const ERROR_REMOVE = 'user/ERROR_REMOVE'
 export const SAVE_USER_TO_EDIT_FORM = 'user/SAVE_USER_TO_EDIT_FORM'
 export const CHANGE_VISIBLE_CONTAINER = 'user/CHANGE_VISIBLE_CONTAINER'
 
 const initialState = {
   user: '',
   password: '',
-  showCreateLoader: false,
-  errorStatus: -1,
-  errorText: ''
+  showCreateLoader: false
 }
 
 export default (state = initialState, action) => {
@@ -32,20 +28,6 @@ export default (state = initialState, action) => {
         ...state
         //TODO change creating to 'created' or something similar
       }
-
-    case ERROR_ADD:
-      return {
-        ...state,
-        errorStatus: action.status,
-        errorText: action.text
-      }
-    case ERROR_REMOVE:
-      return {
-        ...state,
-        errorStatus: -1,
-        errorText: ''
-      }
-
     case SHOW_CREATE_LOADER:
       return {
         ...state,
@@ -80,12 +62,6 @@ export function changeVisibleContainer(container) {
   return {
     type: CHANGE_VISIBLE_CONTAINER,
     show: container
-  }
-}
-
-export const loadUser = (userId, jwsToken) => {
-  return dispatch => {
-    //TODO load the user and put it into the store
   }
 }
 
@@ -168,7 +144,6 @@ export const createUser  = (newUser) => {
     
   }
 }
-
 
 export const fetchUser = (userId) => {
   return (dispatch, getState) => {

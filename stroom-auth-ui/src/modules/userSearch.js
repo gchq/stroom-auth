@@ -2,44 +2,25 @@ import { HttpError } from '../ErrorTypes'
 import { handleErrors, getJsonBody } from './fetchFunctions'
 
 export const SHOW_SEARCH_LOADER = 'userSearch/SHOW_SEARCH_LOADER'
-export const ERROR_ADD = 'userSearch/ERROR_ADD'
-export const ERROR_REMOVE = 'userSearch/ERROR_REMOVE'
 export const UPDATE_RESULTS = 'userSearch/UPDATE_RESULTS'
 
 const initialState = {
   users: [],
-  showSearchLoader: false,
-  errorStatus: -1,
-  errorText: '',
+  showSearchLoader: false
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case ERROR_ADD:
-      return {
-        ...state,
-        errorStatus: action.status,
-        errorText: action.text
-      }
-    case ERROR_REMOVE:
-      return {
-        ...state,
-        errorStatus: -1,
-        errorText: ''
-      }
-
     case SHOW_SEARCH_LOADER:
       return {
         ...state,
         showSearchLoader: action.showSearchLoader
       }
-
     case UPDATE_RESULTS:
       return {
         ...state,
         results: action.results
       }
-
     default:
       return state
   }
