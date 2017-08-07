@@ -8,11 +8,13 @@ export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
 export const TOKEN_DELETE = 'login/TOKEN_DELETE'
 export const SHOW_LOADER = 'login/SHOW_LOADER'
 export const SHOW_UNAUTHORIZED_DIALOG = 'login/SHOW_UNAUTHORIZED_DIALOG'
+export const CHANGE_LOGGED_IN_USER = 'login/CHANGE_LOGGED_IN_USER'
 
 const initialState = {
   token: '',
   showLoader: false,
-  showUnauthorizedDialog: false
+  showUnauthorizedDialog: false,
+  loggedInUserEmail: undefined
 }
 
 export default (state = initialState, action) => {
@@ -40,10 +42,16 @@ export default (state = initialState, action) => {
       }
 
     case SHOW_UNAUTHORIZED_DIALOG:
-    return { 
-      ...state,
-      showUnauthorizedDialog: action.showUnauthorizedDialog
-    }
+      return { 
+        ...state,
+        showUnauthorizedDialog: action.showUnauthorizedDialog
+      }
+
+    case CHANGE_LOGGED_IN_USER:
+      return {
+        ...state,
+        loggedInUserEmail: action.userEmail
+      }
     default:
       return state
   }
@@ -64,8 +72,10 @@ export function deleteToken() {
 
 export const logout = () => {
   localStorage.removeItem('token')
+  localStorage.removeItem('userEmail')
   return dispatch => {
     dispatch(deleteToken())
+    dispatch(storeLoggedInUser(undefined))
   }
 }
 
@@ -78,8 +88,13 @@ export function showLoader(showLoader){
 
 export const checkForRememberMeToken = (dispatch) => {
   const token = localStorage.getItem('token')
+  const userEmail = localStorage.getItem('userEmail')
+
+  if(userEmail){
+    dispatch(storeLoggedInUser(userEmail))
+  }
   if(token){
-      dispatch(changeToken(token))
+    dispatch(changeToken(token))
   }
 }
 
@@ -87,6 +102,13 @@ export const requestWasUnauthorized = (showUnauthorizedDialog) => {
   return {
     type: SHOW_UNAUTHORIZED_DIALOG,
     showUnauthorizedDialog
+  }
+}
+
+export function storeLoggedInUser(userEmail) {
+  return {
+    type: CHANGE_LOGGED_IN_USER,
+    userEmail
   }
 }
 
@@ -124,7 +146,10 @@ export const login = (credentials) => {
       .then(getBody)
       //TODO restore referrer
       // .then(jwsToken => processToken(jwsToken, dispatch, referrer))
-      .then(jwsToken => processToken(jwsToken, dispatch, rememberMe, null))
+      .then(jwsToken => {
+        dispatch(storeLoggedInUser(email))
+        processToken(jwsToken, email, dispatch, rememberMe, null)
+      })
   }
 }
 
@@ -143,14 +168,17 @@ function getBody(response) {
   return response.text()
 }
 
-function processToken(token, dispatch, rememberMe, referrer){
+function processToken(token, userEmail, dispatch, rememberMe, referrer){
   if(rememberMe){
     const existingToken = localStorage.getItem('token')
+    const userEmail = localStorage.getItem('userEmail')
     if(existingToken !== token) {
       localStorage.setItem('token', token)
+      localStorage.setItem('userEmail', userEmail)
     }
   }
   else {
+    localStorage.removeItem('token')
     localStorage.removeItem('token')
   }
 
