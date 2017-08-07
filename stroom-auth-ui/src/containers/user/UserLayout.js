@@ -12,6 +12,7 @@ import {fullWhite} from 'material-ui/styles/colors'
 import Add from 'material-ui-icons/Add'
 import Search from 'material-ui-icons/Search'
 import Delete from 'material-ui-icons/Delete'
+import Edit from 'material-ui-icons/Edit'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import UserSearch from '../userSearch'
@@ -62,11 +63,21 @@ class UserLayout extends Component {
 
             {showSearch ? (
               <div className="UserLayout-toolbarButton">
-                <RaisedButton label="Delete" primary={true} className="UserSearch-appButton" 
+                <RaisedButton label="Delete" primary={true} 
                   icon={<Delete color={fullWhite}/>} disabled={deleteButtonDisabled}
                   onClick={(param1, param2) => this.deleteUser(param1, param2)}/>
               </div>
             ) : (undefined)}
+
+            {showSearch ? (
+              <div className="UserLayout-toolbarButton">
+                <NavLink to={`/user/${selectedUserRowId}`}>
+                  <RaisedButton label="Edit" primary={true}
+                    icon={<Edit color={fullWhite}/>} disabled={deleteButtonDisabled}/>
+                </NavLink>
+              </div>
+            ) : (undefined)}
+
 
             {showSearchButton ? (
               <div className="UserLayout-toolbarButton">
