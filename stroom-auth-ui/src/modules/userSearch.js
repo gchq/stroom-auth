@@ -52,20 +52,6 @@ export function showSearchLoader(showSearchLoader){
   }
 }
  
-export function errorAdd(status, text){
-  return {
-    type: ERROR_ADD,
-    status,
-    text
-  }
-}
-
-export function errorRemove(){
-  return {
-    type: ERROR_REMOVE
-  }
-}
-
 export function updateResults(results){
   return {
     type: UPDATE_RESULTS,
@@ -75,7 +61,6 @@ export function updateResults(results){
 
 export const performUserSearch = (jwsToken) => {
   return dispatch => {
-    dispatch(errorRemove())
     dispatch(showSearchLoader(true))
 
     var userSearchUrl = process.env.REACT_APP_USER_URL + '/?fromEmail=&usersPerPage=100&orderBy=id'

@@ -76,20 +76,6 @@ export function showCreateLoader(showCreateLoader){
   }
 }
 
-export function errorAdd(status, text){
-  return {
-    type: ERROR_ADD,
-    status,
-    text
-  }
-}
-
-export function errorRemove(){
-  return {
-    type: ERROR_REMOVE
-  }
-}
-
 export function changeVisibleContainer(container) {
   return {
     type: CHANGE_VISIBLE_CONTAINER,
@@ -151,8 +137,6 @@ export const createUser  = (newUser) => {
 
     const jwsToken = getState().login.token
     const { email, password, first_name, last_name, comments, state } = newUser
-      // We're re-attempting a login so we should remove any old errors
-    dispatch(errorRemove())
 
     dispatch(showCreateLoader(true))
 
