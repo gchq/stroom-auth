@@ -61,7 +61,7 @@ public final class App extends Application<Config>  {
     public void run(Config config, Environment environment) throws Exception {
         configureAuthentication(config, environment);
 //        environment.lifecycle().addServerLifecycleListener((ServerLifecycleListener) null.INSTANCE);
-        this.injector = Guice.createInjector(new stroom.auth.service.Module());
+        this.injector = Guice.createInjector(new stroom.auth.service.Module(config));
 
         TokenGenerator tokenGenerator = injector.getInstance(TokenGenerator.class);
         environment.jersey().register(new AuthenticationResource(tokenGenerator, config));
