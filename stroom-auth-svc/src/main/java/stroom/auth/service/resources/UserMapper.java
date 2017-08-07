@@ -21,6 +21,9 @@ public final class UserMapper {
     if(user.getId() != null) userMap.put("id", user.getId());
     if(user.getEmail() != null) userMap.put("email", user.getEmail());
     if(user.getPassword_hash() != null) userMap.put("password_hash", user.getPassword_hash());
+    // This will override the setting for getPasswordHash, above. If there's a hash it'll map that,
+    // but if there's a password it'll update the hash.
+    if(user.getPassword() != null) userMap.put("password_hash", user.generatePasswordHash());
     if(user.getState() != null) userMap.put("state", user.getState());
     if(user.getFirst_name() != null) userMap.put("first_name", user.getFirst_name());
     if(user.getLast_name() != null) userMap.put("last_name", user.getLast_name());
@@ -39,7 +42,7 @@ public final class UserMapper {
 
   @NotNull
   public static final Timestamp convertISO8601ToTimestamp(@Nullable String dateString) {
-    long millis = ZonedDateTime.parse((CharSequence)dateString).toInstant().toEpochMilli();
+    long millis = ZonedDateTime.parse(dateString).toInstant().toEpochMilli();
     return new Timestamp(millis);
   }
 

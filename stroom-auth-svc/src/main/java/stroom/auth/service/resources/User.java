@@ -2,11 +2,13 @@ package stroom.auth.service.resources;
 
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.tuple.Pair;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
+//TODO: Improve naming in this class - it was generated
 public final class User {
   @Nullable
   private Integer id;
@@ -180,6 +182,14 @@ public final class User {
   public User(@NotNull String email, @NotNull String password) {
     this.email = email;
     this.password = password;
+  }
+
+  /**
+   * This is not the same as getPasswordHash(). That's a getting for the model property,
+   * but this method actually creates a new hash.
+   */
+  public String generatePasswordHash() {
+    return BCrypt.hashpw(this.password, BCrypt.gensalt());
   }
 
   public static Pair<Boolean, String> isValidForCreate(User user){

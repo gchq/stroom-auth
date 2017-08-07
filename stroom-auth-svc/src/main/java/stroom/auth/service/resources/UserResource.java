@@ -30,6 +30,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static stroom.db.auth.Tables.USERS;
 
@@ -83,11 +85,13 @@ public final class UserResource {
       return Response.status(Response.Status.CONFLICT).entity(UserValidationError.USER_ALREADY_EXISTS).build();
     }
 
+
+
     // Create the user
     UsersRecord usersRecord = (UsersRecord) database
         .insertInto((Table) USERS)
         .set( USERS.EMAIL, user.getEmail())
-        .set(USERS.PASSWORD_HASH, "TODO HASH")
+        .set(USERS.PASSWORD_HASH, user.generatePasswordHash())
         .set(USERS.FIRST_NAME, user.getFirst_name())
         .set(USERS.LAST_NAME, user.getLast_name())
         .set(USERS.COMMENTS, user.getComments())
@@ -185,6 +189,8 @@ public final class UserResource {
         .selectFrom((Table) USERS)
         .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
         .fetchOne();
+    user.setUpdated_by_user(user.getEmail());
+    user.setUpdated_on(ZonedDateTime.now().toString());
     UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
     database
             .update((Table) USERS)
