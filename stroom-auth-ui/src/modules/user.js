@@ -3,7 +3,7 @@ import { HttpError } from '../ErrorTypes'
 import { initialize } from 'redux-form'
 
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
-import { performUserSearch } from './userSearch'
+import { performUserSearch, changeSelectedRow } from './userSearch'
 
 export const CREATE_REQUEST = 'user/CREATE_REQUEST'
 export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
@@ -192,6 +192,7 @@ export const deleteSelectedUser = (userId) => {
     .then(handleStatus)
     .then(getBody)
     .then(user => {
+      dispatch(changeSelectedRow(userId))
       dispatch(performUserSearch(jwsToken))
     })
     .catch(error => handleErrors(error, dispatch))
