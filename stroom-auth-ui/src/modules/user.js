@@ -2,7 +2,7 @@ import { push } from 'react-router-redux'
 import { HttpError } from '../ErrorTypes'
 import { initialize } from 'redux-form'
 
-import { handleErrors, getBody, getJsonBody } from './common'
+import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
 
 export const CREATE_REQUEST = 'user/CREATE_REQUEST'
 export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'

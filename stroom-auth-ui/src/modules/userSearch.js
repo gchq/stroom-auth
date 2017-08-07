@@ -1,5 +1,5 @@
 import { HttpError } from '../ErrorTypes'
-import { handleErrors, getJsonBody } from './common'
+import { handleErrors, getJsonBody } from './fetchFunctions'
 
 export const SHOW_SEARCH_LOADER = 'userSearch/SHOW_SEARCH_LOADER'
 export const ERROR_ADD = 'userSearch/ERROR_ADD'
