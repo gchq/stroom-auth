@@ -6,6 +6,7 @@ import { NavLink} from 'react-router-dom'
 import Paper from 'material-ui/Paper'
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
 import RaisedButton from 'material-ui/RaisedButton'
+import Checkbox from 'material-ui/Checkbox'
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
@@ -18,41 +19,68 @@ import Add from 'material-ui-icons/Add'
 import { performUserSearch } from '../../modules/userSearch'
 import './UserSearch.css'
 
-const columns = [{
-  Header: '',
-  accessor: 'id',
-  Cell: row => (
-    <NavLink to={`/user/${row.value}`}><IconButton className='UserSearch-tableButton'><ImageEdit/></IconButton></NavLink>
-  )
-}, {
-  Header: 'Email',
-  accessor: 'email'
-}, {
-  Header: 'State',
-  accessor: 'state'
-}, {
-  Header: 'Last login',
-  accessor: 'last_ogin'
-}, {
-  Header: 'Login failures',
-  accessor: 'login_failures'
-}, {
-  Header: 'Updated by',
-  accessor: 'updated_by_user'
-}, {
-  Header: 'Updated',
-  accessor: 'updated_on'
-}, {
-  Header: 'Comments',
-  accessor: 'comments'
-}]
 
 class UserSearch extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
   componentDidMount() {
     this.props.performUserSearch(this.props.token)
   }
 
+  rowSelected(id, isChecked){
+    // We're not allowing selection of multiple rows so we want to uncheck everything.
+    // Material-UI RadioButtons don't work accross rows so we're using checkboxes to get this.
+    Object.keys(this.state).forEach((rowId) => {
+      this.setState({[rowId]: false})
+    });
+    this.setState({[id]: isChecked})
+  }
+
+  rowState(id){
+    if(this.state[id]) {
+      return this.state[id]
+    }
+    else {
+      return false
+    }
+  }
+
   render() {
+
+    const columns = [{
+      Header: '',
+      accessor: 'id',
+      Cell: row => (
+        <Checkbox checked={this.rowState(row.value)} 
+          onCheck={(event, isChecked) => this.rowSelected(row.value, isChecked)}/>
+      )
+    }, {
+      Header: 'Email',
+      accessor: 'email'
+    }, {
+      Header: 'State',
+      accessor: 'state'
+    }, {
+      Header: 'Last login',
+      accessor: 'last_ogin'
+    }, {
+      Header: 'Login failures',
+      accessor: 'login_failures'
+    }, {
+      Header: 'Updated by',
+      accessor: 'updated_by_user'
+    }, {
+      Header: 'Updated',
+      accessor: 'updated_on'
+    }, {
+      Header: 'Comments',
+      accessor: 'comments'
+    }]
+
     //TODO Need to detect changes in height and put it into the store, then read it. That way it'll change when the window resizes.
     const innerHeight = window.innerHeight
     const appBarHeight = 200
@@ -61,18 +89,25 @@ class UserSearch extends Component {
       <Paper className='UserSearch-main'>
         <div className="UserSearch-content" >
           <div>
-            <ReactTable
-              data={this.props.results}
-              className='-striped -highlight UserSearch-table'
-              style={{height: tableHeight}}
-              columns={columns}
-              defaultSorted={[{
-                id:'email',
-                desc: true
-              }]}
-              showPagination={false}
-              filterable={true}
-              loading={this.props.showSearchLoader}/>
+              <ReactTable
+                data={this.props.results}
+                className='-striped -highlight UserSearch-table'
+                style={{height: tableHeight}}
+                columns={columns}
+                defaultSorted={[{
+                  id:'email',
+                  desc: true
+                }]}
+                showPagination={false}
+                filterable={true}
+                loading={this.props.showSearchLoader}
+                getTrProps={(state, rowInfo, column, instance) => {
+                  return {
+                    onClick: (target, event) => {
+                      this.rowSelected(rowInfo.row.id, true)
+                    }
+                  }
+                }}/>
             <p className="warning">This list is for user accounts only. It excludes those users who might have logged in using certificates or LDAP credentials.</p>
           </div>
         </div>
