@@ -157,7 +157,7 @@ export const createUser  = (newUser) => {
       .then(newUserId => {
         dispatch(showCreateLoader(false))
         dispatch(push(`/user/${newUserId}`))
-        dispatch(toggleAlertVisibility('Your changes have been saved'))
+        dispatch(toggleAlertVisibility('User has been created'))
       })
       .catch(error => handleErrors(error, dispatch))
     
@@ -212,6 +212,7 @@ export const deleteSelectedUser = (userId) => {
     .then(user => {
       dispatch(changeSelectedRow(userId))
       dispatch(performUserSearch(jwsToken))
+      dispatch(toggleAlertVisibility("User has been deleted"))
     })
     .catch(error => handleErrors(error, dispatch))
   }

@@ -14,11 +14,12 @@ import Search from 'material-ui-icons/Search'
 import Delete from 'material-ui-icons/Delete'
 import Edit from 'material-ui-icons/Edit'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
+import Snackbar from 'material-ui/Snackbar'
 
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
 import UserEdit from '../editUser'
-import { deleteSelectedUser } from '../../modules/user'
+import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
 
 import Paper from 'material-ui/Card'
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
@@ -31,7 +32,7 @@ class UserLayout extends Component {
   }
 
   render() {
-    const { show, selectedUserRowId } = this.props
+    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility  } = this.props
     var showSearch = show === 'search'
     var showCreate = show === 'create'
     var showEdit = show === 'edit'
@@ -95,7 +96,14 @@ class UserLayout extends Component {
           {showCreate ? (<UserCreate/>) : (undefined)}
           {showEdit ? (<UserEdit/>) : (undefined)}
         </div>
+        <Snackbar
+          open={showAlert}
+          message={alertText}
+          autoHideDuration={4000}
+          onRequestClose={() => toggleAlertVisibility()}
+        />
       </Paper> 
+
     )
   }
 }
@@ -106,11 +114,14 @@ UserLayout.contextTypes = {
 
 const mapStateToProps = state => ({
   show: state.user.show,
-  selectedUserRowId: state.userSearch.selectedUserRowId
+  selectedUserRowId: state.userSearch.selectedUserRowId,
+  showAlert: state.user.showAlert,
+  alertText: state.user.alertText
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  deleteSelectedUser
+  deleteSelectedUser,
+  toggleAlertVisibility
 }, dispatch)
 
 export default connect(
