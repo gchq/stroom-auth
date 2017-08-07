@@ -24,9 +24,17 @@ export default (state = initialState, action) => {
         results: action.results
       }
     case SELECT_ROW:
-      return {
-        ...state,
-        selectedUserRowId: action.selectedUserRowId
+      if(state.selectedUserRowId === action.selectedUserRowId){
+        return {
+          ...state,
+          selectedUserRowId: undefined
+        }
+      }
+      else {
+        return {
+          ...state,
+          selectedUserRowId: action.selectedUserRowId
+        }
       }
     default:
       return state
@@ -71,11 +79,11 @@ export const performUserSearch = (jwsToken) => {
   }
 }
 
-export const changeSelectedRow = (userId, isSelected) => {
+export const changeSelectedRow = (userId) => {
   return dispatch => {
     dispatch({
       type: SELECT_ROW,
-      selectedUserRowId: isSelected ? userId : undefined
+      selectedUserRowId: userId
     })
   }
 }

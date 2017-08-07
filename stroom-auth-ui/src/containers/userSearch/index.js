@@ -24,34 +24,15 @@ class UserSearch extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {}
   }
 
   componentDidMount() {
     this.props.performUserSearch(this.props.token)
   }
 
-  toggleRow(id) {
-    // We're not allowing selection of multiple rows so we want to uncheck everything.
-    // Material-UI RadioButtons don't work accross rows so we're using checkboxes to get this.
-    Object.keys(this.state).forEach((rowId) => {
-      this.setState({[rowId]: false})
-    });
-
-    const isThisRowSelected = this.state[id] ? true : false
-    this.setState({[id]: !isThisRowSelected})
-
+  toggleRow(id, event, isInputChecked ) {
     // Tell the redux store so the control buttons get displayed correctly
-    this.props.changeSelectedRow(id, !isThisRowSelected)
-  }
-
-  rowState(id){
-    if(this.state[id]) {
-      return this.state[id]
-    }
-    else {
-      return false
-    }
+    this.props.changeSelectedRow(id, isInputChecked)
   }
 
   render() {
@@ -60,8 +41,8 @@ class UserSearch extends Component {
       Header: '',
       accessor: 'id',
       Cell: row => (
-        <Checkbox checked={this.rowState(row.value)} 
-          onCheck={(event) => this.toggleRow(row.value)}/>
+        <Checkbox checked={this.props.selectedUserRowId === row.value} 
+          onCheck={() => this.toggleRow(row.value) }/>
       )
     }, {
       Header: 'Email',
@@ -71,7 +52,7 @@ class UserSearch extends Component {
       accessor: 'state'
     }, {
       Header: 'Last login',
-      accessor: 'last_ogin'
+      accessor: 'last_login'
     }, {
       Header: 'Login failures',
       accessor: 'login_failures'
@@ -126,7 +107,8 @@ const mapStateToProps = state => ({
   showSearchLoader: state.userSearch.showSearchLoader,
   results: state.userSearch.results,
   errorStatus: state.user.errorStatus,
-  errorText: state.user.errorText
+  errorText: state.user.errorText,
+  selectedUserRowId: state.userSearch.selectedUserRowId
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
