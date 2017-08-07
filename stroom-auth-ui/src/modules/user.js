@@ -135,12 +135,6 @@ export function changeVisibleContainer(container) {
 //   }
 // }
 
-export const saveChanges = (email, password, jwsToken) => {
-  return dispatch => {
-    console.log("TODO: save changes")
-  }
-}
-
 export const loadUser = (userId, jwsToken) => {
   return dispatch => {
     //TODO load the user and put it into the store
@@ -177,6 +171,42 @@ function handleErrors(error, dispatch) {
   }
 }
 
+export const saveChanges = (editedUser) => {
+  return (dispatch, getState) => {
+     const jwsToken = getState().login.token
+  const { id, email, password, first_name, last_name, comments, state } = editedUser
+    // We're re-attempting a login so we should remove any old errors
+  dispatch(errorRemove())
+
+  dispatch(showCreateLoader(true))
+
+  var userServiceUrl = `${process.env.REACT_APP_USER_URL}/${id}`
+  fetch(userServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
+      },
+      method: 'put',
+      mode: 'cors',
+      body: JSON.stringify({
+        email,
+        password,
+        first_name,
+        last_name,
+        comments,
+        state
+      })
+    })
+    .then(handleStatus)
+    .then(getBody)
+    .then(() => {
+      dispatch(showCreateLoader(false))
+      dispatch(push(`/user/${id}`))
+    })
+    .catch(error => handleErrors(error, dispatch))
+  }
+}
 
 export const createUser  = (newUser) => {
   return (dispatch, getState) => {

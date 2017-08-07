@@ -171,7 +171,11 @@ public final class UserResource {
   @Path("{id}")
   @Timed
   @NotNull
-  public final Response updateUser(@Auth @NotNull ServiceUser authenticatedServiceUser, @Context @NotNull DSLContext database, @NotNull User user, @PathParam("id") int userId) {
+  public final Response updateUser(
+          @Auth @NotNull ServiceUser authenticatedServiceUser,
+          @Context @NotNull DSLContext database,
+          @NotNull User user,
+          @PathParam("id") int userId) {
     // Validate
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
@@ -182,7 +186,10 @@ public final class UserResource {
         .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
         .fetchOne();
     UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
-    database.update((Table) USERS).set( updatedUsersRecord).where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
+    database
+            .update((Table) USERS)
+            .set(updatedUsersRecord)
+            .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
     Response response = Response.status(Response.Status.OK).build();
     return response;
   }
