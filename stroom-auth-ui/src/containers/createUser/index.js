@@ -17,14 +17,13 @@ const UserCreateForm = props => {
       <div>
         <h2>Please enter the details of the new user</h2>
         <form onSubmit={handleSubmit}>
-          <UserFields showCalculatedFields={false}/>
+          <UserFields showCalculatedFields={false} constrainPasswordEditing={false}/>
           <div>
           <RaisedButton 
             primary={true} 
             disabled={pristine || submitting}
-            type="submit">
-              Create the user
-          </RaisedButton>
+            type="submit"
+            label="Create the user"/>
           </div>
         </form>
       </div>

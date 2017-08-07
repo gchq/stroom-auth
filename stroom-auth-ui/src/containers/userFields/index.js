@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Field } from 'redux-form'
 import PropTypes from 'prop-types'
 
 import { MenuItem } from 'material-ui/Menu'
+import FlatButton from 'material-ui/FlatButton'
 import { SelectField, TextField } from 'redux-form-material-ui'
 
 import { required, email } from '../../validations'
@@ -10,15 +11,24 @@ import './UserFields.css'
 
 /*
 This can display all user fields, or not. 
-
-The password field never has the real password. It can't be edited and is
-there to complete the picture for the user.
-TODO: add password change facility
 */
 
-const UserFields = props => {
-  const { showCalculatedFields } = props
-  return (
+class UserFields extends Component {
+  constructor() {
+    super()
+    this.state = {
+      isPasswordEditingEnabled: false
+    }
+  }
+
+  handleShowPasswordField() {
+    this.setState({isPasswordEditingEnabled: true})
+  }
+
+  render() {
+    const { showCalculatedFields, constrainPasswordEditing } = this.props
+    const showPasswordField = this.state.isPasswordEditingEnabled || !constrainPasswordEditing
+    return (
       <div className="container">
           <div className="left-container">
             <div className="field-container">
@@ -40,14 +50,22 @@ const UserFields = props => {
                 <label>Password</label>
               </div>
               <div className="input-container">
-                <Field
-                  className="CreateUserForm-field"
-                  name="password"
-                  type="password"
-                  component={TextField}
-                  validate={[required]}
-                />
+
+                {showPasswordField ? (
+                  <Field
+                    className="CreateUserForm-field"
+                    name="password"
+                    type="password"
+                    component={TextField}
+                    validate={[required]}/>
+                ) : (
+                  <FlatButton
+                    label="Edit password"
+                    secondary={true}
+                    onTouchTap={() => this.handleShowPasswordField()}/>
+                )}
               </div>
+
             </div>
             <div className="field-container">
               <div className="label-container">
@@ -202,13 +220,15 @@ const UserFields = props => {
             </div>
           </div>
           ) : (<div/>)}
-    </div>
-  )
+      </div>
+    )
+  }
 }
 
 
-UserFields.propTypes ={
-  showCalculatedFields: PropTypes.bool.isRequired
+UserFields.propTypes = {
+  showCalculatedFields: PropTypes.bool.isRequired,
+  constrainPasswordEditing: PropTypes.bool.isRequired
 }
 
 export default UserFields

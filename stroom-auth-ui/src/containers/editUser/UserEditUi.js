@@ -16,13 +16,12 @@ const UserEditForm = props => {
   return (
     <Card className="EditUserForm-card">
       <form onSubmit={handleSubmit}>
-          <UserFields showCalculatedFields={true}/>
+          <UserFields showCalculatedFields={true} constrainPasswordEditing={true}/>
           <RaisedButton 
             primary={true}
             disabled={pristine || submitting}
-            type="submit">
-              Update the user
-          </RaisedButton>
+            type="submit"
+            label="Update the user"/>
       </form>
     </Card>
   )
