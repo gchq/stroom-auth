@@ -92,7 +92,7 @@ jooq:
   attachRecords: yes
   updatablePrimaryKeys: no
 
-jwsExpirationTimeInMinutesInTheFuture: 5
+jwsExpirationTimeInMinutesInTheFuture: 1440 # 1440 minutes = 1 day
 jwsIssuer: stroom
 jwsSecret: ${JWS_SECRET:- CHANGE_ME}
 certificateDnPattern: CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?
