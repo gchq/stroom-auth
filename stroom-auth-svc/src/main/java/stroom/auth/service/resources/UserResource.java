@@ -209,9 +209,11 @@ public final class UserResource {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
-    database.deleteFrom((Table) USERS).where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
-    Response var10000 = Response.status(Response.Status.OK).build();
-    return var10000;
+    database
+            .deleteFrom((Table) USERS)
+            .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
+    Response response = Response.status(Response.Status.OK).build();
+    return response;
   }
 
   public UserResource(@NotNull Config config) {
