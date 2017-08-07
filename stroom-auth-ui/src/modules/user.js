@@ -10,6 +10,7 @@ export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
 export const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER'
 export const SAVE_USER_TO_EDIT_FORM = 'user/SAVE_USER_TO_EDIT_FORM'
 export const CHANGE_VISIBLE_CONTAINER = 'user/CHANGE_VISIBLE_CONTAINER'
+export const TOGGLE_PASSWORD_CHANGED_MESSAGE_VISIBILITY = 'user/TOGGLE_PASSWORD_CHANGED_MESSAGE_VISIBILITY'
 
 const initialState = {
   user: '',
@@ -46,6 +47,14 @@ export default (state = initialState, action) => {
         ...state,
         show: action.show
       }
+    
+    case TOGGLE_PASSWORD_CHANGED_MESSAGE_VISIBILITY:
+      const showPasswordChangedMessage = !state.showPasswordChangedMessage
+        return {
+          ...state,
+          showPasswordChangedMessage: showPasswordChangedMessage
+        }
+      
 
     default:
       return state
@@ -63,6 +72,12 @@ export function changeVisibleContainer(container) {
   return {
     type: CHANGE_VISIBLE_CONTAINER,
     show: container
+  }
+}
+
+export function togglePasswordChangedMessageVisibility() {
+  return {
+    type: TOGGLE_PASSWORD_CHANGED_MESSAGE_VISIBILITY
   }
 }
 
@@ -241,8 +256,7 @@ export const changePassword = (userId) => {
     })
     .then(handleStatus)
     .then(() => {
-      //TODO display save confirmation
-      // dispatch(push(`/user/${id}`))
+      dispatch(togglePasswordChangedMessageVisibility())
     })
     .catch(error => handleErrors(error, dispatch))
   }
