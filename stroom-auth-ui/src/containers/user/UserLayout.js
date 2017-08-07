@@ -32,7 +32,7 @@ class UserLayout extends Component {
   }
 
   render() {
-    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility  } = this.props
+    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props
     var showSearch = show === 'search'
     var showCreate = show === 'create'
     var showEdit = show === 'edit'
