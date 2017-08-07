@@ -199,6 +199,55 @@ export const deleteSelectedUser = (userId) => {
   }
 }
 
+export const changePasswordForCurrentUser = () => {
+  return (dispatch, getState) => {
+    const jwsToken = getState().login.token
+    var userServiceUrl = process.env.REACT_APP_USER_URL + "/me"
+    fetch(userServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
+      },
+      method: 'get',
+      mode: 'cors'
+    })
+    .then(handleStatus)
+    .then(getJsonBody)
+    .then(getUser)
+    .then(user => {
+      dispatch(changePassword(user.id))
+    })
+    .catch(error => handleErrors(error, dispatch))
+  }
+}
+
+export const changePassword = (userId) => {
+  return (dispatch, getState) => {
+    const userServiceUrl = `${process.env.REACT_APP_USER_URL}/${userId}`
+    const jwsToken = getState().login.token
+    const newPassword = getState().form.ChangePasswordForm.values.password
+    fetch(userServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
+      },
+      method: 'put',
+      mode: 'cors',
+      body: JSON.stringify({
+        password: newPassword
+      })
+    })
+    .then(handleStatus)
+    .then(() => {
+      //TODO display save confirmation
+      // dispatch(push(`/user/${id}`))
+    })
+    .catch(error => handleErrors(error, dispatch))
+  }
+}
+
 function getUser(user) {
   //TODO check that there is a user and throw an error if there isn't one
   return user[0]

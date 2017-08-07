@@ -11,7 +11,7 @@ import { TextField } from 'redux-form-material-ui'
 
 import { required } from '../../validations'
 
-import { changePassword as onSubmit } from '../../modules/user'
+import { changePasswordForCurrentUser as onSubmit } from '../../modules/user'
 import './ChangePassword.css'
 
 const ChangePassword = props => {
