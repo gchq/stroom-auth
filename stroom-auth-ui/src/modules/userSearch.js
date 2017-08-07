@@ -3,10 +3,12 @@ import { handleErrors, getJsonBody } from './fetchFunctions'
 
 export const SHOW_SEARCH_LOADER = 'userSearch/SHOW_SEARCH_LOADER'
 export const UPDATE_RESULTS = 'userSearch/UPDATE_RESULTS'
+export const SELECT_ROW = 'userSearch/SELECT_ROW'
 
 const initialState = {
   users: [],
-  showSearchLoader: false
+  showSearchLoader: false,
+  selectedUserRowId: undefined
 }
 
 export default (state = initialState, action) => {
@@ -20,6 +22,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         results: action.results
+      }
+    case SELECT_ROW:
+      return {
+        ...state,
+        selectedUserRowId: action.selectedUserRowId
       }
     default:
       return state
@@ -61,6 +68,15 @@ export const performUserSearch = (jwsToken) => {
       dispatch(updateResults(data))
     })
     .catch(error => handleErrors(error, dispatch))    
+  }
+}
+
+export const changeSelectedRow = (userId, isSelected) => {
+  return dispatch => {
+    dispatch({
+      type: SELECT_ROW,
+      selectedUserRowId: isSelected ? userId : undefined
+    })
   }
 }
 

@@ -3,6 +3,7 @@ import { HttpError } from '../ErrorTypes'
 import { initialize } from 'redux-form'
 
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
+import { performUserSearch } from './userSearch'
 
 export const CREATE_REQUEST = 'user/CREATE_REQUEST'
 export const CREATE_RESPONSE = 'user/CREATE_RESPONSE'
@@ -168,6 +169,30 @@ export const fetchUser = (userId) => {
       dispatch(showCreateLoader(false))
       // Use the redux-form action creator to re-initialize the form with this user
       dispatch(initialize("UserEditForm", user))
+    })
+    .catch(error => handleErrors(error, dispatch))
+  }
+}
+
+
+export const deleteSelectedUser = (userId) => {
+  return (dispatch, getState) => {
+    const jwsToken = getState().login.token
+    const userIdToDelete = getState().userSearch.selectedUserRowId
+    var userServiceUrl = process.env.REACT_APP_USER_URL + "/" + userIdToDelete
+    fetch(userServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
+      },
+      method: 'delete',
+      mode: 'cors'
+    })
+    .then(handleStatus)
+    .then(getBody)
+    .then(user => {
+      dispatch(performUserSearch(jwsToken))
     })
     .catch(error => handleErrors(error, dispatch))
   }

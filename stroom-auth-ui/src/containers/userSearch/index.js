@@ -16,7 +16,7 @@ import ImageEdit from 'material-ui/svg-icons/image/edit'
 import {fullWhite} from 'material-ui/styles/colors'
 import Add from 'material-ui-icons/Add'
 
-import { performUserSearch } from '../../modules/userSearch'
+import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 import './UserSearch.css'
 
 
@@ -31,13 +31,18 @@ class UserSearch extends Component {
     this.props.performUserSearch(this.props.token)
   }
 
-  rowSelected(id, isChecked){
+  toggleRow(id) {
     // We're not allowing selection of multiple rows so we want to uncheck everything.
     // Material-UI RadioButtons don't work accross rows so we're using checkboxes to get this.
     Object.keys(this.state).forEach((rowId) => {
       this.setState({[rowId]: false})
     });
-    this.setState({[id]: isChecked})
+
+    const isThisRowSelected = this.state[id] ? true : false
+    this.setState({[id]: !isThisRowSelected})
+
+    // Tell the redux store so the control buttons get displayed correctly
+    this.props.changeSelectedRow(id, !isThisRowSelected)
   }
 
   rowState(id){
@@ -56,7 +61,7 @@ class UserSearch extends Component {
       accessor: 'id',
       Cell: row => (
         <Checkbox checked={this.rowState(row.value)} 
-          onCheck={(event, isChecked) => this.rowSelected(row.value, isChecked)}/>
+          onCheck={(event) => this.toggleRow(row.value)}/>
       )
     }, {
       Header: 'Email',
@@ -104,7 +109,7 @@ class UserSearch extends Component {
                 getTrProps={(state, rowInfo, column, instance) => {
                   return {
                     onClick: (target, event) => {
-                      this.rowSelected(rowInfo.row.id, true)
+                      this.toggleRow(rowInfo.row.id)
                     }
                   }
                 }}/>
@@ -125,7 +130,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  performUserSearch
+  performUserSearch,
+  changeSelectedRow
 }, dispatch)
 
 export default connect(

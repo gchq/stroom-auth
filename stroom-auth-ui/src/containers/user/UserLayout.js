@@ -11,63 +11,96 @@ import RaisedButton from 'material-ui/RaisedButton'
 import {fullWhite} from 'material-ui/styles/colors'
 import Add from 'material-ui-icons/Add'
 import Search from 'material-ui-icons/Search'
+import Delete from 'material-ui-icons/Delete'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
 import UserEdit from '../editUser'
+import { deleteSelectedUser } from '../../modules/user'
 
 import Paper from 'material-ui/Card'
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
 
 import './User.css'
 
-const UserLayout = props => {
-  const { show } = props
-  var showSearch = show === 'search'
-  var showCreate = show === 'create'
-  var showEdit = show === 'edit'
-  var showCreateButton = showSearch || showEdit
-  var showSearchButton = showEdit || showCreate
-  return (
-    <Paper className='UserLayout-main'>
-      <Toolbar>
-        <ToolbarGroup>
-          <NavLink to='/userSearch'>
-            <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
-          </NavLink>
-          <KeyboardArrowRight className="UserLayout-toolbarSeparator"/>
-          {showSearch ? (<ToolbarTitle text="Search" className="UserLayout-toolbarTitle"/>) : (undefined)}
-          {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
-          {showEdit ? (<ToolbarTitle text="Edit" className="UserLayout-toolbarTitle"/>) : (undefined)}
-        </ToolbarGroup>
-        <ToolbarGroup>
-          {showCreateButton ? (
-          <NavLink to='/newUser'>
-            <RaisedButton label="Create" primary={true} className="UserSearch-appButton" icon={<Add color={fullWhite}/>}/>
-          </NavLink>
-          ) : (undefined)}
-          {showSearchButton ? (
-          <NavLink to='/userSearch'>
-            <RaisedButton label="Search" primary={true} className="UserSearch-appButton" icon={<Search color={fullWhite}/>}/>
-          </NavLink>
-          ) : (undefined)}
-        </ToolbarGroup>
-      </Toolbar>
-      <div className="User-content">
-        {showSearch ? (<UserSearch/>) : (undefined)}
-        {showCreate ? (<UserCreate/>) : (undefined)}
-        {showEdit ? (<UserEdit/>) : (undefined)}
-      </div>
-    </Paper> 
-  )
+class UserLayout extends Component {
+  deleteUser(){
+    this.context.store.dispatch(deleteSelectedUser())
+  }
+
+  render() {
+    const { show, selectedUserRowId } = this.props
+    var showSearch = show === 'search'
+    var showCreate = show === 'create'
+    var showEdit = show === 'edit'
+    var showCreateButton = showSearch || showEdit
+    var showSearchButton = showEdit || showCreate
+    var deleteButtonDisabled = selectedUserRowId ? false : true
+    return (
+      <Paper className='UserLayout-main'>
+        <Toolbar>
+          <ToolbarGroup>
+            <NavLink to='/userSearch'>
+              <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
+            </NavLink>
+            <KeyboardArrowRight className="UserLayout-toolbarSeparator"/>
+            {showSearch ? (<ToolbarTitle text="Search" className="UserLayout-toolbarTitle"/>) : (undefined)}
+            {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
+            {showEdit ? (<ToolbarTitle text="Edit" className="UserLayout-toolbarTitle"/>) : (undefined)}
+          </ToolbarGroup>
+          <ToolbarGroup>
+
+            {showCreateButton ? (
+              <div className="UserLayout-toolbarButton">
+                <NavLink to='/newUser'>
+                  <RaisedButton label="Create" primary={true} className="UserSearch-appButton" 
+                    icon={<Add color={fullWhite}/>}/>
+                </NavLink>
+              </div>
+            ) : (undefined)}
+
+            {showSearch ? (
+              <div className="UserLayout-toolbarButton">
+                <RaisedButton label="Delete" primary={true} className="UserSearch-appButton" 
+                  icon={<Delete color={fullWhite}/>} disabled={deleteButtonDisabled}
+                  onClick={(param1, param2) => this.deleteUser(param1, param2)}/>
+              </div>
+            ) : (undefined)}
+
+            {showSearchButton ? (
+              <div className="UserLayout-toolbarButton">
+                <NavLink to='/userSearch'>
+                  <RaisedButton label="Search" primary={true} className="UserSearch-appButton" 
+                    icon={<Search color={fullWhite}/>} />
+                </NavLink>
+              </div>
+            ) : (undefined)}
+
+          </ToolbarGroup>
+        </Toolbar>
+        <div className="User-content">
+          {showSearch ? (<UserSearch/>) : (undefined)}
+          {showCreate ? (<UserCreate/>) : (undefined)}
+          {showEdit ? (<UserEdit/>) : (undefined)}
+        </div>
+      </Paper> 
+    )
+  }
+}
+
+UserLayout.contextTypes = {
+  store: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-  show: state.user.show
+  show: state.user.show,
+  selectedUserRowId: state.userSearch.selectedUserRowId
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({
+  deleteSelectedUser
+}, dispatch)
 
 export default connect(
   mapStateToProps,
