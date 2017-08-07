@@ -7,18 +7,18 @@ import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import UserFields from '../userFields'
-import {saveChanges} from '../../modules/user'
+import {saveChanges as onSubmit} from '../../modules/user'
 
 import './EditUser.css'
 
 const UserEditForm = props => {
-  const {saveChanges, pristine, submitting } = props
+  const {handleSubmit, pristine, submitting } = props
   return (
-    <Card >
-      <form onSubmit={saveChanges}>
+    <Card className="EditUserForm-card">
+      <form onSubmit={handleSubmit}>
           <UserFields showCalculatedFields={true}/>
-            <RaisedButton 
-            primary={true} className="User-button" 
+          <RaisedButton 
+            primary={true}
             disabled={pristine || submitting}
             type="submit">
               Update the user
@@ -38,7 +38,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  saveChanges
+  onSubmit
 }, dispatch)
 
 export default connect(

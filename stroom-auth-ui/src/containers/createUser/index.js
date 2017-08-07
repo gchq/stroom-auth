@@ -8,7 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 
 import UserFields from '../userFields'
 import './CreateUserForm.css'
-import { onSubmit } from '../../modules/user'
+import { createUser as onSubmit } from '../../modules/user'
 
 const UserCreateForm = props => {
   const {handleSubmit, pristine, submitting } = props
@@ -20,7 +20,7 @@ const UserCreateForm = props => {
           <UserFields showCalculatedFields={false}/>
           <div>
           <RaisedButton 
-            primary={true} className="User-button" 
+            primary={true} 
             disabled={pristine || submitting}
             type="submit">
               Create the user

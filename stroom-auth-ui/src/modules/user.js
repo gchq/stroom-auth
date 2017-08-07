@@ -178,7 +178,7 @@ function handleErrors(error, dispatch) {
 }
 
 
-export const onSubmit  = (newUser) => {
+export const createUser  = (newUser) => {
   return (dispatch, getState) => {
 
     const jwsToken = getState().login.token
