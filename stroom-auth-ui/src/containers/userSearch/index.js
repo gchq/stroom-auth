@@ -121,7 +121,7 @@ class UserSearch extends Component {
 
   render() {
     return (
-      <Paper className='UserSearch-main' zDepth="0">
+      <Paper className='UserSearch-main' zDepth={0}>
         <div className="UserSearch-content" >
           <div>
               <ReactTable

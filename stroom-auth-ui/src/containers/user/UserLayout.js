@@ -65,7 +65,7 @@ class UserLayout extends Component {
     var showCreateButton = showSearch 
     var deleteButtonDisabled = selectedUserRowId ? false : true
     return (
-      <Paper className='UserLayout-main' zDepth='0'>
+      <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
             <NavLink to='/userSearch'>

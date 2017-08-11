@@ -51,15 +51,18 @@ class App extends Component {
               iconElementLeft={<div/>}
               iconElementRight= {
                 <div className="App-appBar-buttons">
-                  <FlatButton onClick={() => this.props.goToStroom(this.props.token)} label="Go to Stroom" primary={true} labelStyle={{color:'white'}}
+                  <FlatButton onClick={() => this.props.goToStroom(this.props.token)} 
+                    label="Go to Stroom" primary={true}
                     icon={<img src={iconBlue} alt="Stroom logo"/>}/>
                   <NavLink to='/userSearch'>
-                    <FlatButton label="Search users" labelStyle={{color:'white'}} icon={<Person color={fullWhite}/>}/>
+                    <FlatButton 
+                      label="Search users"
+                      icon={<Person color={fullWhite}/>}/>
                   </NavLink>
                   
                   <IconMenu
                     iconButtonElement={
-                      <IconButton className="App-iconButton" labelStyle={{color:'white'}}><MoreVert color={fullWhite}/></IconButton>
+                      <IconButton className="App-iconButton"><MoreVert color={fullWhite}/></IconButton>
                     }>
                     {this.isLoggedIn() ? (
                       <div>

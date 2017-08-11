@@ -16,7 +16,9 @@ export const TOGGLE_ALERT_VISIBILITY = 'user/TOGGLE_ALERT_VISIBILITY'
 const initialState = {
   user: '',
   password: '',
-  showCreateLoader: false
+  showCreateLoader: false,
+  alertText: '',
+  showAlert: false
 }
 
 export default (state = initialState, action) => {
