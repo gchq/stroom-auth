@@ -8,6 +8,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.JSONFormat;
+import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -30,7 +31,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import static stroom.db.auth.Tables.USERS;
@@ -112,8 +112,16 @@ public final class UserResource {
     Preconditions.checkNotNull(database);
 
     // Get the user
-    UsersRecord foundUserRecord = database
-        .selectFrom(USERS)
+    Record foundUserRecord = database
+        .select(USERS.ID,
+            USERS.EMAIL,
+            USERS.LOGIN_FAILURES,
+            USERS.LAST_LOGIN,
+            USERS.UPDATED_ON,
+            USERS.UPDATED_BY_USER,
+            USERS.CREATED_ON,
+            USERS.CREATED_BY_USER)
+        .from(USERS)
         .where(new Condition[]{USERS.EMAIL.eq(authenticatedServiceUser.getName())}).fetchOne();
     Result foundUserResult = database
         .newResult(
@@ -141,8 +149,21 @@ public final class UserResource {
     Preconditions.checkNotNull(database);
 
     // Get the user
-    UsersRecord foundUserRecord = database
-        .selectFrom(USERS)
+    Record foundUserRecord = database
+        .select(USERS.ID,
+            USERS.EMAIL,
+            USERS.FIRST_NAME,
+            USERS.LAST_NAME,
+            USERS.COMMENTS,
+            USERS.STATE,
+            USERS.LOGIN_FAILURES,
+            USERS.LOGIN_COUNT,
+            USERS.LAST_LOGIN,
+            USERS.UPDATED_ON,
+            USERS.UPDATED_BY_USER,
+            USERS.CREATED_ON,
+            USERS.CREATED_BY_USER)
+        .from(USERS)
         .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
         .fetchOne();
     Response response;
@@ -165,7 +186,10 @@ public final class UserResource {
           USERS.CREATED_ON,
           USERS.CREATED_BY_USER);
       foundUserResult.add(foundUserRecord);
-      String foundUserJson = foundUserResult.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
+      String foundUserJson = foundUserResult
+          .formatJSON((new JSONFormat())
+              .header(false)
+              .recordFormat(JSONFormat.RecordFormat.OBJECT));
       response = Response.status(Response.Status.OK).entity(foundUserJson).build();
       return response;
     }
