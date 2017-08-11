@@ -22,3 +22,4 @@
 ./gradlew clean build shadowJar -x test -x integrationTest
 
 docker build --tag gchq/stroom-auth-service:latest stroom-auth-svc/.
+docker build --tag gchq/stroom-auth-ui:latest stroom-auth-ui/.
