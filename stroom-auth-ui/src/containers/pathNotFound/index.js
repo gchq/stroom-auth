@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import Card, { CardContent } from 'material-ui/Card'
+import Card from 'material-ui/Card'
 
 import './PathNotFound.css'
 

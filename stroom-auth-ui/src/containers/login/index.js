@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import LoginUI from './LoginUI'
-import { fetchUser } from '../../modules/user'
 import { checkForRememberMeToken } from '../../modules/login'
 
 class Login extends Component {

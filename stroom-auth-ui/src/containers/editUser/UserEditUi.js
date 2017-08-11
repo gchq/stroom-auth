@@ -7,10 +7,9 @@ import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import Snackbar from 'material-ui/Snackbar'
 
+import './EditUser.css'
 import UserFields from '../userFields'
 import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
-
-import './EditUser.css'
 
 const UserEditForm = props => {
   const {handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility } = props

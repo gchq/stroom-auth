@@ -6,13 +6,12 @@ import { MenuItem } from 'material-ui/Menu'
 import FlatButton from 'material-ui/FlatButton'
 import { SelectField, TextField } from 'redux-form-material-ui'
 
-import { required, email } from '../../validations'
 import './UserFields.css'
+import { required, email } from '../../validations'
 
 /*
 This can display all user fields, or not. 
 */
-
 class UserFields extends Component {
   constructor() {
     super()
