@@ -28,6 +28,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.regex.Pattern;
 
 import static stroom.db.auth.Tables.USERS;
@@ -123,6 +124,7 @@ public final class AuthenticationResource {
             // We reset the failed login count if we have a successful login
             user.setLoginFailures(0);
             user.setLoginCount(user.getLoginCount() + 1);
+            user.setLastLogin(UserMapper.convertISO8601ToTimestamp(ZonedDateTime.now().toString()));
             database
                     .update((Table) USERS)
                     .set(user)

@@ -189,7 +189,7 @@ public final class UserResource {
         .selectFrom((Table) USERS)
         .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
         .fetchOne();
-    user.setUpdated_by_user(user.getEmail());
+    user.setUpdated_by_user(authenticatedServiceUser.getName());
     user.setUpdated_on(ZonedDateTime.now().toString());
     UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
     database
