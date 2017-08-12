@@ -154,10 +154,10 @@ TokenSearch.propTypes = {
 
 const mapStateToProps = state => ({
   token: state.login.token,
-  showSearchLoader: state.userSearch.showSearchLoader, //TODO wire this in
-  results: state.userSearch.results,
-  errorStatus: state.user.errorStatus, //TODO wire this in
-  errorText: state.user.errorText, // TODO wire this in
+  showSearchLoader: state.tokenSearch.showSearchLoader, //TODO wire this in
+  results: state.tokenSearch.results,
+  errorStatus: state.token.errorStatus, //TODO wire this in
+  errorText: state.token.errorText, // TODO wire this in
   selectedTokenRowId: state.userSearch.selectedTokenRowId // TODO wire this in
 })
 

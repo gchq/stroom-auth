@@ -1,9 +1,9 @@
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getJsonBody } from './fetchFunctions'
 
-export const SHOW_SEARCH_LOADER = 'userSearch/SHOW_SEARCH_LOADER'
-export const UPDATE_RESULTS = 'userSearch/UPDATE_RESULTS'
-export const SELECT_ROW = 'userSearch/SELECT_ROW'
+export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER'
+export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS'
+export const SELECT_ROW = 'tokenSearch/SELECT_ROW'
 
 const initialState = {
   tokens: [],
