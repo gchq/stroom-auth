@@ -158,7 +158,7 @@ const mapStateToProps = state => ({
   results: state.tokenSearch.results,
   errorStatus: state.token.errorStatus, //TODO wire this in
   errorText: state.token.errorText, // TODO wire this in
-  selectedTokenRowId: state.userSearch.selectedTokenRowId // TODO wire this in
+  selectedTokenRowId: state.tokenSearch.selectedTokenRowId 
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
