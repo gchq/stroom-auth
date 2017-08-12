@@ -71,6 +71,12 @@ export const performTokenSearch = (jwsToken, tableState) => {
       orderDirection = tableState.sorted[0].desc ? 'desc' : 'asc'
     }
 
+    // TODO: get the object out of the array 
+    var filters = tableState.filtered.map(filter => {
+      console.log(filter)
+      return {[filter.id]:filter.value}
+    })
+
     var userSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search"
 
     fetch(userSearchUrl, {

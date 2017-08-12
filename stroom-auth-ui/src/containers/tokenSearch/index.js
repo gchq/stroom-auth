@@ -122,7 +122,8 @@ class TokenSearch extends Component {
                 //   id:'email',
                 //   desc: true
                 // }]}
-                // filterable={this.props.isFilteringEnabled}
+                // TODO: tie this to this.props.isFilteringEnabled
+                filterable={true}
                 showPagination= {true}
                 loading={this.props.showSearchLoader}
                 getTrProps={(state, rowInfo, column, instance) => {
