@@ -48,8 +48,16 @@ export function updateResults(results){
   }
 }
 
+export function showSearchLoader(showSearchLoader){
+  return {
+    type: SHOW_SEARCH_LOADER,
+    showSearchLoader
+  }
+}
+
 export const performTokenSearch = (jwsToken, tableState) => {
   return dispatch => {
+    dispatch(showSearchLoader(true))
 
     var limit = tableState.pageSize
     var page = tableState.page
@@ -80,6 +88,7 @@ export const performTokenSearch = (jwsToken, tableState) => {
         .then(handleStatus)
         .then(getJsonBody)
         .then(data => {
+          dispatch(showSearchLoader(false))
           dispatch(updateResults(data))
         })
         .catch(error => handleErrors(error, dispatch, jwsToken))
