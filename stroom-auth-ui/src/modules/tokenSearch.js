@@ -61,10 +61,15 @@ export const performTokenSearch = (jwsToken, tableState) => {
 
     var limit = tableState.pageSize
     var page = tableState.page
+    
+    // Default ordering and direction
+    var orderBy = 'issued_on'
+    var orderDirection = 'desc'
 
-    //TODO ordering
-    //var orderBy = tableState.sorted
-    //var orderDirection = 'asc'
+    if(tableState.sorted.length > 0){
+      orderBy = tableState.sorted[0].id
+      orderDirection = tableState.sorted[0].desc ? 'desc' : 'asc'
+    }
 
     var userSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search"
 
@@ -79,19 +84,18 @@ export const performTokenSearch = (jwsToken, tableState) => {
       body: JSON.stringify({
         page,
         limit,
-        //TODO ordering
-        // orderBy,
-        // orderDirection
+        orderBy,
+        orderDirection
         //TODO filters
       })
     })
-        .then(handleStatus)
-        .then(getJsonBody)
-        .then(data => {
-          dispatch(showSearchLoader(false))
-          dispatch(updateResults(data))
-        })
-        .catch(error => handleErrors(error, dispatch, jwsToken))
+    .then(handleStatus)
+    .then(getJsonBody)
+    .then(data => {
+      dispatch(showSearchLoader(false))
+      dispatch(updateResults(data))
+    })
+    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 
