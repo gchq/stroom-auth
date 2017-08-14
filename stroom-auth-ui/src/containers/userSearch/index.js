@@ -35,14 +35,47 @@ class UserSearch extends Component {
     this.props.changeSelectedRow(id)
   }
 
+  renderStateCell(state){
+    var stateColour, stateText
+    switch(state) {
+      case 'enabled':
+        stateColour = '#57d500'
+        stateText = 'Enabled'
+        break;
+      case 'locked':
+        stateColour = '#ff2e00'
+        stateText = 'Locked'
+        break;
+      case 'disabled':
+        stateColour = '#ff2e00'
+        stateText = 'Disabled'
+        break;
+      default:
+        stateColour = '#ffbf00'
+        stateText = 'Unknown!'
+    }
+    return (
+      <span>
+        <span style={{
+          color: stateColour,
+          transition: 'all .3s ease'
+        }}>
+          &#x25cf;
+        </span> {
+          stateText
+        }
+      </span>
+    )
+  }
+
   render() {
     const columns = [{
       Header: '',
       accessor: 'id',
-      Cell: row => (
-        <Checkbox checked={this.props.selectedUserRowId === row.value}/>
-      ),
-      width: 30
+      Cell: row => (<Checkbox checked={this.props.selectedUserRowId === row.value}/>),
+      width: 30,
+      filterable: false,
+      show: false
     }, {
       Header: 'Email',
       accessor: 'email',
@@ -51,39 +84,7 @@ class UserSearch extends Component {
       Header: 'State',
       accessor: 'state',
       width: 100,
-      Cell: row => {
-        var stateColour
-        var stateText ='sdfsd'
-        switch(row.value) {
-          case 'enabled':
-            stateColour = '#57d500'
-            stateText = 'Enabled'
-            break;
-          case 'locked':
-            stateColour = '#ff2e00'
-            stateText = 'Locked'
-            break;
-          case 'disabled':
-            stateColour = '#ff2e00'
-            stateText = 'Disabled'
-            break;
-          default:
-            stateColour = '#ffbf00'
-            stateText = 'Unknown!'
-        }
-          return(
-          <span>
-            <span style={{
-              color: stateColour,
-              transition: 'all .3s ease'
-            }}>
-              &#x25cf;
-            </span> {
-              stateText
-            }
-          </span>
-        )
-      }
+      Cell: row => this.renderStateCell(row.value)
     }, {
       Header: 'Last login',
       accessor: 'last_login',
