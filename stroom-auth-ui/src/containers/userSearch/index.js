@@ -107,10 +107,6 @@ class UserSearch extends Component {
       width: 400
     }]
 
-    //TODO Need to detect changes in height and put it into the store, then read it. That way it'll change when the window resizes.
-    const innerHeight = window.innerHeight
-    const appBarHeight = 200
-    const tableHeight = innerHeight - appBarHeight
     return (
       <Paper className='UserSearch-main' zDepth="0">
         <div className="UserSearch-content" >
@@ -118,7 +114,6 @@ class UserSearch extends Component {
               <ReactTable
                 data={this.props.results}
                 className='-striped -highlight UserSearch-table'
-                style={{height: tableHeight}}
                 columns={columns}
                 defaultSorted={[{
                   id:'email',
