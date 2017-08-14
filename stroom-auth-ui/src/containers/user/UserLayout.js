@@ -36,8 +36,7 @@ class UserLayout extends Component {
     var showSearch = show === 'search'
     var showCreate = show === 'create'
     var showEdit = show === 'edit'
-    var showCreateButton = showSearch || showEdit
-    var showSearchButton = showEdit || showCreate
+    var showCreateButton = showSearch 
     var deleteButtonDisabled = selectedUserRowId ? false : true
     return (
       <Paper className='UserLayout-main'>
@@ -46,8 +45,7 @@ class UserLayout extends Component {
             <NavLink to='/userSearch'>
               <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
             </NavLink>
-            <KeyboardArrowRight className="UserLayout-toolbarSeparator"/>
-            {showSearch ? (<ToolbarTitle text="Search" className="UserLayout-toolbarTitle"/>) : (undefined)}
+            {showCreate || showEdit ? (<KeyboardArrowRight className="UserLayout-toolbarSeparator"/>) : (undefined)}
             {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
             {showEdit ? (<ToolbarTitle text="Edit" className="UserLayout-toolbarTitle"/>) : (undefined)}
           </ToolbarGroup>
@@ -64,14 +62,6 @@ class UserLayout extends Component {
 
             {showSearch ? (
               <div className="UserLayout-toolbarButton">
-                <RaisedButton label="Delete" primary={true} 
-                  icon={<Delete color={fullWhite}/>} disabled={deleteButtonDisabled}
-                  onClick={(param1, param2) => this.deleteUser(param1, param2)}/>
-              </div>
-            ) : (undefined)}
-
-            {showSearch ? (
-              <div className="UserLayout-toolbarButton">
                 <NavLink to={`/user/${selectedUserRowId}`}>
                   <RaisedButton label="Edit" primary={true}
                     icon={<Edit color={fullWhite}/>} disabled={deleteButtonDisabled}/>
@@ -79,13 +69,11 @@ class UserLayout extends Component {
               </div>
             ) : (undefined)}
 
-
-            {showSearchButton ? (
+            {showSearch ? (
               <div className="UserLayout-toolbarButton">
-                <NavLink to='/userSearch'>
-                  <RaisedButton label="Search" primary={true} className="UserSearch-appButton" 
-                    icon={<Search color={fullWhite}/>} />
-                </NavLink>
+                <RaisedButton label="Delete" primary={true} 
+                  icon={<Delete color={fullWhite}/>} disabled={deleteButtonDisabled}
+                  onClick={(param1, param2) => this.deleteUser(param1, param2)}/>
               </div>
             ) : (undefined)}
 
