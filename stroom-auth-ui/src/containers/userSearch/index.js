@@ -42,28 +42,36 @@ class UserSearch extends Component {
       accessor: 'id',
       Cell: row => (
         <Checkbox checked={this.props.selectedUserRowId === row.value}/>
-      )
+      ),
+      width: 30
     }, {
       Header: 'Email',
-      accessor: 'email'
+      accessor: 'email',
+      width: 200
     }, {
       Header: 'State',
-      accessor: 'state'
+      accessor: 'state',
+      width: 80
     }, {
       Header: 'Last login',
-      accessor: 'last_login'
+      accessor: 'last_login',
+      width: 180
     }, {
       Header: 'Login failures',
-      accessor: 'login_failures'
+      accessor: 'login_failures',
+      width: 120
     }, {
       Header: 'Updated by',
-      accessor: 'updated_by_user'
+      accessor: 'updated_by_user',
+      width: 200
     }, {
-      Header: 'Updated',
-      accessor: 'updated_on'
+      Header: 'Updated on',
+      accessor: 'updated_on',
+      width: 180
     }, {
       Header: 'Comments',
-      accessor: 'comments'
+      accessor: 'comments',
+      width: 400
     }]
 
     //TODO Need to detect changes in height and put it into the store, then read it. That way it'll change when the window resizes.
