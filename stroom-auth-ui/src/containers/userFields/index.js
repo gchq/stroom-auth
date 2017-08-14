@@ -110,7 +110,9 @@ class UserFields extends Component {
                 <label>State</label>
               </div>
               <div className="input-container">
-                <Field name="state" component={ SelectField }>
+                <Field name="state" 
+                  component={ SelectField }
+                  validate={[required]}>
                   <MenuItem value="enabled" primaryText="Enabled"/>
                   <MenuItem value="disabled" primaryText="Disabled"/>
                   <MenuItem value="locked" primaryText="Locked"/>

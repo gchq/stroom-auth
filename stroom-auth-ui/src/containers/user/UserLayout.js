@@ -8,14 +8,19 @@ import { Field, reduxForm } from 'redux-form'
 
 import { NavLink } from 'react-router-dom'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import {fullWhite} from 'material-ui/styles/colors'
+import IconButton from 'material-ui/IconButton'
 import Add from 'material-ui-icons/Add'
 import Search from 'material-ui-icons/Search'
 import Delete from 'material-ui-icons/Delete'
 import Edit from 'material-ui-icons/Edit'
+import Help from 'material-ui-icons/Help'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 import Snackbar from 'material-ui/Snackbar'
 import Toggle from 'material-ui/Toggle'
+import Dialog from 'material-ui/Dialog'
+import {blue600, amber900} from 'material-ui/styles/colors'
 
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
@@ -31,7 +36,8 @@ class UserLayout extends Component {
   constructor() {
     super()
     this.state = {
-      isFilteringEnabled: false
+      isFilteringEnabled: false,
+      isHelpDialogOpen: false
     }
   }
 
@@ -43,6 +49,14 @@ class UserLayout extends Component {
     this.setState({isFilteringEnabled})
   }
 
+  handleHelpDialogOpen = () => {
+    this.setState({isHelpDialogOpen: true});
+  };
+
+  handleHelpDialogClose = () => {
+    this.setState({isHelpDialogOpen: false});
+  };
+
   render() {
     const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props
     var showSearch = show === 'search'
@@ -51,7 +65,7 @@ class UserLayout extends Component {
     var showCreateButton = showSearch 
     var deleteButtonDisabled = selectedUserRowId ? false : true
     return (
-      <Paper className='UserLayout-main'>
+      <Paper className='UserLayout-main' zDepth='0'>
         <Toolbar>
           <ToolbarGroup>
             <NavLink to='/userSearch'>
@@ -98,6 +112,9 @@ class UserLayout extends Component {
               </div>
             ) : (undefined)}
 
+            <IconButton onClick={() => this.handleHelpDialogOpen()}>
+              <Help color={blue600} hoverColor={amber900}/>
+            </IconButton>
           </ToolbarGroup>
         </Toolbar>
         <div className="User-content">
@@ -111,6 +128,19 @@ class UserLayout extends Component {
           autoHideDuration={4000}
           onRequestClose={() => toggleAlertVisibility()}
         />
+        <Dialog
+          title={<div><span><Help color={blue600}/></span> &nbsp;<span>Users</span></div>}
+          actions={
+            <FlatButton
+              label="OK"
+              primary={true}
+              onTouchTap={this.handleHelpDialogClose}/>}
+          modal={false}
+          open={this.state.isHelpDialogOpen}
+          onRequestClose={this.handleHelpDialogClose}>
+          <p>This area is for managing user accounts.</p>
+          <p>The list of users here do not include those who might have logged in using certificates or LDAP credentials.</p>
+        </Dialog>
       </Paper> 
 
     )

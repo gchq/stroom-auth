@@ -135,7 +135,6 @@ class UserSearch extends Component {
                     className: selected ? 'selectedRow' : 'unselectedRow'
                   }
                 }}/>
-            <p className="warning">This list is for user accounts only. It excludes those users who might have logged in using certificates or LDAP credentials.</p>
           </div>
         </div>
       </Paper>    
