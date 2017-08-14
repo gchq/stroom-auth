@@ -17,9 +17,9 @@
   height: 100vh; 
 }
 
-/* This just adds some padding to the content */
+/* This just adds some padding to the content, so the paper stands out */
 .main {
-  padding:10px;  
+  /* padding:10px;  */
 }
 
 .App-appBar-buttons {

@@ -79,7 +79,7 @@ class UserSearch extends Component {
     const appBarHeight = 200
     const tableHeight = innerHeight - appBarHeight
     return (
-      <Paper className='UserSearch-main'>
+      <Paper className='UserSearch-main' zDepth="0">
         <div className="UserSearch-content" >
           <div>
               <ReactTable
