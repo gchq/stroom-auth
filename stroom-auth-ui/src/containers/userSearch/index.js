@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { NavLink} from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import Paper from 'material-ui/Paper'
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
@@ -119,8 +120,7 @@ class UserSearch extends Component {
                   id:'email',
                   desc: true
                 }]}
-                showPagination={false}
-                filterable={true}
+                filterable={this.props.isFilteringEnabled}
                 showPagination= {true}
                 loading={this.props.showSearchLoader}
                 getTrProps={(state, rowInfo, column, instance) => {
@@ -141,6 +141,10 @@ class UserSearch extends Component {
       </Paper>    
     )
   }
+}
+
+UserSearch.propTypes = {
+  isFilteringEnabled: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({

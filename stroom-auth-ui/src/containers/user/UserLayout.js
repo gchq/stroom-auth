@@ -15,6 +15,7 @@ import Delete from 'material-ui-icons/Delete'
 import Edit from 'material-ui-icons/Edit'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 import Snackbar from 'material-ui/Snackbar'
+import Toggle from 'material-ui/Toggle'
 
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
@@ -27,8 +28,19 @@ import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
 import './User.css'
 
 class UserLayout extends Component {
+  constructor() {
+    super()
+    this.state = {
+      isFilteringEnabled: false
+    }
+  }
+
   deleteUser(){
     this.context.store.dispatch(deleteSelectedUser())
+  }
+
+  toggleFiltering(isFilteringEnabled){
+    this.setState({isFilteringEnabled})
   }
 
   render() {
@@ -50,6 +62,15 @@ class UserLayout extends Component {
             {showEdit ? (<ToolbarTitle text="Edit" className="UserLayout-toolbarTitle"/>) : (undefined)}
           </ToolbarGroup>
           <ToolbarGroup>
+
+            {showSearch ? (
+              <div className="UserLayout-toolbarButton">
+                <Toggle
+                  label="Show filtering"
+                  labelPosition="right"
+                  onToggle= {(event, isFilteringEnabled)=> this.toggleFiltering(isFilteringEnabled)}/>
+              </div>
+            ) : (undefined)}
 
             {showCreateButton ? (
               <div className="UserLayout-toolbarButton">
@@ -80,7 +101,7 @@ class UserLayout extends Component {
           </ToolbarGroup>
         </Toolbar>
         <div className="User-content">
-          {showSearch ? (<UserSearch/>) : (undefined)}
+          {showSearch ? (<UserSearch isFilteringEnabled={this.state.isFilteringEnabled}/>) : (undefined)}
           {showCreate ? (<UserCreate/>) : (undefined)}
           {showEdit ? (<UserEdit/>) : (undefined)}
         </div>

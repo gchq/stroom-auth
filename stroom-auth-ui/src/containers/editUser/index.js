@@ -10,7 +10,6 @@ class UserEditForm extends Component {
     this.state = {
       rules: []
     }
-
   }
 
   async componentDidMount() {
