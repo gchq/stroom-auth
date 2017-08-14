@@ -72,7 +72,7 @@ class UserSearch extends Component {
     const columns = [{
       Header: '',
       accessor: 'id',
-      Cell: row => (<Checkbox checked={this.props.selectedUserRowId === row.value}/>),
+      Cell: row => (<div>{this.props.selectedUserRowId === row.value ? 'selected' : 'unselected'}</div>),
       width: 30,
       filterable: false,
       show: false
@@ -128,10 +128,15 @@ class UserSearch extends Component {
                 filterable={true}
                 loading={this.props.showSearchLoader}
                 getTrProps={(state, rowInfo, column, instance) => {
+                  var selected = false
+                  if(rowInfo) {
+                    selected = rowInfo.row.id === this.props.selectedUserRowId 
+                  }
                   return {
                     onClick: (target, event) => {
                       this.toggleRow(rowInfo.row.id)
-                    }
+                    },
+                    className: selected ? 'selectedRow' : 'unselectedRow'
                   }
                 }}/>
             <p className="warning">This list is for user accounts only. It excludes those users who might have logged in using certificates or LDAP credentials.</p>
