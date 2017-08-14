@@ -17,6 +17,8 @@ import ImageEdit from 'material-ui/svg-icons/image/edit'
 import {fullWhite} from 'material-ui/styles/colors'
 import Add from 'material-ui-icons/Add'
 
+import dateFormat from 'dateformat'
+
 import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 import './UserSearch.css'
 
@@ -69,7 +71,12 @@ class UserSearch extends Component {
     )
   }
 
-  render() {
+  formatDate(dateString){
+    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
+    return dateString ? dateFormat(dateString, dateFormatString) : ''
+  }
+
+  getColumnFormat() {
     const columns = [{
       Header: '',
       accessor: 'id',
@@ -89,7 +96,8 @@ class UserSearch extends Component {
     }, {
       Header: 'Last login',
       accessor: 'last_login',
-      width: 180
+      Cell: row => this.formatDate(row.value),
+      width: 225
     }, {
       Header: 'Login failures',
       accessor: 'login_failures',
@@ -101,13 +109,17 @@ class UserSearch extends Component {
     }, {
       Header: 'Updated on',
       accessor: 'updated_on',
-      width: 180
+      Cell: row => this.formatDate(row.value),
+      width: 220
     }, {
       Header: 'Comments',
       accessor: 'comments',
       width: 400
     }]
+    return columns
+  }
 
+  render() {
     return (
       <Paper className='UserSearch-main' zDepth="0">
         <div className="UserSearch-content" >
@@ -115,7 +127,7 @@ class UserSearch extends Component {
               <ReactTable
                 data={this.props.results}
                 className='-striped -highlight UserSearch-table'
-                columns={columns}
+                columns={this.getColumnFormat()}
                 defaultSorted={[{
                   id:'email',
                   desc: true

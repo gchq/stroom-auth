@@ -1,6 +1,7 @@
 import { push } from 'react-router-redux'
 import { HttpError } from '../ErrorTypes'
 import { initialize } from 'redux-form'
+import dateFormat from 'dateformat'
 
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
 import { performUserSearch, changeSelectedRow } from './userSearch'
@@ -93,6 +94,10 @@ function handleStatus(response) {
   }
 }
 
+function formatDate(dateString) {
+  const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
+  return dateString ? dateFormat(dateString, dateFormatString) : ''
+}
 
 export const saveChanges = (editedUser) => {
   return (dispatch, getState) => {
@@ -275,11 +280,22 @@ function modifyDataForDisplay(user) {
   if(!user.last_login){
     user.last_login = "Never logged in"
   }
+  else {
+    user.last_login = formatDate(user.last_login)
+  }
+
   if(!user.updated_on){
     user.updated_on = "Never been updated"
   }
+  else {
+    user.updated_on = formatDate(user.updated_on)
+  }
+
   if(!user.updated_by_user) {
     user.updated_by_user = "Never been updated"
   }
+
+  user.created_on = formatDate(user.created_on)
+
   return user
 }
