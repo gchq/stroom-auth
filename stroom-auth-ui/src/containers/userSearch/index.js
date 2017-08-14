@@ -121,6 +121,7 @@ class UserSearch extends Component {
                 }]}
                 showPagination={false}
                 filterable={true}
+                showPagination= {true}
                 loading={this.props.showSearchLoader}
                 getTrProps={(state, rowInfo, column, instance) => {
                   var selected = false
