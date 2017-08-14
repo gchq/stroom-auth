@@ -36,7 +36,6 @@ class UserSearch extends Component {
   }
 
   render() {
-
     const columns = [{
       Header: '',
       accessor: 'id',
@@ -51,7 +50,40 @@ class UserSearch extends Component {
     }, {
       Header: 'State',
       accessor: 'state',
-      width: 80
+      width: 100,
+      Cell: row => {
+        var stateColour
+        var stateText ='sdfsd'
+        switch(row.value) {
+          case 'enabled':
+            stateColour = '#57d500'
+            stateText = 'Enabled'
+            break;
+          case 'locked':
+            stateColour = '#ff2e00'
+            stateText = 'Locked'
+            break;
+          case 'disabled':
+            stateColour = '#ff2e00'
+            stateText = 'Disabled'
+            break;
+          default:
+            stateColour = '#ffbf00'
+            stateText = 'Unknown!'
+        }
+          return(
+          <span>
+            <span style={{
+              color: stateColour,
+              transition: 'all .3s ease'
+            }}>
+              &#x25cf;
+            </span> {
+              stateText
+            }
+          </span>
+        )
+      }
     }, {
       Header: 'Last login',
       accessor: 'last_login',
