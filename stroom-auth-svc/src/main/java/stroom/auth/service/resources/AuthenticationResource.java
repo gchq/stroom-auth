@@ -1,12 +1,17 @@
 package stroom.auth.service.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Result;
 import org.jooq.Table;
 import org.mindrot.jbcrypt.BCrypt;
+import org.simplejavamail.email.Email;
+import org.simplejavamail.mailer.Mailer;
+import org.simplejavamail.mailer.config.ServerConfig;
+import org.simplejavamail.mailer.config.TransportStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.Config;
@@ -15,12 +20,14 @@ import stroom.auth.service.security.CertificateUtil;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.annotation.Nullable;
+import javax.mail.Message;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -130,7 +137,7 @@ public final class AuthenticationResource {
                     .set(user)
                     .where(new Condition[]{USERS.EMAIL.eq(credentials.getEmail())}).execute();
 
-            String token = this.tokenGenerator.getToken(credentials.getEmail());
+            String token = this.tokenGenerator.getToken(credentials.getEmail(), this.config.getJwsExpirationTimeInMinutesInTheFuture());
             response = Response.status(Status.OK).entity(token).build();
             return response;
         } else {
@@ -153,6 +160,42 @@ public final class AuthenticationResource {
 
             return shouldLock ? unauthorisedAndNowLockedResponse() : unauthorisedResponse();
         }
+    }
+
+    @GET
+    @Path("reset/{email}")
+    @Timed
+    @NotNull
+    public final Response resetEmail(@Context @NotNull DSLContext database, @PathParam("email") String emailAddress) {
+        Preconditions.checkNotNull(database);
+
+        UsersRecord usersRecord = database
+            .selectFrom(USERS)
+            .where(USERS.EMAIL.eq(emailAddress)).fetchOne();
+
+        String resetToken = this.tokenGenerator.getToken(emailAddress, this.config.getEmailConfig().getPasswordResetTokenValidityInMinutes());
+        String resetName = usersRecord.getFirstName() + "" + usersRecord.getLastName();
+        String resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
+        String passwordResetEmailText = String.format(config.getEmailConfig().getPasswordResetText(), resetUrl);
+
+        Email email = new Email();
+        email.setFromAddress(config.getEmailConfig().getFromName(), config.getEmailConfig().getFromAddress());
+        email.setReplyToAddress(config.getEmailConfig().getFromName(), config.getEmailConfig().getFromAddress());
+        email.addRecipient(resetName, emailAddress, Message.RecipientType.TO);
+        email.setSubject(config.getEmailConfig().getPasswordResetSubject());
+        email.setText(passwordResetEmailText);
+
+        new Mailer(
+            new ServerConfig(
+                config.getEmailConfig().getSmtpConfig().getHost(),
+                config.getEmailConfig().getSmtpConfig().getPort(),
+                config.getEmailConfig().getSmtpConfig().getUsername(),
+                config.getEmailConfig().getSmtpConfig().getPassword()),
+            TransportStrategy.SMTP_TLS
+        ).sendMail(email);
+
+        Response response = Response.status(Response.Status.OK).build();
+        return response;
     }
 
     private final Response redirectToLoginResponse() throws URISyntaxException {

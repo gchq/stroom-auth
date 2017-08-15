@@ -98,5 +98,18 @@ jwsSecret: ${JWS_SECRET:- CHANGE_ME}
 certificateDnPattern: CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?
 loginUrl: http://localhost/login
 stroomUrl: http://localhost/stroom
+resetPasswordUrl: 'http://localhost/resetPassword/?token=%s'
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://localhost}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
+
+email:
+  fromAddress: noreply@stroom.com
+  fromName: Stroom User Accounts
+  passwordResetSubject: Password reset for Stroom
+  passwordResetText: 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'
+  passwordResetTokenValidityInMinutes: 5
+  smtp:
+    host: localhost
+    port: 2527
+    username: todo
+    password: todo

@@ -16,10 +16,10 @@ public final class TokenGenerator {
     private Config config;
 
     @NotNull
-    public final String getToken(@NotNull String user) {
+    public final String getToken(@NotNull String user,float expirationInMinutes) {
         Preconditions.checkNotNull(user);
         byte[] jwsSecret = this.config.getJwsSecret().getBytes(Charset.defaultCharset());
-        JwtClaims jwtClaims = getClaimsForUser(user);
+        JwtClaims jwtClaims = getClaimsForUser(user, expirationInMinutes);
         return toToken(jwsSecret, jwtClaims);
     }
 
@@ -37,9 +37,9 @@ public final class TokenGenerator {
         }
     }
 
-    private final JwtClaims getClaimsForUser(String user) {
+    private final JwtClaims getClaimsForUser(String user, float expirationInMinutes) {
         JwtClaims claims = new JwtClaims();
-        claims.setExpirationTimeMinutesInTheFuture(this.config.getJwsExpirationTimeInMinutesInTheFuture());
+        claims.setExpirationTimeMinutesInTheFuture(expirationInMinutes);
         claims.setSubject(user);
         claims.setIssuer(this.config.getJwsIssuer());
         return claims;

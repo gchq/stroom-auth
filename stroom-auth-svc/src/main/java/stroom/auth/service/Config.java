@@ -76,6 +76,14 @@ public final class Config extends Configuration {
     @JsonProperty
     private Integer failedLoginLockThreshold = 3;
 
+    @NotNull
+    @JsonProperty
+    private String resetPasswordUrl;
+
+    @Nullable
+    @JsonProperty("email")
+    private EmailConfig emailConfig;
+
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
     }
@@ -122,6 +130,14 @@ public final class Config extends Configuration {
 
     public final Integer getHttpsPort() {
         return getPort();
+    }
+
+    public EmailConfig getEmailConfig() {
+        return emailConfig;
+    }
+
+    public String getResetPasswordUrl() {
+        return resetPasswordUrl;
     }
 
     private final Integer getPort() {

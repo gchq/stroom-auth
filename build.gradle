@@ -56,7 +56,8 @@ ext.deps = [
     curator_client: "org.apache.curator:curator-client:$versions.curator",
     curator_framework: "org.apache.curator:curator-framework:$versions.curator",
     curator_recipies: "org.apache.curator:curator-recipes:$versions.curator",
-    curator_service_discovery: "org.apache.curator:curator-x-discovery:$versions.curator"
+    curator_service_discovery: "org.apache.curator:curator-x-discovery:$versions.curator",
+    simple_java_mail: 'org.simplejavamail:simple-java-mail:4.3.0'
 ]
 
 ext.testDeps = [
