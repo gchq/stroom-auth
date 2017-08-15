@@ -25,6 +25,7 @@ import NewUser from '../../containers/newUser'
 import PathNotFound from '../../containers/pathNotFound'
 import UserCreateForm from '../../containers/createUser'
 import UserEditForm from '../../containers/editUser'
+import ResetPassword from '../../containers/resetPassword'
 import FlatButton from 'material-ui/FlatButton'
 import ChangePassword from '../../containers/changePassword'
 import Person from 'material-ui-icons/Person'
@@ -89,7 +90,7 @@ class App extends Component {
                 ) : (
                   <Redirect to={{
                     pathname: '/login',
-                    state: {referrer:'/user'}}}/>
+                    state: {referrer:'/'}}}/>
                 )
               )} />
 
@@ -97,6 +98,7 @@ class App extends Component {
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/about" component={About}/>
               <Route exact path="/newUser" component={NewUser}/>
+              <Route exact path="/resetPassword" component={ResetPassword}/>
 
               <Route exact path="/changepassword" render={(route) => (
                 this.isLoggedIn() ? (
