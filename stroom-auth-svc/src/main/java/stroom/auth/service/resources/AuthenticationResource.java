@@ -70,7 +70,7 @@ public final class AuthenticationResource {
     @Timed
     @NotNull
     public final Response checkCertificate(@Context @NotNull HttpServletRequest httpServletRequest, @Context @NotNull DSLContext database) throws URISyntaxException {
-        String certificateDn = CertificateUtil.extractCertificateDN(httpServletRequest);
+        String certificateDn = httpServletRequest.getHeader("X-SSL-CLIENT-S-DN");
         Response response;
         if(certificateDn == null) {
             this.LOGGER.debug("No certificate in request. Redirecting to login.");
