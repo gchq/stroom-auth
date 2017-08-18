@@ -16,11 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.Config;
 import stroom.auth.service.TokenGenerator;
-import stroom.auth.service.security.CertificateUtil;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.annotation.Nullable;
 import javax.mail.Message;
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -36,6 +37,7 @@ import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static stroom.db.auth.Tables.USERS;
@@ -71,20 +73,35 @@ public final class AuthenticationResource {
     @NotNull
     public final Response checkCertificate(@Context @NotNull HttpServletRequest httpServletRequest, @Context @NotNull DSLContext database) throws URISyntaxException {
         String certificateDn = httpServletRequest.getHeader("X-SSL-CLIENT-S-DN");
+
         Response response;
         if(certificateDn == null) {
-            this.LOGGER.debug("No certificate in request. Redirecting to login.");
+            LOGGER.debug("No DN in request. Redirecting to login.");
             response = this.redirectToLoginResponse();
         } else {
-            this.LOGGER.debug("Found certificate in request. DN: {}", certificateDn);
-            String certificateUsername = CertificateUtil.extractUserIdFromDN(certificateDn, this.dnPattern);
-            if(certificateUsername == null) {
-                this.LOGGER.debug("Cannot extract user from certificate. Redirecting to login.");
+            try {
+                LdapName ldapName = new LdapName(certificateDn);
+                Optional<String> cn = ldapName.getRdns().stream()
+                    .filter(rdn -> rdn.getType().equalsIgnoreCase("CN"))
+                    .map(rdn -> (String)rdn.getValue())
+                    .findFirst();
+                if(cn.isPresent()){
+                    LOGGER.debug("Found CN in DN; logging user in.");
+                    // Get and return a token based on the CN
+                    String token = this.tokenGenerator.getToken(cn.get(), this.config.getJwsExpirationTimeInMinutesInTheFuture());
+                    response = Response.status(Status.OK).entity(token).build();
+                }
+                else {
+                    LOGGER.debug("Cannot find CN in DN. Redirecting to login.");
+                    response = this.redirectToLoginResponse();
+                }
+            } catch (InvalidNameException e) {
+                LOGGER.debug("Cannot process this DN. Redirecting to login.", e);
                 response = this.redirectToLoginResponse();
             }
         }
 
-        return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        return response;
     }
 
     @POST
@@ -108,7 +125,7 @@ public final class AuthenticationResource {
                 .fetch();
 
         if(results.size() != 1) {
-            this.LOGGER.debug("Request to log in with invalid email: " + credentials.getEmail());
+            LOGGER.debug("Request to log in with invalid email: " + credentials.getEmail());
             return unauthorisedResponse();
         }
 
@@ -126,7 +143,7 @@ public final class AuthenticationResource {
 
         boolean isPasswordCorrect = BCrypt.checkpw(credentials.getPassword(), user.getPasswordHash());
         if(isPasswordCorrect) {
-            this.LOGGER.debug("Login for {} succeeded", credentials.getEmail());
+            LOGGER.debug("Login for {} succeeded", credentials.getEmail());
 
             // We reset the failed login count if we have a successful login
             user.setLoginFailures(0);

@@ -39,8 +39,7 @@ import static stroom.db.auth.Tables.USERS;
 @Produces({"application/json"})
 public final class UserResource {
   private final Config config;
-  private final Logger logger;
-
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
   @GET
   @Path("/")
@@ -244,7 +243,6 @@ public final class UserResource {
     super();
     Preconditions.checkNotNull(config);
     this.config = config;
-    this.logger = LoggerFactory.getLogger(AuthenticationResource.class);
   }
 
   private static Boolean doesUserAlreadyExist(DSLContext database, String email){
