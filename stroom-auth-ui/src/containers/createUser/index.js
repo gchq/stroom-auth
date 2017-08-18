@@ -6,8 +6,8 @@ import { reduxForm } from 'redux-form'
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 
-import UserFields from '../userFields'
 import './CreateUserForm.css'
+import UserFields from '../userFields'
 import { createUser as onSubmit } from '../../modules/user'
 
 const UserCreateForm = props => {

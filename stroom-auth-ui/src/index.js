@@ -5,14 +5,13 @@ import { ConnectedRouter } from 'react-router-redux'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import {blue600, amber900} from 'material-ui/styles/colors'
-
 import { MuiThemeProvider } from 'material-ui/styles'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
+import './index.css'
 import registerServiceWorker from './registerServiceWorker'
 import App from './containers/app'
 import store, { history } from './store'
-import './index.css'
 
 const theme = getMuiTheme({
   palette: {

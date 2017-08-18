@@ -1,34 +1,29 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import PropTypes, { object } from 'prop-types'
-
-
+import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
-import { Field, reduxForm } from 'redux-form'
-
 import { NavLink } from 'react-router-dom'
+
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import {fullWhite} from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
-import Add from 'material-ui-icons/Add'
-import Search from 'material-ui-icons/Search'
-import Delete from 'material-ui-icons/Delete'
-import Edit from 'material-ui-icons/Edit'
-import Help from 'material-ui-icons/Help'
-import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 import Snackbar from 'material-ui/Snackbar'
 import Toggle from 'material-ui/Toggle'
 import Dialog from 'material-ui/Dialog'
 import {blue600, amber900} from 'material-ui/styles/colors'
+import Paper from 'material-ui/Card'
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
+import Add from 'material-ui-icons/Add'
+import Delete from 'material-ui-icons/Delete'
+import Edit from 'material-ui-icons/Edit'
+import Help from 'material-ui-icons/Help'
+import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
 import UserEdit from '../editUser'
 import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
-
-import Paper from 'material-ui/Card'
-import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
 
 import './User.css'
 
@@ -65,7 +60,7 @@ class UserLayout extends Component {
     var showCreateButton = showSearch 
     var deleteButtonDisabled = selectedUserRowId ? false : true
     return (
-      <Paper className='UserLayout-main' zDepth='0'>
+      <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
             <NavLink to='/userSearch'>

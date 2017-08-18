@@ -1,8 +1,8 @@
 import { push } from 'react-router-redux'
-import { HttpError } from '../ErrorTypes'
 import { initialize } from 'redux-form'
 import dateFormat from 'dateformat'
 
+import { HttpError } from '../ErrorTypes'
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
 import { performUserSearch, changeSelectedRow } from './userSearch'
 
@@ -16,7 +16,9 @@ export const TOGGLE_ALERT_VISIBILITY = 'user/TOGGLE_ALERT_VISIBILITY'
 const initialState = {
   user: '',
   password: '',
-  showCreateLoader: false
+  showCreateLoader: false,
+  alertText: '',
+  showAlert: false
 }
 
 export default (state = initialState, action) => {

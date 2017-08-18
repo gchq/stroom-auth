@@ -1,33 +1,19 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { NavLink} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import Paper from 'material-ui/Paper'
-import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
-import RaisedButton from 'material-ui/RaisedButton'
-import Checkbox from 'material-ui/Checkbox'
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 
-import IconButton from 'material-ui/IconButton'
-import ImageEdit from 'material-ui/svg-icons/image/edit'
-import {fullWhite} from 'material-ui/styles/colors'
-import Add from 'material-ui-icons/Add'
-
 import dateFormat from 'dateformat'
 
-import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 import './UserSearch.css'
-
+import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 
 class UserSearch extends Component {
-
-  constructor(props) {
-    super(props)
-  }
 
   componentDidMount() {
     this.props.performUserSearch(this.props.token)
@@ -121,7 +107,7 @@ class UserSearch extends Component {
 
   render() {
     return (
-      <Paper className='UserSearch-main' zDepth="0">
+      <Paper className='UserSearch-main' zDepth={0}>
         <div className="UserSearch-content" >
           <div>
               <ReactTable

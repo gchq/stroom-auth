@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router'
 import PropTypes, { object } from 'prop-types'
 import { push } from 'react-router-redux'
-
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 

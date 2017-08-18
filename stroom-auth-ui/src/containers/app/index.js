@@ -1,39 +1,33 @@
 import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
 import { Route, Redirect, NavLink, withRouter, Switch } from 'react-router-dom'
-
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import AppBar from 'material-ui/AppBar'
 import Dialog from 'material-ui/Dialog'
-import RaisedButton from 'material-ui/RaisedButton'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
 import IconButton from 'material-ui/IconButton'
+import FlatButton from 'material-ui/FlatButton'
 import ExitToApp from 'material-ui-icons/ExitToApp'
 import Lock from 'material-ui-icons/Lock'
-
-import './App.css'
-import logo from './logo.svg'
-import Login from '../../containers/login'
-import Logout from '../../containers/logout'
-import {handleSessionTimeout} from '../../modules/login'
-import About from '../../containers/about'
-import User, {UserCreate, UserEdit, UserSearch} from '../../containers/user'
-import NewUser from '../../containers/newUser'
-import PathNotFound from '../../containers/pathNotFound'
-import UserCreateForm from '../../containers/createUser'
-import UserEditForm from '../../containers/editUser'
-import ResetPassword from '../../containers/resetPassword'
-import FlatButton from 'material-ui/FlatButton'
-import ChangePassword from '../../containers/changePassword'
 import Person from 'material-ui-icons/Person'
 import MoreVert from 'material-ui-icons/MoreVert'
 import {fullWhite} from 'material-ui/styles/colors'
 
-import { goToStroom } from '../../modules/sidebar'
+import './App.css'
+import logo from './logo.svg'
 import iconBlue from './../../icon-blue-small.png'
+import Login from '../../containers/login'
+import Logout from '../../containers/logout'
+import {UserCreate, UserEdit, UserSearch} from '../../containers/user'
+import NewUser from '../../containers/newUser'
+import PathNotFound from '../../containers/pathNotFound'
+import ResetPassword from '../../containers/resetPassword'
+import ChangePassword from '../../containers/changePassword'
+import {handleSessionTimeout} from '../../modules/login'
+import { goToStroom } from '../../modules/sidebar'
 
 class App extends Component {
 
@@ -51,15 +45,18 @@ class App extends Component {
               iconElementLeft={<div/>}
               iconElementRight= {
                 <div className="App-appBar-buttons">
-                  <FlatButton onClick={() => this.props.goToStroom(this.props.token)} label="Go to Stroom" primary={true} labelStyle={{color:'white'}}
+                  <FlatButton onClick={() => this.props.goToStroom(this.props.token)} 
+                    label="Go to Stroom" primary={true}
                     icon={<img src={iconBlue} alt="Stroom logo"/>}/>
                   <NavLink to='/userSearch'>
-                    <FlatButton label="Search users" labelStyle={{color:'white'}} icon={<Person color={fullWhite}/>}/>
+                    <FlatButton 
+                      label="Search users"
+                      icon={<Person color={fullWhite}/>}/>
                   </NavLink>
                   
                   <IconMenu
                     iconButtonElement={
-                      <IconButton className="App-iconButton" labelStyle={{color:'white'}}><MoreVert color={fullWhite}/></IconButton>
+                      <IconButton className="App-iconButton"><MoreVert color={fullWhite}/></IconButton>
                     }>
                     {this.isLoggedIn() ? (
                       <div>
@@ -96,7 +93,6 @@ class App extends Component {
 
               <Route exact path="/login" component={Login} />
               <Route exact path="/logout" component={Logout} />
-              <Route exact path="/about" component={About}/>
               <Route exact path="/newUser" component={NewUser}/>
               <Route exact path="/resetPassword" component={ResetPassword}/>
 

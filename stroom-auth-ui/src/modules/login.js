@@ -1,6 +1,7 @@
 import { push } from 'react-router-redux'
-import { HttpError } from '../ErrorTypes'
 import { SubmissionError } from 'redux-form'
+
+import { HttpError } from '../ErrorTypes'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
