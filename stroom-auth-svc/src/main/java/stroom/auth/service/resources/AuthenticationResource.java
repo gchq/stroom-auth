@@ -202,13 +202,15 @@ public final class AuthenticationResource {
         email.setSubject(config.getEmailConfig().getPasswordResetSubject());
         email.setText(passwordResetEmailText);
 
+        TransportStrategy transportStrategy = config.getEmailConfig().getSmtpConfig().getTransportStrategy();
+
         new Mailer(
             new ServerConfig(
                 config.getEmailConfig().getSmtpConfig().getHost(),
                 config.getEmailConfig().getSmtpConfig().getPort(),
                 config.getEmailConfig().getSmtpConfig().getUsername(),
                 config.getEmailConfig().getSmtpConfig().getPassword()),
-            TransportStrategy.SMTP_TLS
+            transportStrategy
         ).sendMail(email);
 
         Response response = Response.status(Response.Status.OK).build();

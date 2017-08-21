@@ -109,7 +109,8 @@ email:
   passwordResetText: 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'
   passwordResetTokenValidityInMinutes: 5
   smtp:
-    host: localhost
-    port: 2527
-    username: todo
-    password: todo
+    host: smtp.gmail.com
+    port: 587
+    transport: TLS # Possible values: TLS, SSL, plain. Defaults to plain if unspecified.
+    username: TODO
+    password: TODO
