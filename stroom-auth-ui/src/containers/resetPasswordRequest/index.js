@@ -8,14 +8,13 @@ import { TextField } from 'redux-form-material-ui'
 
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import Snackbar from 'material-ui/Snackbar'
 
 import './ResetPasswordRequest.css'
 import { required } from '../../validations'
 import { submitPasswordChangeRequest as onSubmit } from '../../modules/user'
 
 const ResetPasswordRequest = props => {
-    const {handleSubmit, pristine, submitting, showAlert, alertText, toggleAlertVisibility } = props
+    const {handleSubmit, pristine, submitting } = props
     return (
       <Card className="ResetPasswordRequest-main">
         <div>
