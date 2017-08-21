@@ -1,9 +1,14 @@
 package stroom.auth.service.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import io.dropwizard.auth.Auth;
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.jetty.http.HttpStatus;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.server.JSONP;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -27,11 +32,15 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 
 import static stroom.db.auth.Tables.USERS;
 
@@ -40,6 +49,9 @@ import static stroom.db.auth.Tables.USERS;
 public final class UserResource {
   private final Config config;
   private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
+
+  Client authorisationService = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
+
 
   @GET
   @Path("/")
@@ -51,15 +63,30 @@ public final class UserResource {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
-    TableField orderByEmailField = USERS.EMAIL;
-    String usersAsJson = database
-        .selectFrom(USERS)
-        .orderBy(orderByEmailField)
-        .fetch()
-        .formatJSON((new JSONFormat())
-            .header(false)
-            .recordFormat(JSONFormat.RecordFormat.OBJECT));
-    return Response.status(Response.Status.OK).entity(usersAsJson).build();
+    String authorisationUrl = config.getStroomUrl() + "/api/authorisation/canManageUsers";
+    Response response = authorisationService
+        .target(authorisationUrl)
+        .request()
+        .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+        .post(Entity.json(new Object() {
+          @JsonProperty
+          private String permission = "Manage Users";
+        }));
+
+    if(response.getStatus() == HttpStatus.UNAUTHORIZED_401) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity("The user is not authorised to access this resource").build();
+    }
+    else {
+      TableField orderByEmailField = USERS.EMAIL;
+      String usersAsJson = database
+          .selectFrom(USERS)
+          .orderBy(orderByEmailField)
+          .fetch()
+          .formatJSON((new JSONFormat())
+              .header(false)
+              .recordFormat(JSONFormat.RecordFormat.OBJECT));
+      return Response.status(Response.Status.OK).entity(usersAsJson).build();
+    }
   }
 
 
