@@ -1,0 +1,19 @@
+.Home-card {
+    width: 300px;
+    padding: 15px;
+    text-decoration: none;
+}
+
+/* Use Flex to center the avatar icon */
+.Home-iconContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.Home-icon {
+    margin: auto;
+}
+
+a {
+    text-decoration: none;
+}

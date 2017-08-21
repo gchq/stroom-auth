@@ -12,13 +12,11 @@ import IconButton from 'material-ui/IconButton'
 import FlatButton from 'material-ui/FlatButton'
 import ExitToApp from 'material-ui-icons/ExitToApp'
 import Lock from 'material-ui-icons/Lock'
-import Person from 'material-ui-icons/Person'
 import MoreVert from 'material-ui-icons/MoreVert'
 import {fullWhite} from 'material-ui/styles/colors'
 
 import './App.css'
 import logo from './logo.svg'
-import iconBlue from './../../icon-blue-small.png'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import {UserCreate, UserEdit, UserSearch} from '../../containers/user'
@@ -28,6 +26,7 @@ import ResetPassword from '../../containers/resetPassword'
 import ChangePassword from '../../containers/changePassword'
 import ResetPasswordRequest from '../../containers/resetPasswordRequest'
 import ConfirmPasswordResetEmail from '../../containers/confirmPasswordResetEmail'
+import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
 import {handleSessionTimeout} from '../../modules/login'
 import { goToStroom } from '../../modules/sidebar'
@@ -43,20 +42,11 @@ class App extends Component {
       <div className="App">
         {this.isLoggedIn() ? (
         <AppBar
-          title={
-            <img src={logo} className="App-logo" alt="Stroom logo"/>}
+          title={<NavLink to='/'><img src={logo} className="App-logo" alt="Stroom logo"/></NavLink>}
               iconElementLeft={<div/>}
               iconElementRight= {
                 <div className="App-appBar-buttons">
-                  <FlatButton onClick={() => this.props.goToStroom(this.props.token)} 
-                    label="Go to Stroom" primary={true}
-                    icon={<img src={iconBlue} alt="Stroom logo"/>}/>
-                  <NavLink to='/userSearch'>
-                    <FlatButton 
-                      label="Search users"
-                      icon={<Person color={fullWhite}/>}/>
-                  </NavLink>
-                  
+                 
                   <IconMenu
                     iconButtonElement={
                       <IconButton className="App-iconButton"><MoreVert color={fullWhite}/></IconButton>
@@ -86,7 +76,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" render={() => (
                 this.isLoggedIn() ? (
-                  <UserSearch/> 
+                  <Home/> 
                 ) : (
                   <Redirect to={{
                     pathname: '/login',

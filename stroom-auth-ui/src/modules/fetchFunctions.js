@@ -1,4 +1,4 @@
-import { requestWasUnauthorized, showUnauthorisedMessage } from './login'
+import { requestWasUnauthorized } from './login'
 import jwtDecode from 'jwt-decode'
 import { push } from 'react-router-redux'
 

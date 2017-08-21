@@ -31,6 +31,10 @@
   display:flex;
 }
 
+.App-appBar-button {
+  color:whitesmoke !important;
+}
+
 .UserSearch-appButton {
   margin:0px !important;
 }
