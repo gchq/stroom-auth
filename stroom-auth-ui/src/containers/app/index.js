@@ -26,6 +26,8 @@ import NewUser from '../../containers/newUser'
 import PathNotFound from '../../containers/pathNotFound'
 import ResetPassword from '../../containers/resetPassword'
 import ChangePassword from '../../containers/changePassword'
+import ResetPasswordRequest from '../../containers/resetPasswordRequest'
+import ConfirmPasswordResetEmail from '../../containers/confirmPasswordResetEmail'
 import {handleSessionTimeout} from '../../modules/login'
 import { goToStroom } from '../../modules/sidebar'
 
@@ -95,6 +97,8 @@ class App extends Component {
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/newUser" component={NewUser}/>
               <Route exact path="/resetPassword" component={ResetPassword}/>
+              <Route exact path="/confirmPasswordResetEmail" component={ConfirmPasswordResetEmail}/>
+              <Route exact path="/resetPasswordRequest" component={ResetPasswordRequest}/>
 
               <Route exact path="/changepassword" render={(route) => (
                 this.isLoggedIn() ? (

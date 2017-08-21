@@ -273,6 +273,27 @@ export const changePassword = (userId) => {
   }
 }
 
+export const submitPasswordChangeRequest = (formData) => {
+  return (dispatch, getState) => {
+    const userServiceUrl = `${process.env.REACT_APP_AUTHENTICATION_URL}/reset/${formData.emailAddress}`
+    const jwsToken = getState().login.token
+    fetch(userServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
+      },
+      method: 'get',
+      mode: 'cors'
+    })
+    .then(handleStatus)
+    .then(() => {
+      dispatch(push('/confirmPasswordResetEmail'))
+    })
+    .catch(error => handleErrors(error, dispatch))
+  }
+}
+
 function getUser(user) {
   //TODO check that there is a user and throw an error if there isn't one
   return user[0]

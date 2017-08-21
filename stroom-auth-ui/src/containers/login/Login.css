@@ -19,3 +19,7 @@ h4 {
 .LoginForm-icon {
     margin: auto;
 }
+
+.LoginForm-resetPasswordText {
+    font-size:9pt;
+}

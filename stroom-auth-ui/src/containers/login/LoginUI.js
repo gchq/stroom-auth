@@ -1,6 +1,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { NavLink} from 'react-router-dom'
 
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -52,13 +53,14 @@ const LoginForm = props => {
                 className="LoginForm-input"
               />
               <br/>
-              <br/>
               <RaisedButton 
                 primary={true}
                 disabled={pristine || submitting}
                 type="submit"
                 fullWidth={true}
                 label="Sign in"/>
+              <br/>
+              <NavLink to="/resetPasswordRequest"><p className="LoginForm-resetPasswordText">Reset password?</p></NavLink>
             </div>
           </form>
         </Card>
