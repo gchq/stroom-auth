@@ -129,7 +129,7 @@ export const saveChanges = (editedUser) => {
       dispatch(push(`/user/${id}`))
       dispatch(toggleAlertVisibility('User has been updated'))
     })
-    .catch(error => handleErrors(error, dispatch))
+    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 
@@ -166,7 +166,7 @@ export const createUser  = (newUser) => {
         dispatch(push(`/user/${newUserId}`))
         dispatch(toggleAlertVisibility('User has been created'))
       })
-      .catch(error => handleErrors(error, dispatch))
+      .catch(error => handleErrors(error, dispatch, jwsToken))
     
   }
 }
@@ -195,7 +195,7 @@ export const fetchUser = (userId) => {
       // Use the redux-form action creator to re-initialize the form with this user
       dispatch(initialize("UserEditForm", user))
     })
-    .catch(error => handleErrors(error, dispatch))
+    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 
@@ -221,7 +221,7 @@ export const deleteSelectedUser = (userId) => {
       dispatch(performUserSearch(jwsToken))
       dispatch(toggleAlertVisibility("User has been deleted"))
     })
-    .catch(error => handleErrors(error, dispatch))
+    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 
@@ -244,7 +244,7 @@ export const changePasswordForCurrentUser = () => {
     .then(user => {
       dispatch(changePassword(user.id))
     })
-    .catch(error => handleErrors(error, dispatch))
+    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 
@@ -269,7 +269,7 @@ export const changePassword = (userId) => {
     .then(() => {
       dispatch(toggleAlertVisibility("Your password has been changed"))
     })
-    .catch(error => handleErrors(error, dispatch))
+    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 
@@ -290,7 +290,7 @@ export const submitPasswordChangeRequest = (formData) => {
     .then(() => {
       dispatch(push('/confirmPasswordResetEmail'))
     })
-    .catch(error => handleErrors(error, dispatch))
+    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 

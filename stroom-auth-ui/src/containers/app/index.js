@@ -28,6 +28,7 @@ import ResetPassword from '../../containers/resetPassword'
 import ChangePassword from '../../containers/changePassword'
 import ResetPasswordRequest from '../../containers/resetPasswordRequest'
 import ConfirmPasswordResetEmail from '../../containers/confirmPasswordResetEmail'
+import Unauthorised from '../../containers/unauthorised'
 import {handleSessionTimeout} from '../../modules/login'
 import { goToStroom } from '../../modules/sidebar'
 
@@ -99,6 +100,7 @@ class App extends Component {
               <Route exact path="/resetPassword" component={ResetPassword}/>
               <Route exact path="/confirmPasswordResetEmail" component={ConfirmPasswordResetEmail}/>
               <Route exact path="/resetPasswordRequest" component={ResetPasswordRequest}/>
+              <Route exact path="/Unauthorised" component={Unauthorised}/>
 
               <Route exact path="/changepassword" render={(route) => (
                 this.isLoggedIn() ? (

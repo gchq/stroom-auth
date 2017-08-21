@@ -75,7 +75,7 @@ export const performUserSearch = (jwsToken) => {
       dispatch(showSearchLoader(false))
       dispatch(updateResults(data))
     })
-    .catch(error => handleErrors(error, dispatch))    
+    .catch(error => handleErrors(error, dispatch, jwsToken))    
   }
 }
 
