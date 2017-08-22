@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { NavLink} from 'react-router-dom'
@@ -10,7 +11,6 @@ import {amber900 as secondaryColor} from 'material-ui/styles/colors'
 import './Home.css'
 import icon from '../../icon.png'
 import { goToStroom } from '../../modules/sidebar'
-
 
 class Home extends Component {
   constructor(props) {
@@ -46,31 +46,39 @@ class Home extends Component {
           </Card>
         </NavLink>
         <br/>
-        <NavLink to='/userSearch'>        
-          <Card className="Home-card"
-            onMouseOver={() => this.setState({usersLinkShadow:3})} 
-            onMouseOut={() => this.setState({usersLinkShadow:1})} 
-            zDepth={this.state.usersLinkShadow}>
-            <div className="Home-iconContainer">
-              <Avatar
-                backgroundColor={secondaryColor}
-                className="Home-icon"
-                icon={<Person/>}
-                size={100}
-              />
-            </div>
-            <div className="Home-iconContainer">
-              <p>Manage Users</p>
-            </div>
-          </Card>
-        </NavLink>
+          {this.props.canManageUsers ? (
+          <NavLink to='/userSearch'>
+            <Card className="Home-card"
+              onMouseOver={() => this.setState({usersLinkShadow:3})}
+              onMouseOut={() => this.setState({usersLinkShadow:1})}
+              zDepth={this.state.usersLinkShadow}>
+              <div className="Home-iconContainer">
+                <Avatar
+                  backgroundColor={secondaryColor}
+                  className="Home-icon"
+                  icon={<Person/>}
+                  size={100}
+                />
+              </div>
+              <div className="Home-iconContainer">
+                <p>Manage Users</p>
+              </div>
+            </Card>
+          </NavLink>
+        ) : (undefined)}
       </div>
     )
   }
 }
 
+
+Home.contextTypes = {
+  store: PropTypes.object.isRequired
+}
+
 const mapStateToProps = state => ({
-  token: state.login.token  
+  token: state.login.token,
+  canManageUsers: state.login.canManageUsers
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

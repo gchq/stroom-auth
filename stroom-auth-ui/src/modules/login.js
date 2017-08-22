@@ -1,6 +1,7 @@
 import { push } from 'react-router-redux'
 import { SubmissionError } from 'redux-form'
 
+import { handleErrors, getJsonBody } from './fetchFunctions'
 import { HttpError } from '../ErrorTypes'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
@@ -10,12 +11,14 @@ export const TOKEN_DELETE = 'login/TOKEN_DELETE'
 export const SHOW_LOADER = 'login/SHOW_LOADER'
 export const SHOW_UNAUTHORIZED_DIALOG = 'login/SHOW_UNAUTHORIZED_DIALOG'
 export const CHANGE_LOGGED_IN_USER = 'login/CHANGE_LOGGED_IN_USER'
+export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS'
 
 const initialState = {
   token: '',
   showLoader: false,
   showUnauthorizedDialog: false,
-  loggedInUserEmail: undefined
+  loggedInUserEmail: undefined,
+  canManageUsers: false
 }
 
 export default (state = initialState, action) => {
@@ -53,6 +56,13 @@ export default (state = initialState, action) => {
         ...state,
         loggedInUserEmail: action.userEmail
       }
+
+    case SET_CAN_MANAGE_USERS:
+      return {
+        ...state,
+        canManageUsers: action.canManageUsers
+      }
+
     default:
       return state
   }
@@ -77,6 +87,7 @@ export const logout = () => {
   return dispatch => {
     dispatch(deleteToken())
     dispatch(storeLoggedInUser(undefined))
+    dispatch(setCanManagerUsers(false))
   }
 }
 
@@ -96,6 +107,7 @@ export const checkForRememberMeToken = (dispatch) => {
   }
   if(token){
     dispatch(changeToken(token))
+    dispatch(canManageUsers(token))
   }
 }
 
@@ -117,6 +129,13 @@ export const handleSessionTimeout = () => {
   return dispatch => { 
     dispatch(logout())
     dispatch(requestWasUnauthorized(false))
+  }
+}
+
+const setCanManagerUsers = (canManageUsers) => {
+  return {
+      type: SET_CAN_MANAGE_USERS,
+      canManageUsers: canManageUsers
   }
 }
 
@@ -149,6 +168,7 @@ export const login = (credentials) => {
       // .then(jwsToken => processToken(jwsToken, dispatch, referrer))
       .then(jwsToken => {
         dispatch(storeLoggedInUser(email))
+        dispatch(canManageUsers(jwsToken))
         processToken(jwsToken, email, dispatch, rememberMe, null)
       })
   }
@@ -187,7 +207,7 @@ function processToken(token, userEmail, dispatch, rememberMe, referrer){
   dispatch(showLoader(false))        
   if(referrer === "stroom"){
     //TODO use authorisation header
-    var loginUrl = process.env.REACT_APP_STROOM_UI_URL + '/?token=' + token
+    var loginUrl = process.env.REACT_APP_STROOM_URL + '/?token=' + token
     window.location.href = loginUrl
   }
   else if(!referrer) {
@@ -195,5 +215,31 @@ function processToken(token, userEmail, dispatch, rememberMe, referrer){
   }
   else {
     dispatch(push(referrer))
+  }
+}
+
+export const canManageUsers = (jwsToken) => {
+  return (dispatch) => {
+    var canManageUsersUrl = process.env.REACT_APP_STROOM_URL + '/api/authorisation/v1/canManageUsers'
+    return fetch(canManageUsersUrl, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization' : 'Bearer ' + jwsToken
+        },
+        method: 'post',
+        mode: 'cors',
+        body: JSON.stringify({
+          permission: 'Manage Users'
+        })
+      })
+      .then((response) => {
+        if(response.status === 401){
+          dispatch(setCanManagerUsers(false))
+        }
+        else {
+          dispatch(setCanManagerUsers(true))
+        }
+      })
   }
 }
