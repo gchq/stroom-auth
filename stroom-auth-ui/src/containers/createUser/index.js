@@ -7,26 +7,29 @@ import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import './CreateUserForm.css'
+import '../Layout.css'
 import UserFields from '../userFields'
 import { createUser as onSubmit } from '../../modules/user'
 
 const UserCreateForm = props => {
   const {handleSubmit, pristine, submitting } = props
   return (
-    <Card className="CreateUserForm-card">
-      <div>
-        <form onSubmit={handleSubmit}>
-          <UserFields showCalculatedFields={false} constrainPasswordEditing={false}/>
-          <div>
-          <RaisedButton 
-            primary={true} 
-            disabled={pristine || submitting}
-            type="submit"
-            label="Create the user"/>
-          </div>
-        </form>
-      </div>
-    </Card>
+    <div className=''>
+        <Card className="CreateUserForm-card">
+        <div>
+          <form onSubmit={handleSubmit}>
+            <UserFields showCalculatedFields={false} constrainPasswordEditing={false}/>
+            <div>
+            <RaisedButton
+              primary={true}
+              disabled={pristine || submitting}
+              type="submit"
+              label="Create the user"/>
+            </div>
+          </form>
+        </div>
+      </Card>
+    </div>
   )
 }
 

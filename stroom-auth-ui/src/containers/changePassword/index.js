@@ -11,40 +11,43 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Snackbar from 'material-ui/Snackbar'
 
 import './ChangePassword.css'
+import '../Layout.css'
 import { required } from '../../validations'
 import { changePasswordForCurrentUser as onSubmit, toggleAlertVisibility } from '../../modules/user'
 
 const ChangePassword = props => {
     const {handleSubmit, pristine, submitting, showAlert, alertText, toggleAlertVisibility } = props
     return (
-      <Card className="ChangePassword-main">
-        <div>
-            <p>You can change your password below.</p>
-            <form onSubmit={handleSubmit}>
-                
-            <Field 
-                className="ChangePassword-field"
-                name="password"
-                type="password"
-                component={TextField}
-                validate={[required]}/>
-                <br/>
-            <RaisedButton 
-                className="ChangePassword-button"
-                primary={true} 
-                disabled={pristine || submitting}
-                type="submit"
-                label="Change password"/>
-            </form>
+        <div className='content-floating-with-appbar'>
+            <Card className="ChangePassword-main">
+            <div>
+                <p>You can change your password below.</p>
+                <form onSubmit={handleSubmit}>
 
-            <Snackbar
-                open={showAlert}
-                message={alertText}
-                autoHideDuration={4000}
-                onRequestClose={() => toggleAlertVisibility()}
-            />
+                <Field
+                    className="ChangePassword-field"
+                    name="password"
+                    type="password"
+                    component={TextField}
+                    validate={[required]}/>
+                    <br/>
+                <RaisedButton
+                    className="ChangePassword-button"
+                    primary={true}
+                    disabled={pristine || submitting}
+                    type="submit"
+                    label="Change password"/>
+                </form>
+
+                <Snackbar
+                    open={showAlert}
+                    message={alertText}
+                    autoHideDuration={4000}
+                    onRequestClose={() => toggleAlertVisibility()}
+                />
+            </div>
+          </Card>
         </div>
-      </Card>
     )
 }
 

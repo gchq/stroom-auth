@@ -9,6 +9,7 @@ import Person from 'material-ui-icons/Person'
 import {amber900 as secondaryColor} from 'material-ui/styles/colors'
 
 import './Home.css'
+import '../Layout.css'
 import icon from '../../icon.png'
 import { goToStroom } from '../../modules/sidebar'
 
@@ -26,7 +27,7 @@ class Home extends Component {
 
   render() {
     return (
-      <div>
+      <div className="content-floating-with-appbar vertical">
         <NavLink to='/'>
           <Card className="Home-card" 
           onClick={() => this.props.goToStroom(this.props.token)} 

@@ -10,33 +10,36 @@ import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import './ResetPasswordRequest.css'
+import '../Layout.css'
 import { required } from '../../validations'
 import { submitPasswordChangeRequest as onSubmit } from '../../modules/user'
 
 const ResetPasswordRequest = props => {
-    const {handleSubmit, pristine, submitting } = props
-    return (
+  const {handleSubmit, pristine, submitting } = props
+  return (
+    <div className='content-floating-without-appbar'>
       <Card className="ResetPasswordRequest-main">
-        <div>
-            <p>Please enter your email address below.</p>
-            <form onSubmit={handleSubmit}>
-                
-            <Field 
-                className="ResetPasswordRequest-field"
-                name="emailAddress"
-                component={TextField}
-                validate={[required]}/>
-                <br/>
-            <RaisedButton 
-                className="ResetPasswordRequest-button"
-                primary={true} 
-                disabled={pristine || submitting}
-                type="submit"
-                label="Send me a reset email"/>
-            </form>
-        </div>
-      </Card>
-    )
+      <div>
+          <p>Please enter your email address below.</p>
+          <form onSubmit={handleSubmit}>
+
+          <Field
+              className="ResetPasswordRequest-field"
+              name="emailAddress"
+              component={TextField}
+              validate={[required]}/>
+              <br/>
+          <RaisedButton
+              className="ResetPasswordRequest-button"
+              primary={true}
+              disabled={pristine || submitting}
+              type="submit"
+              label="Send me a reset email"/>
+          </form>
+      </div>
+    </Card>
+    </div>
+  )
 }
 
 const ReduxResetPasswordRequestForm = reduxForm({

@@ -4,21 +4,6 @@
    margin-left: 10px;
 }
 
-.container {
-  display: flex;  
-  align-items: center; 
-  justify-content: center;  
-  height: 85vh; 
-}
-
-/* This centers the login box */
-.container-login {
-  display: flex;  
-  align-items: center; 
-  justify-content: center;  
-  height: 100vh; 
-}
-
 /* This just adds some padding to the content, so the paper stands out */
 .main {
   /* padding:10px;  */

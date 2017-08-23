@@ -17,3 +17,6 @@
 a {
     text-decoration: none;
 }
+.vertical {
+    flex-direction: column;
+}

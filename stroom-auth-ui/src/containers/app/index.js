@@ -46,7 +46,6 @@ class App extends Component {
               iconElementLeft={<div/>}
               iconElementRight= {
                 <div className="App-appBar-buttons">
-                 
                   <IconMenu
                     iconButtonElement={
                       <IconButton className="App-iconButton"><MoreVert color={fullWhite}/></IconButton>
@@ -72,11 +71,11 @@ class App extends Component {
         ) : (<div/>)}
 
         <main className='main'>
-          <div className={this.isLoggedIn() ? 'container' : 'container-login'}>
+          <div >
             <Switch>
               <Route exact path="/" render={() => (
                 this.isLoggedIn() ? (
-                  <Home/> 
+                  <Home/>
                 ) : (
                   <Redirect to={{
                     pathname: '/login',
@@ -92,6 +91,16 @@ class App extends Component {
               <Route exact path="/resetPasswordRequest" component={ResetPasswordRequest}/>
               <Route exact path="/Unauthorised" component={Unauthorised}/>
 
+              <Route exact path="/userSearch" render={() => (
+                this.isLoggedIn() ? (
+                  <UserSearch/>
+                ) : (
+                  // We record the referrer because Login needs it to redirect back to after a successful login.
+                  <Redirect to={{
+                    pathname: '/login',
+                    state: {referrer:'/userSearch'}}}/>
+                )
+              )}/>
               <Route exact path="/changepassword" render={(route) => (
                 this.isLoggedIn() ? (
                   <ChangePassword/>
@@ -124,19 +133,8 @@ class App extends Component {
                     state: {referrer:route.location.pathname}}}/>
                 )
               )}/>
-
-              <Route exact path="/userSearch" render={() => (
-                this.isLoggedIn() ? (
-                  <UserSearch/>
-                ) : (
-                  // We record the referrer because Login needs it to redirect back to after a successful login.
-                  <Redirect to={{
-                    pathname: '/login',
-                    state: {referrer:'/userSearch'}}}/>
-                )
-              )}/>
-
               <Route component={PathNotFound}/>
+
             </Switch>
           </div>
         </main>
@@ -159,7 +157,7 @@ class App extends Component {
   }
 }
 
-App.contextTypes = { 
+App.contextTypes = {
   store: PropTypes.object,
   router: PropTypes.shape({
     history: object.isRequired,
