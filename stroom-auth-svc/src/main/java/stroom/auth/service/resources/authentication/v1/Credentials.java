@@ -1,4 +1,4 @@
-package stroom.auth.service.resources;
+package stroom.auth.service.resources.authentication.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

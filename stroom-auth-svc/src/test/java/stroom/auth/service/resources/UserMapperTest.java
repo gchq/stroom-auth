@@ -1,6 +1,8 @@
 package stroom.auth.service.resources;
 
 import org.junit.Test;
+import stroom.auth.service.resources.user.v1.User;
+import stroom.auth.service.resources.user.v1.UserMapper;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import java.sql.Timestamp;

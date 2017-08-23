@@ -1,4 +1,4 @@
-package stroom.auth.service.resources;
+package stroom.auth.service.resources.user.v1;
 
 
 import javax.validation.constraints.NotNull;

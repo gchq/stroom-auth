@@ -1,4 +1,4 @@
-package stroom.auth.service.resources;
+package stroom.auth.service.resources.user.v1;
 
 import com.google.common.base.Preconditions;
 import stroom.db.auth.tables.records.UsersRecord;

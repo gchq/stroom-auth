@@ -1,4 +1,4 @@
-package stroom.auth.service.resources;
+package stroom.auth.service.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.Config;
 import stroom.auth.service.TokenGenerator;
+import stroom.auth.service.resources.user.v1.User;
+import stroom.auth.service.resources.user.v1.UserMapper;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.annotation.Nullable;
@@ -42,7 +44,7 @@ import java.util.regex.Pattern;
 
 import static stroom.db.auth.Tables.USERS;
 
-@Path("/authentication/")
+@Path("/authentication/v1")
 @Produces(MediaType.APPLICATION_JSON)
 public final class AuthenticationResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationResource.class);

@@ -32,7 +32,7 @@ public abstract class Base_IT {
   public static final void setupClass() throws InterruptedException {
     appPort = appRule.getLocalPort();
     adminPort = appRule.getAdminPort();
-    LOGIN_URL = "http://localhost:" + appPort + "/authentication/login";
+    LOGIN_URL = "http://localhost:" + appPort + "/authentication/v1/login";
     BASE_TASKS_URL = "http://localhost:" + adminPort + "/tasks/";
     HEALTH_CHECKS_URL = "http://localhost:" + adminPort + "/healthcheck?pretty=true";
     Thread.sleep(2000);

@@ -1,4 +1,4 @@
-package stroom.auth.service.resources;
+package stroom.auth.service.resources.user.v1;
 
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.tuple.Pair;

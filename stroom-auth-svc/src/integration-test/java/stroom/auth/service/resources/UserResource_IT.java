@@ -6,6 +6,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import stroom.auth.service.resources.user.v1.User;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -16,8 +17,8 @@ public class UserResource_IT extends Base_IT {
   protected final String ME_URL;
 
   public UserResource_IT() {
-    ROOT_URL = "http://localhost:" + appPort + "/user/";
-    ME_URL = "http://localhost:" + appPort + "/user/me";
+    ROOT_URL = "http://localhost:" + appPort + "/user/v1/";
+    ME_URL = "http://localhost:" + appPort + "/user/v1/me";
   }
 
   protected final int createUser(User user, String jwsToken) throws UnirestException {

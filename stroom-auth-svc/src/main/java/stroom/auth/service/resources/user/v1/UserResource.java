@@ -1,4 +1,4 @@
-package stroom.auth.service.resources;
+package stroom.auth.service.resources.user.v1;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.http.HttpStatus;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientResponse;
-import org.glassfish.jersey.server.JSONP;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -40,11 +39,10 @@ import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 
 import static stroom.db.auth.Tables.USERS;
 
-@Path("/user")
+@Path("/user/v1")
 @Produces({"application/json"})
 public final class UserResource {
   private final Config config;

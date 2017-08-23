@@ -18,8 +18,8 @@ import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import stroom.auth.service.resources.AuthenticationResource;
-import stroom.auth.service.resources.UserResource;
+import stroom.auth.service.resources.authentication.v1.AuthenticationResource;
+import stroom.auth.service.resources.user.v1.UserResource;
 import stroom.auth.service.security.AuthenticationFilter;
 import stroom.auth.service.security.ServiceUser;
 
