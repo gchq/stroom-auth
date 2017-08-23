@@ -2,7 +2,7 @@
   "name": "stroom-auth-ui",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/login",
+  "homepage": "/auth",
   "dependencies": {
     "create-react-class": "^15.5.3",
     "dateformat": "^2.0.0",

@@ -24,28 +24,28 @@ dependencies {
 
 
 // Uncomment this to re-generate persistence classes. The database will need to be available.
-jooq {
-    version = '3.9.3'
-    edition = 'OSS'
-    authdb(sourceSets.main) {
-        jdbc {
-            driver = 'org.mariadb.jdbc.Driver'
-            url = 'jdbc:mariadb://localhost:3309/auth'
-            user = 'stroomuser'
-            password = 'stroompassword1'
-        }
-        generator {
-            name = 'org.jooq.util.DefaultGenerator'
-            database {
-                name = 'org.jooq.util.mariadb.MariaDBDatabase'
-                includes = 'users'
-                // We don't want to include flyway versioning
-                excludes = 'schema_version'
-            }
-            target {
-                packageName = 'stroom.db'
-                directory = 'src/main/java'
-            }
-        }
-    }
-}
+//jooq {
+//    version = '3.9.3'
+//    edition = 'OSS'
+//    authdb(sourceSets.main) {
+//        jdbc {
+//            driver = 'org.mariadb.jdbc.Driver'
+//            url = 'jdbc:mariadb://localhost:3309/auth'
+//            user = 'stroomuser'
+//            password = 'stroompassword1'
+//        }
+//        generator {
+//            name = 'org.jooq.util.DefaultGenerator'
+//            database {
+//                name = 'org.jooq.util.mariadb.MariaDBDatabase'
+//                includes = 'users'
+//                // We don't want to include flyway versioning
+//                excludes = 'schema_version'
+//            }
+//            target {
+//                packageName = 'stroom.db'
+//                directory = 'src/main/java'
+//            }
+//        }
+//    }
+//}

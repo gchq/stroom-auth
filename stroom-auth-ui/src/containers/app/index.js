@@ -38,6 +38,7 @@ class App extends Component {
   }
 
   render() {
+    console.log('Mounted here:' + process.env.REACT_APP_ROOT_PATH)
     return (
       <div className="App">
         {this.isLoggedIn() ? (
@@ -73,17 +74,17 @@ class App extends Component {
         <main className='main'>
           <div >
             <Switch>
-              <Route exact path="/" render={() => (
+              <Route exact path={process.env.REACT_APP_ROOT_PATH + "/"} render={() => (
                 this.isLoggedIn() ? (
                   <Home/>
                 ) : (
                   <Redirect to={{
-                    pathname: '/login',
+                    pathname: process.env.REACT_APP_ROOT_PATH + '/login',
                     state: {referrer:'/'}}}/>
                 )
               )} />
 
-              <Route exact path="/login" component={Login} />
+              <Route exact path={process.env.REACT_APP_ROOT_PATH + "/login"} component={Login} />
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/newUser" component={NewUser}/>
               <Route exact path="/resetPassword" component={ResetPassword}/>
