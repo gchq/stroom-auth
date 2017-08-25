@@ -45,8 +45,10 @@ if [ "$TRAVIS_BRANCH" = "dev" ] || [ -n "$TRAVIS_TAG" ] || [ "$TRAVIS_EVENT_TYPE
 
         # The username and password are configured in the travis gui
         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-        docker build stroom-auth-svc_${SPECIFIC_TAG} ${FLOATING_TAG} stroom-auth-svc/.
-        docker build stroom-auth-ui_${SPECIFIC_TAG} ${FLOATING_TAG} stroom-auth-ui/.
+        AUTH_SERVICE_TAG = "stroom-auth-svc_${SPECIFIC_TAG}"
+        AUTH_UI_TAG = "stroom-auth-ui_${SPECIFIC_TAG}"
+        docker build ${AUTH_SERVICE_TAG} stroom-auth-svc/.
+        docker build ${AUTH_UI_TAG} stroom-auth-ui/.
         docker push gchq/stroom-auth
     fi
 fi
