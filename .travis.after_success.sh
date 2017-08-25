@@ -48,12 +48,16 @@ if [ "$TRAVIS_BRANCH" = "dev" ] || [ -n "$TRAVIS_TAG" ] || [ "$TRAVIS_EVENT_TYPE
 
         AUTH_SERVICE_TAG="stroom-auth-svc_${SPECIFIC_TAG}"
         AUTH_SERVICE_REPO="gchq/${AUTH_SERVICE_TAG}"
+        echo "Building stroom-auth-ui with tag ${AUTH_SERVICE_TAG}"
         docker build ${AUTH_SERVICE_TAG} stroom-auth-svc/.
+        echo "Pushing to ${AUTH_SERVICE_REPO}"
         docker push AUTH_SERVICE_REPO
 
         AUTH_UI_TAG="stroom-auth-ui_${SPECIFIC_TAG}"
         AUTH_UI_REPO="gchq/${AUTH_UI_TAG}"
+        echo "Building stroom-auth-ui with tag ${AUTH_UI_TAG}"
         docker build ${AUTH_UI_TAG} stroom-auth-ui/.
+        echo "Pushing to ${AUTH_UI_REPO}"
         docker push AUTH_UI_REPO
     fi
 fi
