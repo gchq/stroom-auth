@@ -97,7 +97,7 @@ jwsIssuer: stroom
 jwsSecret: ${JWS_SECRET:- CHANGE_ME}
 certificateDnPattern: CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?
 loginUrl: ${AUTH_UI:- http://localhost/auth/login}
-stroomUrl: ${STROOM_UI:- http://localhost/stroom}
+stroomUrl: ${STROOM_UI:- http://localhost:8099}
 resetPasswordUrl: 'http://localhost/resetPassword/?token=%s'
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://localhost}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
