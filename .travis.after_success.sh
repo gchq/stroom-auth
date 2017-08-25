@@ -1,6 +1,6 @@
 #!/bin/bash
 CURRENT_STROOM_DEV_VERSION="v6.0.0"
-DOCKER_REPO="gchq/stroom"
+DOCKER_REPO="gchq/stroom-auth"
 DATE_ONLY="$(date +%Y%m%d)"
 DATE_TIME="$(date +%Y%m%d%H%M%S)"
 FLOATING_TAG=""
@@ -30,7 +30,7 @@ if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then
     #git tag ${gitTag} -a -m "Automated Travis build $TRAVIS_BUILD_NUMBER" 2>/dev/null
     git tag -a ${gitTag} ${TRAVIS_COMMIT} -m "Automated Travis build $TRAVIS_BUILD_NUMBER" 
     #git push -q https://$TAGPERM@github.com/gchq/stroom --follow-tags >/dev/null 2>&1
-    git push -q https://$TAGPERM@github.com/gchq/stroom --follow-tags 
+    git push -q https://$TAGPERM@github.com/gchq/stroom-auth --follow-tags
 elif [ -n "$TRAVIS_TAG" ]; then
     SPECIFIC_TAG="--tag=${DOCKER_REPO}:${TRAVIS_TAG}"
     echo "SPECIFIC_TAG: ${SPECIFIC_TAG}"
@@ -47,8 +47,8 @@ if [ "$TRAVIS_BRANCH" = "dev" ] || [ -n "$TRAVIS_TAG" ] || [ "$TRAVIS_EVENT_TYPE
 
         #The username and password are configured in the travis gui
         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-        docker build ${SPECIFIC_TAG} ${FLOATING_TAG} stroom-app/. 
-        docker push gchq/stroom
+        docker build ${SPECIFIC_TAG} ${FLOATING_TAG} stroom-auth-service/.
+        docker push gchq/stroom-auth
     fi
 fi
 
