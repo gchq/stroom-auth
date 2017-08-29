@@ -24,6 +24,7 @@ import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
 import UserEdit from '../editUser'
 import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
+import { relativePath } from '../../relativePush'
 
 import './User.css'
 
@@ -63,7 +64,7 @@ class UserLayout extends Component {
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
-            <NavLink to='/userSearch'>
+            <NavLink to={relativePath('/userSearch')}>
               <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
             </NavLink>
             {showCreate || showEdit ? (<KeyboardArrowRight className="UserLayout-toolbarSeparator"/>) : (undefined)}
@@ -83,7 +84,7 @@ class UserLayout extends Component {
 
             {showCreateButton ? (
               <div className="UserLayout-toolbarButton">
-                <NavLink to='/newUser'>
+                <NavLink to={relativePath('/newUser')}>
                   <RaisedButton label="Create" primary={true} className="UserSearch-appButton" 
                     icon={<Add color={fullWhite}/>}/>
                 </NavLink>
@@ -92,7 +93,7 @@ class UserLayout extends Component {
 
             {showSearch ? (
               <div className="UserLayout-toolbarButton">
-                <NavLink to={`/user/${selectedUserRowId}`}>
+                <NavLink to={relativePath(`/user/${selectedUserRowId}`)}>
                   <RaisedButton label="Edit" primary={true}
                     icon={<Edit color={fullWhite}/>} disabled={deleteButtonDisabled}/>
                 </NavLink>

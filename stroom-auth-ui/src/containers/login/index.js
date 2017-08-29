@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 
 import LoginUI from './LoginUI'
 import { checkForRememberMeToken } from '../../modules/login'
+import { relativePath } from '../../relativePush'
 
 class Login extends Component {
   componentWillMount() {
@@ -14,7 +15,7 @@ class Login extends Component {
 
   render() {
     const { token } = this.props
-    var referrer = '/'
+    var referrer = relativePath('/')
     if(this.props.location.state){
       referrer = this.props.location.state.referrer
     }

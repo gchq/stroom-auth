@@ -24,6 +24,8 @@ RUN yarn build
 
 # ---- Release ----
 FROM base AS release
-COPY --from=build /root/app/build/. .
+# This path is where the app is mounted in the image
+RUN mkdir /root/app/auth
+COPY --from=build /root/app/build/. ./auth
 EXPOSE 5000
 CMD serve --single --cors .

@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import {logout} from '../../modules/login'
+import { relativePath } from '../../relativePush'
 
 class Logout extends Component {
   componentDidMount(){
@@ -12,7 +13,7 @@ class Logout extends Component {
   }
 
   render() {
-    return ( <Redirect to="/"/>)
+    return ( <Redirect to={relativePath("/")}/>)
   }
 }
 

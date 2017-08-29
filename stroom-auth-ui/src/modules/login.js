@@ -1,7 +1,7 @@
 import { push } from 'react-router-redux'
+import { relativePush } from '../relativePush'
 import { SubmissionError } from 'redux-form'
 
-import { handleErrors, getJsonBody } from './fetchFunctions'
 import { HttpError } from '../ErrorTypes'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
@@ -211,7 +211,7 @@ function processToken(token, userEmail, dispatch, rememberMe, referrer){
     window.location.href = loginUrl
   }
   else if(!referrer) {
-    dispatch(push('/'))
+    dispatch(relativePush('/'))
   }
   else {
     dispatch(push(referrer))

@@ -9,7 +9,6 @@ import { MuiThemeProvider } from 'material-ui/styles'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 import './index.css'
-import registerServiceWorker from './registerServiceWorker'
 import App from './containers/app'
 import store, { history } from './store'
 
@@ -23,8 +22,6 @@ const theme = getMuiTheme({
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
-
-registerServiceWorker()
 
 const target = document.querySelector('#root')
 

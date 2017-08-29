@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
-import { push } from 'react-router-redux'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import queryString  from 'query-string'
 import jwtDecode from 'jwt-decode'
 
-import {changeToken} from '../../modules/login'
+import { changeToken } from '../../modules/login'
+import { relativePush } from '../../relativePush'
 
 class ResetPassword extends Component {
 
@@ -44,7 +44,7 @@ class ResetPassword extends Component {
     }
     else {
       this.context.store.dispatch(changeToken(token))
-      this.context.store.dispatch(push('/changepassword'))
+      this.context.store.dispatch(relativePush('/changepassword'))
     }  
   }
 

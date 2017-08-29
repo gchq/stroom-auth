@@ -1,7 +1,7 @@
-import { push } from 'react-router-redux'
 import { initialize } from 'redux-form'
 import dateFormat from 'dateformat'
 
+import { relativePush } from '../relativePush'
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
 import { performUserSearch, changeSelectedRow } from './userSearch'
@@ -126,7 +126,7 @@ export const saveChanges = (editedUser) => {
     })
     .then(handleStatus)
     .then(() => {
-      dispatch(push(`/user/${id}`))
+      dispatch(relativePush(`/user/${id}`))
       dispatch(toggleAlertVisibility('User has been updated'))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
@@ -163,7 +163,7 @@ export const createUser  = (newUser) => {
       .then(getBody)
       .then(newUserId => {
         dispatch(showCreateLoader(false))
-        dispatch(push(`/user/${newUserId}`))
+        dispatch(relativePush(`/user/${newUserId}`))
         dispatch(toggleAlertVisibility('User has been created'))
       })
       .catch(error => handleErrors(error, dispatch, jwsToken))
@@ -288,7 +288,7 @@ export const submitPasswordChangeRequest = (formData) => {
     })
     .then(handleStatus)
     .then(() => {
-      dispatch(push('/confirmPasswordResetEmail'))
+      dispatch(relativePush('/confirmPasswordResetEmail'))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
   }

@@ -12,6 +12,7 @@ import './Home.css'
 import '../Layout.css'
 import icon from '../../icon.png'
 import { goToStroom } from '../../modules/sidebar'
+import { relativePath } from '../../relativePush'
 
 class Home extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class Home extends Component {
   render() {
     return (
       <div className="content-floating-with-appbar vertical">
-        <NavLink to='/'>
+        <NavLink to={relativePath('/')}>
           <Card className="Home-card" 
           onClick={() => this.props.goToStroom(this.props.token)} 
             onMouseOver={() => this.setState({stroomLinkShadow:3})} 
@@ -48,7 +49,7 @@ class Home extends Component {
         </NavLink>
         <br/>
           {this.props.canManageUsers ? (
-          <NavLink to='/userSearch'>
+          <NavLink to={relativePath('/userSearch')}>
             <Card className="Home-card"
               onMouseOver={() => this.setState({usersLinkShadow:3})}
               onMouseOut={() => this.setState({usersLinkShadow:1})}

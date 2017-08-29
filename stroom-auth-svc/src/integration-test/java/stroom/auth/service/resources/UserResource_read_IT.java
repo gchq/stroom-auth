@@ -17,7 +17,7 @@ public final class UserResource_read_IT extends UserResource_IT {
   @Test
   public final void search_users() throws UnirestException, IOException {
     String jwsToken = login();
-    String url = ROOT_URL + "?fromEmail=&usersPerPage=10&orderBy=email";
+    String url = ROOT_URL;
     HttpResponse response = Unirest
         .get(url)
         .header("Authorization", "Bearer " + jwsToken)

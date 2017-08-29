@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
-import { Route, Redirect, NavLink, withRouter, Switch } from 'react-router-dom'
+import {Route, Redirect, NavLink, withRouter, Switch, BrowserRouter} from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -30,6 +30,7 @@ import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
 import {handleSessionTimeout} from '../../modules/login'
 import { goToStroom } from '../../modules/sidebar'
+import { relativePath } from '../../relativePush'
 
 class App extends Component {
 
@@ -38,12 +39,11 @@ class App extends Component {
   }
 
   render() {
-    console.log('Mounted here:' + process.env.REACT_APP_ROOT_PATH)
     return (
       <div className="App">
         {this.isLoggedIn() ? (
         <AppBar
-          title={<NavLink to='/'><img src={logo} className="App-logo" alt="Stroom logo"/></NavLink>}
+          title={<NavLink to={relativePath('/')}><img src={logo} className="App-logo" alt="Stroom logo"/></NavLink>}
               iconElementLeft={<div/>}
               iconElementRight= {
                 <div className="App-appBar-buttons">
@@ -53,15 +53,15 @@ class App extends Component {
                     }>
                     {this.isLoggedIn() ? (
                       <div>
-                      <NavLink to="/changepassword">
+                      <NavLink to={relativePath("/changepassword")}>
                         <MenuItem primaryText="Change password" leftIcon={<Lock/>}/>
                       </NavLink>
-                      <NavLink to="/logout">
+                      <NavLink to={relativePath("/logout")}>
                         <MenuItem primaryText="Log out" leftIcon={<ExitToApp/>}/>
                       </NavLink>
                       </div>
                     ) : (
-                      <NavLink to="/login">
+                      <NavLink to={relativePath("/login")}>
                         <MenuItem primaryText="Log in"/>
                       </NavLink>
                     )}
@@ -73,64 +73,65 @@ class App extends Component {
 
         <main className='main'>
           <div >
+            <BrowserRouter basename={process.env.REACT_APP_ROOT_PATH }/>
             <Switch>
-              <Route exact path={process.env.REACT_APP_ROOT_PATH + "/"} render={() => (
+              <Route exact path={relativePath("/")} render={() => (
                 this.isLoggedIn() ? (
                   <Home/>
                 ) : (
                   <Redirect to={{
                     pathname: process.env.REACT_APP_ROOT_PATH + '/login',
-                    state: {referrer:'/'}}}/>
+                    state: {referrer:relativePath('/')}}}/>
                 )
               )} />
 
-              <Route exact path={process.env.REACT_APP_ROOT_PATH + "/login"} component={Login} />
-              <Route exact path="/logout" component={Logout} />
-              <Route exact path="/newUser" component={NewUser}/>
-              <Route exact path="/resetPassword" component={ResetPassword}/>
-              <Route exact path="/confirmPasswordResetEmail" component={ConfirmPasswordResetEmail}/>
-              <Route exact path="/resetPasswordRequest" component={ResetPasswordRequest}/>
-              <Route exact path="/Unauthorised" component={Unauthorised}/>
+              <Route exact path={relativePath("/login")} component={Login} />
+              <Route exact path={relativePath("/logout")} component={Logout} />
+              <Route exact path={relativePath("/newUser")} component={NewUser}/>
+              <Route exact path={relativePath("/resetPassword")} component={ResetPassword}/>
+              <Route exact path={relativePath("/confirmPasswordResetEmail")} component={ConfirmPasswordResetEmail}/>
+              <Route exact path={relativePath("/resetPasswordRequest")} component={ResetPasswordRequest}/>
+              <Route exact path={relativePath("/Unauthorised")} component={Unauthorised}/>
 
-              <Route exact path="/userSearch" render={() => (
+              <Route exact path={relativePath("/userSearch")} render={() => (
                 this.isLoggedIn() ? (
                   <UserSearch/>
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
                   <Redirect to={{
-                    pathname: '/login',
-                    state: {referrer:'/userSearch'}}}/>
+                    pathname: relativePath('/login'),
+                    state: {referrer:relativePath('/userSearch')}}}/>
                 )
               )}/>
-              <Route exact path="/changepassword" render={(route) => (
+              <Route exact path={relativePath("/changepassword")} render={(route) => (
                 this.isLoggedIn() ? (
                   <ChangePassword/>
                 ) : (
                    // We record the referrer because Login needs it to redirect back to after a successful login.
                   <Redirect to={{
-                    pathname: '/login',
+                    pathname: relativePath('/login'),
                     state: {referrer:route.location.pathname}}}/>
                 )
               )}/>
 
-              <Route exact path="/user" render={() => (
+              <Route exact path={relativePath("/user")} render={() => (
                 this.isLoggedIn() ? (
                   <UserCreate/>
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
                   <Redirect to={{
-                    pathname: '/login',
-                    state: {referrer:'/user'}}}/>
+                    pathname: relativePath('/login'),
+                    state: {referrer:relativePath('/user')}}}/>
                 )
               )}/>
 
-              <Route exact path="/user/:userId" render={(route) => (
+              <Route exact path={relativePath("/user/:userId")} render={(route) => (
                 this.isLoggedIn() ? (
                   <UserEdit/>
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
                   <Redirect to={{
-                    pathname: '/login',
+                    pathname: relativePath('/login'),
                     state: {referrer:route.location.pathname}}}/>
                 )
               )}/>
