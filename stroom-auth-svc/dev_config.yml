@@ -1,5 +1,0 @@
-database:
-    driverClass: org.h2.Driver
-    user: sa
-    password: sa
-    url: jdbc:h2:file:./build/stroom-auth-svc_db_h2

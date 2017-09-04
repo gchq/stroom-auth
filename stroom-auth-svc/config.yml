@@ -1,73 +1,27 @@
 server:
-    adminMinThreads: 1
-    adminMaxThreads: 10
-    adminContextPath: ${ADMIN_CONTEXT_PATH:- /}
-    applicationContextPath: /
-    applicationConnectors:
-        - type: http
-          port: 8099
-#        - type: https
-#          port: 8445
-#          keyStorePath: /home/jc064522/dev/gchq/certs/certs3/keystore.jks
-#          keyStorePassword: changeit
-#          trustStorePath: /home/jc064522/.sdkman/candidates/java/current/jre/lib/security/cacerts
-#          #trustStorePassword: stroompassword1
-#          #validateCerts: true
-#          keyStoreType: JKS
-#          supportedProtocols: [TLSv1, TLSv1.1, TLSv1.2]
-    adminConnectors:
-        - type: http
-          port: 8100
+  adminMinThreads: 1
+  adminMaxThreads: 10
+  adminContextPath: ${ADMIN_CONTEXT_PATH:- /}
+  applicationContextPath: ${APPLICATION_CONTEXT_PATH:- /}
+  applicationConnectors:
+    - type: ${APPLICATION_CONNEXTOR_TYPE:- http}
+      port: ${APPLICATION_CONNEXTOR_PORT:- 8099}
+  adminConnectors:
+    - type: ${ADMIN_CONNEXTOR_TYPE:- http}
+      port: ${ADMIN_CONNEXTOR_PORT:- 8100}
 
 database:
-    driverClass: org.mariadb.jdbc.Driver
-    user: ${DB_USER:- stroomuser}
-    password: ${DB_PASSWORD:- stroompassword1}
-    url: ${DB_URL:- jdbc:mariadb://localhost:3309/auth}
-    properties:
-        charSet: UTF-8
-        hibernate.dialect: org.hibernate.dialect.MySQLInnoDBDialect
-        hibernate.show_sql: false
-
-#flyway:
-#  # The encoding of SQL migration. (default: UTF-8)
-#  encoding: UTF-8
-#  # The schemas managed by Flyway. (default: default schema of the connection)
-#  schemas:
-#  # The fully qualified class names of the callbacks for lifecycle notifications. (default: empty list)
-#  callbacks:
-#  # The name of the schema metadata table that will be used by Flyway. (default: schema_version)
-#  metaDataTableName: schema_version
-#  # The file name prefix for sql migration (default: V)
-#  sqlMigrationPrefix: V
-#  # The file name separator for sql migration (default: __)
-#  sqlMigrationSeparator: __
-#  # The file name suffix for sql migration (default: .sql)
-#  sqlMigrationSuffix: .sql
-#  # The prefix of every placeholder. (default: ${ )
-##  placeholderPrefix: ${
-##  # The suffix of every placeholder. (default: } )
-##  placeholderSuffix: }
-##  # The map of <placeholder, replacementValue> to apply to sql migration scripts. (default: empty map)
-#  placeholders:
-#  # Locations to scan recursively for migration. (default: db/migration)
-#  locations:
-#    - db/migration
-#  # The fully qualified class names of the custom MigrationResolvers to be used in addition to the built-in ones for resolving Migrations to apply. (default: empty list)
-#  resolvers:
-#  # Allows migration to be run "out of order". If you already have versions 1 and 3 applied, and now a version 2 is found, it will be applied too instead of being ignored. (default: false)
-#  outOfOrder: false
-#  # The description to tag an existing schema with when executing baseline. (default: << Flyway Baseline >>)
-#  baselineDescription: "<< Flyway Baseline >>"
-#  # Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. (default: false)
-#  # Be careful when enabling this as it removes the safety net that ensures Flyway does not migrate the wrong database in case of a configuration mistake!
-#  baselineOnMigrate: false
-#  # Whether to automatically call validate or not when running migrate. (default: true)
-#  validateOnMigrate: true
-
+  driverClass: org.mariadb.jdbc.Driver
+  user: ${DB_USER:- stroomuser}
+  password: ${DB_PASSWORD:- stroompassword1}
+  url: ${DB_URL:- jdbc:mariadb://localhost:3309/auth}
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQLInnoDBDialect
+    hibernate.show_sql: false
 
 logging:
-  level: ERROR
+  level: ${LOGGING_LEVEL:- ERROR}
   loggers:
     stroom: DEBUG
     io.dropwizard: INFO
@@ -92,25 +46,25 @@ jooq:
   attachRecords: yes
   updatablePrimaryKeys: no
 
-jwsExpirationTimeInMinutesInTheFuture: 1440 # 1440 minutes = 1 day
-jwsIssuer: stroom
+jwsExpirationTimeInMinutesInTheFuture: ${JWS_EXPIRATION_TIME:- 1440} # 1440 minutes = 1 day
+jwsIssuer: ${JWS_ISSUER:- stroom}
 jwsSecret: ${JWS_SECRET:- CHANGE_ME}
-certificateDnPattern: CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?
+certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?}
 loginUrl: ${AUTH_UI:- http://localhost/auth/login}
 stroomUrl: ${STROOM_UI:- http://localhost:8099}
-resetPasswordUrl: 'http://localhost/resetPassword/?token=%s'
+resetPasswordUrl: ${RESET_PASSWORD_URL:- 'http://localhost/resetPassword/?token=%s'}
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://localhost}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 
 email:
-  fromAddress: noreply@stroom.com
-  fromName: Stroom User Accounts
-  passwordResetSubject: Password reset for Stroom
-  passwordResetText: 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'
-  passwordResetTokenValidityInMinutes: 5
+  fromAddress: ${EMAIL_FROM_ADDRESS:- noreply@stroom.com}
+  fromName: ${EMAIL_FROM_NAME:- Stroom User Accounts}
+  passwordResetSubject: ${EMAIL_RESET_SUBJECT:- Password reset for Stroom}
+  passwordResetText: ${EMAIL_RESET_TEXT:- 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'}
+  passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 5}
   smtp:
-    host: smtp.gmail.com
-    port: 587
-    transport: TLS # Possible values: TLS, SSL, plain. Defaults to plain if unspecified.
-    username: TODO
-    password: TODO
+    host: ${EMAIL_SMTP_HOST:- smtp.gmail.com}
+    port: ${EMAIL_SMTP_PORT:- 587}
+    transport: ${EMAIL_SMTP_TRANSPORT:- TLS} # Possible values: TLS, SSL, plain. Defaults to plain if unspecified.
+    username: ${EMAIL_SMTP_USERNAME:- TODO}
+    password: ${EMAIL_SMTP_PASSWORD:- TODO}
