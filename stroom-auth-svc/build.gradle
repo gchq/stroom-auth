@@ -26,7 +26,7 @@ jar {
         attributes(
                 "Implementation-Title": "Stroom Auth Service",
                 "Implementation-Version": version,
-                "Main-Class" : "stroom.auth.service.App"
+                "Main-Class": "stroom.auth.service.App"
         )
     }
 

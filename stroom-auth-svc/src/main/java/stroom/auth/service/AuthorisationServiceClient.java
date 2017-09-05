@@ -25,7 +25,7 @@ public class AuthorisationServiceClient {
   private Client authorisationService = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
 
   @Inject
-  public AuthorisationServiceClient(Config config){
+  public AuthorisationServiceClient(Config config) {
     this.config = config;
   }
 
@@ -39,7 +39,7 @@ public class AuthorisationServiceClient {
 
     boolean isUserAuthorisedToManageUsers;
 
-    switch(response.getStatus()){
+    switch (response.getStatus()) {
       case HttpStatus.UNAUTHORIZED_401:
         isUserAuthorisedToManageUsers = false;
         break;
@@ -60,7 +60,7 @@ public class AuthorisationServiceClient {
   }
 
 
-  public Entity<Object> getManageUserPermissionEntity(){
+  public Entity<Object> getManageUserPermissionEntity() {
     return Entity.json(new Object() {
       @JsonProperty
       private String permission =

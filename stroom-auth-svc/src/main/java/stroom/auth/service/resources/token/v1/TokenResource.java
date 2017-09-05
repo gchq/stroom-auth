@@ -32,7 +32,7 @@ public class TokenResource {
 
   @Inject
   public TokenResource(@NotNull AuthorisationServiceClient authorisationServiceClient,
-                       @NotNull Config config){
+                       @NotNull Config config) {
     this.authorisationServiceClient = authorisationServiceClient;
     this.config = config;
   }
@@ -57,7 +57,7 @@ public class TokenResource {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
-    if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 

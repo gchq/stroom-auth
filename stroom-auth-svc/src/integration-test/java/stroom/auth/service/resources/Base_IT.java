@@ -46,7 +46,7 @@ public abstract class Base_IT {
         .asString();
 
     LOGGER.info("Response: {}", response.getBody());
-    String jwsToken = (String)response.getBody();
+    String jwsToken = (String) response.getBody();
     assertThat(response.getStatus()).isEqualTo(200);
     // This is the first part of the token, which doesn't change
     assertThat(jwsToken).contains("eyJhbGciOiJIUzI1NiJ9");

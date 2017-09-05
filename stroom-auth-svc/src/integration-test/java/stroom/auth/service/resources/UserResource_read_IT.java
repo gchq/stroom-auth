@@ -35,12 +35,11 @@ public final class UserResource_read_IT extends UserResource_IT {
         .get(ME_URL)
         .header("Authorization", "Bearer " + jwsToken)
         .asString();
-    String body = (String)response.getBody();
-    List<User> user = (List<User>)userListMapper().fromJson(body);
-    if(user != null) {
+    String body = (String) response.getBody();
+    List<User> user = (List<User>) userListMapper().fromJson(body);
+    if (user != null) {
       assertThat(user.get(0).getEmail()).isEqualTo("admin");
-    }
-    else fail("No users found");
+    } else fail("No users found");
     assertThat(response.getStatus()).isEqualTo(200);
   }
 
@@ -79,7 +78,7 @@ public final class UserResource_read_IT extends UserResource_IT {
     User userB = new User(Instant.now().toString(), "testPassword");
     int userBId = createUser(userB, adminsJws);
 
-    String userAJws= logInAsUser(userA);
+    String userAJws = logInAsUser(userA);
     String url = ROOT_URL + userBId;
     HttpResponse response = Unirest
         .get(url)

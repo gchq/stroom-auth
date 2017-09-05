@@ -30,7 +30,7 @@ public class UserResource_IT extends Base_IT {
         .body(serializedUser)
         .asString();
 
-    return Integer.parseInt((String)response.getBody());
+    return Integer.parseInt((String) response.getBody());
   }
 
   protected final String logInAsUser(User user) throws UnirestException {
@@ -39,7 +39,7 @@ public class UserResource_IT extends Base_IT {
         .header("Content-Type", "application/json")
         .body("{\"email\" : \"" + user.getEmail() + "\", \"password\" : \"testPassword\"}")
         .asString();
-    String newUsersJws = (String)getJwsResponse.getBody();
+    String newUsersJws = (String) getJwsResponse.getBody();
     return newUsersJws;
   }
 
@@ -51,16 +51,14 @@ public class UserResource_IT extends Base_IT {
         .header("Authorization", "Bearer " + jwsToken)
         .asString();
 
-    if(response.getStatus() != 404) {
-      String body = (String)response.getBody();
-      List<User> users = (List<User>)userListMapper().fromJson(body);
+    if (response.getStatus() != 404) {
+      String body = (String) response.getBody();
+      List<User> users = (List<User>) userListMapper().fromJson(body);
 
-      if(users != null){
+      if (users != null) {
         return users.get(0);
-      }
-      else return null;
-    }
-    else return null;
+      } else return null;
+    } else return null;
   }
 
   protected final JsonAdapter userListMapper() {

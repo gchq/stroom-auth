@@ -27,7 +27,7 @@ import stroom.auth.service.config.Config;
 
 public class AuthenticationFilter {
 
-  public static JwtAuthFilter<ServiceUser> get(Config config)  {
+  public static JwtAuthFilter<ServiceUser> get(Config config) {
     final JwtConsumer consumer = new JwtConsumerBuilder()
         .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
         .setRequireExpirationTime() // the JWT must have an expiration time

@@ -192,13 +192,12 @@ public final class User {
     return BCrypt.hashpw(this.password, BCrypt.gensalt());
   }
 
-  public static Pair<Boolean, String> isValidForCreate(User user){
+  public static Pair<Boolean, String> isValidForCreate(User user) {
     ArrayList<UserValidationError> validationErrors = new ArrayList<>();
 
-    if(user == null) {
+    if (user == null) {
       validationErrors.add(UserValidationError.NO_USER);
-    }
-    else {
+    } else {
       if (Strings.isNullOrEmpty(user.getEmail())) {
         validationErrors.add(UserValidationError.NO_NAME);
       }
@@ -215,18 +214,18 @@ public final class User {
     return Pair.of(isValid, validationMessages);
   }
 
-  public enum UserState{
+  public enum UserState {
     ENABLED("enabled"),
     DISABLED("disabled"),
     LOCKED("locked");
 
     private String stateText;
 
-    UserState(String stateText){
+    UserState(String stateText) {
       this.stateText = stateText;
     }
 
-    public String getStateText(){
+    public String getStateText() {
       return this.stateText;
     }
   }

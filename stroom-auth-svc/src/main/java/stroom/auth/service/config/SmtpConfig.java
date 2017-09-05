@@ -49,11 +49,15 @@ public class SmtpConfig extends Configuration {
   }
 
   public TransportStrategy getTransportStrategy() {
-    switch(transport){
-      case "TLS": return TransportStrategy.SMTP_TLS;
-      case "SSL": return TransportStrategy.SMTP_TLS;
-      case "plain": return TransportStrategy.SMTP_PLAIN;
-      default: return TransportStrategy.SMTP_PLAIN;
+    switch (transport) {
+      case "TLS":
+        return TransportStrategy.SMTP_TLS;
+      case "SSL":
+        return TransportStrategy.SMTP_TLS;
+      case "plain":
+        return TransportStrategy.SMTP_PLAIN;
+      default:
+        return TransportStrategy.SMTP_PLAIN;
     }
   }
 }

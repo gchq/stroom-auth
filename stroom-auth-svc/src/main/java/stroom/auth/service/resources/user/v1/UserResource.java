@@ -66,7 +66,7 @@ public final class UserResource {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
-    if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
@@ -94,7 +94,7 @@ public final class UserResource {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
-    if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
@@ -108,7 +108,7 @@ public final class UserResource {
       return Response.status(Response.Status.CONFLICT).entity(UserValidationError.USER_ALREADY_EXISTS).build();
     }
 
-    if(Strings.isNullOrEmpty(user.getState())){
+    if (Strings.isNullOrEmpty(user.getState())) {
       user.setState(User.UserState.ENABLED.getStateText());
     }
 
@@ -205,8 +205,8 @@ public final class UserResource {
       // We only need to check auth permissions if the user is trying to access a different user.
       String foundUserEmail = foundUserRecord.get(USERS.EMAIL);
       boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
-      if(!isUserAccessingThemselves){
-        if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      if (!isUserAccessingThemselves) {
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
           return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
       }
@@ -240,10 +240,10 @@ public final class UserResource {
   @Timed
   @NotNull
   public final Response updateUser(
-          @Auth @NotNull ServiceUser authenticatedServiceUser,
-          @Context @NotNull DSLContext database,
-          @NotNull User user,
-          @PathParam("id") int userId) {
+      @Auth @NotNull ServiceUser authenticatedServiceUser,
+      @Context @NotNull DSLContext database,
+      @NotNull User user,
+      @PathParam("id") int userId) {
     // Validate
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
@@ -257,8 +257,8 @@ public final class UserResource {
     // We only need to check auth permissions if the user is trying to access a different user.
     String foundUserEmail = usersRecord.get(USERS.EMAIL);
     boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
-    if(!isUserAccessingThemselves){
-      if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+    if (!isUserAccessingThemselves) {
+      if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
         return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
       }
     }
@@ -267,9 +267,9 @@ public final class UserResource {
     user.setUpdated_on(ZonedDateTime.now().toString());
     UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
     database
-            .update((Table) USERS)
-            .set(updatedUsersRecord)
-            .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
+        .update((Table) USERS)
+        .set(updatedUsersRecord)
+        .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
     Response response = Response.status(Response.Status.OK).build();
     return response;
   }
@@ -283,18 +283,18 @@ public final class UserResource {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
-    if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
     database
-            .deleteFrom((Table) USERS)
-            .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
+        .deleteFrom((Table) USERS)
+        .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
     Response response = Response.status(Response.Status.OK).build();
     return response;
   }
 
-  private static Boolean doesUserAlreadyExist(DSLContext database, String email){
+  private static Boolean doesUserAlreadyExist(DSLContext database, String email) {
     int countOfSameName = database
         .selectCount()
         .from(USERS)
