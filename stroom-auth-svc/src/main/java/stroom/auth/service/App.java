@@ -18,6 +18,7 @@ import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import stroom.auth.service.config.Config;
 import stroom.auth.service.resources.authentication.v1.AuthenticationResource;
 import stroom.auth.service.resources.user.v1.UserResource;
 import stroom.auth.service.security.AuthenticationFilter;
@@ -63,9 +64,10 @@ public final class App extends Application<Config>  {
 //        environment.lifecycle().addServerLifecycleListener((ServerLifecycleListener) null.INSTANCE);
         this.injector = Guice.createInjector(new stroom.auth.service.Module(config));
 
+
         TokenGenerator tokenGenerator = injector.getInstance(TokenGenerator.class);
         environment.jersey().register(new AuthenticationResource(tokenGenerator, config));
-        environment.jersey().register(new UserResource(config));
+        environment.jersey().register(injector.getInstance(UserResource.class));
         configureCors(environment);
         migrate(config, environment);
     }

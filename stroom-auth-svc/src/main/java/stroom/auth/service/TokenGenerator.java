@@ -5,6 +5,7 @@ import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
+import stroom.auth.service.config.Config;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

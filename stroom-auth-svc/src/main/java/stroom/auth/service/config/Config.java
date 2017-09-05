@@ -1,4 +1,4 @@
-package stroom.auth.service;
+package stroom.auth.service.config;
 
 import com.bendb.dropwizard.jooq.JooqFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -84,6 +84,10 @@ public final class Config extends Configuration {
     @JsonProperty("email")
     private EmailConfig emailConfig;
 
+    @NotNull
+    @JsonProperty("authorisationService")
+    private AuthorisationServiceConfig authorisationServiceConfig;
+
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
     }
@@ -157,5 +161,9 @@ public final class Config extends Configuration {
 
     public Integer getFailedLoginLockThreshold() {
         return this.failedLoginLockThreshold;
+    }
+
+    public AuthorisationServiceConfig getAuthorisationServiceConfig() {
+        return authorisationServiceConfig;
     }
 }

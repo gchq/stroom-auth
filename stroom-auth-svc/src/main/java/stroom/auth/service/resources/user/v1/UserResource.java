@@ -1,13 +1,10 @@
 package stroom.auth.service.resources.user.v1;
 
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import io.dropwizard.auth.Auth;
 import org.apache.commons.lang3.tuple.Pair;
-import org.eclipse.jetty.http.HttpStatus;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientResponse;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -18,11 +15,14 @@ import org.jooq.Table;
 import org.jooq.TableField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.service.Config;
+import stroom.auth.service.AuthorisationServiceClient;
+import stroom.auth.service.config.Config;
 import stroom.auth.service.security.ServiceUser;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -31,9 +31,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
@@ -42,14 +39,22 @@ import java.time.ZonedDateTime;
 
 import static stroom.db.auth.Tables.USERS;
 
+@Singleton
 @Path("/user/v1")
 @Produces({"application/json"})
 public final class UserResource {
-  private final Config config;
   private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
-  Client authorisationService = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
+  private final Config config;
+  private AuthorisationServiceClient authorisationServiceClient;
 
+  @Inject
+  public UserResource(@NotNull AuthorisationServiceClient authorisationServiceClient,
+                      @NotNull Config config) {
+    super();
+    this.authorisationServiceClient = authorisationServiceClient;
+    this.config = config;
+  }
 
   @GET
   @Path("/")
@@ -61,30 +66,19 @@ public final class UserResource {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
-    String authorisationUrl = config.getStroomUrl() + "/api/authorisation/canManageUsers";
-    Response response = authorisationService
-        .target(authorisationUrl)
-        .request()
-        .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
-        .post(Entity.json(new Object() {
-          @JsonProperty
-          private String permission = "Manage Users";
-        }));
+    if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    }
 
-    if(response.getStatus() == HttpStatus.UNAUTHORIZED_401) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity("The user is not authorised to access this resource").build();
-    }
-    else {
-      TableField orderByEmailField = USERS.EMAIL;
-      String usersAsJson = database
-          .selectFrom(USERS)
-          .orderBy(orderByEmailField)
-          .fetch()
-          .formatJSON((new JSONFormat())
-              .header(false)
-              .recordFormat(JSONFormat.RecordFormat.OBJECT));
-      return Response.status(Response.Status.OK).entity(usersAsJson).build();
-    }
+    TableField orderByEmailField = USERS.EMAIL;
+    String usersAsJson = database
+        .selectFrom(USERS)
+        .orderBy(orderByEmailField)
+        .fetch()
+        .formatJSON((new JSONFormat())
+            .header(false)
+            .recordFormat(JSONFormat.RecordFormat.OBJECT));
+    return Response.status(Response.Status.OK).entity(usersAsJson).build();
   }
 
 
@@ -99,9 +93,14 @@ public final class UserResource {
     // Validate
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
+
+    if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    }
+
     Pair<Boolean, String> validationResults = User.isValidForCreate(user);
     boolean isUserValid = validationResults.getLeft();
-    if(!isUserValid){
+    if (!isUserValid) {
       return Response.status(Response.Status.BAD_REQUEST).entity(validationResults.getRight()).build();
     }
 
@@ -109,12 +108,15 @@ public final class UserResource {
       return Response.status(Response.Status.CONFLICT).entity(UserValidationError.USER_ALREADY_EXISTS).build();
     }
 
+    if(Strings.isNullOrEmpty(user.getState())){
+      user.setState(User.UserState.ENABLED.getStateText());
+    }
 
 
     // Create the user
     UsersRecord usersRecord = (UsersRecord) database
         .insertInto((Table) USERS)
-        .set( USERS.EMAIL, user.getEmail())
+        .set(USERS.EMAIL, user.getEmail())
         .set(USERS.PASSWORD_HASH, user.generatePasswordHash())
         .set(USERS.FIRST_NAME, user.getFirst_name())
         .set(USERS.LAST_NAME, user.getLast_name())
@@ -134,6 +136,8 @@ public final class UserResource {
     // Validate
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
+
+    // We're not checking authorisation because the current user is allowed to get infomation about themselves.
 
     // Get the user
     Record foundUserRecord = database
@@ -167,7 +171,9 @@ public final class UserResource {
   @Path("{id}")
   @Timed
   @NotNull
-  public final Response getUser(@Auth @NotNull ServiceUser authenticatedServiceUser, @Context @NotNull DSLContext database, @PathParam("id") int userId) {
+  public final Response getUser(@Auth @NotNull ServiceUser authenticatedServiceUser,
+                                @Context @NotNull DSLContext database,
+                                @PathParam("id") int userId) {
     // Validate
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
@@ -195,6 +201,16 @@ public final class UserResource {
       response = Response.status(Response.Status.NOT_FOUND).build();
       return response;
     } else {
+
+      // We only need to check auth permissions if the user is trying to access a different user.
+      String foundUserEmail = foundUserRecord.get(USERS.EMAIL);
+      boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
+      if(!isUserAccessingThemselves){
+        if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+          return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
+      }
+
       Result foundUserResult = database.newResult(
           USERS.ID,
           USERS.EMAIL,
@@ -237,6 +253,16 @@ public final class UserResource {
         .selectFrom((Table) USERS)
         .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
         .fetchOne();
+
+    // We only need to check auth permissions if the user is trying to access a different user.
+    String foundUserEmail = usersRecord.get(USERS.EMAIL);
+    boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
+    if(!isUserAccessingThemselves){
+      if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+      }
+    }
+
     user.setUpdated_by_user(authenticatedServiceUser.getName());
     user.setUpdated_on(ZonedDateTime.now().toString());
     UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
@@ -257,17 +283,15 @@ public final class UserResource {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
+    if(!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    }
+
     database
             .deleteFrom((Table) USERS)
             .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
     Response response = Response.status(Response.Status.OK).build();
     return response;
-  }
-
-  public UserResource(@NotNull Config config) {
-    super();
-    Preconditions.checkNotNull(config);
-    this.config = config;
   }
 
   private static Boolean doesUserAlreadyExist(DSLContext database, String email){

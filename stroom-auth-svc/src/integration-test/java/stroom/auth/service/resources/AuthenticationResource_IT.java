@@ -10,7 +10,7 @@ public class AuthenticationResource_IT extends Base_IT {
   public void good_login() throws UnirestException {
     // Most API tests need to login so the actual login method is in the base class.
     // We're adding it as a test here for completeness.
-    login();
+    loginAsAdmin();
   }
 
   @Test

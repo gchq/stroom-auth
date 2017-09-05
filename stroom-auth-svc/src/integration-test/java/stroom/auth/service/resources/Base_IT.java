@@ -38,7 +38,7 @@ public abstract class Base_IT {
     Thread.sleep(2000);
   }
 
-  public final String login() throws UnirestException {
+  public final String loginAsAdmin() throws UnirestException {
     HttpResponse response = Unirest
         .post(LOGIN_URL)
         .header("Content-Type", "application/json")

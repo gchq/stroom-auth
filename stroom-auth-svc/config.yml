@@ -56,6 +56,11 @@ resetPasswordUrl: ${RESET_PASSWORD_URL:- 'http://localhost/resetPassword/?token=
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://localhost}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 
+authorisationService:
+  url: ${AUTHORISATION_SERVICE_URL:- http://localhost:8080/api/authorisation/v1}
+  canManageUsersPath: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PATH:- /canManageUsers}
+  canManageUsersPermission: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
+
 email:
   fromAddress: ${EMAIL_FROM_ADDRESS:- noreply@stroom.com}
   fromName: ${EMAIL_FROM_NAME:- Stroom User Accounts}

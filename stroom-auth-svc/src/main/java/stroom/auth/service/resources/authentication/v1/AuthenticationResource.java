@@ -14,7 +14,7 @@ import org.simplejavamail.mailer.config.ServerConfig;
 import org.simplejavamail.mailer.config.TransportStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.service.Config;
+import stroom.auth.service.config.Config;
 import stroom.auth.service.TokenGenerator;
 import stroom.auth.service.resources.user.v1.User;
 import stroom.auth.service.resources.user.v1.UserMapper;

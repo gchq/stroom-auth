@@ -2,6 +2,8 @@ package stroom.auth.service;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import stroom.auth.service.config.Config;
+import stroom.auth.service.resources.user.v1.UserResource;
 
 public final class Module extends AbstractModule {
     private Config config;
@@ -11,7 +13,9 @@ public final class Module extends AbstractModule {
     }
 
     protected void configure() {
-        this.bind(TokenGenerator.class);
+        bind(TokenGenerator.class);
+        bind(UserResource.class);
+        bind(AuthorisationServiceClient.class);
     }
 
     @Provides

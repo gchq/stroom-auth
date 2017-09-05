@@ -41,13 +41,21 @@ public final class User {
   @Nullable
   private String created_by_user;
 
+  public User() {
+  }
+
+  public User(@NotNull String email, @NotNull String password) {
+    this.email = email;
+    this.password = password;
+  }
+
   @Nullable
   public final Integer getId() {
     return this.id;
   }
 
-  public final void setId(@Nullable Integer var1) {
-    this.id = var1;
+  public final void setId(@Nullable Integer id) {
+    this.id = id;
   }
 
   @Nullable
@@ -55,8 +63,8 @@ public final class User {
     return this.first_name;
   }
 
-  public final void setFirst_name(@Nullable String var1) {
-    this.first_name = var1;
+  public final void setFirst_name(@Nullable String firstName) {
+    this.first_name = firstName;
   }
 
   @Nullable
@@ -64,8 +72,8 @@ public final class User {
     return this.last_name;
   }
 
-  public final void setLast_name(@Nullable String var1) {
-    this.last_name = var1;
+  public final void setLast_name(@Nullable String lastName) {
+    this.last_name = lastName;
   }
 
   @Nullable
@@ -73,8 +81,8 @@ public final class User {
     return this.comments;
   }
 
-  public final void setComments(@Nullable String var1) {
-    this.comments = var1;
+  public final void setComments(@Nullable String comments) {
+    this.comments = comments;
   }
 
   @Nullable
@@ -82,8 +90,8 @@ public final class User {
     return this.email;
   }
 
-  public final void setEmail(@Nullable String var1) {
-    this.email = var1;
+  public final void setEmail(@Nullable String email) {
+    this.email = email;
   }
 
   @Nullable
@@ -91,8 +99,8 @@ public final class User {
     return this.state;
   }
 
-  public final void setState(@Nullable String var1) {
-    this.state = var1;
+  public final void setState(@Nullable String state) {
+    this.state = state;
   }
 
   @Nullable
@@ -100,8 +108,8 @@ public final class User {
     return this.password;
   }
 
-  public final void setPassword(@Nullable String var1) {
-    this.password = var1;
+  public final void setPassword(@Nullable String password) {
+    this.password = password;
   }
 
   @Nullable
@@ -109,8 +117,8 @@ public final class User {
     return this.password_hash;
   }
 
-  public final void setPassword_hash(@Nullable String var1) {
-    this.password_hash = var1;
+  public final void setPassword_hash(@Nullable String passwordHash) {
+    this.password_hash = passwordHash;
   }
 
   @Nullable
@@ -118,8 +126,8 @@ public final class User {
     return this.login_failures;
   }
 
-  public final void setLogin_failures(@Nullable Integer var1) {
-    this.login_failures = var1;
+  public final void setLogin_failures(@Nullable Integer loginFailures) {
+    this.login_failures = loginFailures;
   }
 
   @Nullable
@@ -127,8 +135,8 @@ public final class User {
     return this.login_count;
   }
 
-  public final void setLogin_count(@Nullable Integer var1) {
-    this.login_count = var1;
+  public final void setLogin_count(@Nullable Integer loginCount) {
+    this.login_count = loginCount;
   }
 
   @Nullable
@@ -136,8 +144,8 @@ public final class User {
     return this.last_login;
   }
 
-  public final void setLast_login(@Nullable String var1) {
-    this.last_login = var1;
+  public final void setLast_login(@Nullable String lastLogin) {
+    this.last_login = lastLogin;
   }
 
   @Nullable
@@ -145,8 +153,8 @@ public final class User {
     return this.updated_on;
   }
 
-  public final void setUpdated_on(@Nullable String var1) {
-    this.updated_on = var1;
+  public final void setUpdated_on(@Nullable String updatedOn) {
+    this.updated_on = updatedOn;
   }
 
   @Nullable
@@ -154,8 +162,8 @@ public final class User {
     return this.updated_by_user;
   }
 
-  public final void setUpdated_by_user(@Nullable String var1) {
-    this.updated_by_user = var1;
+  public final void setUpdated_by_user(@Nullable String updatedByUser) {
+    this.updated_by_user = updatedByUser;
   }
 
   @Nullable
@@ -163,8 +171,8 @@ public final class User {
     return this.created_on;
   }
 
-  public final void setCreated_on(@Nullable String var1) {
-    this.created_on = var1;
+  public final void setCreated_on(@Nullable String createdOn) {
+    this.created_on = createdOn;
   }
 
   @Nullable
@@ -172,16 +180,8 @@ public final class User {
     return this.created_by_user;
   }
 
-  public final void setCreated_by_user(@Nullable String var1) {
-    this.created_by_user = var1;
-  }
-
-  public User() {
-  }
-
-  public User(@NotNull String email, @NotNull String password) {
-    this.email = email;
-    this.password = password;
+  public final void setCreated_by_user(@Nullable String createdByUser) {
+    this.created_by_user = createdByUser;
   }
 
   /**

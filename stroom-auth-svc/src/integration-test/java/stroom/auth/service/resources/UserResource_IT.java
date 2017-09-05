@@ -33,6 +33,16 @@ public class UserResource_IT extends Base_IT {
     return Integer.parseInt((String)response.getBody());
   }
 
+  protected final String logInAsUser(User user) throws UnirestException {
+    HttpResponse getJwsResponse = Unirest
+        .post(LOGIN_URL)
+        .header("Content-Type", "application/json")
+        .body("{\"email\" : \"" + user.getEmail() + "\", \"password\" : \"testPassword\"}")
+        .asString();
+    String newUsersJws = (String)getJwsResponse.getBody();
+    return newUsersJws;
+  }
+
   protected final User getUser(int userId, String jwsToken) throws UnirestException, IOException {
     String url = this.ROOT_URL + userId;
     HttpResponse response = Unirest
@@ -63,5 +73,4 @@ public class UserResource_IT extends Base_IT {
   protected final JsonAdapter userMapper() {
     return new Moshi.Builder().build().adapter(User.class);
   }
-
 }
