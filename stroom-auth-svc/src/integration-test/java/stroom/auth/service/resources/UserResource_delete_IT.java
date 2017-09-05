@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static stroom.auth.service.resources.HttpAsserts.assertUnauthorised;
 
 public final class UserResource_delete_IT extends UserResource_IT {
   @Test

@@ -12,6 +12,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
+import static stroom.auth.service.resources.HttpAsserts.assertOk;
+import static stroom.auth.service.resources.HttpAsserts.assertUnauthorised;
 
 public final class UserResource_read_IT extends UserResource_IT {
 

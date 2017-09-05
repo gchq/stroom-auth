@@ -8,6 +8,12 @@ import stroom.auth.service.resources.user.v1.User;
 
 import java.time.Instant;
 
+import static stroom.auth.service.resources.HttpAsserts.assertBadRequest;
+import static stroom.auth.service.resources.HttpAsserts.assertBodyNotNull;
+import static stroom.auth.service.resources.HttpAsserts.assertConflict;
+import static stroom.auth.service.resources.HttpAsserts.assertOk;
+import static stroom.auth.service.resources.HttpAsserts.assertUnauthorised;
+
 public final class UserResource_create_IT extends UserResource_IT {
   @Test
   public final void create_user() throws UnirestException {

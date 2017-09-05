@@ -5,6 +5,9 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 
+import static stroom.auth.service.resources.HttpAsserts.assertBadRequest;
+import static stroom.auth.service.resources.HttpAsserts.assertUnauthorised;
+
 public class AuthenticationResource_IT extends Base_IT {
   @Test
   public void good_login() throws UnirestException {
