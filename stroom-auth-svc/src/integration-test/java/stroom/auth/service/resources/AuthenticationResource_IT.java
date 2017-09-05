@@ -13,13 +13,13 @@ public class AuthenticationResource_IT extends Base_IT {
   public void good_login() throws UnirestException {
     // Most API tests need to login so the actual login method is in the base class.
     // We're adding it as a test here for completeness.
-    loginAsAdmin();
+    authenticationManager.loginAsAdmin();
   }
 
   @Test
   public void incorrect_credentials_1() throws UnirestException {
     HttpResponse response = Unirest
-        .post(LOGIN_URL)
+        .post(authenticationManager.getLoginUrl())
         .header("Content-Type", "application/json")
         .body("{\"email\" : \"BAD\", \"password\" : \"admin\"}")
         .asString();
@@ -30,7 +30,7 @@ public class AuthenticationResource_IT extends Base_IT {
   @Test
   public void incorrect_credentials_2() throws UnirestException {
     HttpResponse response = Unirest
-        .post(LOGIN_URL)
+        .post(authenticationManager.getLoginUrl())
         .header("Content-Type", "application/json")
         .body("{\"email\" : \"admin\", \"password\" : \"BAD\"}")
         .asString();
@@ -40,7 +40,7 @@ public class AuthenticationResource_IT extends Base_IT {
   @Test
   public void incorrect_credentials_3() throws UnirestException {
     HttpResponse response = Unirest
-        .post(LOGIN_URL)
+        .post(authenticationManager.getLoginUrl())
         .header("Content-Type", "application/json")
         .body("{\"email\" : \"BAD\", \"password\" : \"BAD\"}")
         .asString();
@@ -50,7 +50,7 @@ public class AuthenticationResource_IT extends Base_IT {
   @Test
   public void missing_credentials_1() throws UnirestException {
     HttpResponse response = Unirest
-        .post(LOGIN_URL)
+        .post(authenticationManager.getLoginUrl())
         .header("Content-Type", "application/json")
         .body("{\"email\" : \"BAD\"}")
         .asString();
@@ -60,7 +60,7 @@ public class AuthenticationResource_IT extends Base_IT {
   @Test
   public void missing_credentials_2() throws UnirestException {
     HttpResponse response = Unirest
-        .post(LOGIN_URL)
+        .post(authenticationManager.getLoginUrl())
         .header("Content-Type", "application/json")
         .body("\"password\" : \"admin\"}")
         .asString();
@@ -70,7 +70,7 @@ public class AuthenticationResource_IT extends Base_IT {
   @Test
   public void missing_credentials_3() throws UnirestException {
     HttpResponse response = Unirest
-        .post(LOGIN_URL)
+        .post(authenticationManager.getLoginUrl())
         .header("Content-Type", "application/json")
         .body("")
         .asString();

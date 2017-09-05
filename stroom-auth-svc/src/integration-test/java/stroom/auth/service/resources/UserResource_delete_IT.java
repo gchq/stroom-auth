@@ -12,13 +12,13 @@ import java.time.Instant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.auth.service.resources.HttpAsserts.assertUnauthorised;
 
-public final class UserResource_delete_IT extends UserResource_IT {
+public final class UserResource_delete_IT extends Base_IT {
   @Test
   public final void delete_user() throws UnirestException, IOException {
-    String jwsToken = loginAsAdmin();
+    String jwsToken = authenticationManager.loginAsAdmin();
     User user = new User(Instant.now().toString(), "testPassword");
-    int userId = this.createUser(user, jwsToken);
-    String url = this.ROOT_URL + userId;
+    int userId = userManager.createUser(user, jwsToken);
+    String url = userManager.getRootUrl() + userId;
 
     HttpResponse response = Unirest
         .delete(url)
@@ -26,22 +26,22 @@ public final class UserResource_delete_IT extends UserResource_IT {
         .header("Content-Type", "application/json")
         .asJson();
 
-    User shouldBeNull = getUser(userId, jwsToken);
+    User shouldBeNull = userManager.getUser(userId, jwsToken);
     assertThat(shouldBeNull).isNull();
   }
 
   @Test
   public final void delete_user_without_authorisation() throws UnirestException, IOException {
-    String adminsJws = loginAsAdmin();
+    String adminsJws = authenticationManager.loginAsAdmin();
 
     User userA = new User(Instant.now().toString(), "testPassword");
-    createUser(userA, adminsJws);
-    String userAJws = logInAsUser(userA);
+    userManager.createUser(userA, adminsJws);
+    String userAJws = authenticationManager.logInAsUser(userA);
 
     User userB = new User(Instant.now().toString(), "testPassword");
-    int userBId = createUser(userB, adminsJws);
+    int userBId = userManager.createUser(userB, adminsJws);
 
-    String url = this.ROOT_URL + userBId;
+    String url = userManager.getRootUrl() + userBId;
 
     HttpResponse response = Unirest
         .delete(url)

@@ -12,19 +12,14 @@ import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-public class UserResource_IT extends Base_IT {
-  protected final String ROOT_URL;
-  protected final String ME_URL;
+public class UserManager {
+  private String rootUrl;
+  private String meUrl;
 
-  public UserResource_IT() {
-    ROOT_URL = "http://localhost:" + appPort + "/user/v1/";
-    ME_URL = "http://localhost:" + appPort + "/user/v1/me";
-  }
-
-  protected final int createUser(User user, String jwsToken) throws UnirestException {
+  public final int createUser(User user, String jwsToken) throws UnirestException {
     String serializedUser = this.userMapper().toJson(user);
     HttpResponse response = Unirest
-        .post(ROOT_URL)
+        .post(this.rootUrl)
         .header("Content-Type", "application/json")
         .header("Authorization", "Bearer " + jwsToken)
         .body(serializedUser)
@@ -33,18 +28,8 @@ public class UserResource_IT extends Base_IT {
     return Integer.parseInt((String) response.getBody());
   }
 
-  protected final String logInAsUser(User user) throws UnirestException {
-    HttpResponse getJwsResponse = Unirest
-        .post(LOGIN_URL)
-        .header("Content-Type", "application/json")
-        .body("{\"email\" : \"" + user.getEmail() + "\", \"password\" : \"testPassword\"}")
-        .asString();
-    String newUsersJws = (String) getJwsResponse.getBody();
-    return newUsersJws;
-  }
-
-  protected final User getUser(int userId, String jwsToken) throws UnirestException, IOException {
-    String url = this.ROOT_URL + userId;
+  public final User getUser(int userId, String jwsToken) throws UnirestException, IOException {
+    String url = this.rootUrl + userId;
     HttpResponse response = Unirest
         .get(url)
         .header("Content-Type", "application/json")
@@ -61,14 +46,35 @@ public class UserResource_IT extends Base_IT {
     } else return null;
   }
 
-  protected final JsonAdapter userListMapper() {
+  public final List<User> parseUsers(String body) throws IOException {
+    return (List<User>) userListMapper().fromJson(body);
+  }
+
+  public final String serialiseUser(User user) {
+    return userMapper().toJson(user);
+  }
+
+  private final JsonAdapter userListMapper() {
     Moshi moshi = new Moshi.Builder().build();
     ParameterizedType type = Types.newParameterizedType(List.class, User.class);
     JsonAdapter<List<User>> jsonAdapter = moshi.adapter(type);
     return jsonAdapter;
   }
 
-  protected final JsonAdapter userMapper() {
+  private static final JsonAdapter userMapper() {
     return new Moshi.Builder().build().adapter(User.class);
+  }
+
+  public void setPort(int appPort) {
+    this.rootUrl = "http://localhost:" + appPort + "/user/v1/";
+    this.meUrl = "http://localhost:" + appPort + "/user/v1/me";
+  }
+
+  public String getRootUrl(){
+    return this.rootUrl;
+  }
+
+  public String getMeUrl() {
+    return meUrl;
   }
 }

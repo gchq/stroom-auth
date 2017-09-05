@@ -14,15 +14,15 @@ import static stroom.auth.service.resources.HttpAsserts.assertConflict;
 import static stroom.auth.service.resources.HttpAsserts.assertOk;
 import static stroom.auth.service.resources.HttpAsserts.assertUnauthorised;
 
-public final class UserResource_create_IT extends UserResource_IT {
+public final class UserResource_create_IT extends Base_IT {
   @Test
   public final void create_user() throws UnirestException {
-    String jwsToken = loginAsAdmin();
+    String jwsToken = authenticationManager.loginAsAdmin();
     User user = new User(Instant.now().toString(), "testPassword");
-    String serializedUser = this.userMapper().toJson(user);
+    String serializedUser = userManager.serialiseUser(user);
 
     HttpResponse response = Unirest
-        .post(ROOT_URL)
+        .post(userManager.getRootUrl())
         .header("Authorization", "Bearer " + jwsToken)
         .header("Content-Type", "application/json")
         .body(serializedUser)
@@ -34,9 +34,9 @@ public final class UserResource_create_IT extends UserResource_IT {
 
   @Test
   public final void create_user_missing_user() throws UnirestException {
-    String jwsToken = loginAsAdmin();
+    String jwsToken = authenticationManager.loginAsAdmin();
     HttpResponse response = Unirest
-        .post(ROOT_URL)
+        .post(userManager.getRootUrl())
         .header("Authorization", "Bearer " + jwsToken)
         .header("Content-Type", "application/json")
         .asString();
@@ -46,12 +46,12 @@ public final class UserResource_create_IT extends UserResource_IT {
 
   @Test
   public final void create_user_missing_name() throws UnirestException {
-    String jwsToken = loginAsAdmin();
+    String jwsToken = authenticationManager.loginAsAdmin();
     User user = new User("", "testPassword");
-    String serializedUser = this.userMapper().toJson(user);
+    String serializedUser = userManager.serialiseUser(user);
 
     HttpResponse response = Unirest
-        .post(ROOT_URL)
+        .post(userManager.getRootUrl())
         .header("Authorization", "Bearer " + jwsToken)
         .header("Content-Type", "application/json")
         .body(serializedUser)
@@ -62,12 +62,12 @@ public final class UserResource_create_IT extends UserResource_IT {
 
   @Test
   public final void create_user_missing_password() throws UnirestException {
-    String jwsToken = loginAsAdmin();
+    String jwsToken = authenticationManager.loginAsAdmin();
     User user = new User(Instant.now().toString(), "");
-    String serializedUser = this.userMapper().toJson(user);
+    String serializedUser = userManager.serialiseUser(user);
 
     HttpResponse response = Unirest
-        .post(ROOT_URL)
+        .post(userManager.getRootUrl())
         .header("Authorization", "Bearer " + jwsToken)
         .header("Content-Type", "application/json")
         .body(serializedUser)
@@ -78,13 +78,13 @@ public final class UserResource_create_IT extends UserResource_IT {
 
   @Test
   public final void create_user_with_duplicate_name() throws UnirestException {
-    String jwsToken = loginAsAdmin();
+    String jwsToken = authenticationManager.loginAsAdmin();
     String emailToBeReused = Instant.now().toString();
     User user = new User(emailToBeReused, "testPassword");
-    String serializedUser = this.userMapper().toJson(user);
+    String serializedUser = userManager.serialiseUser(user);
 
     HttpResponse response = Unirest
-        .post(ROOT_URL)
+        .post(userManager.getRootUrl())
         .header("Authorization", "Bearer " + jwsToken)
         .header("Content-Type", "application/json")
         .body(serializedUser)
@@ -94,9 +94,9 @@ public final class UserResource_create_IT extends UserResource_IT {
     assertBodyNotNull(response);
 
     User duplicateUser = new User(emailToBeReused, "testPassword");
-    String duplicateSerializedUser = this.userMapper().toJson(duplicateUser);
+    String duplicateSerializedUser = userManager.serialiseUser(duplicateUser);
     HttpResponse duplicateResponse = Unirest
-        .post(ROOT_URL)
+        .post(userManager.getRootUrl())
         .header("Authorization", "Bearer " + jwsToken)
         .header("Content-Type", "application/json")
         .body(duplicateSerializedUser)
@@ -107,22 +107,22 @@ public final class UserResource_create_IT extends UserResource_IT {
 
   @Test
   public final void create_user_with_no_authorisation() throws UnirestException {
-    String adminsJws = loginAsAdmin();
+    String adminsJws = authenticationManager.loginAsAdmin();
     User user = new User(Instant.now().toString(), "testPassword");
-    createUser(user, adminsJws);
-    String newUsersJws = logInAsUser(user);
+    userManager.createUser(user, adminsJws);
+    String newUsersJws = authenticationManager.logInAsUser(user);
 
     // Try to use this new user to create another user
     User anotherUser = new User(Instant.now().toString(), "testPassword");
-    String serializedAnotherUser = this.userMapper().toJson(anotherUser);
+    String serializedAnotherUser = userManager.serialiseUser(anotherUser);
     HttpResponse createAnotherUserResponse = Unirest
-        .post(ROOT_URL)
+        .post(userManager.getRootUrl())
         .header("Authorization", "Bearer " + newUsersJws)
         .header("Content-Type", "application/json")
         .body(serializedAnotherUser)
         .asString();
 
-    // 5. This new user won't have permission to create users, so this request should be rejected.
+    // This new user won't have permission to create users, so this request should be rejected.
     assertUnauthorised(createAnotherUserResponse);
   }
 }
