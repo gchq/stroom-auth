@@ -21,6 +21,8 @@ import stroom.auth.service.resources.user.v1.UserMapper;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.mail.Message;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
@@ -44,6 +46,7 @@ import java.util.regex.Pattern;
 
 import static stroom.db.auth.Tables.USERS;
 
+@Singleton
 @Path("/authentication/v1")
 @Produces(MediaType.APPLICATION_JSON)
 public final class AuthenticationResource {
@@ -53,6 +56,7 @@ public final class AuthenticationResource {
     private Config config;
     private final Pattern dnPattern;
 
+    @Inject
     public AuthenticationResource(@NotNull TokenGenerator tokenGenerator, @NotNull Config config) {
         this.tokenGenerator = tokenGenerator;
         this.config = config;

@@ -20,6 +20,7 @@ import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import stroom.auth.service.config.Config;
 import stroom.auth.service.resources.authentication.v1.AuthenticationResource;
+import stroom.auth.service.resources.token.v1.TokenResource;
 import stroom.auth.service.resources.user.v1.UserResource;
 import stroom.auth.service.security.AuthenticationFilter;
 import stroom.auth.service.security.ServiceUser;
@@ -61,13 +62,8 @@ public final class App extends Application<Config>  {
     @Override
     public void run(Config config, Environment environment) throws Exception {
         configureAuthentication(config, environment);
-//        environment.lifecycle().addServerLifecycleListener((ServerLifecycleListener) null.INSTANCE);
-        this.injector = Guice.createInjector(new stroom.auth.service.Module(config));
-
-
-        TokenGenerator tokenGenerator = injector.getInstance(TokenGenerator.class);
-        environment.jersey().register(new AuthenticationResource(tokenGenerator, config));
-        environment.jersey().register(injector.getInstance(UserResource.class));
+        injector = Guice.createInjector(new stroom.auth.service.Module(config));
+        registerResources(environment);
         configureCors(environment);
         migrate(config, environment);
     }
@@ -80,6 +76,12 @@ public final class App extends Application<Config>  {
                 new EnvironmentVariableSubstitutor(false)));
         bootstrap.addBundle(this.jooqBundle);
         bootstrap.addBundle(this.flywayBundle);
+    }
+
+    private void registerResources(Environment environment) {
+        environment.jersey().register(injector.getInstance(AuthenticationResource.class));
+        environment.jersey().register(injector.getInstance(UserResource.class));
+        environment.jersey().register(injector.getInstance(TokenResource.class));
     }
 
     private static final void configureAuthentication(Config config, Environment environment) {

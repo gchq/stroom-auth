@@ -4,14 +4,14 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
 import io.dropwizard.auth.Auth;
 import org.jooq.DSLContext;
-import org.jooq.JSONFormat;
-import org.jooq.TableField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.AuthorisationServiceClient;
 import stroom.auth.service.config.Config;
 import stroom.auth.service.security.ServiceUser;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -21,6 +21,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Singleton
 @Path("/token/v1")
 @Produces(MediaType.APPLICATION_JSON)
 public class TokenResource {
@@ -29,6 +30,7 @@ public class TokenResource {
   private final Config config;
   private AuthorisationServiceClient authorisationServiceClient;
 
+  @Inject
   public TokenResource(@NotNull AuthorisationServiceClient authorisationServiceClient,
                        @NotNull Config config){
     this.authorisationServiceClient = authorisationServiceClient;
