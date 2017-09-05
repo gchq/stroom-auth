@@ -1,4 +1,4 @@
-package stroom.auth.service.resources;
+package stroom.auth.service.resources.support;
 
 import com.mashape.unirest.http.HttpResponse;
 

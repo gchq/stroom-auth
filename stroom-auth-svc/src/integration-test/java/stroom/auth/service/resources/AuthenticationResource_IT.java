@@ -4,9 +4,10 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
+import stroom.auth.service.resources.support.Base_IT;
 
-import static stroom.auth.service.resources.HttpAsserts.assertBadRequest;
-import static stroom.auth.service.resources.HttpAsserts.assertUnauthorised;
+import static stroom.auth.service.resources.support.HttpAsserts.assertBadRequest;
+import static stroom.auth.service.resources.support.HttpAsserts.assertUnauthorised;
 
 public class AuthenticationResource_IT extends Base_IT {
   @Test
