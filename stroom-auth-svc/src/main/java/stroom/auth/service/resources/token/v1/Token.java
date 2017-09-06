@@ -7,31 +7,31 @@ public class Token {
   private int id;
 
   @Nullable
-  private String userEmail;
+  private String user_email;
 
   @Nullable
-  private String tokenType;
+  private String token_type;
 
   @Nullable
   private String token;
 
   @Nullable
-  private String expiresOn;
+  private String expires_on;
 
   @Nullable
-  private String issuedOn;
+  private String issued_on;
 
   @Nullable
-  private String issuedByUser;
+  private String issued_by_user;
 
   @Nullable
   private boolean enabled;
 
   @Nullable
-  private String updatedOn;
+  private String updated_on;
 
   @Nullable
-  private String updatedByUser;
+  private String updated_by_user;
 
   @Nullable
   public int getId() {
@@ -43,21 +43,21 @@ public class Token {
   }
 
   @Nullable
-  public String getUserEmail() {
-    return userEmail;
+  public String getUser_email() {
+    return user_email;
   }
 
-  public void setUserEmail(@Nullable String userEmail) {
-    this.userEmail = userEmail;
+  public void setUser_email(@Nullable String user_email) {
+    this.user_email = user_email;
   }
 
   @Nullable
-  public String getTokenType() {
-    return tokenType;
+  public String getToken_type() {
+    return token_type;
   }
 
-  public void setTokenType(@Nullable String tokenType) {
-    this.tokenType = tokenType;
+  public void setToken_type(@Nullable String token_type) {
+    this.token_type = token_type;
   }
 
   @Nullable
@@ -70,30 +70,30 @@ public class Token {
   }
 
   @Nullable
-  public String getExpiresOn() {
-    return expiresOn;
+  public String getExpires_on() {
+    return expires_on;
   }
 
-  public void setExpiresOn(@Nullable String expiresOn) {
-    this.expiresOn = expiresOn;
-  }
-
-  @Nullable
-  public String getIssuedOn() {
-    return issuedOn;
-  }
-
-  public void setIssuedOn(@Nullable String issuedOn) {
-    this.issuedOn = issuedOn;
+  public void setExpires_on(@Nullable String expires_on) {
+    this.expires_on = expires_on;
   }
 
   @Nullable
-  public String getIssuedByUser() {
-    return issuedByUser;
+  public String getIssued_on() {
+    return issued_on;
   }
 
-  public void setIssuedByUser(@Nullable String issuedByUser) {
-    this.issuedByUser = issuedByUser;
+  public void setIssued_on(@Nullable String issued_on) {
+    this.issued_on = issued_on;
+  }
+
+  @Nullable
+  public String getIssued_by_user() {
+    return issued_by_user;
+  }
+
+  public void setIssued_by_user(@Nullable String issued_by_user) {
+    this.issued_by_user = issued_by_user;
   }
 
   @Nullable
@@ -106,21 +106,21 @@ public class Token {
   }
 
   @Nullable
-  public String getUpdatedOn() {
-    return updatedOn;
+  public String getUpdated_on() {
+    return updated_on;
   }
 
-  public void setUpdatedOn(@Nullable String updatedOn) {
-    this.updatedOn = updatedOn;
+  public void setUpdated_on(@Nullable String updated_on) {
+    this.updated_on = updated_on;
   }
 
   @Nullable
-  public String getUpdatedByUser() {
-    return updatedByUser;
+  public String getUpdated_by_user() {
+    return updated_by_user;
   }
 
-  public void setUpdatedByUser(@Nullable String updatedByUser) {
-    this.updatedByUser = updatedByUser;
+  public void setUpdated_by_user(@Nullable String updated_by_user) {
+    this.updated_by_user = updated_by_user;
   }
 
   public enum TokenType {
@@ -206,15 +206,15 @@ public class Token {
     public Token build() {
       Token token = new Token();
       token.setId(id);
-      token.setUserEmail(userEmail);
-      token.setTokenType(tokenType);
+      token.setUser_email(userEmail);
+      token.setToken_type(tokenType);
       token.setToken(this.token);
-      token.setExpiresOn(expiresOn);
-      token.setIssuedOn(issuedOn);
-      token.setIssuedByUser(issuedByUser);
+      token.setExpires_on(expiresOn);
+      token.setIssued_on(issuedOn);
+      token.setIssued_by_user(issuedByUser);
       token.setEnabled(enabled);
-      token.setUpdatedOn(updatedOn);
-      token.setUpdatedByUser(updatedByUser);
+      token.setUpdated_on(updatedOn);
+      token.setUpdated_by_user(updatedByUser);
       return token;
     }
   }

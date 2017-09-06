@@ -35,7 +35,7 @@ import stroom.db.auth.tables.records.TokenTypesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TokenTypes extends TableImpl<TokenTypesRecord> {
 
-    private static final long serialVersionUID = -1643311652;
+    private static final long serialVersionUID = 1939786109;
 
     /**
      * The reference instance of <code>auth.token_types</code>
@@ -56,9 +56,9 @@ public class TokenTypes extends TableImpl<TokenTypesRecord> {
     public final TableField<TokenTypesRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>auth.token_types.tokenType</code>.
+     * The column <code>auth.token_types.token_type</code>.
      */
-    public final TableField<TokenTypesRecord, String> TOKENTYPE = createField("tokenType", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<TokenTypesRecord, String> TOKEN_TYPE = createField("token_type", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
      * Create a <code>auth.token_types</code> table reference

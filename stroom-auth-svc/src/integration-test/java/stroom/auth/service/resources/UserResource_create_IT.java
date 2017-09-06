@@ -14,6 +14,7 @@ import static stroom.auth.service.resources.support.HttpAsserts.assertBodyNotNul
 import static stroom.auth.service.resources.support.HttpAsserts.assertConflict;
 import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
 import static stroom.auth.service.resources.support.HttpAsserts.assertUnauthorised;
+import static stroom.auth.service.resources.support.HttpAsserts.assertUnprocessableEntity;
 
 public final class UserResource_create_IT extends Base_IT {
   @Test
@@ -42,7 +43,7 @@ public final class UserResource_create_IT extends Base_IT {
         .header("Content-Type", "application/json")
         .asString();
 
-    assertBadRequest(response);
+    assertUnprocessableEntity(response);
   }
 
   @Test

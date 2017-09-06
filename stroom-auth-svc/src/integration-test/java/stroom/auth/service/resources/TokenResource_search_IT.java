@@ -44,31 +44,48 @@ public class TokenResource_search_IT extends Base_IT{
 
   @Test
   public void multipage_search() throws UnirestException, IOException {
-    String jwsToken = authenticationManager.loginAsAdmin();
+    String securityToken = clearTokensAndLogin();
 
-    tokenManager.deleteAllTokens(jwsToken);
-
-    // We've just deleted all the tokens so we'll need to log in again.
-    String refreshedToken = authenticationManager.loginAsAdmin();
-
-    createUserAndTokens("user1" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user2" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user3" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user4" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user5" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user6" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user7" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user8" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user9" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user10" + Instant.now().toString(), refreshedToken);
-    createUserAndTokens("user11" + Instant.now().toString(), refreshedToken);
+    createUserAndTokens("user1" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user2" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user3" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user4" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user5" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user6" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user7" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user8" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user9" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user10" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user11" + Instant.now().toString(), securityToken);
 
     // We expect twice as many tokens as users because we're creating API tokens and user tokens.
-    getPageAndAssert(0, 5, 5, refreshedToken);
-    getPageAndAssert(1, 5, 5, refreshedToken);
-    getPageAndAssert(2, 5, 5, refreshedToken);
-    getPageAndAssert(3, 5, 5, refreshedToken);
-    getPageAndAssert(4, 5, 2, refreshedToken);
+    getPageAndAssert(0, 5, 5, securityToken);
+    getPageAndAssert(1, 5, 5, securityToken);
+    getPageAndAssert(2, 5, 5, securityToken);
+    getPageAndAssert(3, 5, 5, securityToken);
+    getPageAndAssert(4, 5, 2, securityToken);
+  }
+
+  @Test
+  public void order_by_token_type() throws UnirestException, IOException {
+    String securityToken = clearTokensAndLogin();
+
+    createUserAndTokens("user1" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user2" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user3" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user4" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user5" + Instant.now().toString(), securityToken);
+
+    String url = getSearchUrl(0, 5, "token_type_id");
+    HttpResponse response = Unirest
+        .get(url)
+        .header("Authorization", "Bearer " + securityToken)
+        .asString();
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody());
+    assertThat(results.size()).isEqualTo(5);
+    assertThat(response.getStatus()).isEqualTo(200);
+    results.forEach(result ->
+        assertThat(result.getToken_type()).isEqualTo(Token.TokenType.USER.getText()));
   }
 
   private void createUserAndTokens(String userEmail, String jwsToken) throws UnirestException {
@@ -99,6 +116,14 @@ public class TokenResource_search_IT extends Base_IT{
     List<Token> results = tokenManager.deserialiseTokens((String)response.getBody());
     assertThat(results.size()).isEqualTo(expectedCount);
     assertThat(response.getStatus()).isEqualTo(200);
+  }
+
+  private String clearTokensAndLogin() throws UnirestException {
+    String jwsToken = authenticationManager.loginAsAdmin();
+    tokenManager.deleteAllTokens(jwsToken);
+    // We've just deleted all the tokens so we'll need to log in again.
+    String refreshedToken = authenticationManager.loginAsAdmin();
+    return refreshedToken;
   }
 
   private static String getSearchUrl(

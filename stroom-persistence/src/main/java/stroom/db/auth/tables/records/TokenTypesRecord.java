@@ -28,7 +28,7 @@ import stroom.db.auth.tables.TokenTypes;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TokenTypesRecord extends UpdatableRecordImpl<TokenTypesRecord> implements Record2<Integer, String> {
 
-    private static final long serialVersionUID = 853684764;
+    private static final long serialVersionUID = 25939813;
 
     /**
      * Setter for <code>auth.token_types.id</code>.
@@ -45,16 +45,16 @@ public class TokenTypesRecord extends UpdatableRecordImpl<TokenTypesRecord> impl
     }
 
     /**
-     * Setter for <code>auth.token_types.tokenType</code>.
+     * Setter for <code>auth.token_types.token_type</code>.
      */
-    public void setTokentype(String value) {
+    public void setTokenType(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>auth.token_types.tokenType</code>.
+     * Getter for <code>auth.token_types.token_type</code>.
      */
-    public String getTokentype() {
+    public String getTokenType() {
         return (String) get(1);
     }
 
@@ -103,7 +103,7 @@ public class TokenTypesRecord extends UpdatableRecordImpl<TokenTypesRecord> impl
      */
     @Override
     public Field<String> field2() {
-        return TokenTypes.TOKEN_TYPES.TOKENTYPE;
+        return TokenTypes.TOKEN_TYPES.TOKEN_TYPE;
     }
 
     /**
@@ -119,7 +119,7 @@ public class TokenTypesRecord extends UpdatableRecordImpl<TokenTypesRecord> impl
      */
     @Override
     public String value2() {
-        return getTokentype();
+        return getTokenType();
     }
 
     /**
@@ -136,7 +136,7 @@ public class TokenTypesRecord extends UpdatableRecordImpl<TokenTypesRecord> impl
      */
     @Override
     public TokenTypesRecord value2(String value) {
-        setTokentype(value);
+        setTokenType(value);
         return this;
     }
 
@@ -164,10 +164,10 @@ public class TokenTypesRecord extends UpdatableRecordImpl<TokenTypesRecord> impl
     /**
      * Create a detached, initialised TokenTypesRecord
      */
-    public TokenTypesRecord(Integer id, String tokentype) {
+    public TokenTypesRecord(Integer id, String tokenType) {
         super(TokenTypes.TOKEN_TYPES);
 
         set(0, id);
-        set(1, tokentype);
+        set(1, tokenType);
     }
 }

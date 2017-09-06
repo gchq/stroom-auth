@@ -13,6 +13,10 @@ public class HttpAsserts {
     assertThat(response.getStatus()).isEqualTo(400);
   }
 
+  public static final void assertUnprocessableEntity(HttpResponse response){
+    assertThat(response.getStatus()).isEqualTo(422);
+  }
+
   public static final void assertConflict(HttpResponse response) {
     assertThat(response.getStatus()).isEqualTo(409);
   }

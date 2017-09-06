@@ -4,14 +4,14 @@
 
 CREATE TABLE token_types (
     id 				      MEDIUMINT NOT NULL AUTO_INCREMENT,
-    tokenType             VARCHAR(255) NOT NULL,
+    token_type             VARCHAR(255) NOT NULL,
     PRIMARY KEY           (id),
     UNIQUE 			      (id)
 ) ENGINE=InnoDB DEFAULT CHARSET latin1;
 
 
-INSERT INTO token_types (tokenType) VALUES ("user");
-INSERT INTO token_types (tokenType) VALUES ("api");
+INSERT INTO token_types (token_type) VALUES ("user");
+INSERT INTO token_types (token_type) VALUES ("api");
 
 CREATE TABLE tokens (
     id 				      MEDIUMINT NOT NULL AUTO_INCREMENT,
@@ -20,7 +20,7 @@ CREATE TABLE tokens (
     token                 VARCHAR(255) NOT NULL,
     expires_on            TIMESTAMP NOT NULL,
     issued_on             TIMESTAMP NOT NULL,
-    issued_by_user		  VARCHAR(255) NULL,
+    issued_by_user		  MEDIUMINT NOT NULL,
     enabled               BIT DEFAULT 1,
     updated_on 			  TIMESTAMP NULL,
     updated_by_user 	  VARCHAR(255) NULL,
