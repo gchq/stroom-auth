@@ -7,6 +7,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import org.eclipse.jetty.http.HttpStatus;
+import stroom.auth.service.resources.token.v1.SearchRequest;
 import stroom.auth.service.resources.token.v1.Token;
 import stroom.auth.service.resources.user.v1.User;
 
@@ -47,6 +48,10 @@ public class TokenManager {
 
   public final String serialiseToken(Token token) {
     return new Moshi.Builder().build().adapter(Token.class).toJson(token);
+  }
+
+  public final String serialiseSearchRequest(SearchRequest searchRequest) {
+    return new Moshi.Builder().build().adapter(SearchRequest.class).toJson(searchRequest);
   }
 
   public void setPort(int appPort) {

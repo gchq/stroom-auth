@@ -5,19 +5,22 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 import stroom.auth.service.resources.support.Base_IT;
+import stroom.auth.service.resources.token.v1.SearchRequest;
 import stroom.auth.service.resources.token.v1.Token;
 import stroom.auth.service.resources.user.v1.User;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TokenResource_search_IT extends Base_IT{
 
-  private static final String SEARCH_PARAMS = "/?page=%s&limit=%s&orderBy=%s";
-  private static final String SEARCH_PARAMS_WITH_DIRECTION = "/?page=%s&limit=%s&orderBy=%s&orderDirection=%s";
+  private static final String SEARCH_PARAMS = "/search";//?page=%s&limit=%s&orderBy=%s";
+  private static final String SEARCH_PARAMS_WITH_DIRECTION = "/search";//?page=%s&limit=%s&orderBy=%s&orderDirection=%s";
 
   @Test
   public void simple_search() throws UnirestException, IOException {
@@ -35,7 +38,7 @@ public class TokenResource_search_IT extends Base_IT{
 
     String url = getSearchUrl(0, 10, "expires_on");
     HttpResponse response = Unirest
-        .get(url)
+        .post(url)
         .header("Authorization", "Bearer " + jwsToken)
         .asString();
     List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody());
@@ -68,7 +71,7 @@ public class TokenResource_search_IT extends Base_IT{
   }
 
   @Test
-  public void order_by_token_type() throws UnirestException, IOException {
+  public void search_ordering_by_token_type() throws UnirestException, IOException {
     Token.TokenType expectedType = Token.TokenType.USER;
 
     String securityToken = orderByTokenSetup();
@@ -79,7 +82,7 @@ public class TokenResource_search_IT extends Base_IT{
   }
 
   @Test
-  public void order_by_token_type_desc() throws UnirestException, IOException {
+  public void search_ordering_by_token_type_desc() throws UnirestException, IOException {
     Token.TokenType expectedType = Token.TokenType.API;
 
     String securityToken = orderByTokenSetup();
@@ -87,6 +90,92 @@ public class TokenResource_search_IT extends Base_IT{
     List<Token> results = orderByTokenExecute(url, securityToken);
     results.forEach(result ->
         assertThat(result.getToken_type().toLowerCase()).isEqualTo(expectedType.getText().toLowerCase()));
+  }
+
+  @Test
+  public void search_on_user() throws UnirestException, IOException {
+    String securityToken = clearTokensAndLogin();
+
+    createUserAndTokens("user1_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user2_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user3_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user4_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user5_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user6_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user7_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user8_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user9_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user10_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user11_" + Instant.now().toString(), securityToken);
+
+    String url = tokenManager.getRootUrl() + SEARCH_PARAMS;
+
+    Map<String, String> filters = new HashMap<>();
+    filters.put("user_email", "user1");
+
+    SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
+        .filters(filters)
+        .limit(10)
+        .orderBy("expires_on")
+        .page(0)
+        .build();
+    String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
+
+    HttpResponse response = Unirest
+        .post(url)
+        .header("Authorization", "Bearer " + securityToken)
+        .header("Content-Type", "application/json")
+        .body(serialisedSearchRequest )
+        .asString();
+
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody());
+    assertThat(results.size()).isEqualTo(6);
+    results.forEach(result -> {
+      assertThat(result.getUser_email()).contains("user1");
+    });
+  }
+
+  @Test
+  public void search_on_enabled() throws UnirestException, IOException {
+    String securityToken = clearTokensAndLogin();
+
+    createUserAndTokens("user1_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user2_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user3_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user4_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user5_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user6_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user7_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user8_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user9_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user10_" + Instant.now().toString(), securityToken);
+    createUserAndTokens("user11_" + Instant.now().toString(), securityToken);
+
+    String url = tokenManager.getRootUrl() + SEARCH_PARAMS;
+
+    Map<String, String> filters = new HashMap<>();
+    filters.put("user_email", "user1");
+
+    SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
+        .filters(filters)
+        .limit(10)
+        .orderBy("expires_on")
+        .page(0)
+        .build();
+    String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
+
+    HttpResponse response = Unirest
+        .post(url)
+        .header("Authorization", "Bearer " + securityToken)
+        .header("Content-Type", "application/json")
+        .body(serialisedSearchRequest )
+        .asString();
+
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody());
+    assertThat(results.size()).isEqualTo(6);
+    results.forEach(result -> {
+      assertThat(result.getUser_email()).contains("user1");
+    });
   }
 
   private String orderByTokenSetup() throws UnirestException {
@@ -103,7 +192,7 @@ public class TokenResource_search_IT extends Base_IT{
 
   private List<Token> orderByTokenExecute(String url, String securityToken) throws UnirestException, IOException {
     HttpResponse response = Unirest
-        .get(url)
+        .post(url)
         .header("Authorization", "Bearer " + securityToken)
         .asString();
     List<Token> results = tokenManager.deserialiseTokens((String)response.getBody());
@@ -135,7 +224,7 @@ public class TokenResource_search_IT extends Base_IT{
   private void getPageAndAssert(int page, int limit, int expectedCount, String jwsToken) throws UnirestException, IOException {
     String url = getSearchUrl(page, limit, "expires_on");
     HttpResponse response = Unirest
-        .get(url)
+        .post(url)
         .header("Authorization", "Bearer " + jwsToken)
         .asString();
     List<Token> results = tokenManager.deserialiseTokens((String)response.getBody());
