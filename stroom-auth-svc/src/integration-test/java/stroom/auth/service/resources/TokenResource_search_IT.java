@@ -19,8 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TokenResource_search_IT extends Base_IT{
 
-  private static final String SEARCH_PARAMS = "/search";//?page=%s&limit=%s&orderBy=%s";
-  private static final String SEARCH_PARAMS_WITH_DIRECTION = "/search";//?page=%s&limit=%s&orderBy=%s&orderDirection=%s";
+  private final String url;
+
+  private TokenResource_search_IT() {
+    url = tokenManager.getRootUrl() + "/search";
+  }
 
   @Test
   public void simple_search() throws UnirestException, IOException {
@@ -36,10 +39,18 @@ public class TokenResource_search_IT extends Base_IT{
         .build();
     tokenManager.createToken(token, jwsToken);
 
-    String url = getSearchUrl(0, 10, "expires_on");
+    SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
+        .page(0)
+        .limit(10)
+        .orderBy("expires_on")
+        .build();
+    String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
+
     HttpResponse response = Unirest
         .post(url)
         .header("Authorization", "Bearer " + jwsToken)
+        .header("Content-Type", "application/json")
+        .body(serialisedSearchRequest)
         .asString();
     List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody());
     assertThat(tokens.size()).isGreaterThan(0);
@@ -108,8 +119,6 @@ public class TokenResource_search_IT extends Base_IT{
     createUserAndTokens("user10_" + Instant.now().toString(), securityToken);
     createUserAndTokens("user11_" + Instant.now().toString(), securityToken);
 
-    String url = tokenManager.getRootUrl() + SEARCH_PARAMS;
-
     Map<String, String> filters = new HashMap<>();
     filters.put("user_email", "user1");
 
@@ -136,6 +145,7 @@ public class TokenResource_search_IT extends Base_IT{
   }
 
   @Test
+  //TODO finish this
   public void search_on_enabled() throws UnirestException, IOException {
     String securityToken = clearTokensAndLogin();
 
@@ -240,22 +250,22 @@ public class TokenResource_search_IT extends Base_IT{
     return refreshedToken;
   }
 
-  private static String getSearchUrl(
-      int page,
-      int limit,
-      String orderBy){
-    return String.format(
-        tokenManager.getRootUrl() + SEARCH_PARAMS,
-        page, limit, orderBy);
-  }
+//  private static String getSearchUrl(
+//      int page,
+//      int limit,
+//      String orderBy){
+//    return String.format(
+//        tokenManager.getRootUrl() + SEARCH_PARAMS,
+//        page, limit, orderBy);
+//  }
 
-  private static String getSearchUrl(
-      int page,
-      int limit,
-      String orderBy,
-      String orderDirection){
-    return String.format(
-        tokenManager.getRootUrl() + SEARCH_PARAMS_WITH_DIRECTION,
-        page, limit, orderBy, orderDirection);
-  }
+//  private static String getSearchUrl(
+//      int page,
+//      int limit,
+//      String orderBy,
+//      String orderDirection){
+//    return String.format(
+//        tokenManager.getRootUrl() + SEARCH_PARAMS_WITH_DIRECTION,
+//        page, limit, orderBy, orderDirection);
+//  }
 }
