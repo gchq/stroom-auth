@@ -2,6 +2,12 @@ package stroom.auth.service.resources.token.v1;
 
 import javax.annotation.Nullable;
 
+/**
+ * This POJO binds to the response from the database, and to the JSON.
+ *
+ * The names are database-style to reduce mapping code. This looks weird in Java but it's sensible for the database
+ * and it's sensible for the json.
+ */
 public class Token {
   @Nullable
   private int id;

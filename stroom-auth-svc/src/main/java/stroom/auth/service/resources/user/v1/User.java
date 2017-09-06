@@ -8,7 +8,12 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
-//TODO: Improve naming in this class - it was generated
+/**
+ * This POJO binds to the response from the database, and to the JSON.
+ *
+ * The names are database-style to reduce mapping code. This looks weird in Java but it's sensible for the database
+ * and it's sensible for the json.
+ */
 public final class User {
   @Nullable
   private Integer id;
