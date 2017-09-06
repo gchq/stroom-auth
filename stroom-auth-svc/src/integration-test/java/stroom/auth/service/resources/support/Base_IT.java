@@ -19,12 +19,14 @@ public abstract class Base_IT {
 
   protected static UserManager userManager = new UserManager();
   protected static AuthenticationManager authenticationManager = new AuthenticationManager();
+  protected static TokenManager tokenManager = new TokenManager();
 
   @BeforeClass
   public static final void setupClass() throws InterruptedException {
     appPort = appRule.getLocalPort();
     authenticationManager.setPort(appPort);
     userManager.setPort(appPort);
+    tokenManager.setPort(appPort);
 
     adminPort = appRule.getAdminPort();
     BASE_TASKS_URL = "http://localhost:" + adminPort + "/tasks/";

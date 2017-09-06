@@ -17,7 +17,7 @@ public class UserManager {
   private String meUrl;
 
   public final int createUser(User user, String jwsToken) throws UnirestException {
-    String serializedUser = this.userMapper().toJson(user);
+    String serializedUser = serialiseUser(user);
     HttpResponse response = Unirest
         .post(this.rootUrl)
         .header("Content-Type", "application/json")
@@ -46,12 +46,12 @@ public class UserManager {
     } else return null;
   }
 
-  public final List<User> parseUsers(String body) throws IOException {
+  public final List<User> deserialiseUsers(String body) throws IOException {
     return (List<User>) userListMapper().fromJson(body);
   }
 
   public final String serialiseUser(User user) {
-    return userMapper().toJson(user);
+    return new Moshi.Builder().build().adapter(User.class).toJson(user);
   }
 
   private final JsonAdapter userListMapper() {
@@ -59,10 +59,6 @@ public class UserManager {
     ParameterizedType type = Types.newParameterizedType(List.class, User.class);
     JsonAdapter<List<User>> jsonAdapter = moshi.adapter(type);
     return jsonAdapter;
-  }
-
-  private static final JsonAdapter userMapper() {
-    return new Moshi.Builder().build().adapter(User.class);
   }
 
   public void setPort(int appPort) {

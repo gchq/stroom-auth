@@ -15,6 +15,8 @@ import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
 import stroom.db.DefaultCatalog;
+import stroom.db.auth.tables.TokenTypes;
+import stroom.db.auth.tables.Tokens;
 import stroom.db.auth.tables.Users;
 
 
@@ -31,12 +33,22 @@ import stroom.db.auth.tables.Users;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Auth extends SchemaImpl {
 
-    private static final long serialVersionUID = -902370245;
+    private static final long serialVersionUID = -556755999;
 
     /**
      * The reference instance of <code>auth</code>
      */
     public static final Auth AUTH = new Auth();
+
+    /**
+     * The table <code>auth.tokens</code>.
+     */
+    public final Tokens TOKENS = stroom.db.auth.tables.Tokens.TOKENS;
+
+    /**
+     * The table <code>auth.token_types</code>.
+     */
+    public final TokenTypes TOKEN_TYPES = stroom.db.auth.tables.TokenTypes.TOKEN_TYPES;
 
     /**
      * The table <code>auth.users</code>.
@@ -68,6 +80,8 @@ public class Auth extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            Tokens.TOKENS,
+            TokenTypes.TOKEN_TYPES,
             Users.USERS);
     }
 }

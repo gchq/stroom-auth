@@ -6,6 +6,8 @@ package stroom.db.auth;
 
 import javax.annotation.Generated;
 
+import stroom.db.auth.tables.TokenTypes;
+import stroom.db.auth.tables.Tokens;
 import stroom.db.auth.tables.Users;
 
 
@@ -21,6 +23,16 @@ import stroom.db.auth.tables.Users;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>auth.tokens</code>.
+     */
+    public static final Tokens TOKENS = stroom.db.auth.tables.Tokens.TOKENS;
+
+    /**
+     * The table <code>auth.token_types</code>.
+     */
+    public static final TokenTypes TOKEN_TYPES = stroom.db.auth.tables.TokenTypes.TOKEN_TYPES;
 
     /**
      * The table <code>auth.users</code>.

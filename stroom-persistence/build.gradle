@@ -38,7 +38,8 @@ dependencies {
 //            name = 'org.jooq.util.DefaultGenerator'
 //            database {
 //                name = 'org.jooq.util.mariadb.MariaDBDatabase'
-//                includes = 'users'
+//                // Add anything you want included in generation below
+//                includes = 'users|tokens|token_types'
 //                // We don't want to include flyway versioning
 //                excludes = 'schema_version'
 //            }

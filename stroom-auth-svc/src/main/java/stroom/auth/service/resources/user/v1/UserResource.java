@@ -89,7 +89,7 @@ public final class UserResource {
   public final Response createUser(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
       @Context @NotNull DSLContext database,
-      @Nullable User user) {
+      @NotNull User user) {
     // Validate
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);

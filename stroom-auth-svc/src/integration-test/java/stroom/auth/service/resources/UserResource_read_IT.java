@@ -37,7 +37,7 @@ public final class UserResource_read_IT extends Base_IT {
         .header("Authorization", "Bearer " + jwsToken)
         .asString();
     String body = (String) response.getBody();
-    List<User> user = userManager.parseUsers(body);
+    List<User> user = userManager.deserialiseUsers(body);
     if (user != null) {
       assertThat(user.get(0).getEmail()).isEqualTo("admin");
     } else fail("No users found");
