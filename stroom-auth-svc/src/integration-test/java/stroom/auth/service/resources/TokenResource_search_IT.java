@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TokenResource_search_IT extends Base_IT{
 
   private static final String SEARCH_PARAMS = "/?page=%s&limit=%s&orderBy=%s";
+  private static final String SEARCH_PARAMS_WITH_DIRECTION = "/?page=%s&limit=%s&orderBy=%s&orderDirection=%s";
 
   @Test
   public void simple_search() throws UnirestException, IOException {
@@ -68,6 +69,27 @@ public class TokenResource_search_IT extends Base_IT{
 
   @Test
   public void order_by_token_type() throws UnirestException, IOException {
+    Token.TokenType expectedType = Token.TokenType.USER;
+
+    String securityToken = orderByTokenSetup();
+    String url = getSearchUrl(0, 5, "token_type_id");
+    List<Token> results = orderByTokenExecute(url, securityToken);
+    results.forEach(result ->
+        assertThat(result.getToken_type()).isEqualTo(expectedType.getText()));
+  }
+
+  @Test
+  public void order_by_token_type_desc() throws UnirestException, IOException {
+    Token.TokenType expectedType = Token.TokenType.API;
+
+    String securityToken = orderByTokenSetup();
+    String url = getSearchUrl(0, 5, "token_type_id", "desc");
+    List<Token> results = orderByTokenExecute(url, securityToken);
+    results.forEach(result ->
+        assertThat(result.getToken_type().toLowerCase()).isEqualTo(expectedType.getText().toLowerCase()));
+  }
+
+  private String orderByTokenSetup() throws UnirestException {
     String securityToken = clearTokensAndLogin();
 
     createUserAndTokens("user1" + Instant.now().toString(), securityToken);
@@ -76,7 +98,10 @@ public class TokenResource_search_IT extends Base_IT{
     createUserAndTokens("user4" + Instant.now().toString(), securityToken);
     createUserAndTokens("user5" + Instant.now().toString(), securityToken);
 
-    String url = getSearchUrl(0, 5, "token_type_id");
+    return securityToken;
+  }
+
+  private List<Token> orderByTokenExecute(String url, String securityToken) throws UnirestException, IOException {
     HttpResponse response = Unirest
         .get(url)
         .header("Authorization", "Bearer " + securityToken)
@@ -84,8 +109,8 @@ public class TokenResource_search_IT extends Base_IT{
     List<Token> results = tokenManager.deserialiseTokens((String)response.getBody());
     assertThat(results.size()).isEqualTo(5);
     assertThat(response.getStatus()).isEqualTo(200);
-    results.forEach(result ->
-        assertThat(result.getToken_type()).isEqualTo(Token.TokenType.USER.getText()));
+
+    return results;
   }
 
   private void createUserAndTokens(String userEmail, String jwsToken) throws UnirestException {
@@ -133,5 +158,15 @@ public class TokenResource_search_IT extends Base_IT{
     return String.format(
         tokenManager.getRootUrl() + SEARCH_PARAMS,
         page, limit, orderBy);
+  }
+
+  private static String getSearchUrl(
+      int page,
+      int limit,
+      String orderBy,
+      String orderDirection){
+    return String.format(
+        tokenManager.getRootUrl() + SEARCH_PARAMS_WITH_DIRECTION,
+        page, limit, orderBy, orderDirection);
   }
 }
