@@ -18,14 +18,5 @@ FROM dependencies AS build
 COPY --from=dependencies /root/app/node_modules /root/app/node_modules
 COPY src src
 COPY public public
-COPY .env.production .env.production
-RUN yarn build
-
-
-# ---- Release ----
-FROM base AS release
-# This path is where the app is mounted in the image
-RUN mkdir /root/app/auth
-COPY --from=build /root/app/build/. ./auth
 EXPOSE 5000
-CMD serve --single --cors .
+CMD yarn build && serve --single --cors ./build
