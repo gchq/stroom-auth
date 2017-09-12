@@ -1,14 +1,24 @@
 package stroom.auth.service.resources.token.v1;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
+import javax.validation.constraints.Pattern;
 import java.util.Map;
 
 public class SearchRequest {
   @NotNull private int page;
   @NotNull private int limit;
+
+  @Nullable
+  @Pattern(
+      regexp = "^enabled$|^user_email$|^issued_by_user$|^token$|^token_type$|^updated_by_user$|^expires_on$|^issued_on$|^updated_on$",
+      message = "orderBy must be one of: 'enabled', 'user_email', 'issued_by_user', 'token', 'token_type', 'updated_by_user', 'expires_on', 'issued_on', 'updated_on'")
   private String orderBy;
+
+  @Nullable
+  @Pattern(regexp = "^asc$|^desc$", message = "orderDirection must be 'asc' or 'desc'")
   private String orderDirection;
+
   private Map<String, String> filters;
 
   public int getPage() {

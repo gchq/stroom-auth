@@ -131,7 +131,7 @@ public class Token {
 
   public enum TokenType {
     USER("user"),
-    API("API");
+    API("api");
 
     private String tokenTypeText;
 

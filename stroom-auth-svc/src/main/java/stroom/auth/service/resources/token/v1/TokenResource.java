@@ -10,6 +10,7 @@ import org.jooq.Field;
 import org.jooq.JSONFormat;
 import org.jooq.Record11;
 import org.jooq.Result;
+import org.jooq.SelectJoinStep;
 import org.jooq.SortField;
 import org.jooq.Table;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import stroom.db.auth.tables.records.TokensRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -37,6 +39,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static stroom.db.auth.Tables.TOKENS;
 import static stroom.db.auth.Tables.TOKEN_TYPES;
@@ -59,13 +62,19 @@ public class TokenResource {
     this.config = config;
   }
 
+  /**
+   * Default ordering is by ISSUED_ON date, in descending order so the most recent tokens are shown first.
+   * If orderBy is specified but orderDirection is not this will default to ascending.
+   *
+   * The user must have the 'Manage Users' permission to call this.
+   */
   @POST
   @Path("/search")
   @Timed
   public final Response search(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
       @Context @NotNull DSLContext database,
-      @NotNull SearchRequest searchRequest) {
+      @NotNull @Valid SearchRequest searchRequest) {
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
 
@@ -81,20 +90,16 @@ public class TokenResource {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
-    // Validate orderDirection field
-    if(!Strings.isNullOrEmpty(orderDirection) && !orderDirection.equals("asc") && !orderDirection.equals("desc")){
-      return Response.status(Response.Status.BAD_REQUEST).entity("Invalid orderDirection: " + orderDirection).build();
-    }
-
-    // Validate orderBy field
-    if(TOKENS.field(orderBy) == null){
-      return Response.status(Response.Status.BAD_REQUEST).entity("Invalid orderBy: " + orderBy).build();
-    }
-
-    // Figure out ordering field
-    SortField orderByField = TOKENS.field(orderBy).asc();
-    if(!Strings.isNullOrEmpty(orderDirection)) {
-      orderByField = orderDirection.equals("asc") ? TOKENS.field(orderBy).asc() : TOKENS.field(orderBy).desc() ;
+    // Validate filters
+    if(filters != null) {
+      for (String key : filters.keySet()) {
+        switch (key) {
+          case "expires_on":
+          case "issued_on":
+          case "updated_on":
+            return Response.status(Response.Status.BAD_REQUEST).entity("Filtering by date is not supported.").build();
+        }
+      }
     }
 
     // We need these aliased tables because we're joining tokens to users twice.
@@ -102,61 +107,36 @@ public class TokenResource {
     Users tokenOwnerUsers = USERS.as("tokenOwnerUsers");
     Users updatingUsers = USERS.as("updatingUsers");
 
-    // We need to set up conditions
-    List<Condition> conditions = new ArrayList<>();
-    if(filters != null){
-      for(String key : filters.keySet()){
-        Condition condition = null;
-        switch(key) {
-          case "enabled":
-            condition = TOKENS.ENABLED.eq(Boolean.valueOf(filters.get(key)));
-            break;
-          case "expires_on":
-            // TODO: How do we match on this? Must match exactly? Must match part of the date? What if the given date is invalid?
-            //       Is this what a user would want? Maybe they want greater than or less than? This would need additional UI
-            //       We can't sensible implement anything unless we have a better idea of requirements.
-            break;
-          case "user_email":
-            condition = tokenOwnerUsers.EMAIL.contains(filters.get(key));
-            break;
-          case "issued_on":
-            //TODO: The same issues as applied to "expires_on" applies to this.
-            break;
-          case "issued_by_user":
-            condition = issueingUsers.EMAIL.contains(filters.get(key));
-            break;
-          case "token":
-            // It didn't initally make sense that one might want to filter on token, because it's encrypted.
-            // But if someone has a token copy/pasting some or all of it into the search might be the
-            // fastest way to find the token.
-            condition = TOKENS.TOKEN.contains(filters.get(key));
-            break;
-          case "token_type":
-            condition = TOKEN_TYPES.TOKEN_TYPE.contains(filters.get(key));
-            break;
-          case "updated_by_user":
-            condition = updatingUsers.EMAIL.contains(filters.get(key));
-            break;
-          case "updated_on":
-            //TODO: The same issues as applied to "expires_on" applies to this.
-            break;
-          case "user_id":
-
-          default:
-            return Response.status(Response.Status.BAD_REQUEST).entity("Unknown filter: " + filters.get(key)).build();
-        }
-
-        conditions.add(condition);
+    Field userEmail = tokenOwnerUsers.EMAIL.as("user_email");
+    // Special cases
+    Optional<SortField> orderByField = Optional.empty();
+    Optional<Field> specialCaseOrderByField = Optional.empty();
+    if(orderBy != null && orderBy.equals("user_email")){
+      // Why is this a special case? Because the property on the target table is 'email' but the param is 'user_email'
+      // 'user_email' is a clearer param
+      specialCaseOrderByField = Optional.of(userEmail);
+    }
+    else {
+      orderByField = getOrderBy(orderBy, orderDirection);
+      if (!orderByField.isPresent()) {
+        return Response.status(Response.Status.BAD_REQUEST).entity("Invalid orderBy: " + orderBy).build();
       }
     }
 
+    Optional<List<Condition>> conditions;
+    try {
+      conditions = getConditions(filters, issueingUsers, tokenOwnerUsers, updatingUsers);
+    } catch(Exception ex){
+      return Response.status(422).entity(ex.getMessage()).build();
+    }
+
     int offset = limit * page;
-    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> results = database
-        .select(
+    SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
+        database.select(
             TOKENS.ID.as("id"),
             TOKENS.ENABLED.as("enabled"),
             TOKENS.EXPIRES_ON.as("expires_on"),
-            tokenOwnerUsers.EMAIL.as("user_email"),
+            userEmail,
             TOKENS.ISSUED_ON.as("issued_on"),
             issueingUsers.EMAIL.as("issued_by_user"),
             TOKENS.TOKEN.as("token"),
@@ -166,19 +146,34 @@ public class TokenResource {
             TOKENS.USER_ID.as("user_id"))
         .from(
             TOKENS
-              .join(TOKEN_TYPES)
+                .join(TOKEN_TYPES)
                 .on(TOKENS.TOKEN_TYPE_ID.eq(TOKEN_TYPES.ID))
-              .join(issueingUsers)
+                .join(issueingUsers)
                 .on(TOKENS.ISSUED_BY_USER.eq(issueingUsers.ID))
-              .join(tokenOwnerUsers)
-                .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID)))
-              .join(updatingUsers)
-                .on(TOKENS.ISSUED_BY_USER.eq(updatingUsers.ID))
-        .where(conditions)
-        .orderBy(orderByField, TOKENS.ID.asc())
-        .limit(limit)
-        .offset(offset)
-        .fetch();
+                .join(tokenOwnerUsers)
+                .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID))
+                .join(updatingUsers)
+                .on(TOKENS.ISSUED_BY_USER.eq(updatingUsers.ID)));
+
+    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> results;
+    if(specialCaseOrderByField.isPresent()){
+      results =
+          selectFrom
+              .where(conditions.get())
+              .orderBy(specialCaseOrderByField.get())
+              .limit(limit)
+              .offset(offset)
+              .fetch();
+    }
+    else{
+      results =
+          selectFrom
+              .where(conditions.get())
+              .orderBy(orderByField.get(), TOKENS.ID.asc())
+              .limit(limit)
+              .offset(offset)
+              .fetch();
+    }
 
     String serialisedResults = results.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
 
@@ -250,4 +245,102 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity("All tokens deleted").build();
   }
 
+  private static Optional<SortField> getOrderBy(String orderBy, String orderDirection) {
+    // We might be ordering by TOKENS or USERS or TOKEN_TYPES - we join and select on all
+    SortField orderByField;
+    if(orderBy != null){
+      // We have an orderBy...
+      if(TOKENS.field(orderBy) != null) {
+        //... and this orderBy is from TOKENS...
+        if (Strings.isNullOrEmpty(orderDirection)) {
+          // ... but we don't have an orderDirection
+          orderByField = TOKENS.field(orderBy).asc();
+        } else {
+          // ... and we do have an order direction
+          orderByField = orderDirection.toLowerCase().equals("asc") ? TOKENS.field(orderBy).asc() : TOKENS.field(orderBy).desc();
+        }
+      }
+      else if(USERS.field(orderBy) != null){
+        //... and this orderBy is from USERS
+        if (Strings.isNullOrEmpty(orderDirection)) {
+          //... but we don't have an orderDirection
+          orderByField = USERS.field(orderBy).asc();
+        } else {
+          // ... and we do have an order direction
+          orderByField = orderDirection.toLowerCase().equals("asc") ? USERS.field(orderBy).asc() : USERS.field(orderBy).desc();
+        }
+      }
+      else if(TOKEN_TYPES.field(orderBy) != null){
+        //... and this orderBy is from TOKEN_TYPES
+        if (Strings.isNullOrEmpty(orderDirection)) {
+          //... but we don't have an orderDirection
+          orderByField = TOKEN_TYPES.field(orderBy).asc();
+        } else {
+          // ... and we do have an order direction
+          orderByField = orderDirection.toLowerCase().equals("asc") ? TOKEN_TYPES.field(orderBy).asc() : TOKEN_TYPES.field(orderBy).desc();
+        }
+      }
+      else {
+        // ... but we couldn't match it to anything
+        return Optional.empty();
+      }
+    }
+    else{
+      // We don't have an orderBy so we'll use the default ordering
+      orderByField = TOKENS.ISSUED_ON.desc();
+    }
+    return Optional.of(orderByField);
+  }
+
+  /**
+   * How do we match on dates? Must match exactly? Must match part of the date? What if the given date is invalid?
+   * Is this what a user would want? Maybe they want greater than or less than? This would need additional UI
+   * For now we can't sensible implement anything unless we have a better idea of requirements.
+   */
+  private static Optional<List<Condition>> getConditions(Map<String, String> filters, Users issueingUsers,
+                                                         Users tokenOwnerUsers, Users updatingUsers) throws Exception {
+    // We need to set up conditions
+    List<Condition> conditions = new ArrayList<>();
+    if(filters != null){
+      for(String key : filters.keySet()){
+        Condition condition = null;
+        switch(key) {
+          case "enabled":
+            condition = TOKENS.ENABLED.eq(Boolean.valueOf(filters.get(key)));
+            break;
+          case "expires_on":
+            throw new Exception("Unsupported filter: " + key);
+          case "user_email":
+            condition = tokenOwnerUsers.EMAIL.contains(filters.get(key));
+            break;
+          case "issued_on":
+            throw new Exception("Unsupported filter: " + key);
+          case "issued_by_user":
+            condition = issueingUsers.EMAIL.contains(filters.get(key));
+            break;
+          case "token":
+            // It didn't initally make sense that one might want to filter on token, because it's encrypted.
+            // But if someone has a token copy/pasting some or all of it into the search might be the
+            // fastest way to find the token.
+            condition = TOKENS.TOKEN.contains(filters.get(key));
+            break;
+          case "token_type":
+            condition = TOKEN_TYPES.TOKEN_TYPE.contains(filters.get(key));
+            break;
+          case "updated_by_user":
+            condition = updatingUsers.EMAIL.contains(filters.get(key));
+            break;
+          case "updated_on":
+            throw new Exception("Unsupported filter: " + key);
+          case "user_id":
+            throw new Exception("Unsupported filter: " + key);
+          default:
+            throw new Exception("Unknown filter: " + key);
+        }
+
+        conditions.add(condition);
+      }
+    }
+    return Optional.of(conditions);
+  }
 }
