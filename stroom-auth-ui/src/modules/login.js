@@ -220,7 +220,7 @@ function processToken(token, userEmail, dispatch, rememberMe, referrer){
 
 export const canManageUsers = (jwsToken) => {
   return (dispatch) => {
-    var canManageUsersUrl = process.env.REACT_APP_STROOM_URL + '/api/authorisation/v1/canManageUsers'
+    var canManageUsersUrl = process.env.REACT_APP_AUTHORISATION_URL + '/canManageUsers'
     return fetch(canManageUsersUrl, {
         headers: {
           'Accept': 'application/json',

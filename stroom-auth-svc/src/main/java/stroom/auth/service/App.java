@@ -93,16 +93,14 @@ public final class App extends Application<Config> {
   private static final void configureCors(Environment environment) {
     Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
     cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, new String[]{"/*"});
-    cors.setInitParameter("allowedMethods", "GET,PUT,POST,DELETE,OPTIONS");
-    cors.setInitParameter("allowedOrigins", "*");
-    cors.setInitParameter("Access-Control-Allow-Origin", "*");
-    cors.setInitParameter("allowedHeaders", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin");
-    cors.setInitParameter("allowCredentials", "true");
+    cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS");
+    cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+    cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "*");
   }
 
   private static final void migrate(Config config, Environment environment) {
     ManagedDataSource dataSource = config.getDataSourceFactory().build(environment.metrics(), "flywayDataSource");
-    Flyway flyway = config.getFlywayFactory().build((DataSource) dataSource);
+    Flyway flyway = config.getFlywayFactory().build(dataSource);
     flyway.migrate();
   }
 }

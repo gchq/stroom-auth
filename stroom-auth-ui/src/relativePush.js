@@ -6,6 +6,6 @@ export const relativePush = (path) => {
 }
 
 export const relativePath = (path) => {
-  const relativePath = process.env.REACT_APP_ROOT_PATH + path
-  return relativePath
+  const relPath = process.env.REACT_APP_ROOT_PATH + path
+  return relPath
 }
