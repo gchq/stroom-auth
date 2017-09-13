@@ -5,12 +5,8 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import stroom.auth.service.resources.support.Base_IT;
 import stroom.auth.service.resources.token.v1.SearchRequest;
 import stroom.auth.service.resources.token.v1.Token;
-import stroom.auth.service.resources.user.v1.User;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -23,8 +19,7 @@ import static org.assertj.core.util.Sets.newLinkedHashSet;
 import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
 import static stroom.auth.service.resources.support.HttpAsserts.assertUnprocessableEntity;
 
-public class TokenResource_search_IT extends Base_IT {
-  private final String url = tokenManager.getRootUrl() + "/search";
+public class TokenResource_search_IT extends TokenResource_IT {
 
   @Test
   public void simple_search() throws UnirestException, IOException {
@@ -48,7 +43,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + jwsToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
@@ -101,7 +96,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
@@ -134,7 +129,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
@@ -168,7 +163,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
@@ -254,7 +249,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest )
@@ -296,7 +291,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
@@ -326,25 +321,6 @@ public class TokenResource_search_IT extends Base_IT {
     assertFilterValidity("updated_by_user", true, securityToken);
   }
 
-  private void createUserAndTokens(String userEmail, String jwsToken) throws UnirestException {
-    userManager.createUser(new User(userEmail, "password"), jwsToken);
-    createToken(jwsToken, userEmail, Token.TokenType.USER);
-    createToken(jwsToken, userEmail, Token.TokenType.API);
-  }
-
-  private void createToken(String jwsToken, String userEmail, Token.TokenType tokenType) throws UnirestException {
-    Token token = new Token.TokenBuilder()
-        .token(jwsToken)
-        .tokenType(tokenType.getText())
-        .enabled(true)
-        .expiresOn(Instant.now().plusSeconds(604800).toString())
-        .issuedOn(Instant.now().toString())
-        .userEmail(userEmail)
-        .build();
-
-    int id = tokenManager.createToken(token, jwsToken);
-  }
-
   private void getPageAndAssert(int page, int limit, int expectedCount, String jwsToken) throws UnirestException, IOException {
     SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
         .limit(limit)
@@ -353,7 +329,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + jwsToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest )
@@ -362,14 +338,6 @@ public class TokenResource_search_IT extends Base_IT {
     List<Token> results = tokenManager.deserialiseTokens((String)response.getBody());
     assertThat(results.size()).isEqualTo(expectedCount);
     assertThat(response.getStatus()).isEqualTo(200);
-  }
-
-  private String clearTokensAndLogin() throws UnirestException {
-    String jwsToken = authenticationManager.loginAsAdmin();
-    tokenManager.deleteAllTokens(jwsToken);
-    // We've just deleted all the tokens so we'll need to log in again.
-    String refreshedToken = authenticationManager.loginAsAdmin();
-    return refreshedToken;
   }
 
   private void assertOrderDirectionValidity(String orderDirection, boolean isValid, String securityToken) throws UnirestException {
@@ -382,7 +350,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
@@ -406,7 +374,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
@@ -432,7 +400,7 @@ public class TokenResource_search_IT extends Base_IT {
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
     HttpResponse response = Unirest
-        .post(url)
+        .post(searchUrl)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)

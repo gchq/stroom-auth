@@ -8,6 +8,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.JSONFormat;
+import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Result;
 import org.jooq.SelectJoinStep;
@@ -27,8 +28,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -132,28 +135,7 @@ public class TokenResource {
 
     int offset = limit * page;
     SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
-        database.select(
-            TOKENS.ID.as("id"),
-            TOKENS.ENABLED.as("enabled"),
-            TOKENS.EXPIRES_ON.as("expires_on"),
-            userEmail,
-            TOKENS.ISSUED_ON.as("issued_on"),
-            issueingUsers.EMAIL.as("issued_by_user"),
-            TOKENS.TOKEN.as("token"),
-            TOKEN_TYPES.TOKEN_TYPE.as("token_type"),
-            TOKENS.UPDATED_BY_USER.as("updated_by_user"),
-            TOKENS.UPDATED_ON.as("updated_on"),
-            TOKENS.USER_ID.as("user_id"))
-        .from(
-            TOKENS
-                .join(TOKEN_TYPES)
-                .on(TOKENS.TOKEN_TYPE_ID.eq(TOKEN_TYPES.ID))
-                .join(issueingUsers)
-                .on(TOKENS.ISSUED_BY_USER.eq(issueingUsers.ID))
-                .join(tokenOwnerUsers)
-                .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID))
-                .join(updatingUsers)
-                .on(TOKENS.ISSUED_BY_USER.eq(updatingUsers.ID)));
+        getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
 
     Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> results;
     if(specialCaseOrderByField.isPresent()){
@@ -192,12 +174,16 @@ public class TokenResource {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
-    int userId = database
+    Record1<Integer> userRecord = database
         .select(USERS.ID)
         .from(USERS)
         .where(USERS.EMAIL.eq(token.getUser_email()))
-        .fetchOne()
-        .get(USERS.ID);
+        .fetchOne();
+    if(userRecord == null){
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("Cannot find user to associate with this token!").build();
+    }
+    int userId = userRecord.get(USERS.ID);
 
     int issueingUserId = database
         .select(USERS.ID)
@@ -212,8 +198,6 @@ public class TokenResource {
         .where(TOKEN_TYPES.TOKEN_TYPE.eq(token.getToken_type()))
         .fetchOne()
         .get(TOKEN_TYPES.ID);
-
-
 
     TokensRecord tokensRecord = (TokensRecord) database
         .insertInto((Table) TOKENS)
@@ -244,6 +228,92 @@ public class TokenResource {
 
     return Response.status(Response.Status.OK).entity("All tokens deleted").build();
   }
+
+  @DELETE
+  @Path("/{id}")
+  @Timed
+  public final Response delete(
+      @Auth @NotNull ServiceUser authenticatedServiceUser,
+      @Context @NotNull DSLContext database,
+      @PathParam("id") int tokenId){
+
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    }
+
+    database.deleteFrom(TOKENS).where(TOKENS.ID.eq(tokenId)).execute();
+
+    return Response.status(Response.Status.OK).entity("Deleted token").build();
+  }
+
+  @GET
+  @Path("/{id}")
+  @Timed
+  public final Response read(
+      @Auth @NotNull ServiceUser authenticatedServiceUser,
+      @Context @NotNull DSLContext database,
+      @PathParam("id") int tokenId){
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    }
+    // We need these aliased tables because we're joining tokens to users twice.
+    Users issueingUsers = USERS.as("issueingUsers");
+    Users tokenOwnerUsers = USERS.as("tokenOwnerUsers");
+    Users updatingUsers = USERS.as("updatingUsers");
+
+    Field userEmail = tokenOwnerUsers.EMAIL.as("user_email");
+    SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
+        getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
+
+    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
+        result = selectFrom
+        .where(new Condition[]{TOKENS.ID.eq(Integer.valueOf(tokenId))})
+        .fetch();
+
+    if(result.isEmpty()){
+      return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    // We only need to check auth permissions if the user is trying to access a different user.
+    String tokenUser = (String)result.get(0).get("user_email");
+    boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(tokenUser);
+    if (!isUserAccessingThemselves) {
+      if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+      }
+    }
+
+    String serialisedResults = result.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
+    return Response.status(Response.Status.OK).entity(serialisedResults).build();
+  }
+
+  private static SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> getSelectFrom(DSLContext database, Users issueingUsers, Users tokenOwnerUsers, Users updatingUsers, Field userEmail){
+    SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
+        database.select(
+            TOKENS.ID.as("id"),
+            TOKENS.ENABLED.as("enabled"),
+            TOKENS.EXPIRES_ON.as("expires_on"),
+            userEmail,
+            TOKENS.ISSUED_ON.as("issued_on"),
+            issueingUsers.EMAIL.as("issued_by_user"),
+            TOKENS.TOKEN.as("token"),
+            TOKEN_TYPES.TOKEN_TYPE.as("token_type"),
+            TOKENS.UPDATED_BY_USER.as("updated_by_user"),
+            TOKENS.UPDATED_ON.as("updated_on"),
+            TOKENS.USER_ID.as("user_id"))
+            .from(
+                TOKENS
+                    .join(TOKEN_TYPES)
+                    .on(TOKENS.TOKEN_TYPE_ID.eq(TOKEN_TYPES.ID))
+                    .join(issueingUsers)
+                    .on(TOKENS.ISSUED_BY_USER.eq(issueingUsers.ID))
+                    .join(tokenOwnerUsers)
+                    .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID))
+                    .join(updatingUsers)
+                    .on(TOKENS.ISSUED_BY_USER.eq(updatingUsers.ID)));
+    return selectFrom;
+  }
+
 
   private static Optional<SortField> getOrderBy(String orderBy, String orderDirection) {
     // We might be ordering by TOKENS or USERS or TOKEN_TYPES - we join and select on all
