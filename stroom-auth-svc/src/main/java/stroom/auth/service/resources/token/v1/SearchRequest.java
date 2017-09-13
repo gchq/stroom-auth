@@ -19,6 +19,7 @@ public class SearchRequest {
   @Pattern(regexp = "^asc$|^desc$", message = "orderDirection must be 'asc' or 'desc'")
   private String orderDirection;
 
+  @Nullable
   private Map<String, String> filters;
 
   public int getPage() {
