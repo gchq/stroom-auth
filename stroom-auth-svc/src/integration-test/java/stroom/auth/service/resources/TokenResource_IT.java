@@ -25,7 +25,7 @@ public abstract class TokenResource_IT extends Base_IT {
     createToken(jwsToken, userEmail, Token.TokenType.API);
   }
 
-  protected void createToken(String jwsToken, String userEmail, Token.TokenType tokenType) throws UnirestException {
+  protected int createToken(String jwsToken, String userEmail, Token.TokenType tokenType) throws UnirestException {
     Token token = new Token.TokenBuilder()
         .token(jwsToken)
         .tokenType(tokenType.getText())
@@ -36,5 +36,6 @@ public abstract class TokenResource_IT extends Base_IT {
         .build();
 
     int id = tokenManager.createToken(token, jwsToken);
+    return id;
   }
 }

@@ -32,6 +32,14 @@ public class TokenManager {
 
     return Integer.parseInt((String) response.getBody());
   }
+  public void deleteToken(int id, String securityToken) throws UnirestException {
+    HttpResponse response = Unirest
+        .delete(this.rootUrl + "/" + id)
+        .header("Content-Type", "application/json")
+        .header("Authorization", "Bearer " + securityToken)
+        .asString();
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
+  }
 
   public final void deleteAllTokens(String jwsToken) throws UnirestException {
     HttpResponse response = Unirest

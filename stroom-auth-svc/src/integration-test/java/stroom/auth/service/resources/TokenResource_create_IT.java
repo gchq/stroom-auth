@@ -14,6 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.auth.service.resources.support.HttpAsserts.assertBadRequest;
 import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
 
+/**
+ * TODO: create with issued date in the past; create with expiry date in the past; create with invalid token type
+ */
 public class TokenResource_create_IT extends TokenResource_IT {
 
   @Test
