@@ -20,6 +20,7 @@ import logo from './logo.svg'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import {UserCreate, UserEdit, UserSearch} from '../../containers/user'
+import {TokenSearch} from '../../containers/token'
 import NewUser from '../../containers/newUser'
 import PathNotFound from '../../containers/pathNotFound'
 import ResetPassword from '../../containers/resetPassword'
@@ -103,6 +104,7 @@ class App extends Component {
                     state: {referrer:relativePath('/userSearch')}}}/>
                 )
               )}/>
+
               <Route exact path={relativePath("/changepassword")} render={(route) => (
                 this.isLoggedIn() ? (
                   <ChangePassword/>
@@ -135,6 +137,19 @@ class App extends Component {
                     state: {referrer:route.location.pathname}}}/>
                 )
               )}/>
+
+              <Route exact path={relativePath("/tokens")} render={() => (
+                  this.isLoggedIn() ? (
+                      <TokenSearch/>
+                  ) : (
+                      // We record the referrer because Login needs it to redirect back to after a successful login.
+                      <Redirect to={{
+                        pathname: relativePath('/login'),
+                        state: {referrer:relativePath('/tokens')}}}/>
+                  )
+              )}/>
+
+
               <Route component={PathNotFound}/>
 
             </Switch>

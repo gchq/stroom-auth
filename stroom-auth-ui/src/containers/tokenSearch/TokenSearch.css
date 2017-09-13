@@ -1,0 +1,25 @@
+.UserSearch-main {
+  padding: 0px;
+}
+
+.UserSearch-content {
+  padding: 0px;
+}
+
+/* We need the button to be small so it doesn't make the cell in the table too big */
+.UserSearch-tableButton {
+  padding:0px !important;
+  width:0px !important;
+  height:0px !important;
+}
+
+p.warning {
+  font-style: italic;
+  padding: 3px; 
+  margin-bottom: 0px;
+}
+
+.selectedRow {
+  /* This is amber100, a lighter version of the accent colour, amber900 */
+  background-color: #FFECB3 !important;
+}
