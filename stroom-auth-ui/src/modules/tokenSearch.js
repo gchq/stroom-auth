@@ -61,21 +61,39 @@ export const performTokenSearch = (jwsToken, tableState) => {
 
     var limit = tableState.pageSize
     var page = tableState.page
-    
+
     // Default ordering and direction
     var orderBy = 'issued_on'
     var orderDirection = 'desc'
 
-    if(tableState.sorted.length > 0){
+    if (tableState.sorted.length > 0) {
       orderBy = tableState.sorted[0].id
       orderDirection = tableState.sorted[0].desc ? 'desc' : 'asc'
     }
 
-    // TODO: get the object out of the array 
-    var filters = tableState.filtered.map(filter => {
-      console.log(filter)
-      return {[filter.id]:filter.value}
-    })
+
+    var filters = {}
+    if(tableState.filtered.length > 0){
+      tableState.filtered.forEach(filter =>{
+        filters[filter.id] = filter.value
+      })
+    }
+
+    var body = filters ?
+        JSON.stringify({
+          page,
+          limit,
+          orderBy,
+          orderDirection,
+          filters
+        })
+        :
+        JSON.stringify({
+          page,
+          limit,
+          orderBy,
+          orderDirection,
+        })
 
     var userSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search"
 
@@ -87,13 +105,7 @@ export const performTokenSearch = (jwsToken, tableState) => {
       },
       method: 'post',
       mode: 'cors',
-      body: JSON.stringify({
-        page,
-        limit,
-        orderBy,
-        orderDirection
-        //TODO filters
-      })
+      body
     })
     .then(handleStatus)
     .then(getJsonBody)
