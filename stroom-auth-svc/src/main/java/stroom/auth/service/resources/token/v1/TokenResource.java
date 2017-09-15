@@ -112,12 +112,16 @@ public class TokenResource {
 
     Field userEmail = tokenOwnerUsers.EMAIL.as("user_email");
     // Special cases
-    Optional<SortField> orderByField = Optional.empty();
-    Optional<Field> specialCaseOrderByField = Optional.empty();
+    Optional<SortField> orderByField;
     if(orderBy != null && orderBy.equals("user_email")){
       // Why is this a special case? Because the property on the target table is 'email' but the param is 'user_email'
       // 'user_email' is a clearer param
-      specialCaseOrderByField = Optional.of(userEmail);
+      if(orderDirection.equals("asc")){
+        orderByField = Optional.of(userEmail.asc());
+      }
+      else {
+        orderByField = Optional.of(userEmail.desc());
+      }
     }
     else {
       orderByField = getOrderBy(orderBy, orderDirection);
@@ -137,25 +141,13 @@ public class TokenResource {
     SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
         getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
 
-    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> results;
-    if(specialCaseOrderByField.isPresent()){
-      results =
-          selectFrom
-              .where(conditions.get())
-              .orderBy(specialCaseOrderByField.get())
-              .limit(limit)
-              .offset(offset)
-              .fetch();
-    }
-    else{
-      results =
+    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> results =
           selectFrom
               .where(conditions.get())
               .orderBy(orderByField.get(), TOKENS.ID.asc())
               .limit(limit)
               .offset(offset)
               .fetch();
-    }
 
     String serialisedResults = results.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
 
