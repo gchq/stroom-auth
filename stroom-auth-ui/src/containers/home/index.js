@@ -6,6 +6,7 @@ import { NavLink} from 'react-router-dom'
 import Avatar from 'material-ui/Avatar'
 import Card from 'material-ui/Card'
 import Person from 'material-ui-icons/Person'
+import VpnKey from 'material-ui-icons/VpnKey'
 import {amber900 as secondaryColor} from 'material-ui/styles/colors'
 
 import './Home.css'
@@ -19,7 +20,8 @@ class Home extends Component {
     super(props)
     this.state = {
       stroomLinkShadow: 1,
-      usersLinkShadow: 1
+      usersLinkShadow: 1,
+      tokensLinkShadow: 1
     }
   }
 
@@ -67,6 +69,27 @@ class Home extends Component {
               </div>
             </Card>
           </NavLink>
+        ) : (undefined)}
+        <br/>
+        {this.props.canManageUsers ? (
+            <NavLink to={relativePath('/tokens')}>
+              <Card className="Home-card"
+                    onMouseOver={() => this.setState({tokensLinkShadow:3})}
+                    onMouseOut={() => this.setState({tokensLinkShadow:1})}
+                    zDepth={this.state.tokensLinkShadow}>
+                <div className="Home-iconContainer">
+                  <Avatar
+                      backgroundColor={secondaryColor}
+                      className="Home-icon"
+                      icon={<VpnKey/>}
+                      size={100}
+                  />
+                </div>
+                <div className="Home-iconContainer">
+                  <p>Manage Tokens</p>
+                </div>
+              </Card>
+            </NavLink>
         ) : (undefined)}
       </div>
     )
