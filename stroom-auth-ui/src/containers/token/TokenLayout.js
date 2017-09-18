@@ -91,7 +91,7 @@ class TokenLayout extends Component {
               <div className="UserLayout-toolbarButton">
                 <RaisedButton label="Delete" primary={true} 
                   icon={<Delete color={fullWhite}/>} disabled={deleteButtonDisabled}
-                  onClick={(param1, param2) => this.deleteUser(param1, param2)}/>
+                  onClick={() => this.deleteToken()}/>
               </div>
             ) : (undefined)}
 
@@ -136,10 +136,10 @@ TokenLayout.contextTypes = {
 }
 
 const mapStateToProps = state => ({
-  show: state.token.show, //TODO wire this in
-  selectedUserRowId: state.userSearch.selectedUserRowId, //TODO wire this in
-  showAlert: state.user.showAlert, // TODO Wire this in
-  alertText: state.user.alertText //TODO wire this in
+  show: state.token.show,
+  selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
+  showAlert: state.token.showAlert,
+  alertText: state.token.alertText
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

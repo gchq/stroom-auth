@@ -23,7 +23,7 @@ class TokenSearch extends Component {
   }
 
   fetchTokens(securityToken, state) {
-    this.props.performTokenSearch(securityToken, state)
+    this.props.performTokenSearch(securityToken, state.pageSize, state.page, state.sorted, state.filtered)
   }
 
   getEnabledCellRenderer(row){
@@ -134,6 +134,7 @@ class TokenSearch extends Component {
                 manual
                 className='-striped -highlight UserSearch-table'
                 columns={this.getColumnFormat()}
+
                 filterable={this.props.isFilteringEnabled}
                 showPagination= {true}
                 loading={this.props.showSearchLoader}

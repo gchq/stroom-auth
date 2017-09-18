@@ -1,6 +1,6 @@
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getBody } from './fetchFunctions'
-import { performUserSearch, changeSelectedRow } from './userSearch'
+import { performTokenSearch, changeSelectedRow } from './tokenSearch'
 
 export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER'
 export const TOGGLE_ALERT_VISIBILITY = 'user/TOGGLE_ALERT_VISIBILITY'
@@ -50,25 +50,24 @@ export const deleteSelectedToken = (tokenId) => {
   return (dispatch, getState) => {
     const jwsToken = getState().login.token
     const tokenIdToDelete = getState().tokenSearch.selectedTokenRowId
-    //TODO implement this
-  //   var userServiceUrl = process.env.REACT_APP_USER_URL + "/" + tokenIdToDelete
-  //   fetch(userServiceUrl, {
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json',
-  //       'Authorization' : 'Bearer ' + jwsToken
-  //     },
-  //     method: 'delete',
-  //     mode: 'cors'
-  //   })
-  //       .then(handleStatus)
-  //       .then(getBody)
-  //       .then(token => {
-  //         dispatch(changeSelectedRow(tokenId))
-  //         dispatch(performUserSearch(jwsToken))
-  //         dispatch(toggleAlertVisibility("Token has been deleted"))
-  //       })
-  //       .catch(error => handleErrors(error, dispatch, jwsToken))
+    var tokenServiceUrl = process.env.REACT_APP_TOKEN_URL + "/" + tokenIdToDelete
+    fetch(tokenServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
+      },
+      method: 'delete',
+      mode: 'cors'
+    })
+        .then(handleStatus)
+        .then(getBody)
+        .then(token => {
+          dispatch(changeSelectedRow(tokenId))
+          dispatch(performTokenSearch(jwsToken, ))
+          dispatch(toggleAlertVisibility("Token has been deleted"))
+        })
+        .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 

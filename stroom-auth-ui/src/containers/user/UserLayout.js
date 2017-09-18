@@ -37,7 +37,7 @@ class UserLayout extends Component {
     }
   }
 
-  deleteUser(){
+  deleteSelectedUser(){
     this.context.store.dispatch(deleteSelectedUser())
   }
 
@@ -104,7 +104,7 @@ class UserLayout extends Component {
               <div className="UserLayout-toolbarButton">
                 <RaisedButton label="Delete" primary={true} 
                   icon={<Delete color={fullWhite}/>} disabled={deleteButtonDisabled}
-                  onClick={(param1, param2) => this.deleteUser(param1, param2)}/>
+                  onClick={() => this.deleteSelectedUser()}/>
               </div>
             ) : (undefined)}
 

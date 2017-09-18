@@ -5,6 +5,10 @@ import { toggleAlertVisibility } from './token'
 export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER'
 export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS'
 export const SELECT_ROW = 'tokenSearch/SELECT_ROW'
+export const CHANGE_LAST_USED_PAGE_SIZE = 'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE'
+export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE'
+export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED'
+export const CHANGE_LAST_USED_FILTERED = 'tokenSearch/CHANGE_LAST_USED_FILTERED'
 
 const initialState = {
   tokens: [],
@@ -37,6 +41,26 @@ export default (state = initialState, action) => {
           selectedTokenRowId: action.selectedTokenRowId
         }
       }
+    case CHANGE_LAST_USED_PAGE_SIZE:
+      return {
+        ...state,
+        lastUsedPageSize: action.lastUsedPageSize
+      }
+    case CHANGE_LAST_USED_PAGE:
+      return {
+        ...state,
+        lastUsedPage: action.lastUsedPage
+      }
+    case CHANGE_LAST_USED_SORTED:
+      return {
+        ...state,
+        lastUsedSorted: action.lastUsedSorted
+      }
+    case CHANGE_LAST_USED_FILTERED:
+      return {
+        ...state,
+        lastUsedFiltered: action.lastUsedFiltered
+      }
     default:
       return state
   }
@@ -56,26 +80,63 @@ export function showSearchLoader(showSearchLoader){
   }
 }
 
-export const performTokenSearch = (jwsToken, tableState) => {
-  return dispatch => {
+export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) => {
+  return (dispatch, getState)=> {
     dispatch(showSearchLoader(true))
 
-    var limit = tableState.pageSize
-    var page = tableState.page
+    if(pageSize === undefined){
+      pageSize = getState().tokenSearch.lastUsedPageSize
+    }
+    else{
+      dispatch({
+        type: CHANGE_LAST_USED_PAGE_SIZE,
+        lastUsedPageSize: pageSize
+      })
+    }
+
+    if(page === undefined) {
+      page = getState().tokenSearch.lastUsedPage
+    }
+    else{
+      dispatch({
+        type: CHANGE_LAST_USED_PAGE,
+        lastUsedPage: page
+      })
+    }
+
+    if(sorted === undefined){
+      sorted = getState().tokenSearch.lastUsedSorted
+    }
+    else {
+      dispatch({
+        type: CHANGE_LAST_USED_SORTED,
+        lastUsedSorted: sorted
+      })
+    }
+
+    if(filtered === undefined) {
+      filtered = getState().tokenSearch.lastUsedFiltered
+    }
+    else {
+      dispatch({
+        type: CHANGE_LAST_USED_FILTERED,
+        lastUsedFiltered: filtered
+      })
+    }
 
     // Default ordering and direction
     var orderBy = 'issued_on'
     var orderDirection = 'desc'
 
-    if (tableState.sorted.length > 0) {
-      orderBy = tableState.sorted[0].id
-      orderDirection = tableState.sorted[0].desc ? 'desc' : 'asc'
+    if (sorted.length > 0) {
+      orderBy = sorted[0].id
+      orderDirection = sorted[0].desc ? 'desc' : 'asc'
     }
 
 
     var filters = {}
-    if(tableState.filtered.length > 0){
-      tableState.filtered.forEach(filter =>{
+    if(filtered.length > 0){
+      filtered.forEach(filter =>{
         filters[filter.id] = filter.value
       })
     }
@@ -83,7 +144,7 @@ export const performTokenSearch = (jwsToken, tableState) => {
     var body = filters ?
         JSON.stringify({
           page,
-          limit,
+          limit: pageSize,
           orderBy,
           orderDirection,
           filters
@@ -91,7 +152,7 @@ export const performTokenSearch = (jwsToken, tableState) => {
         :
         JSON.stringify({
           page,
-          limit,
+          limit: pageSize,
           orderBy,
           orderDirection,
         })
