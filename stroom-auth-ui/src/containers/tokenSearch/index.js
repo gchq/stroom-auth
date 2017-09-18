@@ -26,7 +26,7 @@ class TokenSearch extends Component {
     this.props.performTokenSearch(securityToken, state)
   }
 
-  renderStateCell(row){
+  getEnabledCellRenderer(row){
     let state = row.value
     let tokenId = row.original.id
     return (
@@ -34,6 +34,20 @@ class TokenSearch extends Component {
             defaultToggled={state}
             onToggle={(_, isEnabled) => this.props.setEnabledStateOnToken(tokenId, isEnabled)}
         />
+    )
+  }
+
+  getEnabledCellFilter(filter, onChange){
+    return (
+      <select
+          onChange={event => onChange(event.target.value)}
+          style={{ width: "100%" }}
+          value={filter ? filter.value : "all"}
+      >
+        <option value="">Show all</option>
+        <option value="true">Enabled only</option>
+        <option value="false">Disabled only</option>
+      </select>
     )
   }
 
@@ -57,8 +71,9 @@ class TokenSearch extends Component {
     }, {
       Header: 'Enabled',
       accessor: 'enabled',
-      width: 100,
-      Cell: row => this.renderStateCell(row)
+      width: 130,
+      Cell: row => this.getEnabledCellRenderer(row),
+      Filter:({filter, onChange}) => this.getEnabledCellFilter(filter, onChange)
     }, {
       Header: 'Expires on',
       accessor: 'expires_on',
