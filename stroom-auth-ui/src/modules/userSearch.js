@@ -56,7 +56,10 @@ export function updateResults(results){
 }
 
 export const performUserSearch = (jwsToken) => {
-  return dispatch => {
+  return (dispatch, getState) => {
+    if(jwsToken === undefined){
+      jwsToken = getState().login.token
+    }
     dispatch(showSearchLoader(true))
 
     var userSearchUrl = process.env.REACT_APP_USER_URL + '/?fromEmail=&usersPerPage=100&orderBy=id'

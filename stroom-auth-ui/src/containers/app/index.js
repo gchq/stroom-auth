@@ -20,7 +20,7 @@ import logo from './logo.svg'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import {UserCreate, UserEdit, UserSearch} from '../../containers/user'
-import {TokenSearch} from '../../containers/token'
+import {TokenCreate, TokenSearch} from '../../containers/token'
 import NewUser from '../../containers/newUser'
 import PathNotFound from '../../containers/pathNotFound'
 import ResetPassword from '../../containers/resetPassword'
@@ -146,6 +146,17 @@ class App extends Component {
                       <Redirect to={{
                         pathname: relativePath('/login'),
                         state: {referrer:relativePath('/tokens')}}}/>
+                  )
+              )}/>
+
+              <Route exact path={relativePath("/token/newApiToken")} render={() => (
+                  this.isLoggedIn() ? (
+                      <TokenCreate/>
+                  ) : (
+                      // We record the referrer because Login needs it to redirect back to after a successful login.
+                      <Redirect to={{
+                        pathname: relativePath('/login'),
+                        state: {referrer:relativePath('/token/newApiToken')}}}/>
                   )
               )}/>
 

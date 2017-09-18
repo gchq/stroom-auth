@@ -20,6 +20,7 @@ import Help from 'material-ui-icons/Help'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import TokenSearch from '../tokenSearch'
+import TokenCreate from '../tokenCreate'
 import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
 import { relativePath } from '../../relativePush'
 
@@ -80,8 +81,8 @@ class TokenLayout extends Component {
 
             {showCreateButton ? (
               <div className="UserLayout-toolbarButton">
-                <NavLink to={relativePath('/newUser')}>
-                  <RaisedButton label="Create" primary={true} className="UserSearch-appButton" 
+                <NavLink to={relativePath('/token/newApiToken')}>
+                  <RaisedButton label="Issue API token" primary={true} className="UserSearch-appButton"
                     icon={<Add color={fullWhite}/>}/>
                 </NavLink>
               </div>
@@ -101,7 +102,8 @@ class TokenLayout extends Component {
           </ToolbarGroup>
         </Toolbar>
         <div className="User-content">
-          <TokenSearch isFilteringEnabled={this.state.isFilteringEnabled}/>
+          {showSearch ? (<TokenSearch isFilteringEnabled={this.state.isFilteringEnabled}/>) : (undefined)}
+          {showCreate ? (<TokenCreate/>) : (undefined)}
         </div>
         <Snackbar
           open={showAlert}
