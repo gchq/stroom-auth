@@ -1,5 +1,6 @@
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getJsonBody } from './fetchFunctions'
+import { toggleAlertVisibility } from './token'
 
 export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER'
 export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS'
@@ -95,9 +96,9 @@ export const performTokenSearch = (jwsToken, tableState) => {
           orderDirection,
         })
 
-    var userSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search"
+    var tokenSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search"
 
-    fetch(userSearchUrl, {
+    fetch(tokenSearchUrl, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -133,6 +134,27 @@ export const changeSelectedRow = (tokenId) => {
     dispatch({
       type: SELECT_ROW,
       selectedTokenRowId: tokenId
+    })
+  }
+}
+
+export const setEnabledStateOnToken = (tokenId, isEnabled) => {
+  return (dispatch, getState) => {
+    const securityToken = getState().login.token
+    var tokenUrl = `${process.env.REACT_APP_TOKEN_URL}/${tokenId}/state/?enabled=${isEnabled}`
+    fetch(tokenUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + securityToken
+      },
+      method: 'get',
+      mode: 'cors'
+    })
+    .then(handleStatus)
+    .catch(error => {
+      dispatch(toggleAlertVisibility('Unable to change the state of this token!'))
+      //TODO Display snackbar with an error message
     })
   }
 }

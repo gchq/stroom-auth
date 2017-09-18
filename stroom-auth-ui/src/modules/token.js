@@ -7,7 +7,8 @@ export const TOGGLE_ALERT_VISIBILITY = 'user/TOGGLE_ALERT_VISIBILITY'
 
 
 const initialState = {
-  showAlert: false
+  showAlert: false,
+  alertText:''
 }
 
 export default (state = initialState, action) => {

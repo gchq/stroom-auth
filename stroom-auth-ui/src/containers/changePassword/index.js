@@ -43,7 +43,7 @@ const ChangePassword = props => {
                     open={showAlert}
                     message={alertText}
                     autoHideDuration={4000}
-                    onRequestClose={() => toggleAlertVisibility()}
+                    onRequestClose={() => toggleAlertVisibility('')}
                 />
             </div>
           </Card>

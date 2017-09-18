@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import Paper from 'material-ui/Paper'
+import Toggle from 'material-ui/Toggle'
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
@@ -11,7 +12,7 @@ import 'react-table/react-table.css'
 import dateFormat from 'dateformat'
 
 import './TokenSearch.css'
-import { performTokenSearch, changeSelectedRow } from '../../modules/tokenSearch'
+import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from '../../modules/tokenSearch'
 
 //TODO change the CSS references from 'User' - maybe make the CSS common?
 class TokenSearch extends Component {
@@ -25,32 +26,14 @@ class TokenSearch extends Component {
     this.props.performTokenSearch(securityToken, state)
   }
 
-  renderStateCell(state){
-    var stateColour, stateText
-    switch(state) {
-      case true:
-        stateColour = '#57d500'
-        stateText = 'Enabled'
-        break;
-      case false:
-        stateColour = '#ff2e00'
-        stateText = 'Disabled'
-        break;
-      default:
-        stateColour = '#ffbf00'
-        stateText = 'Unknown!'
-    }
+  renderStateCell(row){
+    let state = row.value
+    let tokenId = row.original.id
     return (
-      <span>
-        <span style={{
-          color: stateColour,
-          transition: 'all .3s ease'
-        }}>
-          &#x25cf;
-        </span> {
-          stateText
-        }
-      </span>
+        <Toggle
+            defaultToggled={state}
+            onToggle={(_, isEnabled) => this.props.setEnabledStateOnToken(tokenId, isEnabled)}
+        />
     )
   }
 
@@ -75,7 +58,7 @@ class TokenSearch extends Component {
       Header: 'Enabled',
       accessor: 'enabled',
       width: 100,
-      Cell: row => this.renderStateCell(row.value)
+      Cell: row => this.renderStateCell(row)
     }, {
       Header: 'Expires on',
       accessor: 'expires_on',
@@ -164,7 +147,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   performTokenSearch,
-  changeSelectedRow
+  changeSelectedRow,
+  setEnabledStateOnToken
 }, dispatch)
 
 export default connect(

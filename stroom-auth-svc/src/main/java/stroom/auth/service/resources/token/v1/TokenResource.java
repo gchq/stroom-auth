@@ -33,6 +33,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -278,6 +279,23 @@ public class TokenResource {
     String serialisedResults = result.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
     return Response.status(Response.Status.OK).entity(serialisedResults).build();
   }
+
+  @GET
+  @Path("/{id}/state")
+  @Timed
+  public final Response toggleEnabled(@Auth @NotNull ServiceUser authenticatedServiceUser,
+                                      @Context @NotNull DSLContext database,
+                                      @NotNull @PathParam("id") int tokenId,
+                                      @NotNull @QueryParam("enabled") boolean enabled) {
+      Object result = database
+          .update(TOKENS)
+          .set(TOKENS.ENABLED, enabled)
+          .where(TOKENS.ID.eq((tokenId)))
+          .execute();
+
+      return Response.status(Response.Status.OK).build();
+  }
+
 
   private static SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> getSelectFrom(DSLContext database, Users issueingUsers, Users tokenOwnerUsers, Users updatingUsers, Field userEmail){
     SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
