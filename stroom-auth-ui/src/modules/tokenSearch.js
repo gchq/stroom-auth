@@ -26,7 +26,8 @@ export default (state = initialState, action) => {
     case UPDATE_RESULTS:
       return {
         ...state,
-        results: action.results
+        results: action.results,
+        totalPages: action.totalPages
       }
     case SELECT_ROW:
       if(state.selectedTokenRowId === action.selectedTokenRowId){
@@ -66,10 +67,11 @@ export default (state = initialState, action) => {
   }
 }
 
-export function updateResults(results){
+function updateResults(data){
   return {
     type: UPDATE_RESULTS,
-    results
+    results: data.results,
+    totalPages: data.totalPages
   }
 }
 

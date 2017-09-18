@@ -50,7 +50,11 @@ public class TokenManager {
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
   }
 
-  public final List<Token> deserialiseTokens(String body) throws IOException {
+  public final SearchResponse deserialiseTokens(String body) throws IOException {
+    return  (SearchResponse) searchResponseMapper().fromJson(body);
+  }
+
+  public final List<Token> deserialiseToken(String body) throws IOException {
     return (List<Token>) tokenListMapper().fromJson(body);
   }
 
@@ -73,7 +77,13 @@ public class TokenManager {
   private final JsonAdapter tokenListMapper() {
     Moshi moshi = new Moshi.Builder().build();
     ParameterizedType type = Types.newParameterizedType(List.class, Token.class);
-    JsonAdapter<List<User>> jsonAdapter = moshi.adapter(type);
+    JsonAdapter<List<Token>> jsonAdapter = moshi.adapter(type);
+    return jsonAdapter;
+  }
+
+  private final JsonAdapter searchResponseMapper() {
+    Moshi moshi = new Moshi.Builder().build();
+    JsonAdapter<SearchResponse> jsonAdapter = moshi.adapter(SearchResponse.class);
     return jsonAdapter;
   }
 }

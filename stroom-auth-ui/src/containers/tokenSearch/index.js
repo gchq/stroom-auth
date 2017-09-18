@@ -130,18 +130,17 @@ class TokenSearch extends Component {
           <div>
               <ReactTable
                 data={this.props.results}
-                pages={this.props.pages}
+                pages={this.props.totalPages}
                 manual
                 className='-striped -highlight UserSearch-table'
                 columns={this.getColumnFormat()}
-
                 filterable={this.props.isFilteringEnabled}
                 showPagination= {true}
                 loading={this.props.showSearchLoader}
                 getTrProps={(state, rowInfo, column, instance) => {
                   var selected = false
                   if(rowInfo) {
-                    selected = rowInfo.row.id === this.props.selectedTokenRowId
+                    selected = rowInfo.row. id === this.props.selectedTokenRowId
                   }
                   return {
                     onClick: (target, event) => {
@@ -169,9 +168,11 @@ const mapStateToProps = state => ({
   token: state.login.token,
   showSearchLoader: state.tokenSearch.showSearchLoader,
   results: state.tokenSearch.results,
+  totalPages: state.tokenSearch.totalPages,
+  pages: state.tokenSearch.totalPages,
   errorStatus: state.token.errorStatus,
   errorText: state.token.errorText,
-  selectedTokenRowId: state.tokenSearch.selectedTokenRowId
+  selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

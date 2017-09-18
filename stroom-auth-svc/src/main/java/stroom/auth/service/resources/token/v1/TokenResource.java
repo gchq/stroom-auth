@@ -12,6 +12,7 @@ import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Result;
 import org.jooq.SelectJoinStep;
+import org.jooq.SelectSelectStep;
 import org.jooq.SortField;
 import org.jooq.Table;
 import org.slf4j.Logger;
@@ -75,7 +76,7 @@ public class TokenResource {
   @POST
   @Path("/search")
   @Timed
-  public final Response search(
+  public final Response search (
       @Auth @NotNull ServiceUser authenticatedServiceUser,
       @Context @NotNull DSLContext database,
       @NotNull @Valid SearchRequest searchRequest) {
@@ -149,10 +150,21 @@ public class TokenResource {
               .limit(limit)
               .offset(offset)
               .fetch();
-
     String serialisedResults = results.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
 
-    return Response.status(Response.Status.OK).entity(serialisedResults).build();
+    // Finally we need to get the number of tokens so we can calculate the total number of pages
+    SelectSelectStep<Record1<Integer>> selectCount =
+        database.selectCount();
+    SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
+        fromCount = getFrom(selectCount, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
+    int count = (Integer)fromCount
+        .where(conditions.get())
+        .fetchOne(0, int.class);
+    // We need to round up so we always have enough pages even if there's a remainder.
+    int pages= (int)Math.ceil((double) count/limit);
+
+    String responseBody = "{\"totalPages\":\""+pages+"\", \"results\":"+serialisedResults + "}";
+    return Response.status(Response.Status.OK).entity(responseBody ).build();
   }
 
   @POST
@@ -296,32 +308,49 @@ public class TokenResource {
       return Response.status(Response.Status.OK).build();
   }
 
+  private static SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
+  getSelectFrom(DSLContext database, Users issueingUsers, Users tokenOwnerUsers, Users updatingUsers, Field userEmail){
+    SelectSelectStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
+        select = getSelect(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
 
-  private static SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> getSelectFrom(DSLContext database, Users issueingUsers, Users tokenOwnerUsers, Users updatingUsers, Field userEmail){
-    SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
-        database.select(
-            TOKENS.ID.as("id"),
-            TOKENS.ENABLED.as("enabled"),
-            TOKENS.EXPIRES_ON.as("expires_on"),
-            userEmail,
-            TOKENS.ISSUED_ON.as("issued_on"),
-            issueingUsers.EMAIL.as("issued_by_user"),
-            TOKENS.TOKEN.as("token"),
-            TOKEN_TYPES.TOKEN_TYPE.as("token_type"),
-            TOKENS.UPDATED_BY_USER.as("updated_by_user"),
-            TOKENS.UPDATED_ON.as("updated_on"),
-            TOKENS.USER_ID.as("user_id"))
-            .from(
-                TOKENS
-                    .join(TOKEN_TYPES)
-                    .on(TOKENS.TOKEN_TYPE_ID.eq(TOKEN_TYPES.ID))
-                    .join(issueingUsers)
-                    .on(TOKENS.ISSUED_BY_USER.eq(issueingUsers.ID))
-                    .join(tokenOwnerUsers)
-                    .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID))
-                    .join(updatingUsers)
-                    .on(TOKENS.ISSUED_BY_USER.eq(updatingUsers.ID)));
-    return selectFrom;
+    SelectJoinStep from = getFrom(select, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
+    return from;
+  }
+
+  private static SelectSelectStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
+  getSelect(DSLContext database, Users issueingUsers, Users tokenOwnerUsers, Users updatingUsers, Field userEmail){
+    SelectSelectStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
+    select = database.select(
+        TOKENS.ID.as("id"),
+        TOKENS.ENABLED.as("enabled"),
+        TOKENS.EXPIRES_ON.as("expires_on"),
+        userEmail,
+        TOKENS.ISSUED_ON.as("issued_on"),
+        issueingUsers.EMAIL.as("issued_by_user"),
+        TOKENS.TOKEN.as("token"),
+        TOKEN_TYPES.TOKEN_TYPE.as("token_type"),
+        TOKENS.UPDATED_BY_USER.as("updated_by_user"),
+        TOKENS.UPDATED_ON.as("updated_on"),
+        TOKENS.USER_ID.as("user_id"));
+
+    return select;
+  }
+
+  private static SelectJoinStep
+  getFrom(SelectSelectStep select,
+      Users issueingUsers, Users tokenOwnerUsers, Users updatingUsers, Field userEmail){
+    SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
+        from = select.from(TOKENS
+        .join(TOKEN_TYPES)
+        .on(TOKENS.TOKEN_TYPE_ID.eq(TOKEN_TYPES.ID))
+        .join(issueingUsers)
+        .on(TOKENS.ISSUED_BY_USER.eq(issueingUsers.ID))
+        .join(tokenOwnerUsers)
+        .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID))
+        .join(updatingUsers)
+        .on(TOKENS.ISSUED_BY_USER.eq(updatingUsers.ID)));
+
+    return from;
   }
 
 
