@@ -16,7 +16,6 @@ import Paper from 'material-ui/Card'
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
 import Add from 'material-ui-icons/Add'
 import Delete from 'material-ui-icons/Delete'
-import Edit from 'material-ui-icons/Edit'
 import Help from 'material-ui-icons/Help'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
@@ -56,8 +55,7 @@ class TokenLayout extends Component {
     const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props
     var showSearch = show === 'search'
     var showCreate = show === 'create'
-    var showEdit = show === 'edit'
-    var showCreateButton = showSearch 
+    var showCreateButton = showSearch
     var deleteButtonDisabled = selectedTokenRowId ? false : true
     return (
       <Paper className='UserLayout-main' zDepth={0}>
@@ -66,9 +64,8 @@ class TokenLayout extends Component {
             <NavLink to={relativePath('/tokens')}>
               <ToolbarTitle text="Tokens" className="UserLayout-toolbarTitle"/>
             </NavLink>
-            {showCreate || showEdit ? (<KeyboardArrowRight className="UserLayout-toolbarSeparator"/>) : (undefined)}
+            {showCreate ? (<KeyboardArrowRight className="UserLayout-toolbarSeparator"/>) : (undefined)}
             {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
-            {showEdit ? (<ToolbarTitle text="Edit" className="UserLayout-toolbarTitle"/>) : (undefined)}
           </ToolbarGroup>
           <ToolbarGroup>
 
@@ -86,15 +83,6 @@ class TokenLayout extends Component {
                 <NavLink to={relativePath('/newUser')}>
                   <RaisedButton label="Create" primary={true} className="UserSearch-appButton" 
                     icon={<Add color={fullWhite}/>}/>
-                </NavLink>
-              </div>
-            ) : (undefined)}
-
-            {showSearch ? (
-              <div className="UserLayout-toolbarButton">
-                <NavLink to={relativePath(`/user/${selectedTokenRowId}`)}>
-                  <RaisedButton label="Edit" primary={true}
-                    icon={<Edit color={fullWhite}/>} disabled={deleteButtonDisabled}/>
                 </NavLink>
               </div>
             ) : (undefined)}
@@ -148,7 +136,7 @@ TokenLayout.contextTypes = {
 }
 
 const mapStateToProps = state => ({
-  show: state.user.show, //TODO wire this in
+  show: state.token.show, //TODO wire this in
   selectedUserRowId: state.userSearch.selectedUserRowId, //TODO wire this in
   showAlert: state.user.showAlert, // TODO Wire this in
   alertText: state.user.alertText //TODO wire this in

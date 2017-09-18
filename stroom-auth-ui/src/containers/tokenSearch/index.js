@@ -57,8 +57,7 @@ class TokenSearch extends Component {
         <select
             onChange={event => onChange(event.target.value)}
             style={{ width: "100%" }}
-            value={filter ? filter.value : "all"}
-        >
+            value={filter ? filter.value : "all"}>
           <option value="">Show all</option>
           <option value="user">User only</option>
           <option value="api">API only</option>
@@ -135,12 +134,7 @@ class TokenSearch extends Component {
                 manual
                 className='-striped -highlight UserSearch-table'
                 columns={this.getColumnFormat()}
-                // defaultSorted={[{
-                //   id:'email',
-                //   desc: true
-                // }]}
-                // TODO: tie this to this.props.isFilteringEnabled
-                filterable={true}
+                filterable={this.props.isFilteringEnabled}
                 showPagination= {true}
                 loading={this.props.showSearchLoader}
                 getTrProps={(state, rowInfo, column, instance) => {
@@ -172,11 +166,11 @@ TokenSearch.propTypes = {
 
 const mapStateToProps = state => ({
   token: state.login.token,
-  showSearchLoader: state.tokenSearch.showSearchLoader, //TODO wire this in
+  showSearchLoader: state.tokenSearch.showSearchLoader,
   results: state.tokenSearch.results,
-  errorStatus: state.token.errorStatus, //TODO wire this in
-  errorText: state.token.errorText, // TODO wire this in
-  selectedTokenRowId: state.tokenSearch.selectedTokenRowId 
+  errorStatus: state.token.errorStatus,
+  errorText: state.token.errorText,
+  selectedTokenRowId: state.tokenSearch.selectedTokenRowId
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
