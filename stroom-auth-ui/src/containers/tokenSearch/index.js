@@ -51,6 +51,21 @@ class TokenSearch extends Component {
     )
   }
 
+
+  getTokenTypeCellFilter(filter, onChange){
+    return (
+        <select
+            onChange={event => onChange(event.target.value)}
+            style={{ width: "100%" }}
+            value={filter ? filter.value : "all"}
+        >
+          <option value="">Show all</option>
+          <option value="user">User only</option>
+          <option value="api">API only</option>
+        </select>
+    )
+  }
+
   formatDate(dateString){
     const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
     return dateString ? dateFormat(dateString, dateFormatString) : ''
@@ -78,11 +93,13 @@ class TokenSearch extends Component {
       Header: 'Expires on',
       accessor: 'expires_on',
       Cell: row => this.formatDate(row.value),
+      Filter:({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
       width: 225
     }, {
       Header: 'Issued on',
       accessor: 'issued_on',
       Cell: row => this.formatDate(row.value),
+      Filter:({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
       width: 120
     }, {
       Header: 'Token',
@@ -91,6 +108,7 @@ class TokenSearch extends Component {
     }, {
       Header: 'Token type',
       accessor: 'token_type',
+      Filter:({filter, onChange}) => this.getTokenTypeCellFilter(filter, onChange),
       width: 220
     }, {
       Header: 'Updated by user',
@@ -99,6 +117,7 @@ class TokenSearch extends Component {
     }, {
       Header: 'Updated on',
       accessor: 'updated_on',
+      Filter:({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
       Cell: row => this.formatDate(row.value),
       width: 400
     }]
