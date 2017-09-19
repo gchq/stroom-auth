@@ -109,7 +109,7 @@ class TokenLayout extends Component {
           open={showAlert}
           message={alertText}
           autoHideDuration={4000}
-          onRequestClose={() => toggleAlertVisibility()}
+          onRequestClose={() => toggleAlertVisibility('')}
         />
         <Dialog
           title={<div><span><Help color={blue600}/></span> &nbsp;<span>Tokens</span></div>}

@@ -27,7 +27,7 @@ const UserEditForm = props => {
         open={showAlert}
         message={alertText}
         autoHideDuration={4000}
-        onRequestClose={() => toggleAlertVisibility()}
+        onRequestClose={() => toggleAlertVisibility('')}
       />
     </Card>
   )

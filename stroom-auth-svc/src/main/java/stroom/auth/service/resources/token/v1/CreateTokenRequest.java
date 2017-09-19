@@ -9,14 +9,14 @@ import static stroom.auth.service.resources.token.v1.Token.TokenType.*;
 
 public class CreateTokenRequest {
 
-  @Nullable
   private String userEmail;
 
-  @Nullable
   private String tokenType;
 
+  @Nullable
   private boolean enabled;
 
+  // Needed for serialisation
   public CreateTokenRequest(){}
 
   public CreateTokenRequest(String userEmail, String tokenType, boolean enabled){

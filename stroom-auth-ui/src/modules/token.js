@@ -98,8 +98,9 @@ export const createToken = (newToken) => {
       method: 'post',
       mode: 'cors',
       body: JSON.stringify({
-        user_email:email,
-        token_type: 'api'
+        userEmail:email,
+        tokenType: 'api',
+        enabled: true
       })
     })
         .then(handleStatus)
