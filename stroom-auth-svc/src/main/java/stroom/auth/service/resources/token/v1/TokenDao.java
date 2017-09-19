@@ -106,8 +106,7 @@ public class TokenDao {
     database.deleteFrom(TOKENS).where(TOKENS.TOKEN.eq(token)).execute();
   }
 
-  public Optional<ImmutablePair<String, String>>
-  readById(int tokenId) {
+  public Optional<String> readById(int tokenId) {
 
     // We need these aliased tables because we're joining tokens to users twice.
     Users issueingUsers = USERS.as("issueingUsers");
@@ -118,22 +117,20 @@ public class TokenDao {
     SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
         getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
 
-    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
-        result = selectFrom
+    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> result =
+        selectFrom
         .where(new Condition[]{TOKENS.ID.eq(Integer.valueOf(tokenId))})
         .fetch();
 
     if(result.isEmpty()){
       return Optional.empty();
     }
-    String tokenUser = (String)result.get(0).get("user_email");
 
     String serialisedResults = result.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
-    return Optional.of(new ImmutablePair<>(tokenUser, serialisedResults));
+    return Optional.of(serialisedResults);
   }
 
-  public Optional<ImmutablePair<String, String>>
-  readByToken(String token) {
+  public Optional<String> readByToken(String token) {
 
     // We need these aliased tables because we're joining tokens to users twice.
     Users issueingUsers = USERS.as("issueingUsers");
@@ -152,10 +149,9 @@ public class TokenDao {
     if(result.isEmpty()){
       return Optional.empty();
     }
-    String tokenUser = (String)result.get(0).get("user_email");
 
     String serialisedResults = result.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
-    return Optional.of(new ImmutablePair<>(tokenUser, serialisedResults));
+    return Optional.of(serialisedResults);
   }
 
 
@@ -251,5 +247,13 @@ public class TokenDao {
       orderByField = TOKENS.ISSUED_ON.desc();
     }
     return Optional.of(orderByField);
+  }
+
+  public void enableOrDisableToken(int tokenId, boolean enabled) {
+    Object result = database
+        .update(TOKENS)
+        .set(TOKENS.ENABLED, enabled)
+        .where(TOKENS.ID.eq((tokenId)))
+        .execute();
   }
 }

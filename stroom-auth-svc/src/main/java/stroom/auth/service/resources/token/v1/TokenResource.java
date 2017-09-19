@@ -236,82 +236,52 @@ public class TokenResource {
   @GET
   @Path("/{id}")
   @Timed
-  public final Response read(
-      @Auth @NotNull ServiceUser authenticatedServiceUser,
-      @Context @NotNull DSLContext database,
-      @PathParam("id") int tokenId){
+  public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId){
     if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
-    Optional<ImmutablePair<String, String>> tokenOwnerAndToken = tokenDao.readById(tokenId);
+    Optional<String> tokenResult  = tokenDao.readById(tokenId);
 
-    if(!tokenOwnerAndToken.isPresent()){
+    if(!tokenResult.isPresent()){
       return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    String tokenOwnerResult = tokenOwnerAndToken.get().getLeft();
-    String tokenResult = tokenOwnerAndToken.get().getRight();
-
-    // We only need to check auth permissions if the user is trying to access a different user.
-    boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(tokenOwnerResult);
-    if (!isUserAccessingThemselves) {
-      if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-        return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
-      }
-    }
-
-    return Response.status(Response.Status.OK).entity(tokenResult).build();
+    return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
   }
 
 
   @GET
   @Path("/byToken/{token}")
   @Timed
-  public final Response read(
-      @Auth @NotNull ServiceUser authenticatedServiceUser,
-      @Context @NotNull DSLContext database,
-      @PathParam("token") String token){
+  public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token){
     if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
-    Optional<ImmutablePair<String, String>> tokenOwnerAndToken = tokenDao.readByToken(token);
+    Optional<String> tokenResult = tokenDao.readByToken(token);
 
-    if(!tokenOwnerAndToken.isPresent()){
+    if(!tokenResult.isPresent()){
       return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    String tokenOwnerResult = tokenOwnerAndToken.get().getLeft();
-    String tokenResult = tokenOwnerAndToken.get().getRight();
-
-    // We only need to check auth permissions if the user is trying to access a different user.
-    boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(tokenOwnerResult);
-    if (!isUserAccessingThemselves) {
-      if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-        return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
-      }
-    }
-
-    return Response.status(Response.Status.OK).entity(tokenResult).build();
+    return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
   }
+
 
   @GET
   @Path("/{id}/state")
   @Timed
   public final Response toggleEnabled(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                                      @Context @NotNull DSLContext database,
                                       @NotNull @PathParam("id") int tokenId,
                                       @NotNull @QueryParam("enabled") boolean enabled) {
-      Object result = database
-          .update(TOKENS)
-          .set(TOKENS.ENABLED, enabled)
-          .where(TOKENS.ID.eq((tokenId)))
-          .execute();
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    }
 
-      return Response.status(Response.Status.OK).build();
+    tokenDao.enableOrDisableToken(tokenId, enabled);
+    return Response.status(Response.Status.OK).build();
   }
-
 
 
   /**
