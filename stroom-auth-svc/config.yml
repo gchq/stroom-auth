@@ -46,9 +46,13 @@ jooq:
   attachRecords: yes
   updatablePrimaryKeys: no
 
-jwsExpirationTimeInMinutesInTheFuture: ${JWS_EXPIRATION_TIME:- 1440} # 1440 minutes = 1 day
-jwsIssuer: ${JWS_ISSUER:- stroom}
-jwsSecret: ${JWS_SECRET:- CHANGE_ME}
+token:
+  minutesUntilExpirationForUserToken: ${JWS_MINUTES_UNTIL_EXPIRATION_FOR_USER_TOKEN:- 43200} # 43200 minutes = 30 days
+  minutesUntilExpirationForApiToken: ${JWS_MINUTES_UNTIL_EXPIRATION_FOR_API_TOKEN:- 525600} # 525600 minutes = 1 year
+  minutesUntilExpirationForEmailResetToken: ${JWS_MINUTES_UNTIL_EXPIRATION_FOR_EMAIL_RESET_TOKEN:- 5} # 5 minutes - short validity for the token
+  jwsIssuer: ${JWS_ISSUER:- stroom}
+  jwsSecret: ${JWS_SECRET:- CHANGE_ME}
+
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?}
 loginUrl: ${AUTH_UI:- http://localhost/auth/login}
 stroomUrl: ${STROOM_UI:- http://localhost:8099}

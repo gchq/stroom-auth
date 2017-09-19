@@ -25,15 +25,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
   public void simple_search() throws UnirestException, IOException {
     String jwsToken = authenticationManager.loginAsAdmin();
 
-    Token token = new Token.TokenBuilder()
-        .token(jwsToken)
-        .tokenType(Token.TokenType.USER.getText())
-        .enabled(true)
-        .expiresOn(Instant.now().plusSeconds(604800).toString())
-        .issuedOn(Instant.now().toString())
-        .userEmail("admin")
-        .build();
-    tokenManager.createToken(token, jwsToken);
+    tokenManager.createToken("admin", Token.TokenType.API, jwsToken);
 
     SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
         .page(0)
@@ -69,12 +61,15 @@ public class TokenResource_search_IT extends TokenResource_IT {
     createUserAndTokens("user10" + Instant.now().toString(), securityToken);
     createUserAndTokens("user11" + Instant.now().toString(), securityToken);
 
-    // We expect twice as many tokens as users because we're creating API tokens and user tokens.
+    // We expect three times as many tokens as users because we're creating API tokens, user tokens, and email reset tokens.
     getPageAndAssert(0, 5, 5, securityToken);
     getPageAndAssert(1, 5, 5, securityToken);
     getPageAndAssert(2, 5, 5, securityToken);
     getPageAndAssert(3, 5, 5, securityToken);
-    getPageAndAssert(4, 5, 2, securityToken);
+    getPageAndAssert(4, 5, 5, securityToken);
+    getPageAndAssert(5, 5, 5, securityToken);
+    int expectedFinalCount = 4; // This is the 33 tokens from the above setup and admin's token.
+    getPageAndAssert(6, 5, expectedFinalCount, securityToken);
   }
 
   @Test
@@ -256,7 +251,8 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .asString();
 
     List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
-    assertThat(results.size()).isEqualTo(6);
+    int expectedNumberOfTokens = 9; // 3 users should match the filter and they'll have 3 tokens each (API, USER, EMAIL_RESET)
+    assertThat(results.size()).isEqualTo(expectedNumberOfTokens);
     results.forEach(result -> {
       assertThat(result.getUser_email()).contains("user1");
     });
@@ -298,7 +294,8 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .asString();
 
     List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
-    assertThat(results.size()).isEqualTo(6);
+    int expectedNumberOfTokens = 9; // 3 users should match the filter and they'll have 3 tokens each (API, USER, EMAIL_RESET)
+    assertThat(results.size()).isEqualTo(expectedNumberOfTokens);
     results.forEach(result -> {
       assertThat(result.getUser_email()).contains("user1");
     });

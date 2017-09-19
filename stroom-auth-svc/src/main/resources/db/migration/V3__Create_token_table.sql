@@ -12,6 +12,7 @@ CREATE TABLE token_types (
 
 INSERT INTO token_types (token_type) VALUES ("user");
 INSERT INTO token_types (token_type) VALUES ("api");
+INSERT INTO token_types (token_type) VALUES ("email_reset");
 
 CREATE TABLE tokens (
     id 				      MEDIUMINT NOT NULL AUTO_INCREMENT,

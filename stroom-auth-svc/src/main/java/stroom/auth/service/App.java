@@ -18,6 +18,7 @@ import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.jooq.Configuration;
 import stroom.auth.service.config.Config;
 import stroom.auth.service.resources.authentication.v1.AuthenticationResource;
 import stroom.auth.service.resources.token.v1.TokenResource;
@@ -27,7 +28,6 @@ import stroom.auth.service.security.ServiceUser;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
-import javax.sql.DataSource;
 import java.util.EnumSet;
 
 public final class App extends Application<Config> {
@@ -62,7 +62,8 @@ public final class App extends Application<Config> {
   @Override
   public void run(Config config, Environment environment) throws Exception {
     configureAuthentication(config, environment);
-    injector = Guice.createInjector(new stroom.auth.service.Module(config));
+    Configuration jooqConfig = this.jooqBundle.getConfiguration();
+    injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
     registerResources(environment);
     configureCors(environment);
     migrate(config, environment);
@@ -85,7 +86,7 @@ public final class App extends Application<Config> {
   }
 
   private static final void configureAuthentication(Config config, Environment environment) {
-    environment.jersey().register(new AuthDynamicFeature(AuthenticationFilter.get(config)));
+    environment.jersey().register(new AuthDynamicFeature(AuthenticationFilter.get(config.getTokenConfig())));
     environment.jersey().register(new Binder(ServiceUser.class));
     environment.jersey().register(RolesAllowedDynamicFeature.class);
   }

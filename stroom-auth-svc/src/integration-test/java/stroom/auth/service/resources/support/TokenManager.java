@@ -7,9 +7,10 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import org.eclipse.jetty.http.HttpStatus;
+import stroom.auth.service.resources.token.v1.CreateTokenRequest;
 import stroom.auth.service.resources.token.v1.SearchRequest;
 import stroom.auth.service.resources.token.v1.Token;
-import stroom.auth.service.resources.user.v1.User;
+import stroom.auth.service.resources.token.v1.Token.TokenType;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -20,21 +21,21 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class TokenManager {
   private String rootUrl;
 
-  public final int createToken(Token token, String jwsToken) throws UnirestException {
-    String serializedToken = serialiseToken(token);
-
+  public final String createToken(String userEmail, TokenType tokenType, String securityToken) throws UnirestException, IOException {
+    CreateTokenRequest createTokenRequest = new CreateTokenRequest(userEmail, tokenType.getText(), true);
+    String serialisedCreateTokenRequest = serialise(createTokenRequest);
     HttpResponse response = Unirest
         .post(this.rootUrl)
         .header("Content-Type", "application/json")
-        .header("Authorization", "Bearer " + jwsToken)
-        .body(serializedToken)
+        .header("Authorization", "Bearer " + securityToken)
+        .body(serialisedCreateTokenRequest)
         .asString();
-
-    return Integer.parseInt((String) response.getBody());
+    return (String) response.getBody();
   }
-  public void deleteToken(int id, String securityToken) throws UnirestException {
+
+  public void deleteToken(String token, String securityToken) throws UnirestException {
     HttpResponse response = Unirest
-        .delete(this.rootUrl + "/" + id)
+        .delete(this.rootUrl + "/byToken/" + token)
         .header("Content-Type", "application/json")
         .header("Authorization", "Bearer " + securityToken)
         .asString();
@@ -60,6 +61,16 @@ public class TokenManager {
 
   public final String serialiseToken(Token token) {
     return new Moshi.Builder().build().adapter(Token.class).toJson(token);
+  }
+
+  public final String serialise(CreateTokenRequest createTokenRequest){
+    return new Moshi.Builder().build().adapter(CreateTokenRequest.class).toJson(createTokenRequest);
+  }
+
+  public final CreateTokenRequest deserialiseCreateTokenRequest(String serialisedCreateTokenRequest) throws IOException {
+    Moshi moshi = new Moshi.Builder().build();
+    JsonAdapter<CreateTokenRequest> jsonAdapter = moshi.adapter(CreateTokenRequest.class);
+    return jsonAdapter.fromJson(serialisedCreateTokenRequest);
   }
 
   public final String serialiseSearchRequest(SearchRequest searchRequest) {

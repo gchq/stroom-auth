@@ -14,14 +14,12 @@ import org.jooq.Result;
 import org.jooq.SelectJoinStep;
 import org.jooq.SelectSelectStep;
 import org.jooq.SortField;
-import org.jooq.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.AuthorisationServiceClient;
 import stroom.auth.service.config.Config;
 import stroom.auth.service.security.ServiceUser;
 import stroom.db.auth.tables.Users;
-import stroom.db.auth.tables.records.TokensRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,7 +38,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,13 +55,16 @@ public class TokenResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 
   private final Config config;
+  private TokenDao tokenDao;
   private AuthorisationServiceClient authorisationServiceClient;
 
   @Inject
   public TokenResource(@NotNull AuthorisationServiceClient authorisationServiceClient,
-                       @NotNull Config config) {
+                       @NotNull Config config,
+                       TokenDao tokenDao) {
     this.authorisationServiceClient = authorisationServiceClient;
     this.config = config;
+    this.tokenDao = tokenDao;
   }
 
   /**
@@ -173,49 +173,29 @@ public class TokenResource {
   public final Response create(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
       @Context @NotNull DSLContext database,
-      @NotNull Token token) {
+      @NotNull CreateTokenRequest createTokenRequest) {
 
     if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
-    Record1<Integer> userRecord = database
-        .select(USERS.ID)
-        .from(USERS)
-        .where(USERS.EMAIL.eq(token.getUser_email()))
-        .fetchOne();
-    if(userRecord == null){
+    // Parse and validate tokenType
+    Optional<Token.TokenType> tokenTypeToCreate = createTokenRequest.getParsedTokenType();
+    if(!tokenTypeToCreate.isPresent()){
       return Response.status(Response.Status.BAD_REQUEST)
-          .entity("Cannot find user to associate with this token!").build();
+        .entity("Unknown token type:" + createTokenRequest.getTokenType()).build();
     }
-    int userId = userRecord.get(USERS.ID);
 
-    int issueingUserId = database
-        .select(USERS.ID)
-        .from(USERS)
-        .where(USERS.EMAIL.eq(authenticatedServiceUser.getName()))
-        .fetchOne()
-        .get(USERS.ID);
+    String token;
+    try {
+      token = tokenDao.createToken(tokenTypeToCreate.get(), authenticatedServiceUser.getName(),
+          createTokenRequest.getUserEmail());
+    } catch (Exception e) {
+      LOGGER.error(e.getMessage(), e);
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+    }
 
-    int tokenTypeId = database
-        .select(TOKEN_TYPES.ID)
-        .from(TOKEN_TYPES)
-        .where(TOKEN_TYPES.TOKEN_TYPE.eq(token.getToken_type()))
-        .fetchOne()
-        .get(TOKEN_TYPES.ID);
-
-    TokensRecord tokensRecord = (TokensRecord) database
-        .insertInto((Table) TOKENS)
-        .set(TOKENS.USER_ID, userId)
-        .set(TOKENS.TOKEN_TYPE_ID, tokenTypeId)
-        .set(TOKENS.TOKEN, token.getToken())
-        .set(TOKENS.EXPIRES_ON, token.getExpires_on()) //TODO decode token and get expiry date
-        .set(TOKENS.ISSUED_ON, Instant.now() )
-        .set(TOKENS.ISSUED_BY_USER, issueingUserId)
-        .set(TOKENS.ENABLED, token.isEnabled())
-        .returning(new Field[]{TOKENS.ID}).fetchOne();
-
-    return Response.status(Response.Status.OK).entity(tokensRecord.getId()).build();
+    return Response.status(Response.Status.OK).entity(token).build();
   }
 
   @DELETE
@@ -251,6 +231,23 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity("Deleted token").build();
   }
 
+  @DELETE
+  @Path("/byToken/{token}")
+  @Timed
+  public final Response delete(
+      @Auth @NotNull ServiceUser authenticatedServiceUser,
+      @Context @NotNull DSLContext database,
+      @PathParam("token") String token){
+
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    }
+
+    database.deleteFrom(TOKENS).where(TOKENS.TOKEN.eq(token)).execute();
+
+    return Response.status(Response.Status.OK).entity("Deleted token").build();
+  }
+
   @GET
   @Path("/{id}")
   @Timed
@@ -273,6 +270,48 @@ public class TokenResource {
     Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
         result = selectFrom
         .where(new Condition[]{TOKENS.ID.eq(Integer.valueOf(tokenId))})
+        .fetch();
+
+    if(result.isEmpty()){
+      return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    // We only need to check auth permissions if the user is trying to access a different user.
+    String tokenUser = (String)result.get(0).get("user_email");
+    boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(tokenUser);
+    if (!isUserAccessingThemselves) {
+      if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+      }
+    }
+
+    String serialisedResults = result.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
+    return Response.status(Response.Status.OK).entity(serialisedResults).build();
+  }
+
+
+  @GET
+  @Path("/byToken/{token}")
+  @Timed
+  public final Response read(
+      @Auth @NotNull ServiceUser authenticatedServiceUser,
+      @Context @NotNull DSLContext database,
+      @PathParam("token") String token){
+    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    }
+    // We need these aliased tables because we're joining tokens to users twice.
+    Users issueingUsers = USERS.as("issueingUsers");
+    Users tokenOwnerUsers = USERS.as("tokenOwnerUsers");
+    Users updatingUsers = USERS.as("updatingUsers");
+
+    Field userEmail = tokenOwnerUsers.EMAIL.as("user_email");
+    SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
+        getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
+
+    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
+        result = selectFrom
+        .where(new Condition[]{TOKENS.TOKEN.eq(token)})
         .fetch();
 
     if(result.isEmpty()){

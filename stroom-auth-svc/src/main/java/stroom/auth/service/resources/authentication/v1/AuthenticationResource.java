@@ -14,8 +14,10 @@ import org.simplejavamail.mailer.config.ServerConfig;
 import org.simplejavamail.mailer.config.TransportStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.service.TokenGenerator;
 import stroom.auth.service.config.Config;
+import stroom.auth.service.resources.token.v1.Token;
+import stroom.auth.service.resources.token.v1.TokenCreationException;
+import stroom.auth.service.resources.token.v1.TokenDao;
 import stroom.auth.service.resources.user.v1.User;
 import stroom.auth.service.resources.user.v1.UserMapper;
 import stroom.db.auth.tables.records.UsersRecord;
@@ -52,15 +54,15 @@ import static stroom.db.auth.Tables.USERS;
 public final class AuthenticationResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationResource.class);
 
-  private TokenGenerator tokenGenerator;
   private Config config;
   private final Pattern dnPattern;
+  private TokenDao tokenDao;
 
   @Inject
-  public AuthenticationResource(@NotNull TokenGenerator tokenGenerator, @NotNull Config config) {
-    this.tokenGenerator = tokenGenerator;
+  public AuthenticationResource(@NotNull Config config, TokenDao tokenDao) {
     this.config = config;
     this.dnPattern = Pattern.compile(config.getCertificateDnPattern());
+    this.tokenDao = tokenDao;
   }
 
   @GET
@@ -94,7 +96,9 @@ public final class AuthenticationResource {
         if (cn.isPresent()) {
           LOGGER.debug("Found CN in DN; logging user in.");
           // Get and return a token based on the CN
-          String token = this.tokenGenerator.getToken(cn.get(), this.config.getJwsExpirationTimeInMinutesInTheFuture());
+          String token = tokenDao.createToken(
+              Token.TokenType.USER, "authenticationResource",
+              cn.get());
           response = Response.status(Status.OK).entity(token).build();
         } else {
           LOGGER.debug("Cannot find CN in DN. Redirecting to login.");
@@ -102,6 +106,9 @@ public final class AuthenticationResource {
         }
       } catch (InvalidNameException e) {
         LOGGER.debug("Cannot process this DN. Redirecting to login.", e);
+        response = this.redirectToLoginResponse();
+      } catch (TokenCreationException e) {
+        LOGGER.debug("Unable to create a token for this user. Redirecting to login as a backup method.", e);
         response = this.redirectToLoginResponse();
       }
     }
@@ -116,7 +123,7 @@ public final class AuthenticationResource {
   @Timed
   @NotNull
   public final Response authenticateAndReturnToken(
-      @Context @NotNull DSLContext database, @Nullable Credentials credentials) {
+      @Context @NotNull DSLContext database, @Nullable Credentials credentials) throws URISyntaxException {
     Response response;
     if (credentials == null
         || Strings.isNullOrEmpty(credentials.getEmail())
@@ -159,7 +166,15 @@ public final class AuthenticationResource {
           .set(user)
           .where(new Condition[]{USERS.EMAIL.eq(credentials.getEmail())}).execute();
 
-      String token = this.tokenGenerator.getToken(credentials.getEmail(), this.config.getJwsExpirationTimeInMinutesInTheFuture());
+      String token;
+      try {
+        token = tokenDao.createToken(
+            Token.TokenType.USER, "authenticationResource",
+            credentials.getEmail());
+      } catch (TokenCreationException e) {
+        LOGGER.debug("Unable to create a token for this user. Redirecting to login as a backup method.", e);
+        return this.redirectToLoginResponse();
+      }
       response = Response.status(Status.OK).entity(token).build();
       return response;
     } else {
@@ -195,7 +210,17 @@ public final class AuthenticationResource {
         .selectFrom(USERS)
         .where(USERS.EMAIL.eq(emailAddress)).fetchOne();
 
-    String resetToken = this.tokenGenerator.getToken(emailAddress, this.config.getEmailConfig().getPasswordResetTokenValidityInMinutes());
+    String resetToken;
+    try {
+      resetToken = tokenDao.createToken(
+          Token.TokenType.EMAIL_RESET, "authenticationResource",
+          emailAddress);
+    } catch (TokenCreationException e) {
+      String errorMessage = "Unable to create a token for this user!";
+      LOGGER.debug(errorMessage, e);
+      return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unable to create a token for this user!").build();
+    }
+
     String resetName = usersRecord.getFirstName() + "" + usersRecord.getLastName();
     String resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
     String passwordResetEmailText = String.format(config.getEmailConfig().getPasswordResetText(), resetUrl);

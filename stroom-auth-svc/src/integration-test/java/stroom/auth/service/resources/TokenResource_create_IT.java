@@ -13,6 +13,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.auth.service.resources.support.HttpAsserts.assertBadRequest;
 import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
+import static stroom.auth.service.resources.token.v1.Token.TokenType.API;
 
 /**
  * TODO: create with issued date in the past; create with expiry date in the past; create with invalid token type
@@ -23,22 +24,10 @@ public class TokenResource_create_IT extends TokenResource_IT {
   public void simpleCreate() throws UnirestException, IOException {
     String securityToken = clearTokensAndLogin();
 
-    String expiresOn = Instant.now().plusSeconds(604800).toString();
-    String issuedOn = Instant.now().toString();
-
-    Token token = new Token.TokenBuilder()
-        .token(securityToken)
-        .tokenType(Token.TokenType.API.getText())
-        .enabled(true)
-        .expiresOn(expiresOn)
-        .issuedOn(issuedOn)
-        .userEmail("admin")
-        .build();
-
-    int id = tokenManager.createToken(token, securityToken);
+    String token = tokenManager.createToken("admin", API, securityToken);
 
     HttpResponse response = Unirest
-        .get(url + "/" + id)
+        .get(url + "/byToken/" + token)
         .header("Authorization", "Bearer " + securityToken)
         .header("Content-Type", "application/json")
         .asString();
@@ -57,7 +46,7 @@ public class TokenResource_create_IT extends TokenResource_IT {
 
     Token token = new Token.TokenBuilder()
         .token(securityToken)
-        .tokenType(Token.TokenType.API.getText())
+        .tokenType(API.getText())
         .enabled(true)
         .expiresOn(expiresOn)
         .issuedOn(issuedOn)

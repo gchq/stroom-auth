@@ -5,7 +5,7 @@ import stroom.auth.service.resources.support.Base_IT;
 import stroom.auth.service.resources.token.v1.Token;
 import stroom.auth.service.resources.user.v1.User;
 
-import java.time.Instant;
+import java.io.IOException;
 
 public abstract class TokenResource_IT extends Base_IT {
   protected final String url = tokenManager.getRootUrl();
@@ -19,23 +19,11 @@ public abstract class TokenResource_IT extends Base_IT {
     return refreshedToken;
   }
 
-  protected void createUserAndTokens(String userEmail, String jwsToken) throws UnirestException {
+  protected void createUserAndTokens(String userEmail, String jwsToken) throws UnirestException, IOException {
     userManager.createUser(new User(userEmail, "password"), jwsToken);
-    createToken(jwsToken, userEmail, Token.TokenType.USER);
-    createToken(jwsToken, userEmail, Token.TokenType.API);
+    tokenManager.createToken(userEmail, Token.TokenType.USER, jwsToken);
+    tokenManager.createToken(userEmail, Token.TokenType.API, jwsToken);
+    tokenManager.createToken(userEmail, Token.TokenType.EMAIL_RESET, jwsToken);
   }
 
-  protected int createToken(String jwsToken, String userEmail, Token.TokenType tokenType) throws UnirestException {
-    Token token = new Token.TokenBuilder()
-        .token(jwsToken)
-        .tokenType(tokenType.getText())
-        .enabled(true)
-        .expiresOn(Instant.now().plusSeconds(604800).toString())
-        .issuedOn(Instant.now().toString())
-        .userEmail(userEmail)
-        .build();
-
-    int id = tokenManager.createToken(token, jwsToken);
-    return id;
-  }
 }

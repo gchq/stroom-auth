@@ -24,12 +24,13 @@ export class TokenCreateForm extends Component {
                 <div className="left-container">
                   <div className="field-container">
                     <div className="label-container">
-                      <label>Email</label>
+                      <label>User's email</label>
                     </div>
                     <div className="input-container">
                       <Field
-                          hintText="Type a user's email address to create them a token"
+                          hintText="Type to search for a user"
                           component={AutoComplete}
+                          name="email"
                           openOnFocus
                           dataSource={this.props.matchingAutoCompleteResults}
                           onChange={(_, autoCompleteText) => this.props.userAutoCompleteChange(autoCompleteText, this.props.token)}
@@ -43,7 +44,7 @@ export class TokenCreateForm extends Component {
                       primary={true}
                       disabled={pristine || submitting}
                       type="submit"
-                      label="Issue API token"/>
+                      label="Issue API token to user"/>
                 </div>
               </form>
             </div>

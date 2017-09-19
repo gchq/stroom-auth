@@ -82,38 +82,36 @@ export const deleteSelectedToken = (tokenId) => {
 
 export const createToken = (newToken) => {
   return (dispatch, getState) => {
-    console.log("Not implemented yet")
-    // const jwsToken = getState().login.token
-    // const { email, password, first_name, last_name, comments, state } = newUser
-    //
+    const jwsToken = getState().login.token
+    const { email } = newToken
+
+    //TODO wire this in
     // dispatch(showCreateLoader(true))
-    //
-    // var userServiceUrl = process.env.REACT_APP_USER_URL
-    // fetch(userServiceUrl, {
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json',
-    //     'Authorization' : 'Bearer ' + jwsToken
-    //   },
-    //   method: 'post',
-    //   mode: 'cors',
-    //   body: JSON.stringify({
-    //     email,
-    //     password,
-    //     first_name,
-    //     last_name,
-    //     comments,
-    //     state
-    //   })
-    // })
-    //     .then(handleStatus)
-    //     .then(getBody)
-    //     .then(newUserId => {
-    //       dispatch(showCreateLoader(false))
-    //       dispatch(relativePush(`/user/${newUserId}`))
-    //       dispatch(toggleAlertVisibility('User has been created'))
-    //     })
-    //     .catch(error => handleErrors(error, dispatch, jwsToken))
+
+    var tokenServiceUrl = process.env.REACT_APP_TOKEN_URL
+    fetch(tokenServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + jwsToken
+      },
+      method: 'post',
+      mode: 'cors',
+      body: JSON.stringify({
+        user_email:email,
+        token_type: 'api'
+      })
+    })
+        .then(handleStatus)
+        .then(getBody)
+        .then(newTokenId => {
+          //TODO wire this in
+          // dispatch(showCreateLoader(false))
+          //TODO get a destination for displaying the token
+          // dispatch(relativePush(`/user/${newUserId}`))
+          dispatch(toggleAlertVisibility('Token has been created'))
+        })
+        .catch(error => handleErrors(error, dispatch, jwsToken))
 
   }
 }

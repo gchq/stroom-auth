@@ -10,6 +10,7 @@ import stroom.auth.service.resources.user.v1.User;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,15 +22,19 @@ public class TokenResource_delete_IT extends TokenResource_IT{
     String securityToken = clearTokensAndLogin();
     String userEmail = "testUser_" + Instant.now().toString();
     userManager.createUser(new User(userEmail, "password"), securityToken);
-    int id1 = createToken(securityToken, userEmail, Token.TokenType.USER);
-    createToken(securityToken, userEmail, Token.TokenType.API);
-    createToken(securityToken, userEmail, Token.TokenType.API);
-    tokenManager.deleteToken(id1, securityToken);
+    String token = tokenManager.createToken(userEmail, Token.TokenType.USER, securityToken);
+    tokenManager.createToken(userEmail, Token.TokenType.API, securityToken);
+    tokenManager.createToken(userEmail, Token.TokenType.API, securityToken);
+    tokenManager.deleteToken(token, securityToken);
 
     SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
         .page(0)
         .limit(10)
         .orderBy("expires_on")
+        .filters(new HashMap<String, String>()
+          {{
+            put("user_email", userEmail);
+          }})
         .build();
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 

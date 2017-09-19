@@ -131,7 +131,8 @@ public class Token {
 
   public enum TokenType {
     USER("user"),
-    API("api");
+    API("api"),
+    EMAIL_RESET("email_reset");
 
     private String tokenTypeText;
 

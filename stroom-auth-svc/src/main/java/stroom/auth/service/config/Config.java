@@ -32,21 +32,6 @@ public final class Config extends Configuration {
   @Valid
   @NotNull
   @JsonProperty
-  private int jwsExpirationTimeInMinutesInTheFuture;
-
-  @Valid
-  @NotNull
-  @JsonProperty
-  private String jwsIssuer = "stroom";
-
-  @Valid
-  @NotNull
-  @JsonProperty
-  private String jwsSecret = "CHANGE_ME";
-
-  @Valid
-  @NotNull
-  @JsonProperty
   private String certificateDnPattern = "CN=[^ ]+ [^ ]+ (?([a-zA-Z0-9]+))?";
 
   @Valid
@@ -84,6 +69,10 @@ public final class Config extends Configuration {
   @JsonProperty("email")
   private EmailConfig emailConfig;
 
+  @Nullable
+  @JsonProperty("token")
+  private TokenConfig tokenConfig;
+
   @NotNull
   @JsonProperty("authorisationService")
   private AuthorisationServiceConfig authorisationServiceConfig;
@@ -98,18 +87,6 @@ public final class Config extends Configuration {
 
   public final JooqFactory getJooqFactory() {
     return this.jooqFactory;
-  }
-
-  public final float getJwsExpirationTimeInMinutesInTheFuture() {
-    return this.jwsExpirationTimeInMinutesInTheFuture;
-  }
-
-  public final String getJwsIssuer() {
-    return this.jwsIssuer;
-  }
-
-  public final String getJwsSecret() {
-    return this.jwsSecret;
   }
 
   public final String getCertificateDnPattern() {
@@ -144,6 +121,18 @@ public final class Config extends Configuration {
     return resetPasswordUrl;
   }
 
+  public Integer getFailedLoginLockThreshold() {
+    return this.failedLoginLockThreshold;
+  }
+
+  public AuthorisationServiceConfig getAuthorisationServiceConfig() {
+    return authorisationServiceConfig;
+  }
+
+  public TokenConfig getTokenConfig() {
+    return tokenConfig;
+  }
+
   private final Integer getPort() {
     DefaultServerFactory serverFactory = (DefaultServerFactory) this.getServerFactory();
     Integer port = serverFactory.getApplicationConnectors().stream()
@@ -153,17 +142,5 @@ public final class Config extends Configuration {
         .findFirst()
         .get();
     return port;
-  }
-
-  public final byte[] jwsSecretAsBytes() {
-    return jwsSecret.getBytes();
-  }
-
-  public Integer getFailedLoginLockThreshold() {
-    return this.failedLoginLockThreshold;
-  }
-
-  public AuthorisationServiceConfig getAuthorisationServiceConfig() {
-    return authorisationServiceConfig;
   }
 }
