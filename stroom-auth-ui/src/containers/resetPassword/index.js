@@ -35,9 +35,9 @@ class ResetPassword extends Component {
   }
 
   componentDidMount(){
-    var missingToken = false;
-    var invalidToken = false;
-    var expiredToken = false;
+    let missingToken = false;
+    let invalidToken = false;
+    let expiredToken = false;
     
     const token = queryString.parse(this.context.router.route.location.search).token;
 

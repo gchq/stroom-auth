@@ -143,8 +143,8 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     }
 
     // Default ordering and direction
-    var orderBy = 'issued_on';
-    var orderDirection = 'desc';
+    let orderBy = 'issued_on';
+    let orderDirection = 'desc';
 
     if (sorted.length > 0) {
       orderBy = sorted[0].id;
@@ -152,14 +152,14 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     }
 
 
-    var filters = {};
+    let filters = {};
     if(filtered.length > 0){
       filtered.forEach(filter =>{
         filters[filter.id] = filter.value
       })
     }
 
-    var body = filters ?
+    const body = filters ?
         JSON.stringify({
           page,
           limit: pageSize,
@@ -175,7 +175,7 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
           orderDirection,
         });
 
-    var tokenSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search";
+    const tokenSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search";
 
     fetch(tokenSearchUrl, {
       headers: {
@@ -220,7 +220,7 @@ export const changeSelectedRow = (tokenId) => {
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
     const securityToken = getState().login.token;
-    var tokenUrl = `${process.env.REACT_APP_TOKEN_URL}/${tokenId}/state/?enabled=${isEnabled}`;
+    const tokenUrl = `${process.env.REACT_APP_TOKEN_URL}/${tokenId}/state/?enabled=${isEnabled}`;
     fetch(tokenUrl, {
       headers: {
         'Accept': 'application/json',

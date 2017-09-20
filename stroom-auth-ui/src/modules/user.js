@@ -192,7 +192,7 @@ export const fetchUser = (userId) => {
     const jwsToken = getState().login.token;
     //TODO: remove any errors
     //TODO: show loading spinner
-    var userServiceUrl = process.env.REACT_APP_USER_URL + "/" + userId;
+    const userServiceUrl = process.env.REACT_APP_USER_URL + "/" + userId;
     fetch(userServiceUrl, {
       headers: {
         'Accept': 'application/json',
@@ -220,7 +220,7 @@ export const deleteSelectedUser = (userId) => {
   return (dispatch, getState) => {
     const jwsToken = getState().login.token;
     const userIdToDelete = getState().userSearch.selectedUserRowId;
-    var userServiceUrl = process.env.REACT_APP_USER_URL + "/" + userIdToDelete;
+    const userServiceUrl = process.env.REACT_APP_USER_URL + "/" + userIdToDelete;
     fetch(userServiceUrl, {
       headers: {
         'Accept': 'application/json',
@@ -244,7 +244,7 @@ export const deleteSelectedUser = (userId) => {
 export const changePasswordForCurrentUser = () => {
   return (dispatch, getState) => {
     const jwsToken = getState().login.token;
-    var userServiceUrl = process.env.REACT_APP_USER_URL + "/me";
+    const userServiceUrl = process.env.REACT_APP_USER_URL + "/me";
     fetch(userServiceUrl, {
       headers: {
         'Accept': 'application/json',

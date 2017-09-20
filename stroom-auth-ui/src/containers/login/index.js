@@ -31,7 +31,7 @@ class Login extends Component {
 
   render() {
     const { token } = this.props;
-    var referrer = relativePath('/');
+    let referrer = relativePath('/');
     if(this.props.location.state){
       referrer = this.props.location.state.referrer
     }

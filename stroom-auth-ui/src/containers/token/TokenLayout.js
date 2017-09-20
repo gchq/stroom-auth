@@ -70,10 +70,10 @@ class TokenLayout extends Component {
 
   render() {
     const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props;
-    var showSearch = show === 'search';
-    var showCreate = show === 'create';
-    var showCreateButton = showSearch;
-    var deleteButtonDisabled = !selectedTokenRowId;
+    const showSearch = show === 'search';
+    const showCreate = show === 'create';
+    const showCreateButton = showSearch;
+    const deleteButtonDisabled = !selectedTokenRowId;
     return (
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>

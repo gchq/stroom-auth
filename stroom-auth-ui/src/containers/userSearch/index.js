@@ -41,7 +41,7 @@ class UserSearch extends Component {
   }
 
   renderStateCell(state){
-    var stateColour, stateText;
+    let stateColour, stateText;
     switch(state) {
       case 'enabled':
         stateColour = '#57d500';
@@ -137,7 +137,7 @@ class UserSearch extends Component {
                 showPagination= {true}
                 loading={this.props.showSearchLoader}
                 getTrProps={(state, rowInfo, column, instance) => {
-                  var selected = false;
+                  let selected = false;
                   if(rowInfo) {
                     selected = rowInfo.row.id === this.props.selectedUserRowId 
                   }

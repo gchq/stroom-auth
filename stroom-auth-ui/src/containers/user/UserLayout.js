@@ -71,11 +71,11 @@ class UserLayout extends Component {
 
   render() {
     const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props;
-    var showSearch = show === 'search';
-    var showCreate = show === 'create';
-    var showEdit = show === 'edit';
-    var showCreateButton = showSearch ;
-    var deleteButtonDisabled = !selectedUserRowId;
+    const showSearch = show === 'search';
+    const showCreate = show === 'create';
+    const showEdit = show === 'edit';
+    const showCreateButton = showSearch ;
+    const deleteButtonDisabled = !selectedUserRowId;
     return (
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>

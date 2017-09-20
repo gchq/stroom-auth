@@ -78,7 +78,7 @@ export const performUserSearch = (jwsToken) => {
     }
     dispatch(showSearchLoader(true));
 
-    var userSearchUrl = process.env.REACT_APP_USER_URL + '/?fromEmail=&usersPerPage=100&orderBy=id';
+    const userSearchUrl = process.env.REACT_APP_USER_URL + '/?fromEmail=&usersPerPage=100&orderBy=id';
     fetch(userSearchUrl, {
       headers: {
         'Accept': 'application/json',

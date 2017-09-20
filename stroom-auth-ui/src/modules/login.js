@@ -162,7 +162,7 @@ export const login = (credentials) => {
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))
 
-    var loginServiceUrl = process.env.REACT_APP_LOGIN_URL;
+    const loginServiceUrl = process.env.REACT_APP_LOGIN_URL;
     // Call the authentication service to get a token.
     // If successful we re-direct to Stroom, otherwise we display a message.
     // It's essential we return the promise, otherwise any errors we get won't be handled.
@@ -235,7 +235,7 @@ function processToken(token, userEmail, dispatch, rememberMe, referrer){
 
 export const canManageUsers = (jwsToken) => {
   return (dispatch) => {
-    var canManageUsersUrl = process.env.REACT_APP_AUTHORISATION_URL + '/canManageUsers';
+    const canManageUsersUrl = process.env.REACT_APP_AUTHORISATION_URL + '/canManageUsers';
     return fetch(canManageUsersUrl, {
         headers: {
           'Accept': 'application/json',

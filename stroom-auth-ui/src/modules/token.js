@@ -75,7 +75,7 @@ export const deleteSelectedToken = (tokenId) => {
   return (dispatch, getState) => {
     const jwsToken = getState().login.token;
     const tokenIdToDelete = getState().tokenSearch.selectedTokenRowId;
-    var tokenServiceUrl = process.env.REACT_APP_TOKEN_URL + "/" + tokenIdToDelete;
+    const tokenServiceUrl = process.env.REACT_APP_TOKEN_URL + "/" + tokenIdToDelete;
     fetch(tokenServiceUrl, {
       headers: {
         'Accept': 'application/json',
@@ -104,7 +104,7 @@ export const createToken = (newToken) => {
     //TODO wire this in
     // dispatch(showCreateLoader(true))
 
-    var tokenServiceUrl = process.env.REACT_APP_TOKEN_URL;
+    const tokenServiceUrl = process.env.REACT_APP_TOKEN_URL;
     fetch(tokenServiceUrl, {
       headers: {
         'Accept': 'application/json',
@@ -137,8 +137,8 @@ export const createToken = (newToken) => {
 export function userAutoCompleteChange(autocompleteText, securityToken, param2){
   return (dispatch, getState) => {
     performUserSearch(securityToken);
-    var matchingAutoCompleteResults = [];
-    var autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
+    let matchingAutoCompleteResults = [];
+    const autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
     getState().userSearch.results.filter(result => {
       if(result.email.indexOf(autocompleteText) !== -1
         && matchingAutoCompleteResults.length <= autoCompleteSuggestionLimit){
