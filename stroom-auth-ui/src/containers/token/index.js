@@ -24,7 +24,7 @@ import { performUserSearch } from "../../modules/userSearch"
 export class TokenCreate extends Component {
   componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('create'))
+    this.context.store.dispatch(changeVisibleContainer('create'));
     this.context.store.dispatch(performUserSearch())
   }
 
@@ -37,7 +37,7 @@ export class TokenCreate extends Component {
 
 TokenCreate.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 
 export class TokenSearch extends Component {
@@ -55,4 +55,4 @@ export class TokenSearch extends Component {
 
 TokenSearch.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};

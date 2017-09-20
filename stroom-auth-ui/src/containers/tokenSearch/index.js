@@ -43,8 +43,8 @@ class TokenSearch extends Component {
   }
 
   getEnabledCellRenderer(row){
-    let state = row.value
-    let tokenId = row.original.id
+    let state = row.value;
+    let tokenId = row.original.id;
     return (
         <Toggle
             defaultToggled={state}
@@ -82,12 +82,12 @@ class TokenSearch extends Component {
   }
 
   formatDate(dateString){
-    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
+    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
     return dateString ? dateFormat(dateString, dateFormatString) : ''
   }
 
   getColumnFormat() {
-    const columns = [{
+    return [{
       Header: '',
       accessor: 'id',
       Cell: row => (<div>{this.props.selectedTokenRowId === row.value ? 'selected' : 'unselected'}</div>),
@@ -103,18 +103,18 @@ class TokenSearch extends Component {
       accessor: 'enabled',
       width: 130,
       Cell: row => this.getEnabledCellRenderer(row),
-      Filter:({filter, onChange}) => this.getEnabledCellFilter(filter, onChange)
+      Filter: ({filter, onChange}) => this.getEnabledCellFilter(filter, onChange)
     }, {
       Header: 'Expires on',
       accessor: 'expires_on',
       Cell: row => this.formatDate(row.value),
-      Filter:({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+      Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
       width: 225
     }, {
       Header: 'Issued on',
       accessor: 'issued_on',
       Cell: row => this.formatDate(row.value),
-      Filter:({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+      Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
       width: 120
     }, {
       Header: 'Token',
@@ -123,7 +123,7 @@ class TokenSearch extends Component {
     }, {
       Header: 'Token type',
       accessor: 'token_type',
-      Filter:({filter, onChange}) => this.getTokenTypeCellFilter(filter, onChange),
+      Filter: ({filter, onChange}) => this.getTokenTypeCellFilter(filter, onChange),
       width: 220
     }, {
       Header: 'Updated by user',
@@ -132,11 +132,10 @@ class TokenSearch extends Component {
     }, {
       Header: 'Updated on',
       accessor: 'updated_on',
-      Filter:({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+      Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
       Cell: row => this.formatDate(row.value),
       width: 400
     }]
-    return columns
   }
 
   render() {
@@ -178,7 +177,7 @@ class TokenSearch extends Component {
 
 TokenSearch.propTypes = {
   isFilteringEnabled: PropTypes.bool.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   token: state.login.token,
@@ -189,13 +188,13 @@ const mapStateToProps = state => ({
   errorStatus: state.token.errorStatus,
   errorText: state.token.errorText,
   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   performTokenSearch,
   changeSelectedRow,
   setEnabledStateOnToken
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

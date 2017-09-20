@@ -31,7 +31,7 @@ import { createToken as onSubmit, userAutoCompleteChange } from '../../modules/t
 export class TokenCreateForm extends Component {
 
   render() {
-    const {handleSubmit, pristine, submitting } = this.props
+    const {handleSubmit, pristine, submitting } = this.props;
     return (
         <div className=''>
           <Card className="CreateTokenForm-card">
@@ -72,7 +72,7 @@ export class TokenCreateForm extends Component {
 
 const ReduxTokenCreateForm = reduxForm({
   form: 'TokenCreateForm'
-})(TokenCreateForm)
+})(TokenCreateForm);
 
 const mapStateToProps = state => ({
   token: state.login.token,
@@ -80,12 +80,12 @@ const mapStateToProps = state => ({
   // errorStatus: state.user.errorStatus,
   // errorText: state.user.errorText,
   matchingAutoCompleteResults: state.token.matchingAutoCompleteResults
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   userAutoCompleteChange,
   onSubmit
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

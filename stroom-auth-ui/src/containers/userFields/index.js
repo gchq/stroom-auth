@@ -30,7 +30,7 @@ This can display all user fields, or not.
 */
 class UserFields extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       isPasswordEditingEnabled: false
     }
@@ -41,8 +41,8 @@ class UserFields extends Component {
   }
 
   render() {
-    const { showCalculatedFields, constrainPasswordEditing } = this.props
-    const showPasswordField = this.state.isPasswordEditingEnabled || !constrainPasswordEditing
+    const { showCalculatedFields, constrainPasswordEditing } = this.props;
+    const showPasswordField = this.state.isPasswordEditingEnabled || !constrainPasswordEditing;
     return (
       <div className="container">
           <div className="left-container">
@@ -246,6 +246,6 @@ class UserFields extends Component {
 UserFields.propTypes = {
   showCalculatedFields: PropTypes.bool.isRequired,
   constrainPasswordEditing: PropTypes.bool.isRequired
-}
+};
 
 export default UserFields

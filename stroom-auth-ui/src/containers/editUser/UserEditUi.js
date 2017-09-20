@@ -28,7 +28,7 @@ import UserFields from '../userFields'
 import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
 
 const UserEditForm = props => {
-  const {handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility } = props
+  const {handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility } = props;
   return (
     <Card className="EditUserForm-card">
       <form onSubmit={handleSubmit}>
@@ -47,23 +47,23 @@ const UserEditForm = props => {
       />
     </Card>
   )
-}
+};
 
 const ReduxUserEditForm = reduxForm({
   form: 'UserEditForm'
-})(UserEditForm)
+})(UserEditForm);
 
 
 const mapStateToProps = state => ({
   initialValues: state.user.userBeingEdited,
   showAlert: state.user.showAlert,
   alertText: state.user.alertText
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit,
   toggleAlertVisibility
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

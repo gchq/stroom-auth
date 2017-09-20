@@ -22,16 +22,16 @@ import { relativePush } from '../relativePush'
 export function handleErrors(error, dispatch, token) {
   if(error.status === 401){
 
-    const decodedToken = jwtDecode(token)
-    const now = new Date().getTime() / 1000
-    const expiredToken = decodedToken.exp <= now
+    const decodedToken = jwtDecode(token);
+    const now = new Date().getTime() / 1000;
+    const expiredToken = decodedToken.exp <= now;
     if(expiredToken){
       //TODO rename this to 'requestExpiredToken'
-      dispatch(requestWasUnauthorized(true))  
+      dispatch(requestWasUnauthorized(true));
     }
     else {
       // If it's not expired then that means this user is genuinely unauthorised
-      dispatch(relativePush('/unauthorised'))
+      dispatch(relativePush('/unauthorised'));
     }  
   }
   else { 
@@ -40,9 +40,9 @@ export function handleErrors(error, dispatch, token) {
 }
 
 export function getBody(response) {
-  return response.text()
+  return response.text();
 }
 
 export function getJsonBody(response) {
-  return response.json()
+  return response.json();
 }

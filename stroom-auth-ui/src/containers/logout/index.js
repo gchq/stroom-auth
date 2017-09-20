@@ -34,11 +34,11 @@ class Logout extends Component {
 }
 
 const mapStateToProps = state => ({
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   logout
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

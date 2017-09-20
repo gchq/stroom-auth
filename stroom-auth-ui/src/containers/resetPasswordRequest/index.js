@@ -31,7 +31,7 @@ import { required } from '../../validations'
 import { submitPasswordChangeRequest as onSubmit } from '../../modules/user'
 
 const ResetPasswordRequest = props => {
-  const {handleSubmit, pristine, submitting } = props
+  const {handleSubmit, pristine, submitting } = props;
   return (
     <div className='content-floating-without-appbar'>
       <Card className="ResetPasswordRequest-main">
@@ -56,18 +56,18 @@ const ResetPasswordRequest = props => {
     </Card>
     </div>
   )
-}
+};
 
 const ReduxResetPasswordRequestForm = reduxForm({
   form: 'ResetPasswordRequestForm'
-})(ResetPasswordRequest)
+})(ResetPasswordRequest);
 
 const mapStateToProps = state => ({
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

@@ -28,7 +28,7 @@ import UserFields from '../userFields'
 import { createUser as onSubmit } from '../../modules/user'
 
 const UserCreateForm = props => {
-  const {handleSubmit, pristine, submitting } = props
+  const {handleSubmit, pristine, submitting } = props;
   return (
     <div className=''>
         <Card className="CreateUserForm-card">
@@ -47,11 +47,11 @@ const UserCreateForm = props => {
       </Card>
     </div>
   )
-}
+};
 
 const ReduxUserCreateForm = reduxForm({
   form: 'UserCreateForm'
-})(UserCreateForm)
+})(UserCreateForm);
 
 const mapStateToProps = state => ({
   // token: state.login.token,
@@ -60,11 +60,11 @@ const mapStateToProps = state => ({
   // password: state.user.password,
   errorStatus: state.user.errorStatus,
   errorText: state.user.errorText,
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

@@ -45,7 +45,7 @@ import './Token.css'
 // TODO: make the CSS specific to token, or make it common
 class TokenLayout extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       isFilteringEnabled: false,
       isHelpDialogOpen: false
@@ -69,11 +69,11 @@ class TokenLayout extends Component {
   };
 
   render() {
-    const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props
-    var showSearch = show === 'search'
-    var showCreate = show === 'create'
-    var showCreateButton = showSearch
-    var deleteButtonDisabled = selectedTokenRowId ? false : true
+    const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props;
+    var showSearch = show === 'search';
+    var showCreate = show === 'create';
+    var showCreateButton = showSearch;
+    var deleteButtonDisabled = !selectedTokenRowId;
     return (
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
@@ -151,19 +151,19 @@ class TokenLayout extends Component {
 
 TokenLayout.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   show: state.token.show,
   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
   showAlert: state.token.showAlert,
   alertText: state.token.alertText
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   deleteSelectedToken,
   toggleAlertVisibility
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

@@ -33,7 +33,7 @@ import { relativePath } from '../../relativePush'
 
 class Home extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       stroomLinkShadow: 1,
       usersLinkShadow: 1,
@@ -41,8 +41,8 @@ class Home extends Component {
     }
   }
 
-  onMouseOver = () => this.setState({shadow:3})
-  onMouseOut = () => this.setState({shadow:1})
+  onMouseOver = () => this.setState({shadow:3});
+  onMouseOut = () => this.setState({shadow:1});
 
   render() {
     return (
@@ -115,16 +115,16 @@ class Home extends Component {
 
 Home.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   token: state.login.token,
   canManageUsers: state.login.canManageUsers
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   goToStroom
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

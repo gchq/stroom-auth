@@ -33,13 +33,13 @@ const theme = getMuiTheme({
     primary1Color: blue600,
     accent1Color: amber900,
   }
-})
+});
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
-const target = document.querySelector('#root')
+const target = document.querySelector('#root');
 
 render(
   <Provider store={store}>
@@ -50,4 +50,4 @@ render(
     </ConnectedRouter>
   </Provider>,
   target
-)
+);

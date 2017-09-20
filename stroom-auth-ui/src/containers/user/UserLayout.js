@@ -46,7 +46,7 @@ import './User.css'
 
 class UserLayout extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       isFilteringEnabled: false,
       isHelpDialogOpen: false
@@ -70,12 +70,12 @@ class UserLayout extends Component {
   };
 
   render() {
-    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props
-    var showSearch = show === 'search'
-    var showCreate = show === 'create'
-    var showEdit = show === 'edit'
-    var showCreateButton = showSearch 
-    var deleteButtonDisabled = selectedUserRowId ? false : true
+    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props;
+    var showSearch = show === 'search';
+    var showCreate = show === 'create';
+    var showEdit = show === 'edit';
+    var showCreateButton = showSearch ;
+    var deleteButtonDisabled = !selectedUserRowId;
     return (
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
@@ -161,19 +161,19 @@ class UserLayout extends Component {
 
 UserLayout.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   show: state.user.show,
   selectedUserRowId: state.userSearch.selectedUserRowId,
   showAlert: state.user.showAlert,
   alertText: state.user.alertText
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   deleteSelectedUser,
   toggleAlertVisibility
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

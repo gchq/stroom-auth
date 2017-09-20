@@ -19,16 +19,16 @@ import { handleErrors, getBody } from './fetchFunctions'
 import { performTokenSearch, changeSelectedRow } from './tokenSearch'
 import { performUserSearch } from './userSearch'
 
-export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER'
-export const TOGGLE_ALERT_VISIBILITY = 'token/TOGGLE_ALERT_VISIBILITY'
-export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = 'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS'
+export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER';
+export const TOGGLE_ALERT_VISIBILITY = 'token/TOGGLE_ALERT_VISIBILITY';
+export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = 'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS';
 
 
 const initialState = {
   showAlert: false,
   alertText: '',
   matchingAutoCompleteResults: []
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -36,7 +36,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         show: action.show
-      }
+      };
 
     case TOGGLE_ALERT_VISIBILITY:
       const showAlert = !state.showAlert
@@ -44,13 +44,13 @@ export default (state = initialState, action) => {
         ...state,
         showAlert: showAlert,
         alertText: action.alertText
-      }
+      };
 
     case UPDATE_MATCHING_AUTO_COMPLETE_RESULTS:
       return {
         ...state,
         matchingAutoCompleteResults: action.matchingAutoCompleteResults
-      }
+      };
 
     default:
       return state
@@ -73,9 +73,9 @@ export function toggleAlertVisibility(alertText) {
 
 export const deleteSelectedToken = (tokenId) => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
-    const tokenIdToDelete = getState().tokenSearch.selectedTokenRowId
-    var tokenServiceUrl = process.env.REACT_APP_TOKEN_URL + "/" + tokenIdToDelete
+    const jwsToken = getState().login.token;
+    const tokenIdToDelete = getState().tokenSearch.selectedTokenRowId;
+    var tokenServiceUrl = process.env.REACT_APP_TOKEN_URL + "/" + tokenIdToDelete;
     fetch(tokenServiceUrl, {
       headers: {
         'Accept': 'application/json',
@@ -88,9 +88,9 @@ export const deleteSelectedToken = (tokenId) => {
         .then(handleStatus)
         .then(getBody)
         .then(token => {
-          dispatch(changeSelectedRow(tokenId))
-          dispatch(performTokenSearch(jwsToken, ))
-          dispatch(toggleAlertVisibility("Token has been deleted"))
+          dispatch(changeSelectedRow(tokenId));
+          dispatch(performTokenSearch(jwsToken, ));
+          dispatch(toggleAlertVisibility("Token has been deleted"));
         })
         .catch(error => handleErrors(error, dispatch, jwsToken))
   }
@@ -98,13 +98,13 @@ export const deleteSelectedToken = (tokenId) => {
 
 export const createToken = (newToken) => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
-    const { email } = newToken
+    const jwsToken = getState().login.token;
+    const { email } = newToken;
 
     //TODO wire this in
     // dispatch(showCreateLoader(true))
 
-    var tokenServiceUrl = process.env.REACT_APP_TOKEN_URL
+    var tokenServiceUrl = process.env.REACT_APP_TOKEN_URL;
     fetch(tokenServiceUrl, {
       headers: {
         'Accept': 'application/json',
@@ -131,20 +131,20 @@ export const createToken = (newToken) => {
         .catch(error => handleErrors(error, dispatch, jwsToken))
 
   }
-}
+};
 
 
 export function userAutoCompleteChange(autocompleteText, securityToken, param2){
   return (dispatch, getState) => {
-    performUserSearch(securityToken)
-    var matchingAutoCompleteResults = []
+    performUserSearch(securityToken);
+    var matchingAutoCompleteResults = [];
     var autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
     getState().userSearch.results.filter(result => {
       if(result.email.indexOf(autocompleteText) !== -1
         && matchingAutoCompleteResults.length <= autoCompleteSuggestionLimit){
         matchingAutoCompleteResults.push(result.email)
       }
-    })
+    });
     dispatch({
       type: UPDATE_MATCHING_AUTO_COMPLETE_RESULTS,
       matchingAutoCompleteResults

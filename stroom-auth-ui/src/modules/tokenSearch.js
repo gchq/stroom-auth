@@ -18,19 +18,19 @@ import { HttpError } from '../ErrorTypes'
 import { handleErrors, getJsonBody } from './fetchFunctions'
 import { toggleAlertVisibility } from './token'
 
-export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER'
-export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS'
-export const SELECT_ROW = 'tokenSearch/SELECT_ROW'
-export const CHANGE_LAST_USED_PAGE_SIZE = 'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE'
-export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE'
-export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED'
-export const CHANGE_LAST_USED_FILTERED = 'tokenSearch/CHANGE_LAST_USED_FILTERED'
+export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER';
+export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS';
+export const SELECT_ROW = 'tokenSearch/SELECT_ROW';
+export const CHANGE_LAST_USED_PAGE_SIZE = 'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE';
+export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE';
+export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED';
+export const CHANGE_LAST_USED_FILTERED = 'tokenSearch/CHANGE_LAST_USED_FILTERED';
 
 const initialState = {
   tokens: [],
   showSearchLoader: false,
   selectedTokenRowId: undefined
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -38,13 +38,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         showSearchLoader: action.showSearchLoader
-      }
+      };
     case UPDATE_RESULTS:
       return {
         ...state,
         results: action.results,
         totalPages: action.totalPages
-      }
+      };
     case SELECT_ROW:
       if(state.selectedTokenRowId === action.selectedTokenRowId){
         return {
@@ -62,22 +62,22 @@ export default (state = initialState, action) => {
       return {
         ...state,
         lastUsedPageSize: action.lastUsedPageSize
-      }
+      };
     case CHANGE_LAST_USED_PAGE:
       return {
         ...state,
         lastUsedPage: action.lastUsedPage
-      }
+      };
     case CHANGE_LAST_USED_SORTED:
       return {
         ...state,
         lastUsedSorted: action.lastUsedSorted
-      }
+      };
     case CHANGE_LAST_USED_FILTERED:
       return {
         ...state,
         lastUsedFiltered: action.lastUsedFiltered
-      }
+      };
     default:
       return state
   }
@@ -100,7 +100,7 @@ export function showSearchLoader(showSearchLoader){
 
 export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) => {
   return (dispatch, getState)=> {
-    dispatch(showSearchLoader(true))
+    dispatch(showSearchLoader(true));
 
     if(pageSize === undefined){
       pageSize = getState().tokenSearch.lastUsedPageSize
@@ -143,16 +143,16 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     }
 
     // Default ordering and direction
-    var orderBy = 'issued_on'
-    var orderDirection = 'desc'
+    var orderBy = 'issued_on';
+    var orderDirection = 'desc';
 
     if (sorted.length > 0) {
-      orderBy = sorted[0].id
+      orderBy = sorted[0].id;
       orderDirection = sorted[0].desc ? 'desc' : 'asc'
     }
 
 
-    var filters = {}
+    var filters = {};
     if(filtered.length > 0){
       filtered.forEach(filter =>{
         filters[filter.id] = filter.value
@@ -173,9 +173,9 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
           limit: pageSize,
           orderBy,
           orderDirection,
-        })
+        });
 
-    var tokenSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search"
+    var tokenSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search";
 
     fetch(tokenSearchUrl, {
       headers: {
@@ -190,12 +190,12 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     .then(handleStatus)
     .then(getJsonBody)
     .then(data => {
-      dispatch(showSearchLoader(false))
+      dispatch(showSearchLoader(false));
       dispatch(updateResults(data))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
   }
-}
+};
 
 function handleStatus(response) {
   if(response.status === 200){
@@ -215,12 +215,12 @@ export const changeSelectedRow = (tokenId) => {
       selectedTokenRowId: tokenId
     })
   }
-}
+};
 
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
-    const securityToken = getState().login.token
-    var tokenUrl = `${process.env.REACT_APP_TOKEN_URL}/${tokenId}/state/?enabled=${isEnabled}`
+    const securityToken = getState().login.token;
+    var tokenUrl = `${process.env.REACT_APP_TOKEN_URL}/${tokenId}/state/?enabled=${isEnabled}`;
     fetch(tokenUrl, {
       headers: {
         'Accept': 'application/json',
@@ -236,4 +236,4 @@ export const setEnabledStateOnToken = (tokenId, isEnabled) => {
       //TODO Display snackbar with an error message
     })
   }
-}
+};

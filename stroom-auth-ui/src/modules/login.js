@@ -20,14 +20,14 @@ import { SubmissionError } from 'redux-form'
 
 import { HttpError } from '../ErrorTypes'
 
-export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
-export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
-export const TOKEN_CHANGE = 'login/TOKEN_CHANGE'
-export const TOKEN_DELETE = 'login/TOKEN_DELETE'
-export const SHOW_LOADER = 'login/SHOW_LOADER'
-export const SHOW_UNAUTHORIZED_DIALOG = 'login/SHOW_UNAUTHORIZED_DIALOG'
-export const CHANGE_LOGGED_IN_USER = 'login/CHANGE_LOGGED_IN_USER'
-export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS'
+export const EMAIL_CHANGE = 'login/EMAIL_CHANGE';
+export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE';
+export const TOKEN_CHANGE = 'login/TOKEN_CHANGE';
+export const TOKEN_DELETE = 'login/TOKEN_DELETE';
+export const SHOW_LOADER = 'login/SHOW_LOADER';
+export const SHOW_UNAUTHORIZED_DIALOG = 'login/SHOW_UNAUTHORIZED_DIALOG';
+export const CHANGE_LOGGED_IN_USER = 'login/CHANGE_LOGGED_IN_USER';
+export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS';
 
 const initialState = {
   token: '',
@@ -35,7 +35,7 @@ const initialState = {
   showUnauthorizedDialog: false,
   loggedInUserEmail: undefined,
   canManageUsers: false
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -43,41 +43,41 @@ export default (state = initialState, action) => {
       return {
         ...state,
         email: action.email
-      }
+      };
 
     case TOKEN_CHANGE: 
       return {
         ...state,
         token: action.token
-      }
+      };
     case TOKEN_DELETE:
       return {
         ...state,
         token: ''
-      }
+      };
     case SHOW_LOADER:
       return {
         ...state,
         showLoader: action.showLoader
-      }
+      };
 
     case SHOW_UNAUTHORIZED_DIALOG:
       return { 
         ...state,
         showUnauthorizedDialog: action.showUnauthorizedDialog
-      }
+      };
 
     case CHANGE_LOGGED_IN_USER:
       return {
         ...state,
         loggedInUserEmail: action.userEmail
-      }
+      };
 
     case SET_CAN_MANAGE_USERS:
       return {
         ...state,
         canManageUsers: action.canManageUsers
-      }
+      };
 
     default:
       return state
@@ -98,11 +98,11 @@ export function deleteToken() {
 }
 
 export const logout = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('userEmail')
+  localStorage.removeItem('token');
+  localStorage.removeItem('userEmail');
   return dispatch => {
-    dispatch(deleteToken())
-    dispatch(storeLoggedInUser(undefined))
+    dispatch(deleteToken());
+    dispatch(storeLoggedInUser(undefined));
     dispatch(setCanManagerUsers(false))
   }
 }
@@ -115,24 +115,24 @@ export function showLoader(showLoader){
 }
 
 export const checkForRememberMeToken = (dispatch) => {
-  const token = localStorage.getItem('token')
-  const userEmail = localStorage.getItem('userEmail')
+  const token = localStorage.getItem('token');
+  const userEmail = localStorage.getItem('userEmail');
 
   if(userEmail){
     dispatch(storeLoggedInUser(userEmail))
   }
   if(token){
-    dispatch(changeToken(token))
+    dispatch(changeToken(token));
     dispatch(canManageUsers(token))
   }
-}
+};
 
 export const requestWasUnauthorized = (showUnauthorizedDialog) => {
   return {
     type: SHOW_UNAUTHORIZED_DIALOG,
     showUnauthorizedDialog
   }
-}
+};
 
 export function storeLoggedInUser(userEmail) {
   return {
@@ -146,23 +146,23 @@ export const handleSessionTimeout = () => {
     dispatch(logout())
     dispatch(requestWasUnauthorized(false))
   }
-}
+};
 
 const setCanManagerUsers = (canManageUsers) => {
   return {
       type: SET_CAN_MANAGE_USERS,
       canManageUsers: canManageUsers
   }
-}
+};
 
 export const login = (credentials) => {
   return dispatch => {
-    const { email, password, rememberMe } = credentials
+    const { email, password, rememberMe } = credentials;
 
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))
 
-    var loginServiceUrl = process.env.REACT_APP_LOGIN_URL
+    var loginServiceUrl = process.env.REACT_APP_LOGIN_URL;
     // Call the authentication service to get a token.
     // If successful we re-direct to Stroom, otherwise we display a message.
     // It's essential we return the promise, otherwise any errors we get won't be handled.
@@ -183,8 +183,8 @@ export const login = (credentials) => {
       //TODO restore referrer
       // .then(jwsToken => processToken(jwsToken, dispatch, referrer))
       .then(jwsToken => {
-        dispatch(storeLoggedInUser(email))
-        dispatch(canManageUsers(jwsToken))
+        dispatch(storeLoggedInUser(email));
+        dispatch(canManageUsers(jwsToken));
         processToken(jwsToken, email, dispatch, rememberMe, null)
       })
   }
@@ -207,24 +207,23 @@ function getBody(response) {
 
 function processToken(token, userEmail, dispatch, rememberMe, referrer){
   if(rememberMe){
-    const existingToken = localStorage.getItem('token')
-    const userEmail = localStorage.getItem('userEmail')
+    const existingToken = localStorage.getItem('token');
+    const userEmail = localStorage.getItem('userEmail');
     if(existingToken !== token) {
-      localStorage.setItem('token', token)
+      localStorage.setItem('token', token);
       localStorage.setItem('userEmail', userEmail)
     }
   }
   else {
-    localStorage.removeItem('token')
+    localStorage.removeItem('token');
     localStorage.removeItem('token')
   }
 
-  dispatch(changeToken(token))
-  dispatch(showLoader(false))        
+  dispatch(changeToken(token));
+  dispatch(showLoader(false))        ;
   if(referrer === "stroom"){
     //TODO use authorisation header
-    var loginUrl = process.env.REACT_APP_STROOM_URL + '/?token=' + token
-    window.location.href = loginUrl
+    window.location.href = process.env.REACT_APP_STROOM_URL + '/?token=' + token
   }
   else if(!referrer) {
     dispatch(relativePush('/'))
@@ -236,7 +235,7 @@ function processToken(token, userEmail, dispatch, rememberMe, referrer){
 
 export const canManageUsers = (jwsToken) => {
   return (dispatch) => {
-    var canManageUsersUrl = process.env.REACT_APP_AUTHORISATION_URL + '/canManageUsers'
+    var canManageUsersUrl = process.env.REACT_APP_AUTHORISATION_URL + '/canManageUsers';
     return fetch(canManageUsersUrl, {
         headers: {
           'Accept': 'application/json',
@@ -258,4 +257,4 @@ export const canManageUsers = (jwsToken) => {
         }
       })
   }
-}
+};

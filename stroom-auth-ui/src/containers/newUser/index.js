@@ -28,10 +28,10 @@ class NewUser extends Component {
 }
 
 const mapStateToProps = state => ({
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

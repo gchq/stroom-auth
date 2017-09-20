@@ -41,22 +41,22 @@ class UserSearch extends Component {
   }
 
   renderStateCell(state){
-    var stateColour, stateText
+    var stateColour, stateText;
     switch(state) {
       case 'enabled':
-        stateColour = '#57d500'
-        stateText = 'Enabled'
+        stateColour = '#57d500';
+        stateText = 'Enabled';
         break;
       case 'locked':
-        stateColour = '#ff2e00'
-        stateText = 'Locked'
+        stateColour = '#ff2e00';
+        stateText = 'Locked';
         break;
       case 'disabled':
-        stateColour = '#ff2e00'
-        stateText = 'Disabled'
+        stateColour = '#ff2e00';
+        stateText = 'Disabled';
         break;
       default:
-        stateColour = '#ffbf00'
+        stateColour = '#ffbf00';
         stateText = 'Unknown!'
     }
     return (
@@ -74,12 +74,12 @@ class UserSearch extends Component {
   }
 
   formatDate(dateString){
-    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
+    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
     return dateString ? dateFormat(dateString, dateFormatString) : ''
   }
 
   getColumnFormat() {
-    const columns = [{
+    return [{
       Header: '',
       accessor: 'id',
       Cell: row => (<div>{this.props.selectedUserRowId === row.value ? 'selected' : 'unselected'}</div>),
@@ -118,7 +118,6 @@ class UserSearch extends Component {
       accessor: 'comments',
       width: 400
     }]
-    return columns
   }
 
   render() {
@@ -138,7 +137,7 @@ class UserSearch extends Component {
                 showPagination= {true}
                 loading={this.props.showSearchLoader}
                 getTrProps={(state, rowInfo, column, instance) => {
-                  var selected = false
+                  var selected = false;
                   if(rowInfo) {
                     selected = rowInfo.row.id === this.props.selectedUserRowId 
                   }
@@ -158,7 +157,7 @@ class UserSearch extends Component {
 
 UserSearch.propTypes = {
   isFilteringEnabled: PropTypes.bool.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   token: state.login.token,
@@ -167,12 +166,12 @@ const mapStateToProps = state => ({
   errorStatus: state.user.errorStatus,
   errorText: state.user.errorText,
   selectedUserRowId: state.userSearch.selectedUserRowId
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   performUserSearch,
   changeSelectedRow
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

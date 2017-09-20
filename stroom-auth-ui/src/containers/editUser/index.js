@@ -22,14 +22,14 @@ import { fetchUser } from '../../modules/user'
 
 class UserEditForm extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       rules: []
     }
   }
 
   async componentDidMount() {
-    const userId = this.context.router.route.match.params.userId
+    const userId = this.context.router.route.match.params.userId;
     this.context.store.dispatch(fetchUser(userId))
 
     //TODO get user from API and put into store
@@ -48,6 +48,6 @@ UserEditForm.contextTypes = {
   router: PropTypes.shape({
     history: object.isRequired,
   }),
-}
+};
 
 export default UserEditForm

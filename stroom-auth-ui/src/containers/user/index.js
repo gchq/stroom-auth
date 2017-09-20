@@ -35,7 +35,7 @@ export class UserCreate extends Component {
 
 UserCreate.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 export class UserEdit extends Component {
     componentWillMount() {
@@ -52,7 +52,7 @@ export class UserEdit extends Component {
 
 UserEdit.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 export class UserSearch extends Component {
     componentWillMount() {
@@ -69,4 +69,4 @@ export class UserSearch extends Component {
 
 UserSearch.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};

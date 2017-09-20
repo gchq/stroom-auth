@@ -22,7 +22,7 @@ import Menu, { MenuItem } from 'material-ui/Menu'
 
 export default class UserStateMenu extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       anchorEl: undefined,
       open: false,
@@ -30,27 +30,27 @@ export default class UserStateMenu extends Component {
     }
   }
 
-  button = undefined
+  button = undefined;
 
   handleClickListItem = event => {
     this.setState({ open: true, anchorEl: event.currentTarget })
-  }
+  };
 
   handleMenuItemClick = (event, index) => {
-    this.setState({ selectedIndex: index, open: false })
+    this.setState({ selectedIndex: index, open: false });
     this.props.onChange(index)
-  }
+  };
 
   handleRequestClose = () => {
     this.setState({ open: false })
-  }
+  };
 
   render() {
     const options = [
       'Enabled',
       'Disabled',
       'Locked',
-    ]
+    ];
     return (
       <div>
         <List>
@@ -88,4 +88,4 @@ export default class UserStateMenu extends Component {
 UserStateMenu.propTypes = {
   value: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired
-}
+};

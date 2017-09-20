@@ -30,8 +30,8 @@ class Login extends Component {
   }
 
   render() {
-    const { token } = this.props
-    var referrer = relativePath('/')
+    const { token } = this.props;
+    var referrer = relativePath('/');
     if(this.props.location.state){
       referrer = this.props.location.state.referrer
     }
@@ -52,19 +52,19 @@ class Login extends Component {
 
 Login.PropTypes = {
   token: PropTypes.string.isRequired
-}
+};
 
 Login.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   token: state.login.token
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   checkForRememberMeToken
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

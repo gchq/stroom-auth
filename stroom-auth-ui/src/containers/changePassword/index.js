@@ -32,7 +32,7 @@ import { required } from '../../validations'
 import { changePasswordForCurrentUser as onSubmit, toggleAlertVisibility } from '../../modules/user'
 
 const ChangePassword = props => {
-    const {handleSubmit, pristine, submitting, showAlert, alertText, toggleAlertVisibility } = props
+    const {handleSubmit, pristine, submitting, showAlert, alertText, toggleAlertVisibility } = props;
     return (
         <div className='content-floating-with-appbar'>
             <Card className="ChangePassword-main">
@@ -65,22 +65,22 @@ const ChangePassword = props => {
           </Card>
         </div>
     )
-}
+};
 
 
 const ReduxChangePassword = reduxForm({
   form: 'ChangePasswordForm'
-})(ChangePassword)
+})(ChangePassword);
 
 const mapStateToProps = state => ({
     showAlert: state.user.showAlert,
     alertText: state.user.alertText
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit, 
   toggleAlertVisibility
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

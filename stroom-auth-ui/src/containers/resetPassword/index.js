@@ -28,18 +28,18 @@ import { relativePush } from '../../relativePush'
 class ResetPassword extends Component {
 
   constructor() {
-    super()
+    super();
     this.state = {
       noToken: false
     }
   }
 
   componentDidMount(){
-    var missingToken = false
-    var invalidToken = false
-    var expiredToken = false
+    var missingToken = false;
+    var invalidToken = false;
+    var expiredToken = false;
     
-    const token = queryString.parse(this.context.router.route.location.search).token
+    const token = queryString.parse(this.context.router.route.location.search).token;
 
     // Validate token
     if(!token){
@@ -47,8 +47,8 @@ class ResetPassword extends Component {
     }
     else {  
       try{
-        const decodedToken = jwtDecode(token)
-        const now = new Date().getTime() / 1000
+        const decodedToken = jwtDecode(token);
+        const now = new Date().getTime() / 1000;
         expiredToken = decodedToken.exp <= now
       } catch (err) {
         invalidToken = true
@@ -59,7 +59,7 @@ class ResetPassword extends Component {
       this.setState({noToken:true})
     }
     else {
-      this.context.store.dispatch(changeToken(token))
+      this.context.store.dispatch(changeToken(token));
       this.context.store.dispatch(relativePush('/changepassword'))
     }  
   }
@@ -85,14 +85,14 @@ ResetPassword.contextTypes = {
   router: PropTypes.shape({
     history: object.isRequired,
   }),
-}
+};
 
 const mapStateToProps = state => ({
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   changeToken
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,

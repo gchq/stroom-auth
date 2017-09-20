@@ -52,7 +52,7 @@ import { relativePath } from '../../relativePush'
 class App extends Component {
 
   isLoggedIn(){
-    return this.props.token ? true : false
+    return !!this.props.token
   }
 
   render() {
@@ -206,22 +206,22 @@ App.contextTypes = {
   router: PropTypes.shape({
     history: object.isRequired,
   }),
-}
+};
 
 App.propTypes = {
   token: PropTypes.string.isRequired,
   showUnauthorizedDialog: PropTypes.bool.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   token: state.login.token,
   showUnauthorizedDialog: state.login.showUnauthorizedDialog
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   goToStroom,
   handleSessionTimeout
-}, dispatch)
+}, dispatch);
 
 export default withRouter(connect(
   mapStateToProps,

@@ -34,7 +34,7 @@ import { login as onSubmit } from '../../modules/login'
 import { relativePath } from '../../relativePush'
 
 const LoginForm = props => {
-  const {handleSubmit, pristine, submitting } = props
+  const {handleSubmit, pristine, submitting } = props;
     return (
       <div className='content-floating-without-appbar'>
         <Card className='Login-card'>
@@ -84,18 +84,18 @@ const LoginForm = props => {
         </Card>
       </div>
     )
-  }
+  };
 
 const ReduxLoginForm = reduxForm({
   form: 'LoginForm'
-})(LoginForm)
+})(LoginForm);
 
 const mapStateToProps = state => ({
-})
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit
-}, dispatch)
+}, dispatch);
 
 export default connect(
   mapStateToProps,
