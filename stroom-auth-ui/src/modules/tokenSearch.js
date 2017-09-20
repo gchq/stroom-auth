@@ -231,7 +231,7 @@ export const setEnabledStateOnToken = (tokenId, isEnabled) => {
       mode: 'cors'
     })
     .then(handleStatus)
-    .catch(error => {
+    .catch(() => {
       dispatch(toggleAlertVisibility('Unable to change the state of this token!'))
       //TODO Display snackbar with an error message
     })

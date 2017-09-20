@@ -41,9 +41,6 @@ class Home extends Component {
     }
   }
 
-  onMouseOver = () => this.setState({shadow:3});
-  onMouseOut = () => this.setState({shadow:1});
-
   render() {
     return (
       <div className="content-floating-with-appbar vertical">

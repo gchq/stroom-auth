@@ -105,7 +105,7 @@ export const logout = () => {
     dispatch(storeLoggedInUser(undefined));
     dispatch(setCanManagerUsers(false))
   }
-}
+};
 
 export function showLoader(showLoader){
   return {
@@ -143,7 +143,7 @@ export function storeLoggedInUser(userEmail) {
 
 export const handleSessionTimeout = () => {
   return dispatch => { 
-    dispatch(logout())
+    dispatch(logout());
     dispatch(requestWasUnauthorized(false))
   }
 };
@@ -160,7 +160,7 @@ export const login = (credentials) => {
     const { email, password, rememberMe } = credentials;
 
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
-    dispatch(showLoader(true))
+    dispatch(showLoader(true));
 
     const loginServiceUrl = process.env.REACT_APP_LOGIN_URL;
     // Call the authentication service to get a token.
@@ -188,7 +188,7 @@ export const login = (credentials) => {
         processToken(jwsToken, email, dispatch, rememberMe, null)
       })
   }
-}
+};
 
 function handleStatus(response) {
   if(response.status === 200){

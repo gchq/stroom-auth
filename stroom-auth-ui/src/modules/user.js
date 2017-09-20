@@ -232,7 +232,7 @@ export const deleteSelectedUser = (userId) => {
     })
     .then(handleStatus)
     .then(getBody)
-    .then(user => {
+    .then(() => {
       dispatch(changeSelectedRow(userId));
       dispatch(performUserSearch(jwsToken));
       dispatch(toggleAlertVisibility("User has been deleted"))

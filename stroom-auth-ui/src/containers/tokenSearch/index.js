@@ -152,8 +152,8 @@ class TokenSearch extends Component {
                 filterable={this.props.isFilteringEnabled}
                 showPagination= {true}
                 loading={this.props.showSearchLoader}
-                getTrProps={(state, rowInfo, column, instance) => {
-                  let selected = false
+                getTrProps={(state, rowInfo) => {
+                  let selected = false;
                   if(rowInfo) {
                     selected = rowInfo.row. id === this.props.selectedTokenRowId
                   }

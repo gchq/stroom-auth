@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
       };
 
     case TOGGLE_ALERT_VISIBILITY:
-      const showAlert = !state.showAlert
+      const showAlert = !state.showAlert;
       return {
         ...state,
         showAlert: showAlert,
@@ -87,14 +87,14 @@ export const deleteSelectedToken = (tokenId) => {
     })
         .then(handleStatus)
         .then(getBody)
-        .then(token => {
+        .then(() => {
           dispatch(changeSelectedRow(tokenId));
-          dispatch(performTokenSearch(jwsToken, ));
+          dispatch(performTokenSearch(jwsToken));
           dispatch(toggleAlertVisibility("Token has been deleted"));
         })
         .catch(error => handleErrors(error, dispatch, jwsToken))
   }
-}
+};
 
 export const createToken = (newToken) => {
   return (dispatch, getState) => {
@@ -121,7 +121,7 @@ export const createToken = (newToken) => {
     })
         .then(handleStatus)
         .then(getBody)
-        .then(newTokenId => {
+        .then(() => {
           //TODO wire this in
           // dispatch(showCreateLoader(false))
           //TODO get a destination for displaying the token
@@ -134,7 +134,7 @@ export const createToken = (newToken) => {
 };
 
 
-export function userAutoCompleteChange(autocompleteText, securityToken, param2){
+export function userAutoCompleteChange(autocompleteText, securityToken){
   return (dispatch, getState) => {
     performUserSearch(securityToken);
     let matchingAutoCompleteResults = [];

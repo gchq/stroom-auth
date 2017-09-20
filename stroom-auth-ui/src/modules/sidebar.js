@@ -15,7 +15,7 @@
  */
 
 export const goToStroom = (token) => {
-  return dispatch => {
+  return () => {
     window.location.href = process.env.REACT_APP_STROOM_URL + '/?token=' + token;
   }
 };
