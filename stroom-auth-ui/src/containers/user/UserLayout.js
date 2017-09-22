@@ -34,6 +34,7 @@ import Add from 'material-ui-icons/Add'
 import Delete from 'material-ui-icons/Delete'
 import Edit from 'material-ui-icons/Edit'
 import Help from 'material-ui-icons/Help'
+import Home from 'material-ui-icons/Home'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import UserSearch from '../userSearch'
@@ -80,10 +81,14 @@ class UserLayout extends Component {
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
+            <NavLink to={relativePath('/')}>
+              <Home/> 
+            </NavLink>
+            <KeyboardArrowRight/>
             <NavLink to={relativePath('/userSearch')}>
               <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
             </NavLink>
-            {showCreate || showEdit ? (<KeyboardArrowRight className="UserLayout-toolbarSeparator"/>) : (undefined)}
+            {showCreate || showEdit ? (<KeyboardArrowRight/>) : (undefined)}
             {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
             {showEdit ? (<ToolbarTitle text="Edit" className="UserLayout-toolbarTitle"/>) : (undefined)}
           </ToolbarGroup>

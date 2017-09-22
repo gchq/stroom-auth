@@ -33,6 +33,7 @@ import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
 import Add from 'material-ui-icons/Add'
 import Delete from 'material-ui-icons/Delete'
 import Help from 'material-ui-icons/Help'
+import Home from 'material-ui-icons/Home'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import TokenSearch from '../tokenSearch'
@@ -78,10 +79,14 @@ class TokenLayout extends Component {
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
+            <NavLink to={relativePath('/')}>
+              <Home/> 
+            </NavLink>
+            <KeyboardArrowRight/>
             <NavLink to={relativePath('/tokens')}>
               <ToolbarTitle text="Tokens" className="UserLayout-toolbarTitle"/>
             </NavLink>
-            {showCreate ? (<KeyboardArrowRight className="UserLayout-toolbarSeparator"/>) : (undefined)}
+            {showCreate ? (<KeyboardArrowRight/>) : (undefined)}
             {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
           </ToolbarGroup>
           <ToolbarGroup>

@@ -23,14 +23,10 @@
     width:400px;
 }
 
-.UserLayout-toolbarSeparator {
-    padding-right:16px;
-}
-
 .UserLayout-toolbarTitle {
     /* The default colourings for the toolbar and title is low-contrast grey-on-grey. Changing for improved accessibility. */
     color:black !important;
-    padding:0;
+    padding:0 !important;
 }
 
 .UserLayout-badge {
