@@ -19,14 +19,18 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
 
-// import AutoComplete from 'material-ui/AutoComplete'
 import { AutoComplete } from 'redux-form-material-ui'
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/RaisedButton'
+import Dialog from 'material-ui/Dialog'
+import CopyToClipboard from 'react-copy-to-clipboard'
+import ContentCopy from 'material-ui-icons/ContentCopy'
+import {blue600, amber900} from 'material-ui/styles/colors'
 
 import './CreateTokenForm.css'
 import '../Layout.css'
-import { createToken as onSubmit, userAutoCompleteChange } from '../../modules/token'
+import { createToken as onSubmit, userAutoCompleteChange, handleTokenCreatedDialogClose } from '../../modules/token'
 
 export class TokenCreateForm extends Component {
 
@@ -64,6 +68,30 @@ export class TokenCreateForm extends Component {
                 </div>
               </form>
             </div>
+            <Dialog
+                contentStyle={{maxWidth:'none'}}
+                title={<div>An API token has been created for this user</div>}
+                actions={
+                  <div>
+                    <CopyToClipboard text={this.props.newlyCreatedToken}>
+                      <FlatButton
+                        label='Copy token to clipboard'
+                        primary={true}
+                        icon={<ContentCopy color={amber900}/>}/>
+                    </CopyToClipboard >
+                    &nbsp;&nbsp;
+                    <FlatButton
+                      label="OK"
+                      primary={true}
+                      onTouchTap={() => this.props.handleTokenCreatedDialogClose()}/>
+                    </div>
+                }
+                modal={false}
+                open={this.props.showTokenCreatedDialog}
+                onRequestClose={() => this.props.handleTokenCreatedDialogClose()}>
+              <p>User:</p><pre> {this.props.newlyCreatedTokenUser}</pre>
+              <p>Token :</p><pre> {this.props.newlyCreatedToken}</pre>
+            </Dialog>
           </Card>
         </div>
     )
@@ -76,15 +104,16 @@ const ReduxTokenCreateForm = reduxForm({
 
 const mapStateToProps = state => ({
   token: state.login.token,
-  // showCreateLoader: state.user.showCreateLoader,
-  // errorStatus: state.user.errorStatus,
-  // errorText: state.user.errorText,
-  matchingAutoCompleteResults: state.token.matchingAutoCompleteResults
+  matchingAutoCompleteResults: state.token.matchingAutoCompleteResults,
+  showTokenCreatedDialog: state.token.showTokenCreatedDialog,
+  newlyCreatedToken: state.token.newlyCreatedToken,
+  newlyCreatedTokenUser: state.token.newlyCreatedTokenUser
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   userAutoCompleteChange,
-  onSubmit
+  onSubmit,
+  handleTokenCreatedDialogClose
 }, dispatch);
 
 export default connect(

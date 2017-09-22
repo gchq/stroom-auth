@@ -22,12 +22,17 @@ import { performUserSearch } from './userSearch'
 export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER';
 export const TOGGLE_ALERT_VISIBILITY = 'token/TOGGLE_ALERT_VISIBILITY';
 export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = 'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS';
+export const CLOSE_TOKEN_CREATED_DIALOG = 'token/CLOSE_TOKEN_CREATED_DIALOGUE'
+export const SHOW_TOKEN_CREATED_DIALOG = 'token/SHOW_TOKEN_CREATED_DIALOGUE'
 
 
 const initialState = {
   showAlert: false,
   alertText: '',
-  matchingAutoCompleteResults: []
+  matchingAutoCompleteResults: [],
+  showTokenCreatedDialog: false,
+  newlyCreatedToken: '',
+  newlyCreatedTokenUser: ''
 };
 
 export default (state = initialState, action) => {
@@ -51,6 +56,22 @@ export default (state = initialState, action) => {
         ...state,
         matchingAutoCompleteResults: action.matchingAutoCompleteResults
       };
+
+    case SHOW_TOKEN_CREATED_DIALOG:
+      return {
+        ...state,
+        showTokenCreatedDialog: true,
+        newlyCreatedToken: action.newlyCreatedToken,
+        newlyCreatedTokenUser: action.newlyCreatedTokenUser 
+      }
+
+    case CLOSE_TOKEN_CREATED_DIALOG:
+      return {
+        ...state,
+        showTokenCreatedDialog: false,
+        newlyCreatedToken: '',
+        newlyCreatedTokenUser: ''
+      }
 
     default:
       return state
@@ -121,12 +142,14 @@ export const createToken = (newToken) => {
     })
         .then(handleStatus)
         .then(getBody)
-        .then(() => {
+        .then((body) => {
           //TODO wire this in
           // dispatch(showCreateLoader(false))
-          //TODO get a destination for displaying the token
-          // dispatch(relativePush(`/user/${newUserId}`))
-          dispatch(toggleAlertVisibility('Token has been created'))
+          dispatch({
+            type: SHOW_TOKEN_CREATED_DIALOG,
+            newlyCreatedToken: body,
+            newlyCreatedTokenUser: email
+          })
         })
         .catch(error => handleErrors(error, dispatch, jwsToken))
 
@@ -139,7 +162,7 @@ export function userAutoCompleteChange(autocompleteText, securityToken){
     performUserSearch(securityToken);
     let matchingAutoCompleteResults = [];
     const autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
-    getState().userSearch.results.filter(result => {
+    getState().userSearch.results.forEach(result => {
       if(result.email.indexOf(autocompleteText) !== -1
         && matchingAutoCompleteResults.length <= autoCompleteSuggestionLimit){
         matchingAutoCompleteResults.push(result.email)
@@ -150,6 +173,12 @@ export function userAutoCompleteChange(autocompleteText, securityToken){
       matchingAutoCompleteResults
     })
   }
+}
+
+export function handleTokenCreatedDialogClose() {
+  return (dispatch) => dispatch({
+    type: CLOSE_TOKEN_CREATED_DIALOG
+  })
 }
 
 

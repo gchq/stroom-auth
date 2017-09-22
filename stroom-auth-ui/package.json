@@ -12,6 +12,7 @@
     "prop-types": "^15.5.10",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
+    "react-copy-to-clipboard": "^5.0.0",
     "react-dom": "^15.5.4",
     "react-layout": "^1.1.0",
     "react-materialize": "^1.0.1",

@@ -155,7 +155,7 @@ class TokenSearch extends Component {
                 getTrProps={(state, rowInfo) => {
                   let selected = false;
                   if(rowInfo) {
-                    selected = rowInfo.row. id === this.props.selectedTokenRowId
+                    selected = rowInfo.row.id === this.props.selectedTokenRowId
                   }
                   return {
                     onClick: (target, event) => {
