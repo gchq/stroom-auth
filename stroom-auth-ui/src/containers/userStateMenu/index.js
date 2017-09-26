@@ -21,54 +21,49 @@ import List, { ListItem, ListItemText } from 'material-ui/List'
 import Menu, { MenuItem } from 'material-ui/Menu'
 
 export default class UserStateMenu extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       anchorEl: undefined,
       open: false,
-      selectedIndex: props.value,
+      selectedIndex: props.value
     }
   }
 
-  button = undefined;
-
-  handleClickListItem = event => {
+  handleClickListItem (event) {
     this.setState({ open: true, anchorEl: event.currentTarget })
   };
 
-  handleMenuItemClick = (event, index) => {
-    this.setState({ selectedIndex: index, open: false });
+  handleMenuItemClick (event, index) {
+    this.setState({ selectedIndex: index, open: false })
     this.props.onChange(index)
   };
 
-  handleRequestClose = () => {
+  handleRequestClose () {
     this.setState({ open: false })
   };
 
-  render() {
+  render () {
     const options = [
       'Enabled',
       'Disabled',
-      'Locked',
-    ];
+      'Locked'
+    ]
     return (
       <div>
         <List>
-          <ListItem
-            button
-            onClick={this.handleClickListItem}
-          >
+          <ListItem onClick={() => this.handleClickListItem()}>
             <ListItemText
-              primary="The state of this user"
+              primary='The state of this user'
               secondary={options[this.state.selectedIndex]}
             />
           </ListItem>
         </List>
         <Menu
-          id="state-menu"
+          id='state-menu'
           anchorEl={this.state.anchorEl}
           open={this.state.open}
-          onRequestClose={this.handleRequestClose}
+          onRequestClose={() => this.handleRequestClose()}
         >
           { options.map((option, index) =>
             <MenuItem
@@ -77,7 +72,7 @@ export default class UserStateMenu extends Component {
               onClick={event => this.handleMenuItemClick(event, index)}
             >
               {option}
-            </MenuItem>,
+            </MenuItem>
           )}
         </Menu>
       </div>
@@ -88,4 +83,4 @@ export default class UserStateMenu extends Component {
 UserStateMenu.propTypes = {
   value: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired
-};
+}
