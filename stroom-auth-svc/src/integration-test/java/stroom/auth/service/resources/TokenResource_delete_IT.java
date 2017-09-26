@@ -79,14 +79,16 @@ public class TokenResource_delete_IT extends TokenResource_IT{
         .build();
     String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
 
+    String newSecurityToken = clearTokensAndLogin();
     HttpResponse response = Unirest
         .post(searchUrl)
-        .header("Authorization", "Bearer " + securityToken)
+        .header("Authorization", "Bearer " + newSecurityToken)
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
         .asString();
     List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
-    assertThat(tokens.size()).isEqualTo(0);
+    // We can't access tokens without a token for the admin user
+    assertThat(tokens.size()).isEqualTo(1);
   }
 
 }

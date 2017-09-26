@@ -49,8 +49,7 @@ public class TokenResource_create_IT extends TokenResource_IT {
         .asString();
 
     assertOk(response);
-    List<Token> tokens = tokenManager.deserialiseToken((String)response.getBody());
-    assertThat(tokens.size()).isGreaterThan(0);
+    tokenManager.deserialiseToken((String)response.getBody());
   }
 
   @Test

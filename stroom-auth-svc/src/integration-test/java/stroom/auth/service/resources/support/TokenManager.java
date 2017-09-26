@@ -71,8 +71,10 @@ public class TokenManager {
     return  (SearchResponse) searchResponseMapper().fromJson(body);
   }
 
-  public final List<Token> deserialiseToken(String body) throws IOException {
-    return (List<Token>) tokenListMapper().fromJson(body);
+  public final Token deserialiseToken(String body) throws IOException {
+    Moshi moshi = new Moshi.Builder().build();
+    JsonAdapter<Token> jsonAdapter = moshi.adapter(Token.class);
+    return jsonAdapter.fromJson(body);
   }
 
   public final String serialiseToken(Token token) {
