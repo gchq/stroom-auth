@@ -24,6 +24,7 @@ import stroom.auth.service.config.TokenConfig;
 import stroom.auth.service.resources.authentication.v1.AuthenticationResource;
 import stroom.auth.service.resources.token.v1.TokenDao;
 import stroom.auth.service.resources.token.v1.TokenResource;
+import stroom.auth.service.resources.token.v1.TokenVerifier;
 import stroom.auth.service.resources.user.v1.UserResource;
 
 public final class Module extends AbstractModule {
@@ -41,6 +42,7 @@ public final class Module extends AbstractModule {
     bind(TokenResource.class);
     bind(AuthorisationServiceClient.class);
     bind(TokenDao.class);
+    bind(TokenVerifier.class);
   }
 
   @Provides

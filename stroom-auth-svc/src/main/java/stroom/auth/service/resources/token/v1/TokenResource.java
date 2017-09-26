@@ -185,25 +185,6 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
   }
 
-
-  @GET
-  @Path("/byToken/{token}")
-  @Timed
-  public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token){
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
-    }
-
-    Optional<String> tokenResult = tokenDao.readByToken(token);
-
-    if(!tokenResult.isPresent()){
-      return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
-  }
-
-
   @GET
   @Path("/{id}/state")
   @Timed

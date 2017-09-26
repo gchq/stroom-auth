@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package stroom.auth.service;
+package stroom.auth.service.resources.token.v1;
 
 import jersey.repackaged.com.google.common.base.Preconditions;
 import org.jose4j.jws.JsonWebSignature;
@@ -25,12 +25,10 @@ import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.config.TokenConfig;
-import stroom.auth.service.resources.token.v1.Token;
-import stroom.auth.service.resources.token.v1.TokenCreationException;
 
 import javax.validation.constraints.NotNull;
 
-public final class TokenGenerator {
+final class TokenGenerator {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenGenerator.class);
 
   private TokenConfig config;

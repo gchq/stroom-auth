@@ -17,7 +17,6 @@
 package stroom.auth.service.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -34,6 +33,7 @@ import stroom.auth.service.config.Config;
 import stroom.auth.service.resources.token.v1.Token;
 import stroom.auth.service.resources.token.v1.TokenCreationException;
 import stroom.auth.service.resources.token.v1.TokenDao;
+import stroom.auth.service.resources.token.v1.TokenVerifier;
 import stroom.auth.service.resources.user.v1.User;
 import stroom.auth.service.resources.user.v1.UserMapper;
 import stroom.db.auth.tables.records.UsersRecord;
@@ -73,12 +73,14 @@ public final class AuthenticationResource {
   private Config config;
   private final Pattern dnPattern;
   private TokenDao tokenDao;
+  private TokenVerifier tokenVerifier;
 
   @Inject
-  public AuthenticationResource(@NotNull Config config, TokenDao tokenDao) {
+  public AuthenticationResource(@NotNull Config config, TokenDao tokenDao, TokenVerifier tokenVerifier) {
     this.config = config;
     this.dnPattern = Pattern.compile(config.getCertificateDnPattern());
     this.tokenDao = tokenDao;
+    this.tokenVerifier = tokenVerifier;
   }
 
   @GET
@@ -220,8 +222,6 @@ public final class AuthenticationResource {
   @Timed
   @NotNull
   public final Response resetEmail(@Context @NotNull DSLContext database, @PathParam("email") String emailAddress) {
-    Preconditions.checkNotNull(database);
-
     UsersRecord usersRecord = database
         .selectFrom(USERS)
         .where(USERS.EMAIL.eq(emailAddress)).fetchOne();
@@ -261,6 +261,20 @@ public final class AuthenticationResource {
 
     Response response = Response.status(Response.Status.OK).build();
     return response;
+  }
+
+  @GET
+  @Path("/verify/{token}")
+  @Timed
+  @NotNull
+  public final Response verifyToken(@Context @NotNull DSLContext database, @PathParam("token") String token){
+    Optional<String> usersEmail = tokenVerifier.verifyToken(token);
+    if(usersEmail.isPresent()) {
+      return Response.status(Status.OK).entity(usersEmail.get()).build();
+    }
+    else{
+      return Response.status(Status.UNAUTHORIZED).build();
+    }
   }
 
   private final Response redirectToLoginResponse() throws URISyntaxException {

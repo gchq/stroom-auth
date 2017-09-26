@@ -32,7 +32,6 @@ import org.jooq.Table;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.service.TokenGenerator;
 import stroom.auth.service.config.TokenConfig;
 import stroom.auth.service.resources.DaoException;
 import stroom.db.auth.tables.Users;
@@ -217,7 +216,8 @@ public class TokenDao {
     return Optional.of(serialisedResults);
   }
 
-  public Optional<String> readByToken(String token) {
+
+  public Optional<Token> readByToken(String token) {
 
     // We need these aliased tables because we're joining tokens to users twice.
     Users issueingUsers = USERS.as("issueingUsers");
@@ -237,8 +237,19 @@ public class TokenDao {
       return Optional.empty();
     }
 
-    String serialisedResults = result.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
-    return Optional.of(serialisedResults);
+    //TODO: Improve this mapping/move it somewhere common and reuse it.
+    Token resultToken = new Token();
+    resultToken.setId(result.getValue(0, TOKENS.ID));
+    resultToken.setEnabled(result.getValue(0, TOKENS.ENABLED));
+    resultToken.setExpires_on(result.getValue(0, TOKENS.EXPIRES_ON).toString());
+    resultToken.setUser_email((String)result.getValue(0, userEmail));
+    resultToken.setIssued_on(result.getValue(0, TOKENS.ISSUED_ON).toString());
+//    resultToken.setIssued_by_user(result.getValue(0, TOKENS.ISSUED_BY_USER));
+    resultToken.setToken(result.getValue(0, TOKENS.TOKEN));
+    resultToken.setToken_type(result.getValue(0, TOKEN_TYPES.TOKEN_TYPE));
+//    resultToken.setUpdated_by_user(result.getValue(0, TOKENS.UPDATED_BY_USER));
+//    resultToken.setUpdated_on(result.getValue(0,TOKENS.UPDATED_ON).toString());
+    return Optional.of(resultToken);
   }
 
 
