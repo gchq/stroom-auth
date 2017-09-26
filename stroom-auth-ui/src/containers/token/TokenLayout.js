@@ -22,14 +22,13 @@ import { NavLink } from 'react-router-dom'
 
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
-import {fullWhite} from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
 import Snackbar from 'material-ui/Snackbar'
 import Toggle from 'material-ui/Toggle'
 import Dialog from 'material-ui/Dialog'
-import {blue600, amber900} from 'material-ui/styles/colors'
+import { blue600, amber900, fullWhite } from 'material-ui/styles/colors'
 import Paper from 'material-ui/Card'
-import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
 import Add from 'material-ui-icons/Add'
 import Delete from 'material-ui-icons/Delete'
 import Help from 'material-ui-icons/Help'
@@ -45,86 +44,86 @@ import './Token.css'
 
 // TODO: make the CSS specific to token, or make it common
 class TokenLayout extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       isFilteringEnabled: false,
       isHelpDialogOpen: false
     }
   }
 
-  deleteToken(){
+  deleteToken () {
     this.context.store.dispatch(deleteSelectedToken())
   }
 
-  toggleFiltering(isFilteringEnabled){
+  toggleFiltering (isFilteringEnabled) {
     this.setState({isFilteringEnabled})
   }
 
-  handleHelpDialogOpen = () => {
-    this.setState({isHelpDialogOpen: true});
-  };
+  handleHelpDialogOpen () {
+    this.setState({isHelpDialogOpen: true})
+  }
 
-  handleHelpDialogClose = () => {
-    this.setState({isHelpDialogOpen: false});
-  };
+  handleHelpDialogClose () {
+    this.setState({isHelpDialogOpen: false})
+  }
 
-  render() {
-    const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props;
-    const showSearch = show === 'search';
-    const showCreate = show === 'create';
-    const showCreateButton = showSearch;
-    const deleteButtonDisabled = !selectedTokenRowId;
+  render () {
+    const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props
+    const showSearch = show === 'search'
+    const showCreate = show === 'create'
+    const showCreateButton = showSearch
+    const deleteButtonDisabled = !selectedTokenRowId
     return (
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
             <NavLink to={relativePath('/')}>
-              <Home/> 
+              <Home />
             </NavLink>
-            <KeyboardArrowRight/>
+            <KeyboardArrowRight />
             <NavLink to={relativePath('/tokens')}>
-              <ToolbarTitle text="Tokens" className="UserLayout-toolbarTitle"/>
+              <ToolbarTitle text='Tokens' className='UserLayout-toolbarTitle' />
             </NavLink>
-            {showCreate ? (<KeyboardArrowRight/>) : (undefined)}
-            {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
+            {showCreate ? (<KeyboardArrowRight />) : (undefined)}
+            {showCreate ? (<ToolbarTitle text='Create' className='UserLayout-toolbarTitle' />) : (undefined)}
           </ToolbarGroup>
           <ToolbarGroup>
 
             {showSearch ? (
-              <div className="UserLayout-toolbarButton">
+              <div className='UserLayout-toolbarButton'>
                 <Toggle
-                  label="Show filtering"
-                  labelPosition="right"
-                  onToggle= {(event, isFilteringEnabled)=> this.toggleFiltering(isFilteringEnabled)}/>
+                  label='Show filtering'
+                  labelPosition='right'
+                  onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
               </div>
             ) : (undefined)}
 
             {showCreateButton ? (
-              <div className="UserLayout-toolbarButton">
+              <div className='UserLayout-toolbarButton'>
                 <NavLink to={relativePath('/token/newApiToken')}>
-                  <RaisedButton label="Issue API token" primary={true} className="UserSearch-appButton"
-                    icon={<Add color={fullWhite}/>}/>
+                  <RaisedButton label='Issue API token' primary className='UserSearch-appButton'
+                    icon={<Add color={fullWhite} />} />
                 </NavLink>
               </div>
             ) : (undefined)}
 
             {showSearch ? (
-              <div className="UserLayout-toolbarButton">
-                <RaisedButton label="Delete" primary={true} 
-                  icon={<Delete color={fullWhite}/>} disabled={deleteButtonDisabled}
-                  onClick={() => this.deleteToken()}/>
+              <div className='UserLayout-toolbarButton'>
+                <RaisedButton label='Delete' primary
+                  icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
+                  onClick={() => this.deleteToken()} />
               </div>
             ) : (undefined)}
 
             <IconButton onClick={() => this.handleHelpDialogOpen()}>
-              <Help color={blue600} hoverColor={amber900}/>
+              <Help color={blue600} hoverColor={amber900} />
             </IconButton>
           </ToolbarGroup>
         </Toolbar>
-        <div className="User-content">
-          {showSearch ? (<TokenSearch isFilteringEnabled={this.state.isFilteringEnabled}/>) : (undefined)}
-          {showCreate ? (<TokenCreate/>) : (undefined)}
+        <div className='User-content'>
+          {showSearch ? (<TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
+          {showCreate ? (<TokenCreate />) : (undefined)}
         </div>
         <Snackbar
           open={showAlert}
@@ -133,22 +132,22 @@ class TokenLayout extends Component {
           onRequestClose={() => toggleAlertVisibility('')}
         />
         <Dialog
-          title={<div><span><Help color={blue600}/></span> &nbsp;<span>Tokens</span></div>}
+          title={<div><span><Help color={blue600} /></span> &nbsp;<span>Tokens</span></div>}
           actions={
             <FlatButton
-              label="OK"
-              primary={true}
-              onTouchTap={this.handleHelpDialogClose}/>}
+              label='OK'
+              primary
+              onTouchTap={() => this.handleHelpDialogClose()} />}
           modal={false}
           open={this.state.isHelpDialogOpen}
-          onRequestClose={this.handleHelpDialogClose}>
+          onRequestClose={() => this.handleHelpDialogClose()}>
           <p>This area is for managing tokens.</p>
           <p>There are two types of tokens: user tokens and API tokens. A user token is that which is issued to a user
             after they log in. The system then uses that token to authenticate them with the various services they might
             need to use to perform whatever it is they want to do. An API token is one issued to a user for them to
             use with their application - it allows them to write an application that integrates with Stroom.</p>
         </Dialog>
-      </Paper> 
+      </Paper>
 
     )
   }
@@ -156,19 +155,19 @@ class TokenLayout extends Component {
 
 TokenLayout.contextTypes = {
   store: PropTypes.object.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   show: state.token.show,
   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
   showAlert: state.token.showAlert,
   alertText: state.token.alertText
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   deleteSelectedToken,
   toggleAlertVisibility
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

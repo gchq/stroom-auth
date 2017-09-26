@@ -17,9 +17,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { reduxForm } from 'redux-form'
-import { Field } from 'redux-form'
-
+import { reduxForm, Field } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 
 import Card from 'material-ui/Card'
@@ -32,55 +30,54 @@ import { required } from '../../validations'
 import { changePasswordForCurrentUser as onSubmit, toggleAlertVisibility } from '../../modules/user'
 
 const ChangePassword = props => {
-    const {handleSubmit, pristine, submitting, showAlert, alertText, toggleAlertVisibility } = props;
-    return (
-        <div className='content-floating-with-appbar'>
-            <Card className="ChangePassword-main">
-            <div>
-                <p>You can change your password below.</p>
-                <form onSubmit={handleSubmit}>
+  const { handleSubmit, pristine, submitting, showAlert, alertText, toggleAlertVisibility } = props
+  return (
+    <div className='content-floating-with-appbar'>
+      <Card className='ChangePassword-main'>
+        <div>
+          <p>You can change your password below.</p>
+          <form onSubmit={handleSubmit}>
 
-                <Field
-                    className="ChangePassword-field"
-                    name="password"
-                    type="password"
-                    component={TextField}
-                    validate={[required]}/>
-                    <br/>
-                <RaisedButton
-                    className="ChangePassword-button"
-                    primary={true}
-                    disabled={pristine || submitting}
-                    type="submit"
-                    label="Change password"/>
-                </form>
+            <Field
+              className='ChangePassword-field'
+              name='password'
+              type='password'
+              component={TextField}
+              validate={[required]} />
+            <br />
+            <RaisedButton
+              className='ChangePassword-button'
+              primary
+              disabled={pristine || submitting}
+              type='submit'
+              label='Change password' />
+          </form>
 
-                <Snackbar
-                    open={showAlert}
-                    message={alertText}
-                    autoHideDuration={4000}
-                    onRequestClose={() => toggleAlertVisibility('')}
+          <Snackbar
+            open={showAlert}
+            message={alertText}
+            autoHideDuration={4000}
+            onRequestClose={() => toggleAlertVisibility('')}
                 />
-            </div>
-          </Card>
         </div>
-    )
-};
-
+      </Card>
+    </div>
+  )
+}
 
 const ReduxChangePassword = reduxForm({
   form: 'ChangePasswordForm'
-})(ChangePassword);
+})(ChangePassword)
 
 const mapStateToProps = state => ({
-    showAlert: state.user.showAlert,
-    alertText: state.user.alertText
-});
+  showAlert: state.user.showAlert,
+  alertText: state.user.alertText
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  onSubmit, 
+  onSubmit,
   toggleAlertVisibility
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

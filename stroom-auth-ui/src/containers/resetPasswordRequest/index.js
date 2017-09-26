@@ -17,8 +17,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { reduxForm } from 'redux-form'
-import { Field } from 'redux-form'
+import { reduxForm, Field } from 'redux-form'
 
 import { TextField } from 'redux-form-material-ui'
 
@@ -31,43 +30,43 @@ import { required } from '../../validations'
 import { submitPasswordChangeRequest as onSubmit } from '../../modules/user'
 
 const ResetPasswordRequest = props => {
-  const {handleSubmit, pristine, submitting } = props;
+  const { handleSubmit, pristine, submitting } = props
   return (
     <div className='content-floating-without-appbar'>
-      <Card className="ResetPasswordRequest-main">
-      <div>
+      <Card className='ResetPasswordRequest-main'>
+        <div>
           <p>Please enter your email address below.</p>
           <form onSubmit={handleSubmit}>
 
-          <Field
-              className="ResetPasswordRequest-field"
-              name="emailAddress"
+            <Field
+              className='ResetPasswordRequest-field'
+              name='emailAddress'
               component={TextField}
-              validate={[required]}/>
-              <br/>
-          <RaisedButton
-              className="ResetPasswordRequest-button"
-              primary={true}
+              validate={[required]} />
+            <br />
+            <RaisedButton
+              className='ResetPasswordRequest-button'
+              primary
               disabled={pristine || submitting}
-              type="submit"
-              label="Send me a reset email"/>
+              type='submit'
+              label='Send me a reset email' />
           </form>
-      </div>
-    </Card>
+        </div>
+      </Card>
     </div>
   )
-};
+}
 
 const ReduxResetPasswordRequestForm = reduxForm({
   form: 'ResetPasswordRequestForm'
-})(ResetPasswordRequest);
+})(ResetPasswordRequest)
 
 const mapStateToProps = state => ({
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

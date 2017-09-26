@@ -24,21 +24,21 @@ import {logout} from '../../modules/login'
 import { relativePath } from '../../relativePush'
 
 class Logout extends Component {
-  componentDidMount(){
+  componentDidMount () {
     this.props.logout()
   }
 
-  render() {
-    return ( <Redirect to={relativePath("/")}/>)
+  render () {
+    return (<Redirect to={relativePath('/')} />)
   }
 }
 
 const mapStateToProps = state => ({
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   logout
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

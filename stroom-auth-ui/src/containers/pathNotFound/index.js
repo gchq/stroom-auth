@@ -24,10 +24,10 @@ import './PathNotFound.css'
 import '../Layout.css'
 
 class PathNotFound extends Component {
-  render() {
+  render () {
     return (
       <div className='content-floating-without-appbar'>
-        <Card className="PathNotFound-card">
+        <Card className='PathNotFound-card'>
           <h3>Page not found!</h3>
           <p>There's nothing here I'm afraid.</p>
         </Card>
@@ -36,9 +36,9 @@ class PathNotFound extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({})
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
 
 export default connect(
   mapStateToProps,

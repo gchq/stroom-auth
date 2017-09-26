@@ -21,24 +21,24 @@ import UserEditUi from './UserEditUi'
 import { fetchUser } from '../../modules/user'
 
 class UserEditForm extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       rules: []
     }
   }
 
-  async componentDidMount() {
-    const userId = this.context.router.route.match.params.userId;
+  async componentDidMount () {
+    const userId = this.context.router.route.match.params.userId
     this.context.store.dispatch(fetchUser(userId))
 
-    //TODO get user from API and put into store
-    //TODO Load from store? How?
+    // TODO get user from API and put into store
+    // TODO Load from store? How?
   }
 
-  render() {
+  render () {
     return (
-      <UserEditUi/>
+      <UserEditUi />
     )
   }
 }
@@ -46,8 +46,8 @@ class UserEditForm extends Component {
 UserEditForm.contextTypes = {
   store: PropTypes.object.isRequired,
   router: PropTypes.shape({
-    history: object.isRequired,
-  }),
-};
+    history: object.isRequired
+  })
+}
 
 export default UserEditForm

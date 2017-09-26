@@ -19,40 +19,39 @@ import PropTypes from 'prop-types'
 
 import TokenLayout from './TokenLayout'
 import { changeVisibleContainer } from '../../modules/token'
-import { performUserSearch } from "../../modules/userSearch"
+import { performUserSearch } from '../../modules/userSearch'
 
 export class TokenCreate extends Component {
-  componentWillMount() {
+  componentWillMount () {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('create'));
+    this.context.store.dispatch(changeVisibleContainer('create'))
     this.context.store.dispatch(performUserSearch())
   }
 
-  render() {
+  render () {
     return (
-        <TokenLayout/>
+      <TokenLayout />
     )
   }
 }
 
 TokenCreate.contextTypes = {
   store: PropTypes.object.isRequired
-};
-
+}
 
 export class TokenSearch extends Component {
-    componentWillMount() {
+  componentWillMount () {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
     this.context.store.dispatch(changeVisibleContainer('search'))
   }
 
-  render() {
+  render () {
     return (
-        <TokenLayout/>
+      <TokenLayout />
     )
   }
 }
 
 TokenSearch.contextTypes = {
   store: PropTypes.object.isRequired
-};
+}

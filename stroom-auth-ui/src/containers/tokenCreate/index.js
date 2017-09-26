@@ -22,85 +22,84 @@ import { reduxForm, Field } from 'redux-form'
 import { AutoComplete } from 'redux-form-material-ui'
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import Dialog from 'material-ui/Dialog'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import ContentCopy from 'material-ui-icons/ContentCopy'
-import {blue600, amber900} from 'material-ui/styles/colors'
+import { amber900 } from 'material-ui/styles/colors'
 
 import './CreateTokenForm.css'
 import '../Layout.css'
 import { createToken as onSubmit, userAutoCompleteChange, handleTokenCreatedDialogClose } from '../../modules/token'
 
 export class TokenCreateForm extends Component {
-
-  render() {
-    const {handleSubmit, pristine, submitting } = this.props;
+  render () {
+    const { handleSubmit, pristine, submitting } = this.props
     return (
-        <div className=''>
-          <Card className="CreateTokenForm-card">
-            <div>
-              <form onSubmit={handleSubmit}>
-                <div className="left-container">
-                  <div className="field-container">
-                    <div className="label-container">
-                      <label>User's email</label>
-                    </div>
-                    <div className="input-container">
-                      <Field
-                          hintText="Type to search for a user"
-                          component={AutoComplete}
-                          name="email"
-                          openOnFocus
-                          dataSource={this.props.matchingAutoCompleteResults}
-                          onChange={(_, autoCompleteText) => this.props.userAutoCompleteChange(autoCompleteText, this.props.token)}
+      <div className=''>
+        <Card className='CreateTokenForm-card'>
+          <div>
+            <form onSubmit={handleSubmit}>
+              <div className='left-container'>
+                <div className='field-container'>
+                  <div className='label-container'>
+                    <label>User's email</label>
+                  </div>
+                  <div className='input-container'>
+                    <Field
+                      hintText='Type to search for a user'
+                      component={AutoComplete}
+                      name='email'
+                      openOnFocus
+                      dataSource={this.props.matchingAutoCompleteResults}
+                      onChange={(_, autoCompleteText) => this.props.userAutoCompleteChange(autoCompleteText, this.props.token)}
                       />
-                    </div>
                   </div>
                 </div>
-                <br/>
-                <div>
-                  <RaisedButton
-                      primary={true}
-                      disabled={pristine || submitting}
-                      type="submit"
-                      label="Issue API token to user"/>
-                </div>
-              </form>
-            </div>
-            <Dialog
-                contentStyle={{maxWidth:'none'}}
-                title={<div>An API token has been created for this user</div>}
-                actions={
-                  <div>
-                    <CopyToClipboard text={this.props.newlyCreatedToken}>
-                      <FlatButton
-                        label='Copy token to clipboard'
-                        primary={true}
-                        icon={<ContentCopy color={amber900}/>}/>
-                    </CopyToClipboard >
+              </div>
+              <br />
+              <div>
+                <RaisedButton
+                  primary
+                  disabled={pristine || submitting}
+                  type='submit'
+                  label='Issue API token to user' />
+              </div>
+            </form>
+          </div>
+          <Dialog
+            contentStyle={{maxWidth: 'none'}}
+            title={<div>An API token has been created for this user</div>}
+            actions={
+              <div>
+                <CopyToClipboard text={this.props.newlyCreatedToken}>
+                  <FlatButton
+                    label='Copy token to clipboard'
+                    primary
+                    icon={<ContentCopy color={amber900} />} />
+                </CopyToClipboard >
                     &nbsp;&nbsp;
-                    <FlatButton
-                      label="OK"
-                      primary={true}
-                      onTouchTap={() => this.props.handleTokenCreatedDialogClose()}/>
-                    </div>
+                <FlatButton
+                  label='OK'
+                  primary
+                  onTouchTap={() => this.props.handleTokenCreatedDialogClose()} />
+              </div>
                 }
-                modal={false}
-                open={this.props.showTokenCreatedDialog}
-                onRequestClose={() => this.props.handleTokenCreatedDialogClose()}>
-              <p>User:</p><pre> {this.props.newlyCreatedTokenUser}</pre>
-              <p>Token :</p><pre> {this.props.newlyCreatedToken}</pre>
-            </Dialog>
-          </Card>
-        </div>
+            modal={false}
+            open={this.props.showTokenCreatedDialog}
+            onRequestClose={() => this.props.handleTokenCreatedDialogClose()}>
+            <p>User:</p><pre> {this.props.newlyCreatedTokenUser}</pre>
+            <p>Token :</p><pre> {this.props.newlyCreatedToken}</pre>
+          </Dialog>
+        </Card>
+      </div>
     )
   }
 }
 
 const ReduxTokenCreateForm = reduxForm({
   form: 'TokenCreateForm'
-})(TokenCreateForm);
+})(TokenCreateForm)
 
 const mapStateToProps = state => ({
   token: state.login.token,
@@ -108,13 +107,13 @@ const mapStateToProps = state => ({
   showTokenCreatedDialog: state.token.showTokenCreatedDialog,
   newlyCreatedToken: state.token.newlyCreatedToken,
   newlyCreatedTokenUser: state.token.newlyCreatedTokenUser
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   userAutoCompleteChange,
   onSubmit,
   handleTokenCreatedDialogClose
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

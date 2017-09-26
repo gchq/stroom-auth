@@ -22,14 +22,13 @@ import { NavLink } from 'react-router-dom'
 
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
-import {fullWhite} from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
 import Snackbar from 'material-ui/Snackbar'
 import Toggle from 'material-ui/Toggle'
 import Dialog from 'material-ui/Dialog'
-import {blue600, amber900} from 'material-ui/styles/colors'
+import { blue600, amber900, fullWhite } from 'material-ui/styles/colors'
 import Paper from 'material-ui/Card'
-import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
 import Add from 'material-ui-icons/Add'
 import Delete from 'material-ui-icons/Delete'
 import Edit from 'material-ui-icons/Edit'
@@ -46,98 +45,98 @@ import { relativePath } from '../../relativePush'
 import './User.css'
 
 class UserLayout extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       isFilteringEnabled: false,
       isHelpDialogOpen: false
     }
   }
 
-  deleteSelectedUser(){
+  deleteSelectedUser () {
     this.context.store.dispatch(deleteSelectedUser())
   }
 
-  toggleFiltering(isFilteringEnabled){
+  toggleFiltering (isFilteringEnabled) {
     this.setState({isFilteringEnabled})
   }
 
-  handleHelpDialogOpen = () => {
-    this.setState({isHelpDialogOpen: true});
+  handleHelpDialogOpen () {
+    this.setState({isHelpDialogOpen: true})
   };
 
-  handleHelpDialogClose = () => {
-    this.setState({isHelpDialogOpen: false});
+  handleHelpDialogClose () {
+    this.setState({isHelpDialogOpen: false})
   };
 
-  render() {
-    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props;
-    const showSearch = show === 'search';
-    const showCreate = show === 'create';
-    const showEdit = show === 'edit';
-    const showCreateButton = showSearch ;
-    const deleteButtonDisabled = !selectedUserRowId;
+  render () {
+    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props
+    const showSearch = show === 'search'
+    const showCreate = show === 'create'
+    const showEdit = show === 'edit'
+    const showCreateButton = showSearch
+    const deleteButtonDisabled = !selectedUserRowId
     return (
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
             <NavLink to={relativePath('/')}>
-              <Home/> 
+              <Home />
             </NavLink>
-            <KeyboardArrowRight/>
+            <KeyboardArrowRight />
             <NavLink to={relativePath('/userSearch')}>
-              <ToolbarTitle text="Users" className="UserLayout-toolbarTitle"/>
+              <ToolbarTitle text='Users' className='UserLayout-toolbarTitle' />
             </NavLink>
-            {showCreate || showEdit ? (<KeyboardArrowRight/>) : (undefined)}
-            {showCreate ? (<ToolbarTitle text="Create" className="UserLayout-toolbarTitle"/>) : (undefined)}
-            {showEdit ? (<ToolbarTitle text="Edit" className="UserLayout-toolbarTitle"/>) : (undefined)}
+            {showCreate || showEdit ? (<KeyboardArrowRight />) : (undefined)}
+            {showCreate ? (<ToolbarTitle text='Create' className='UserLayout-toolbarTitle' />) : (undefined)}
+            {showEdit ? (<ToolbarTitle text='Edit' className='UserLayout-toolbarTitle' />) : (undefined)}
           </ToolbarGroup>
           <ToolbarGroup>
 
             {showSearch ? (
-              <div className="UserLayout-toolbarButton">
+              <div className='UserLayout-toolbarButton'>
                 <Toggle
-                  label="Show filtering"
-                  labelPosition="right"
-                  onToggle= {(event, isFilteringEnabled)=> this.toggleFiltering(isFilteringEnabled)}/>
+                  label='Show filtering'
+                  labelPosition='right'
+                  onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
               </div>
             ) : (undefined)}
 
             {showCreateButton ? (
-              <div className="UserLayout-toolbarButton">
+              <div className='UserLayout-toolbarButton'>
                 <NavLink to={relativePath('/newUser')}>
-                  <RaisedButton label="Create" primary={true} className="UserSearch-appButton" 
-                    icon={<Add color={fullWhite}/>}/>
+                  <RaisedButton label='Create' primary className='UserSearch-appButton'
+                    icon={<Add color={fullWhite} />} />
                 </NavLink>
               </div>
             ) : (undefined)}
 
             {showSearch ? (
-              <div className="UserLayout-toolbarButton">
+              <div className='UserLayout-toolbarButton'>
                 <NavLink to={relativePath(`/user/${selectedUserRowId}`)}>
-                  <RaisedButton label="Edit" primary={true}
-                    icon={<Edit color={fullWhite}/>} disabled={deleteButtonDisabled}/>
+                  <RaisedButton label='Edit' primary
+                    icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
                 </NavLink>
               </div>
             ) : (undefined)}
 
             {showSearch ? (
-              <div className="UserLayout-toolbarButton">
-                <RaisedButton label="Delete" primary={true} 
-                  icon={<Delete color={fullWhite}/>} disabled={deleteButtonDisabled}
-                  onClick={() => this.deleteSelectedUser()}/>
+              <div className='UserLayout-toolbarButton'>
+                <RaisedButton label='Delete' primary
+                  icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
+                  onClick={() => this.deleteSelectedUser()} />
               </div>
             ) : (undefined)}
 
             <IconButton onClick={() => this.handleHelpDialogOpen()}>
-              <Help color={blue600} hoverColor={amber900}/>
+              <Help color={blue600} hoverColor={amber900} />
             </IconButton>
           </ToolbarGroup>
         </Toolbar>
-        <div className="User-content">
-          {showSearch ? (<UserSearch isFilteringEnabled={this.state.isFilteringEnabled}/>) : (undefined)}
-          {showCreate ? (<UserCreate/>) : (undefined)}
-          {showEdit ? (<UserEdit/>) : (undefined)}
+        <div className='User-content'>
+          {showSearch ? (<UserSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
+          {showCreate ? (<UserCreate />) : (undefined)}
+          {showEdit ? (<UserEdit />) : (undefined)}
         </div>
         <Snackbar
           open={showAlert}
@@ -146,19 +145,19 @@ class UserLayout extends Component {
           onRequestClose={() => toggleAlertVisibility()}
         />
         <Dialog
-          title={<div><span><Help color={blue600}/></span> &nbsp;<span>Users</span></div>}
+          title={<div><span><Help color={blue600} /></span> &nbsp;<span>Users</span></div>}
           actions={
             <FlatButton
-              label="OK"
-              primary={true}
-              onTouchTap={this.handleHelpDialogClose}/>}
+              label='OK'
+              primary
+              onTouchTap={this.handleHelpDialogClose} />}
           modal={false}
           open={this.state.isHelpDialogOpen}
           onRequestClose={this.handleHelpDialogClose}>
           <p>This area is for managing user accounts.</p>
           <p>The list of users here do not include those who might have logged in using certificates or LDAP credentials.</p>
         </Dialog>
-      </Paper> 
+      </Paper>
 
     )
   }
@@ -166,19 +165,19 @@ class UserLayout extends Component {
 
 UserLayout.contextTypes = {
   store: PropTypes.object.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   show: state.user.show,
   selectedUserRowId: state.userSearch.selectedUserRowId,
   showAlert: state.user.showAlert,
   alertText: state.user.alertText
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   deleteSelectedUser,
   toggleAlertVisibility
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

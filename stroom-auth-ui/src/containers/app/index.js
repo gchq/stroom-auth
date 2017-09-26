@@ -50,148 +50,146 @@ import { goToStroom } from '../../modules/sidebar'
 import { relativePath } from '../../relativePush'
 
 class App extends Component {
-
-  isLoggedIn(){
+  isLoggedIn () {
     return !!this.props.token
   }
 
-  render() {
+  render () {
     return (
-      <div className="App">
+      <div className='App'>
         {this.isLoggedIn() ? (
-        <AppBar
-          title={<NavLink to={relativePath('/')}><img src={logo} className="App-logo" alt="Stroom logo"/></NavLink>}
-              iconElementLeft={<div/>}
-              iconElementRight= {
-                <div className="App-appBar-buttons">
-                  <IconMenu
-                    iconButtonElement={
-                      <IconButton className="App-iconButton"><MoreVert color={fullWhite}/></IconButton>
+          <AppBar
+            title={<NavLink to={relativePath('/')}><img src={logo} className='App-logo' alt='Stroom logo' /></NavLink>}
+            iconElementLeft={<div />}
+            iconElementRight={
+              <div className='App-appBar-buttons'>
+                <IconMenu
+                  iconButtonElement={
+                    <IconButton className='App-iconButton'><MoreVert color={fullWhite} /></IconButton>
                     }>
-                    {this.isLoggedIn() ? (
-                      <div>
-                      <NavLink to={relativePath("/changepassword")}>
-                        <MenuItem primaryText="Change password" leftIcon={<Lock/>}/>
+                  {this.isLoggedIn() ? (
+                    <div>
+                      <NavLink to={relativePath('/changepassword')}>
+                        <MenuItem primaryText='Change password' leftIcon={<Lock />} />
                       </NavLink>
-                      <NavLink to={relativePath("/logout")}>
-                        <MenuItem primaryText="Log out" leftIcon={<ExitToApp/>}/>
+                      <NavLink to={relativePath('/logout')}>
+                        <MenuItem primaryText='Log out' leftIcon={<ExitToApp />} />
                       </NavLink>
-                      </div>
+                    </div>
                     ) : (
-                      <NavLink to={relativePath("/login")}>
-                        <MenuItem primaryText="Log in"/>
+                      <NavLink to={relativePath('/login')}>
+                        <MenuItem primaryText='Log in' />
                       </NavLink>
                     )}
-                  </IconMenu>
-                </div>
+                </IconMenu>
+              </div>
               }
           />
-        ) : (<div/>)}
+        ) : (<div />)}
 
         <main className='main'>
           <div >
-            <BrowserRouter basename={process.env.REACT_APP_ROOT_PATH }/>
+            <BrowserRouter basename={process.env.REACT_APP_ROOT_PATH} />
             <Switch>
-              <Route exact path={relativePath("/")} render={() => (
+              <Route exact path={relativePath('/')} render={() => (
                 this.isLoggedIn() ? (
-                  <Home/>
+                  <Home />
                 ) : (
                   <Redirect to={{
                     pathname: process.env.REACT_APP_ROOT_PATH + '/login',
-                    state: {referrer:relativePath('/')}}}/>
+                    state: {referrer: relativePath('/')}}} />
                 )
               )} />
 
-              <Route exact path={relativePath("/login")} component={Login} />
-              <Route exact path={relativePath("/logout")} component={Logout} />
-              <Route exact path={relativePath("/newUser")} component={NewUser}/>
-              <Route exact path={relativePath("/resetPassword")} component={ResetPassword}/>
-              <Route exact path={relativePath("/confirmPasswordResetEmail")} component={ConfirmPasswordResetEmail}/>
-              <Route exact path={relativePath("/resetPasswordRequest")} component={ResetPasswordRequest}/>
-              <Route exact path={relativePath("/Unauthorised")} component={Unauthorised}/>
+              <Route exact path={relativePath('/login')} component={Login} />
+              <Route exact path={relativePath('/logout')} component={Logout} />
+              <Route exact path={relativePath('/newUser')} component={NewUser} />
+              <Route exact path={relativePath('/resetPassword')} component={ResetPassword} />
+              <Route exact path={relativePath('/confirmPasswordResetEmail')} component={ConfirmPasswordResetEmail} />
+              <Route exact path={relativePath('/resetPasswordRequest')} component={ResetPasswordRequest} />
+              <Route exact path={relativePath('/Unauthorised')} component={Unauthorised} />
 
-              <Route exact path={relativePath("/userSearch")} render={() => (
+              <Route exact path={relativePath('/userSearch')} render={() => (
                 this.isLoggedIn() ? (
-                  <UserSearch/>
+                  <UserSearch />
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
                   <Redirect to={{
                     pathname: relativePath('/login'),
-                    state: {referrer:relativePath('/userSearch')}}}/>
+                    state: {referrer: relativePath('/userSearch')}}} />
                 )
-              )}/>
+              )} />
 
-              <Route exact path={relativePath("/changepassword")} render={(route) => (
+              <Route exact path={relativePath('/changepassword')} render={(route) => (
                 this.isLoggedIn() ? (
-                  <ChangePassword/>
+                  <ChangePassword />
                 ) : (
                    // We record the referrer because Login needs it to redirect back to after a successful login.
                   <Redirect to={{
                     pathname: relativePath('/login'),
-                    state: {referrer:route.location.pathname}}}/>
+                    state: {referrer: route.location.pathname}}} />
                 )
-              )}/>
+              )} />
 
-              <Route exact path={relativePath("/user")} render={() => (
+              <Route exact path={relativePath('/user')} render={() => (
                 this.isLoggedIn() ? (
-                  <UserCreate/>
+                  <UserCreate />
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
                   <Redirect to={{
                     pathname: relativePath('/login'),
-                    state: {referrer:relativePath('/user')}}}/>
+                    state: {referrer: relativePath('/user')}}} />
                 )
-              )}/>
+              )} />
 
-              <Route exact path={relativePath("/user/:userId")} render={(route) => (
+              <Route exact path={relativePath('/user/:userId')} render={(route) => (
                 this.isLoggedIn() ? (
-                  <UserEdit/>
+                  <UserEdit />
                 ) : (
                   // We record the referrer because Login needs it to redirect back to after a successful login.
                   <Redirect to={{
                     pathname: relativePath('/login'),
-                    state: {referrer:route.location.pathname}}}/>
+                    state: {referrer: route.location.pathname}}} />
                 )
-              )}/>
+              )} />
 
-              <Route exact path={relativePath("/tokens")} render={() => (
+              <Route exact path={relativePath('/tokens')} render={() => (
                   this.isLoggedIn() ? (
-                      <TokenSearch/>
+                    <TokenSearch />
                   ) : (
                       // We record the referrer because Login needs it to redirect back to after a successful login.
-                      <Redirect to={{
-                        pathname: relativePath('/login'),
-                        state: {referrer:relativePath('/tokens')}}}/>
+                    <Redirect to={{
+                      pathname: relativePath('/login'),
+                      state: {referrer: relativePath('/tokens')}}} />
                   )
-              )}/>
+              )} />
 
-              <Route exact path={relativePath("/token/newApiToken")} render={() => (
+              <Route exact path={relativePath('/token/newApiToken')} render={() => (
                   this.isLoggedIn() ? (
-                      <TokenCreate/>
+                    <TokenCreate />
                   ) : (
                       // We record the referrer because Login needs it to redirect back to after a successful login.
-                      <Redirect to={{
-                        pathname: relativePath('/login'),
-                        state: {referrer:relativePath('/token/newApiToken')}}}/>
+                    <Redirect to={{
+                      pathname: relativePath('/login'),
+                      state: {referrer: relativePath('/token/newApiToken')}}} />
                   )
-              )}/>
+              )} />
 
-
-              <Route component={PathNotFound}/>
+              <Route component={PathNotFound} />
 
             </Switch>
           </div>
         </main>
-         <Dialog
-          title="Unauthorised!"
+        <Dialog
+          title='Unauthorised!'
           actions={[
             <FlatButton
-              label="Log in again"
-              primary={true}
+              label='Log in again'
+              primary
               onTouchTap={this.props.handleSessionTimeout}
             />
           ]}
-          modal={true}
+          modal
           open={this.props.showUnauthorizedDialog}
         >
           It's likely that your session has timed-out. Would you like to try logging in again?
@@ -204,24 +202,24 @@ class App extends Component {
 App.contextTypes = {
   store: PropTypes.object,
   router: PropTypes.shape({
-    history: object.isRequired,
-  }),
-};
+    history: object.isRequired
+  })
+}
 
 App.propTypes = {
   token: PropTypes.string.isRequired,
   showUnauthorizedDialog: PropTypes.bool.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   token: state.login.token,
   showUnauthorizedDialog: state.login.showUnauthorizedDialog
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   goToStroom,
   handleSessionTimeout
-}, dispatch);
+}, dispatch)
 
 export default withRouter(connect(
   mapStateToProps,

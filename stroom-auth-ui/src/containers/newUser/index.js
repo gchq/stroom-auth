@@ -22,16 +22,16 @@ import { connect } from 'react-redux'
 import { relativePath } from '../../relativePush'
 
 class NewUser extends Component {
-  render() {
-    return ( <Redirect to={relativePath("/user")}/>)
+  render () {
+    return (<Redirect to={relativePath('/user')} />)
   }
 }
 
 const mapStateToProps = state => ({
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

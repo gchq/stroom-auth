@@ -30,63 +30,61 @@ import dateFormat from 'dateformat'
 import './TokenSearch.css'
 import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from '../../modules/tokenSearch'
 
-//TODO change the CSS references from 'User' - maybe make the CSS common?
+// TODO change the CSS references from 'User' - maybe make the CSS common?
 class TokenSearch extends Component {
-
-  toggleRow(id) {
+  toggleRow (id) {
     // Tell the redux store so the control buttons get displayed correctly
     this.props.changeSelectedRow(id)
   }
 
-  fetchTokens(securityToken, state) {
+  fetchTokens (securityToken, state) {
     this.props.performTokenSearch(securityToken, state.pageSize, state.page, state.sorted, state.filtered)
   }
 
-  getEnabledCellRenderer(row){
-    let state = row.value;
-    let tokenId = row.original.id;
+  getEnabledCellRenderer (row) {
+    let state = row.value
+    let tokenId = row.original.id
     return (
-        <Toggle
-            defaultToggled={state}
-            onToggle={(_, isEnabled) => this.props.setEnabledStateOnToken(tokenId, isEnabled)}
+      <Toggle
+        defaultToggled={state}
+        onToggle={(_, isEnabled) => this.props.setEnabledStateOnToken(tokenId, isEnabled)}
         />
     )
   }
 
-  getEnabledCellFilter(filter, onChange){
+  getEnabledCellFilter (filter, onChange) {
     return (
       <select
-          onChange={event => onChange(event.target.value)}
-          style={{ width: "100%" }}
-          value={filter ? filter.value : "all"}
+        onChange={event => onChange(event.target.value)}
+        style={{ width: '100%' }}
+        value={filter ? filter.value : 'all'}
       >
-        <option value="">Show all</option>
-        <option value="true">Enabled only</option>
-        <option value="false">Disabled only</option>
+        <option value=''>Show all</option>
+        <option value='true'>Enabled only</option>
+        <option value='false'>Disabled only</option>
       </select>
     )
   }
 
-
-  getTokenTypeCellFilter(filter, onChange){
+  getTokenTypeCellFilter (filter, onChange) {
     return (
-        <select
-            onChange={event => onChange(event.target.value)}
-            style={{ width: "100%" }}
-            value={filter ? filter.value : "all"}>
-          <option value="">Show all</option>
-          <option value="user">User only</option>
-          <option value="api">API only</option>
-        </select>
+      <select
+        onChange={event => onChange(event.target.value)}
+        style={{ width: '100%' }}
+        value={filter ? filter.value : 'all'}>
+        <option value=''>Show all</option>
+        <option value='user'>User only</option>
+        <option value='api'>API only</option>
+      </select>
     )
   }
 
-  formatDate(dateString){
-    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
+  formatDate (dateString) {
+    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
     return dateString ? dateFormat(dateString, dateFormatString) : ''
   }
 
-  getColumnFormat() {
+  getColumnFormat () {
     return [{
       Header: '',
       accessor: 'id',
@@ -138,46 +136,46 @@ class TokenSearch extends Component {
     }]
   }
 
-  render() {
+  render () {
     return (
       <Paper className='UserSearch-main' zDepth={0}>
-        <div className="UserSearch-content" >
+        <div className='UserSearch-content' >
           <div>
-              <ReactTable
-                data={this.props.results}
-                pages={this.props.totalPages}
-                manual
-                className='-striped -highlight UserSearch-table'
-                columns={this.getColumnFormat()}
-                filterable={this.props.isFilteringEnabled}
-                showPagination= {true}
-                loading={this.props.showSearchLoader}
-                getTrProps={(state, rowInfo) => {
-                  let selected = false;
-                  if(rowInfo) {
-                    selected = rowInfo.row.id === this.props.selectedTokenRowId
-                  }
-                  return {
-                    onClick: (target, event) => {
-                      this.toggleRow(rowInfo.row.id)
-                    },
-                    className: selected ? 'selectedRow' : 'unselectedRow'
-                  }
-                }}
-                onFetchData={(state, instance) => {
-                  //TODO call to show the loading state
-                  this.fetchTokens(this.props.token, state)
-                }}/>
+            <ReactTable
+              data={this.props.results}
+              pages={this.props.totalPages}
+              manual
+              className='-striped -highlight UserSearch-table'
+              columns={this.getColumnFormat()}
+              filterable={this.props.isFilteringEnabled}
+              showPagination
+              loading={this.props.showSearchLoader}
+              getTrProps={(state, rowInfo) => {
+                let selected = false
+                if (rowInfo) {
+                  selected = rowInfo.row.id === this.props.selectedTokenRowId
+                }
+                return {
+                  onClick: (target, event) => {
+                    this.toggleRow(rowInfo.row.id)
+                  },
+                  className: selected ? 'selectedRow' : 'unselectedRow'
+                }
+              }}
+              onFetchData={(state, instance) => {
+                  // TODO call to show the loading state
+                this.fetchTokens(this.props.token, state)
+              }} />
           </div>
         </div>
-      </Paper>    
+      </Paper>
     )
   }
 }
 
 TokenSearch.propTypes = {
   isFilteringEnabled: PropTypes.bool.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   token: state.login.token,
@@ -187,14 +185,14 @@ const mapStateToProps = state => ({
   pages: state.tokenSearch.totalPages,
   errorStatus: state.token.errorStatus,
   errorText: state.token.errorText,
-  selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
-});
+  selectedTokenRowId: state.tokenSearch.selectedTokenRowId
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   performTokenSearch,
   changeSelectedRow,
   setEnabledStateOnToken
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

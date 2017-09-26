@@ -19,53 +19,50 @@ import PropTypes, { object } from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import queryString  from 'query-string'
+import queryString from 'query-string'
 import jwtDecode from 'jwt-decode'
 
 import { changeToken } from '../../modules/login'
 import { relativePush } from '../../relativePush'
 
 class ResetPassword extends Component {
-
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       noToken: false
     }
   }
 
-  componentDidMount(){
-    let missingToken = false;
-    let invalidToken = false;
-    let expiredToken = false;
-    
-    const token = queryString.parse(this.context.router.route.location.search).token;
+  componentDidMount () {
+    let missingToken = false
+    let invalidToken = false
+    let expiredToken = false
+
+    const token = queryString.parse(this.context.router.route.location.search).token
 
     // Validate token
-    if(!token){
+    if (!token) {
       missingToken = true
-    }
-    else {  
-      try{
-        const decodedToken = jwtDecode(token);
-        const now = new Date().getTime() / 1000;
+    } else {
+      try {
+        const decodedToken = jwtDecode(token)
+        const now = new Date().getTime() / 1000
         expiredToken = decodedToken.exp <= now
       } catch (err) {
         invalidToken = true
       }
     }
 
-    if(missingToken || invalidToken || expiredToken) {
-      this.setState({noToken:true})
-    }
-    else {
-      this.context.store.dispatch(changeToken(token));
+    if (missingToken || invalidToken || expiredToken) {
+      this.setState({noToken: true})
+    } else {
+      this.context.store.dispatch(changeToken(token))
       this.context.store.dispatch(relativePush('/changepassword'))
-    }  
+    }
   }
 
-  render() {
-    return ( 
+  render () {
+    return (
       <div>
         { this.state.noToken ? (
           <div>
@@ -74,25 +71,24 @@ class ResetPassword extends Component {
           </div>
         ) : (undefined) }
       </div>
-      
+
     )
   }
-  
 }
 
 ResetPassword.contextTypes = {
   store: PropTypes.object.isRequired,
   router: PropTypes.shape({
-    history: object.isRequired,
-  }),
-};
+    history: object.isRequired
+  })
+}
 
 const mapStateToProps = state => ({
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   changeToken
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

@@ -25,14 +25,14 @@ import { checkForRememberMeToken } from '../../modules/login'
 import { relativePath } from '../../relativePush'
 
 class Login extends Component {
-  componentWillMount() {
+  componentWillMount () {
     checkForRememberMeToken(this.context.store.dispatch)
   }
 
-  render() {
-    const { token } = this.props;
-    let referrer = relativePath('/');
-    if(this.props.location.state){
+  render () {
+    const { token } = this.props
+    let referrer = relativePath('/')
+    if (this.props.location.state) {
       referrer = this.props.location.state.referrer
     }
     return (
@@ -40,10 +40,10 @@ class Login extends Component {
         {token ? (
           <Redirect to={{
             pathname: referrer,
-            state: {referrer:'/login'}
-          }}/>
-        ): (
-          <LoginUI/>
+            state: {referrer: '/login'}
+          }} />
+        ) : (
+          <LoginUI />
         )}
       </div>
     )
@@ -52,19 +52,19 @@ class Login extends Component {
 
 Login.PropTypes = {
   token: PropTypes.string.isRequired
-};
+}
 
 Login.contextTypes = {
   store: PropTypes.object.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   token: state.login.token
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   checkForRememberMeToken
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

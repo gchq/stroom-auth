@@ -18,19 +18,19 @@ import { HttpError } from '../ErrorTypes'
 import { handleErrors, getJsonBody } from './fetchFunctions'
 import { toggleAlertVisibility } from './token'
 
-export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER';
-export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS';
-export const SELECT_ROW = 'tokenSearch/SELECT_ROW';
-export const CHANGE_LAST_USED_PAGE_SIZE = 'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE';
-export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE';
-export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED';
-export const CHANGE_LAST_USED_FILTERED = 'tokenSearch/CHANGE_LAST_USED_FILTERED';
+export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER'
+export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS'
+export const SELECT_ROW = 'tokenSearch/SELECT_ROW'
+export const CHANGE_LAST_USED_PAGE_SIZE = 'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE'
+export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE'
+export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED'
+export const CHANGE_LAST_USED_FILTERED = 'tokenSearch/CHANGE_LAST_USED_FILTERED'
 
 const initialState = {
   tokens: [],
   showSearchLoader: false,
   selectedTokenRowId: undefined
-};
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -38,21 +38,20 @@ export default (state = initialState, action) => {
       return {
         ...state,
         showSearchLoader: action.showSearchLoader
-      };
+      }
     case UPDATE_RESULTS:
       return {
         ...state,
         results: action.results,
         totalPages: action.totalPages
-      };
+      }
     case SELECT_ROW:
-      if(state.selectedTokenRowId === action.selectedTokenRowId){
+      if (state.selectedTokenRowId === action.selectedTokenRowId) {
         return {
           ...state,
           selectedTokenRowId: undefined
         }
-      }
-      else {
+      } else {
         return {
           ...state,
           selectedTokenRowId: action.selectedTokenRowId
@@ -62,28 +61,28 @@ export default (state = initialState, action) => {
       return {
         ...state,
         lastUsedPageSize: action.lastUsedPageSize
-      };
+      }
     case CHANGE_LAST_USED_PAGE:
       return {
         ...state,
         lastUsedPage: action.lastUsedPage
-      };
+      }
     case CHANGE_LAST_USED_SORTED:
       return {
         ...state,
         lastUsedSorted: action.lastUsedSorted
-      };
+      }
     case CHANGE_LAST_USED_FILTERED:
       return {
         ...state,
         lastUsedFiltered: action.lastUsedFiltered
-      };
+      }
     default:
       return state
   }
 }
 
-function updateResults(data){
+function updateResults (data) {
   return {
     type: UPDATE_RESULTS,
     results: data.results,
@@ -91,7 +90,7 @@ function updateResults(data){
   }
 }
 
-export function showSearchLoader(showSearchLoader){
+export function showSearchLoader (showSearchLoader) {
   return {
     type: SHOW_SEARCH_LOADER,
     showSearchLoader
@@ -99,43 +98,39 @@ export function showSearchLoader(showSearchLoader){
 }
 
 export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) => {
-  return (dispatch, getState)=> {
-    dispatch(showSearchLoader(true));
+  return (dispatch, getState) => {
+    dispatch(showSearchLoader(true))
 
-    if(pageSize === undefined){
+    if (pageSize === undefined) {
       pageSize = getState().tokenSearch.lastUsedPageSize
-    }
-    else{
+    } else {
       dispatch({
         type: CHANGE_LAST_USED_PAGE_SIZE,
         lastUsedPageSize: pageSize
       })
     }
 
-    if(page === undefined) {
+    if (page === undefined) {
       page = getState().tokenSearch.lastUsedPage
-    }
-    else{
+    } else {
       dispatch({
         type: CHANGE_LAST_USED_PAGE,
         lastUsedPage: page
       })
     }
 
-    if(sorted === undefined){
+    if (sorted === undefined) {
       sorted = getState().tokenSearch.lastUsedSorted
-    }
-    else {
+    } else {
       dispatch({
         type: CHANGE_LAST_USED_SORTED,
         lastUsedSorted: sorted
       })
     }
 
-    if(filtered === undefined) {
+    if (filtered === undefined) {
       filtered = getState().tokenSearch.lastUsedFiltered
-    }
-    else {
+    } else {
       dispatch({
         type: CHANGE_LAST_USED_FILTERED,
         lastUsedFiltered: filtered
@@ -143,39 +138,37 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     }
 
     // Default ordering and direction
-    let orderBy = 'issued_on';
-    let orderDirection = 'desc';
+    let orderBy = 'issued_on'
+    let orderDirection = 'desc'
 
     if (sorted.length > 0) {
-      orderBy = sorted[0].id;
+      orderBy = sorted[0].id
       orderDirection = sorted[0].desc ? 'desc' : 'asc'
     }
 
-
-    let filters = {};
-    if(filtered.length > 0){
-      filtered.forEach(filter =>{
+    let filters = {}
+    if (filtered.length > 0) {
+      filtered.forEach(filter => {
         filters[filter.id] = filter.value
       })
     }
 
-    const body = filters ?
-        JSON.stringify({
+    const body = filters
+        ? JSON.stringify({
           page,
           limit: pageSize,
           orderBy,
           orderDirection,
           filters
         })
-        :
-        JSON.stringify({
+        : JSON.stringify({
           page,
           limit: pageSize,
           orderBy,
-          orderDirection,
-        });
+          orderDirection
+        })
 
-    const tokenSearchUrl = process.env.REACT_APP_TOKEN_URL + "/search";
+    const tokenSearchUrl = process.env.REACT_APP_TOKEN_URL + '/search'
 
     fetch(tokenSearchUrl, {
       headers: {
@@ -190,20 +183,19 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     .then(handleStatus)
     .then(getJsonBody)
     .then(data => {
-      dispatch(showSearchLoader(false));
+      dispatch(showSearchLoader(false))
       dispatch(updateResults(data))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
   }
-};
+}
 
-function handleStatus(response) {
-  if(response.status === 200){
+function handleStatus (response) {
+  if (response.status === 200) {
     return Promise.resolve(response)
-  } else if(response.status === 409) {
+  } else if (response.status === 409) {
     return Promise.reject(new HttpError(response.status, 'This token already exists.'))
-  }
-  else {
+  } else {
     return Promise.reject(new HttpError(response.status, response.statusText))
   }
 }
@@ -215,12 +207,12 @@ export const changeSelectedRow = (tokenId) => {
       selectedTokenRowId: tokenId
     })
   }
-};
+}
 
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
-    const securityToken = getState().login.token;
-    const tokenUrl = `${process.env.REACT_APP_TOKEN_URL}/${tokenId}/state/?enabled=${isEnabled}`;
+    const securityToken = getState().login.token
+    const tokenUrl = `${process.env.REACT_APP_TOKEN_URL}/${tokenId}/state/?enabled=${isEnabled}`
     fetch(tokenUrl, {
       headers: {
         'Accept': 'application/json',
@@ -233,7 +225,7 @@ export const setEnabledStateOnToken = (tokenId, isEnabled) => {
     .then(handleStatus)
     .catch(() => {
       dispatch(toggleAlertVisibility('Unable to change the state of this token!'))
-      //TODO Display snackbar with an error message
+      // TODO Display snackbar with an error message
     })
   }
-};
+}

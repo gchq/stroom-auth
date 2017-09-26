@@ -21,52 +21,52 @@ import UserLayout from './UserLayout'
 import { changeVisibleContainer } from '../../modules/user'
 
 export class UserCreate extends Component {
-    componentWillMount() {
+  componentWillMount () {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
     this.context.store.dispatch(changeVisibleContainer('create'))
   }
 
-    render() {
+  render () {
     return (
-        <UserLayout/>
+      <UserLayout />
     )
   }
 }
 
 UserCreate.contextTypes = {
   store: PropTypes.object.isRequired
-};
+}
 
 export class UserEdit extends Component {
-    componentWillMount() {
+  componentWillMount () {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
     this.context.store.dispatch(changeVisibleContainer('edit'))
   }
 
-    render() {
+  render () {
     return (
-        <UserLayout/>
+      <UserLayout />
     )
   }
 }
 
 UserEdit.contextTypes = {
   store: PropTypes.object.isRequired
-};
+}
 
 export class UserSearch extends Component {
-    componentWillMount() {
+  componentWillMount () {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
     this.context.store.dispatch(changeVisibleContainer('search'))
   }
 
-    render() {
+  render () {
     return (
-        <UserLayout/>
+      <UserLayout />
     )
   }
 }
 
 UserSearch.contextTypes = {
   store: PropTypes.object.isRequired
-};
+}

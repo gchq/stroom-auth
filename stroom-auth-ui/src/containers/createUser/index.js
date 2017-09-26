@@ -28,30 +28,30 @@ import UserFields from '../userFields'
 import { createUser as onSubmit } from '../../modules/user'
 
 const UserCreateForm = props => {
-  const {handleSubmit, pristine, submitting } = props;
+  const { handleSubmit, pristine, submitting } = props
   return (
     <div className=''>
-        <Card className="CreateUserForm-card">
+      <Card className='CreateUserForm-card'>
         <div>
           <form onSubmit={handleSubmit}>
-            <UserFields showCalculatedFields={false} constrainPasswordEditing={false}/>
+            <UserFields showCalculatedFields={false} constrainPasswordEditing={false} />
             <div>
-            <RaisedButton
-              primary={true}
-              disabled={pristine || submitting}
-              type="submit"
-              label="Create the user"/>
+              <RaisedButton
+                primary
+                disabled={pristine || submitting}
+                type='submit'
+                label='Create the user' />
             </div>
           </form>
         </div>
       </Card>
     </div>
   )
-};
+}
 
 const ReduxUserCreateForm = reduxForm({
   form: 'UserCreateForm'
-})(UserCreateForm);
+})(UserCreateForm)
 
 const mapStateToProps = state => ({
   // token: state.login.token,
@@ -59,12 +59,12 @@ const mapStateToProps = state => ({
   // email: state.user.email,
   // password: state.user.password,
   errorStatus: state.user.errorStatus,
-  errorText: state.user.errorText,
-});
+  errorText: state.user.errorText
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

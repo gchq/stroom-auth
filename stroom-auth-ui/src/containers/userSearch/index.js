@@ -30,33 +30,32 @@ import './UserSearch.css'
 import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 
 class UserSearch extends Component {
-
-  componentDidMount() {
+  componentDidMount () {
     this.props.performUserSearch(this.props.token)
   }
 
-  toggleRow(id) {
+  toggleRow (id) {
     // Tell the redux store so the control buttons get displayed correctly
     this.props.changeSelectedRow(id)
   }
 
-  renderStateCell(state){
-    let stateColour, stateText;
-    switch(state) {
+  renderStateCell (state) {
+    let stateColour, stateText
+    switch (state) {
       case 'enabled':
-        stateColour = '#57d500';
-        stateText = 'Enabled';
-        break;
+        stateColour = '#57d500'
+        stateText = 'Enabled'
+        break
       case 'locked':
-        stateColour = '#ff2e00';
-        stateText = 'Locked';
-        break;
+        stateColour = '#ff2e00'
+        stateText = 'Locked'
+        break
       case 'disabled':
-        stateColour = '#ff2e00';
-        stateText = 'Disabled';
-        break;
+        stateColour = '#ff2e00'
+        stateText = 'Disabled'
+        break
       default:
-        stateColour = '#ffbf00';
+        stateColour = '#ffbf00'
         stateText = 'Unknown!'
     }
     return (
@@ -73,12 +72,12 @@ class UserSearch extends Component {
     )
   }
 
-  formatDate(dateString){
-    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
+  formatDate (dateString) {
+    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
     return dateString ? dateFormat(dateString, dateFormatString) : ''
   }
 
-  getColumnFormat() {
+  getColumnFormat () {
     return [{
       Header: '',
       accessor: 'id',
@@ -120,34 +119,34 @@ class UserSearch extends Component {
     }]
   }
 
-  render() {
+  render () {
     return (
       <Paper className='UserSearch-main' zDepth={0}>
-        <div className="UserSearch-content" >
+        <div className='UserSearch-content' >
           <div>
-              <ReactTable
-                data={this.props.results}
-                className='-striped -highlight UserSearch-table'
-                columns={this.getColumnFormat()}
-                defaultSorted={[{
-                  id:'email',
-                  desc: true
-                }]}
-                filterable={this.props.isFilteringEnabled}
-                showPagination= {true}
-                loading={this.props.showSearchLoader}
-                getTrProps={(state, rowInfo) => {
-                  let selected = false;
-                  if(rowInfo) {
-                    selected = rowInfo.row.id === this.props.selectedUserRowId 
-                  }
-                  return {
-                    onClick: (target, event) => {
-                      this.toggleRow(rowInfo.row.id)
-                    },
-                    className: selected ? 'selectedRow' : 'unselectedRow'
-                  }
-                }}/>
+            <ReactTable
+              data={this.props.results}
+              className='-striped -highlight UserSearch-table'
+              columns={this.getColumnFormat()}
+              defaultSorted={[{
+                id: 'email',
+                desc: true
+              }]}
+              filterable={this.props.isFilteringEnabled}
+              showPagination
+              loading={this.props.showSearchLoader}
+              getTrProps={(state, rowInfo) => {
+                let selected = false
+                if (rowInfo) {
+                  selected = rowInfo.row.id === this.props.selectedUserRowId
+                }
+                return {
+                  onClick: (target, event) => {
+                    this.toggleRow(rowInfo.row.id)
+                  },
+                  className: selected ? 'selectedRow' : 'unselectedRow'
+                }
+              }} />
           </div>
         </div>
       </Paper>
@@ -157,7 +156,7 @@ class UserSearch extends Component {
 
 UserSearch.propTypes = {
   isFilteringEnabled: PropTypes.bool.isRequired
-};
+}
 
 const mapStateToProps = state => ({
   token: state.login.token,
@@ -166,12 +165,12 @@ const mapStateToProps = state => ({
   errorStatus: state.user.errorStatus,
   errorText: state.user.errorText,
   selectedUserRowId: state.userSearch.selectedUserRowId
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   performUserSearch,
   changeSelectedRow
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,

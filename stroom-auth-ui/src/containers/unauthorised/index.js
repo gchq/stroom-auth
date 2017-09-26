@@ -24,10 +24,10 @@ import './Unauthorised.css'
 import '../Layout.css'
 
 class Unauthorised extends Component {
-  render() {
+  render () {
     return (
       <div className='content-floating-without-appbar'>
-        <Card className="Unauthorised-card">
+        <Card className='Unauthorised-card'>
           <h3>Unauthorised!</h3>
           <p>I'm afraid you're not authorised to see this page. If you think you should be able to please contact an
             administrator.</p>
@@ -37,9 +37,9 @@ class Unauthorised extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({})
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
 
 export default connect(
   mapStateToProps,

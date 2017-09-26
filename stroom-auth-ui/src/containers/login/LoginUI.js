@@ -17,7 +17,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { NavLink} from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -34,68 +34,68 @@ import { login as onSubmit } from '../../modules/login'
 import { relativePath } from '../../relativePush'
 
 const LoginForm = props => {
-  const {handleSubmit, pristine, submitting } = props;
-    return (
-      <div className='content-floating-without-appbar'>
-        <Card className='Login-card'>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <div className="LoginForm-iconContainer">
-                <Avatar
-                  className="LoginForm-icon"
-                  src={icon}
-                  size={100}
+  const { handleSubmit, pristine, submitting } = props
+  return (
+    <div className='content-floating-without-appbar'>
+      <Card className='Login-card'>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <div className='LoginForm-iconContainer'>
+              <Avatar
+                className='LoginForm-icon'
+                src={icon}
+                size={100}
                 />
-              </div>
-              <div>
-              <Field 
-                name="email"
+            </div>
+            <div>
+              <Field
+                name='email'
                 component={TextField}
-                hintText="Email"
+                hintText='Email'
                 validate={[required]}
                 warn={email}
-                className="LoginForm-input"
+                className='LoginForm-input'
               />
-              </div>
-              <Field 
-                name="password"
-                component={TextField}
-                hintText="Password"
-                validate={[required]}
-                className="LoginForm-input"
-              />
-              <Field
-                name="rememberMe"
-                component={Checkbox}
-                label="Remember me?"
-                className="LoginForm-input"
-              />
-              <br/>
-              <RaisedButton 
-                primary={true}
-                disabled={pristine || submitting}
-                type="submit"
-                fullWidth={true}
-                label="Sign in"/>
-              <br/>
-              <NavLink to={relativePath("/resetPasswordRequest")}><p className="LoginForm-resetPasswordText">Reset password?</p></NavLink>
             </div>
-          </form>
-        </Card>
-      </div>
-    )
-  };
+            <Field
+              name='password'
+              component={TextField}
+              hintText='Password'
+              validate={[required]}
+              className='LoginForm-input'
+              />
+            <Field
+              name='rememberMe'
+              component={Checkbox}
+              label='Remember me?'
+              className='LoginForm-input'
+              />
+            <br />
+            <RaisedButton
+              primary
+              disabled={pristine || submitting}
+              type='submit'
+              fullWidth
+              label='Sign in' />
+            <br />
+            <NavLink to={relativePath('/resetPasswordRequest')}><p className='LoginForm-resetPasswordText'>Reset password?</p></NavLink>
+          </div>
+        </form>
+      </Card>
+    </div>
+  )
+}
 
 const ReduxLoginForm = reduxForm({
   form: 'LoginForm'
-})(LoginForm);
+})(LoginForm)
 
 const mapStateToProps = state => ({
-});
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit
-}, dispatch);
+}, dispatch)
 
 export default connect(
   mapStateToProps,
