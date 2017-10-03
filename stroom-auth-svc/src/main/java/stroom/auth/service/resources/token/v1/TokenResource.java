@@ -116,9 +116,12 @@ public class TokenResource {
   @POST
   @Path("/")
   @Timed
+  @ApiOperation(
+      value = "Submit a search request for tokens",
+      response = String.class)
   public final Response create(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
-      @NotNull CreateTokenRequest createTokenRequest) {
+      @ApiParam("CreateTokenRequest") @NotNull CreateTokenRequest createTokenRequest) {
 
     if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();

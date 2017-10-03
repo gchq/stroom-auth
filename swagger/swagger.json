@@ -17,6 +17,32 @@
   "basePath" : "/",
   "schemes" : [ "http", "https" ],
   "paths" : {
+    "/token/v1" : {
+      "post" : {
+        "summary" : "Submit a search request for tokens",
+        "description" : "",
+        "operationId" : "create",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "CreateTokenRequest",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/CreateTokenRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
     "/token/v1/search" : {
       "post" : {
         "summary" : "Submit a search request for tokens",
@@ -45,6 +71,24 @@
     }
   },
   "definitions" : {
+    "CreateTokenRequest" : {
+      "type" : "object",
+      "properties" : {
+        "userEmail" : {
+          "type" : "string"
+        },
+        "tokenType" : {
+          "type" : "string"
+        },
+        "enabled" : {
+          "type" : "boolean"
+        },
+        "parsedTokenType" : {
+          "type" : "string",
+          "enum" : [ "USER", "API", "EMAIL_RESET" ]
+        }
+      }
+    },
     "SearchRequest" : {
       "type" : "object",
       "required" : [ "limit", "page" ],
