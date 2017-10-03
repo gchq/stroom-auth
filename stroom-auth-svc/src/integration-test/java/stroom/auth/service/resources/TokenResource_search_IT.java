@@ -56,7 +56,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
         .asString();
-    List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
     assertThat(tokens.size()).isGreaterThan(0);
     assertThat(response.getStatus()).isEqualTo(200);
   }
@@ -112,7 +112,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
         .asString();
-    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
     assertThat(results.size()).isEqualTo(5);
     assertThat(response.getStatus()).isEqualTo(200);
 
@@ -145,7 +145,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
         .asString();
-    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
 
     assertThat(results.size()).isEqualTo(5);
     assertThat(response.getStatus()).isEqualTo(200);
@@ -179,7 +179,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
         .asString();
-    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
 
     assertThat(results.size()).isEqualTo(5);
     assertThat(response.getStatus()).isEqualTo(200);
@@ -266,7 +266,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .body(serialisedSearchRequest )
         .asString();
 
-    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
     int expectedNumberOfTokens = 9; // 3 users should match the filter and they'll have 3 tokens each (API, USER, EMAIL_RESET)
     assertThat(results.size()).isEqualTo(expectedNumberOfTokens);
     results.forEach(result -> {
@@ -309,7 +309,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .body(serialisedSearchRequest)
         .asString();
 
-    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
     int expectedNumberOfTokens = 9; // 3 users should match the filter and they'll have 3 tokens each (API, USER, EMAIL_RESET)
     assertThat(results.size()).isEqualTo(expectedNumberOfTokens);
     results.forEach(result -> {
@@ -348,7 +348,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         .body(serialisedSearchRequest )
         .asString();
 
-    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> results = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
     assertThat(results.size()).isEqualTo(expectedCount);
     assertThat(response.getStatus()).isEqualTo(200);
   }

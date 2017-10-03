@@ -18,6 +18,9 @@ package stroom.auth.service.resources.token.v1;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.AuthorisationServiceClient;
@@ -37,6 +40,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -47,6 +51,7 @@ import java.util.Optional;
 @Path("/token/v1")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Api(description = "Stroom Auth API")
 public class TokenResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 
@@ -72,7 +77,12 @@ public class TokenResource {
   @POST
   @Path("/search")
   @Timed
-  public final Response search (@Auth @NotNull ServiceUser authenticatedServiceUser, @NotNull @Valid SearchRequest searchRequest) {
+  @ApiOperation(
+      value = "Submit a search request for tokens",
+      response = SearchResponse.class)
+  public final Response search (
+      @Auth @NotNull ServiceUser authenticatedServiceUser,
+      @ApiParam("SearchRequest") @NotNull @Valid SearchRequest searchRequest) {
     Map<String, String> filters = searchRequest.getFilters();
 
     // Check the user is authorised to call this
@@ -92,14 +102,15 @@ public class TokenResource {
       }
     }
 
-    String responseBody;
+    SearchResponse results;
     try {
-      responseBody = tokenDao.searchTokens(searchRequest);
+      results = tokenDao.searchTokens(searchRequest);
     } catch (DaoException e) {
       return Response.status(e.getEquivalentHttpReturnCode()).entity(e.getMessage()).build();
     }
 
-    return Response.status(Response.Status.OK).entity(responseBody).build();
+    LOGGER.info("Returning tokens: found " + results.getTokens().size());
+    return Response.status(Response.Status.OK).entity(Entity.json(results)).build();
   }
 
   @POST

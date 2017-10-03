@@ -61,7 +61,7 @@ public class TokenResource_delete_IT extends TokenResource_IT{
         .body(serialisedSearchRequest)
         .asString();
 
-    List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
     assertThat(tokens.size()).isEqualTo(2);
   }
 
@@ -86,7 +86,7 @@ public class TokenResource_delete_IT extends TokenResource_IT{
         .header("Content-Type", "application/json")
         .body(serialisedSearchRequest)
         .asString();
-    List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getResults();
+    List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
     // We can't access tokens without a token for the admin user
     assertThat(tokens.size()).isEqualTo(1);
   }

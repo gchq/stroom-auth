@@ -14,19 +14,30 @@
  * limitations under the License.
  */
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath('io.swagger:swagger-codegen:2.2.2') // Generates client from YAML/JSON
+    }
+}
+
 plugins {
     id 'com.github.johnrengelman.shadow' version '1.2.4'
+    id "com.benjaminsproule.swagger" version "0.1.4" // Generates YAML/JSON from model
 }
 
 apply plugin: 'application'
 mainClassName = 'stroom.auth.service.App'
+version 'v0.1.0'
 
 jar {
     manifest {
-        attributes(
-                "Implementation-Title": "Stroom Auth Service",
-                "Implementation-Version": version,
-                "Main-Class": "stroom.auth.service.App"
+        attributes (
+            "Implementation-Title": "Stroom Auth Service",
+            "Implementation-Version": version,
+            "Main-Class": "stroom.auth.service.App"
         )
     }
 
@@ -53,14 +64,26 @@ sourceSets {
 }
 
 configurations {
+    testArtifacts
+    sourceArtifacts
+
     // This means our integration tests get all the dependencies from our tests and we don't need to specify them twice.
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
 }
 
+task sources(type: Jar) {
+    baseName = "${project.name}-source"
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    sourceArtifacts sources
+}
+
 // This task lets us run the actual integration tests.
 task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
@@ -75,6 +98,7 @@ tasks.withType(Test) {
 
 dependencies {
     compile project(':stroom-persistence')
+    compile project(':stroom-auth-service-api')
     compile deps.dropwizard_core
     compile deps.dropwizard_flyway
     compile deps.dropwizard_jooq
@@ -88,6 +112,7 @@ dependencies {
     compile deps.flyway_core
     compile deps.curator_service_discovery
     compile deps.simple_java_mail
+    compile deps.swagger_annotations
 
     runtime deps.mariadb_connector
 
@@ -97,4 +122,57 @@ dependencies {
     integrationTestCompile testDeps.dropwizard_testing
     integrationTestCompile testDeps.moshi
     integrationTestCompile testDeps.unirest
+}
+
+def apiProjectRoot = "${projectDir}/../stroom-auth-service-api"
+
+swagger {
+    apiSource {
+        springmvc = false //makes it search for jersey annotations
+        outputFormats = 'json,yaml'
+        locations = ['stroom.auth.service.resources.token.v1.TokenResource',
+                     'stroom.auth.service.resources.token.v1.SearchRequest',
+                    'javax.ws.rs.core.Response']
+        schemes = [
+                'http',
+                'https' ]
+        host = 'localhost:8080'
+        basePath = '/'
+        info {
+            title = 'Stroom Auth API'
+            version = 'v1'
+            description = 'Various APIs for interacting with authentication, users, and tokens.'
+            contact {
+                name = 'GCHQ'
+                url = 'https://github.com/gchq/stroom-auth'
+            }
+            license {
+                url = 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                name = 'Apache 2.0'
+            }
+        }
+        outputPath = "$apiProjectRoot/generated/document.html"
+        swaggerDirectory = "./swagger"
+    }
+}
+
+//TODO this depends on the YAML being generated - make it a gradle dep
+
+import io.swagger.codegen.config.CodegenConfigurator
+import io.swagger.codegen.DefaultGenerator
+def sourceFolder = "$apiProjectRoot/src/main/java"
+task generateSwaggerApi {
+    doLast {
+        def config = new CodegenConfigurator()
+        config.setInputSpec("./swagger/swagger.yaml")
+        config.setOutputDir("$apiProjectRoot")
+        config.setLang('java')
+        config.setAdditionalProperties([
+                'interfaceOnly' : 'true',
+                'apiPackage'    : 'stroom.auth.service.api',
+                'modelPackage'  : 'stroom.auth.service.api.model',
+                'sourceFolder'  : 'src/main/java'
+        ])
+        new DefaultGenerator().opts(config.toClientOptInput()).generate()
+    }
 }

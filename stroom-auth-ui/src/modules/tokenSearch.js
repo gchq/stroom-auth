@@ -85,7 +85,7 @@ export default (state = initialState, action) => {
 function updateResults (data) {
   return {
     type: UPDATE_RESULTS,
-    results: data.results,
+    results: data.tokens,
     totalPages: data.totalPages
   }
 }
@@ -184,7 +184,7 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     .then(getJsonBody)
     .then(data => {
       dispatch(showSearchLoader(false))
-      dispatch(updateResults(data))
+      dispatch(updateResults(data.entity))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
   }

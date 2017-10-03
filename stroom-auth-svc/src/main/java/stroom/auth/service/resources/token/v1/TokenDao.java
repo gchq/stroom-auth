@@ -67,7 +67,7 @@ public class TokenDao {
     database = DSL.using(this.jooqConfig);
   }
 
-  public String searchTokens(SearchRequest searchRequest) throws DaoException {
+  public SearchResponse searchTokens(SearchRequest searchRequest) throws DaoException {
     // Create some vars to allow the rest of this method to be more succinct.
     int page = searchRequest.getPage();
     int limit = searchRequest.getLimit();
@@ -114,7 +114,7 @@ public class TokenDao {
             .limit(limit)
             .offset(offset)
             .fetch();
-    String serialisedResults = results.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
+    List<Token> tokens = results.into(Token.class);
 
     // Finally we need to get the number of tokens so we can calculate the total number of pages
     SelectSelectStep<Record1<Integer>> selectCount =
@@ -127,9 +127,10 @@ public class TokenDao {
     // We need to round up so we always have enough pages even if there's a remainder.
     int pages= (int)Math.ceil((double) count/limit);
 
-    String responseBody = "{\"totalPages\":\""+pages+"\", \"results\":"+serialisedResults + "}";
-
-    return responseBody;
+    SearchResponse searchResponse = new SearchResponse();
+    searchResponse.setTokens(tokens);
+    searchResponse.setTotalPages(pages);
+    return searchResponse;
   }
 
   /**
@@ -233,23 +234,14 @@ public class TokenDao {
         .where(new Condition[]{TOKENS.TOKEN.eq(token)})
         .fetch();
 
-    if(result.isEmpty()){
+    List<Token> tokenResult = result.into(Token.class);
+
+    if(tokenResult.isEmpty()){
       return Optional.empty();
     }
 
-    //TODO: Improve this mapping/move it somewhere common and reuse it.
-    Token resultToken = new Token();
-    resultToken.setId(result.getValue(0, TOKENS.ID));
-    resultToken.setEnabled(result.getValue(0, TOKENS.ENABLED));
-    resultToken.setExpires_on(result.getValue(0, TOKENS.EXPIRES_ON).toString());
-    resultToken.setUser_email((String)result.getValue(0, userEmail));
-    resultToken.setIssued_on(result.getValue(0, TOKENS.ISSUED_ON).toString());
-//    resultToken.setIssued_by_user(result.getValue(0, TOKENS.ISSUED_BY_USER));
-    resultToken.setToken(result.getValue(0, TOKENS.TOKEN));
-    resultToken.setToken_type(result.getValue(0, TOKEN_TYPES.TOKEN_TYPE));
-//    resultToken.setUpdated_by_user(result.getValue(0, TOKENS.UPDATED_BY_USER));
-//    resultToken.setUpdated_on(result.getValue(0,TOKENS.UPDATED_ON).toString());
-    return Optional.of(resultToken);
+    LOGGER.info("Number of results: " + tokenResult.size());
+    return Optional.of(tokenResult.get(0));
   }
 
 

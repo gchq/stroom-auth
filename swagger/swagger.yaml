@@ -1,0 +1,103 @@
+---
+swagger: "2.0"
+info:
+  description: "Various APIs for interacting with authentication, users, and tokens."
+  version: "v1"
+  title: "Stroom Auth API"
+  contact:
+    name: "GCHQ"
+    url: "https://github.com/gchq/stroom-auth"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:8080"
+basePath: "/"
+schemes:
+- "http"
+- "https"
+paths:
+  /token/v1/search:
+    post:
+      summary: "Submit a search request for tokens"
+      description: ""
+      operationId: "search"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "SearchRequest"
+        required: false
+        schema:
+          $ref: "#/definitions/SearchRequest"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/SearchResponse"
+definitions:
+  SearchRequest:
+    type: "object"
+    required:
+    - "limit"
+    - "page"
+    properties:
+      page:
+        type: "integer"
+        format: "int32"
+        description: "The page of search results to retrieve."
+      limit:
+        type: "integer"
+        format: "int32"
+        description: "The number of tokens in a page of search results."
+      orderBy:
+        type: "string"
+        description: "The property by which to order the results."
+        pattern: "^enabled$|^user_email$|^issued_by_user$|^token$|^token_type$|^updated_by_user$|^expires_on$|^issued_on$|^updated_on$"
+      orderDirection:
+        type: "string"
+        description: "The direction in which to order the results."
+        pattern: "^asc$|^desc$"
+      filters:
+        type: "object"
+        description: "How to filter the results. This is done by property, e.g. user_email,\
+          \ 'someone@someplace.com'."
+        additionalProperties:
+          type: "string"
+    description: "A request for a search over tokens."
+  SearchResponse:
+    type: "object"
+    properties:
+      tokens:
+        type: "array"
+        items:
+          $ref: "#/definitions/Token"
+      totalPages:
+        type: "integer"
+        format: "int32"
+  Token:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      user_email:
+        type: "string"
+      token_type:
+        type: "string"
+      token:
+        type: "string"
+      expires_on:
+        type: "string"
+      issued_on:
+        type: "string"
+      issued_by_user:
+        type: "string"
+      enabled:
+        type: "boolean"
+      updated_on:
+        type: "string"
+      updated_by_user:
+        type: "string"

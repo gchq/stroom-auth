@@ -25,6 +25,7 @@ import com.squareup.moshi.Types;
 import org.eclipse.jetty.http.HttpStatus;
 import stroom.auth.service.resources.token.v1.CreateTokenRequest;
 import stroom.auth.service.resources.token.v1.SearchRequest;
+import stroom.auth.service.resources.token.v1.SearchResponse;
 import stroom.auth.service.resources.token.v1.Token;
 import stroom.auth.service.resources.token.v1.Token.TokenType;
 
