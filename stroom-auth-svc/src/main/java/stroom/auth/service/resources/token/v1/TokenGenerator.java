@@ -19,7 +19,6 @@ package stroom.auth.service.resources.token.v1;
 import jersey.repackaged.com.google.common.base.Preconditions;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
@@ -27,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import stroom.auth.service.config.TokenConfig;
 
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 final class TokenGenerator {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenGenerator.class);
@@ -37,7 +38,7 @@ final class TokenGenerator {
 
   private String token = "";
   private String errorMessage = "";
-  private String expiresOn;
+  private Timestamp expiresOn;
 
   public TokenGenerator(Token.TokenType tokenType, @NotNull String user, TokenConfig config) throws TokenCreationException {
     this.config = config;
@@ -57,7 +58,7 @@ final class TokenGenerator {
     return errorMessage;
   }
 
-  public String getExpiresOn() {
+  public Timestamp getExpiresOn() {
     return expiresOn;
   }
 
@@ -79,7 +80,7 @@ final class TokenGenerator {
     }
   }
 
-  private final void createToken(float expirationInMinutes) throws TokenCreationException {
+  private final void createToken(long expirationInMinutes) throws TokenCreationException {
     byte[] jwsSecret = this.config.getJwsSecretAsBytes();
     JwtClaims jwtClaims = getClaimsForUser(user, expirationInMinutes);
     this.token = toToken(jwsSecret, jwtClaims);
@@ -99,18 +100,12 @@ final class TokenGenerator {
     }
   }
 
-  private final JwtClaims getClaimsForUser(String user, float expirationInMinutes) throws TokenCreationException {
+  private final JwtClaims getClaimsForUser(String user, long expirationInMinutes) throws TokenCreationException {
     JwtClaims claims = new JwtClaims();
+    this.expiresOn = Timestamp.valueOf(LocalDateTime.now().plusMinutes(expirationInMinutes));
     claims.setExpirationTimeMinutesInTheFuture(expirationInMinutes);
     claims.setSubject(user);
     claims.setIssuer(this.config.getJwsIssuer());
-    try {
-      this.expiresOn = claims.getExpirationTime().toString();
-    } catch (MalformedClaimException e) {
-      errorMessage = "Bad date format for expiration time!";
-      LOGGER.error(errorMessage, e);
-      throw new TokenCreationException(e);
-    }
     return claims;
   }
 
