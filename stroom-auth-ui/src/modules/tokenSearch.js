@@ -184,7 +184,7 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     .then(getJsonBody)
     .then(data => {
       dispatch(showSearchLoader(false))
-      dispatch(updateResults(data.entity))
+      dispatch(updateResults(data))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
   }

@@ -110,7 +110,7 @@ public class TokenResource {
     }
 
     LOGGER.info("Returning tokens: found " + results.getTokens().size());
-    return Response.status(Response.Status.OK).entity(Entity.json(results)).build();
+    return Response.status(Response.Status.OK).entity(results).build();
   }
 
   @POST
