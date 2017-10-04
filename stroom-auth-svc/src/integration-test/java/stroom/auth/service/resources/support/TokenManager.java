@@ -39,7 +39,8 @@ public class TokenManager {
   private String rootUrl;
 
   public final String createToken(String userEmail, TokenType tokenType, String securityToken) throws UnirestException, IOException {
-    CreateTokenRequest createTokenRequest = new CreateTokenRequest(userEmail, tokenType.getText(), true);
+    CreateTokenRequest createTokenRequest = new CreateTokenRequest(
+        userEmail, tokenType.getText(), true, "Created by TokenManager, for integration tests");
     String serialisedCreateTokenRequest = serialise(createTokenRequest);
     HttpResponse response = Unirest
         .post(this.rootUrl)

@@ -61,19 +61,30 @@ paths:
 definitions:
   CreateTokenRequest:
     type: "object"
+    required:
+    - "tokenType"
+    - "userEmail"
     properties:
       userEmail:
         type: "string"
+        description: "The email of the user whom the token is for."
       tokenType:
         type: "string"
+        description: "The type of token to create: e.g. user, api, or email_reset."
+        pattern: "^user$|^api$|^email_reset$"
+      comments:
+        type: "string"
+        description: "Comments about the token."
       enabled:
         type: "boolean"
+        description: "Whether or not the new token should be enabled."
       parsedTokenType:
         type: "string"
         enum:
         - "USER"
         - "API"
         - "EMAIL_RESET"
+    description: "A request to create a token."
   SearchRequest:
     type: "object"
     required:

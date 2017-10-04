@@ -116,7 +116,7 @@ public final class AuthenticationResource {
           // Get and return a token based on the CN
           String token = tokenDao.createToken(
               Token.TokenType.USER, "authenticationResource",
-              cn.get());
+              cn.get(), true, "Created for a certificate user.");
           response = Response.status(Status.OK).entity(token).build();
         } else {
           LOGGER.debug("Cannot find CN in DN. Redirecting to login.");
@@ -188,7 +188,9 @@ public final class AuthenticationResource {
       try {
         token = tokenDao.createToken(
             Token.TokenType.USER, "authenticationResource",
-            credentials.getEmail());
+            credentials.getEmail(),
+            true,
+            "Created for username/password user");
       } catch (TokenCreationException e) {
         LOGGER.debug("Unable to create a token for this user. Redirecting to login as a backup method.", e);
         return this.redirectToLoginResponse();
@@ -230,7 +232,8 @@ public final class AuthenticationResource {
     try {
       resetToken = tokenDao.createToken(
           Token.TokenType.EMAIL_RESET, "authenticationResource",
-          emailAddress);
+          emailAddress,
+          true, "");
     } catch (TokenCreationException e) {
       String errorMessage = "Unable to create a token for this user!";
       LOGGER.debug(errorMessage, e);

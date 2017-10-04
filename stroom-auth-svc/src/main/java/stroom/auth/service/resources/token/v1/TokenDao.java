@@ -139,7 +139,9 @@ public class TokenDao {
   public String createToken(
       Token.TokenType tokenType,
       String issuingUserEmail,
-      String recipientUserEmail) throws TokenCreationException {
+      String recipientUserEmail,
+      boolean isEnabled,
+      String comment) throws TokenCreationException {
 
     Record1<Integer> userRecord = database
         .select(USERS.ID)
@@ -175,7 +177,8 @@ public class TokenDao {
         .set(TOKENS.EXPIRES_ON, tokenGenerator.getExpiresOn())
         .set(TOKENS.ISSUED_ON, Instant.now() )
         .set(TOKENS.ISSUED_BY_USER, issuingUserId)
-        .set(TOKENS.ENABLED, true)
+        .set(TOKENS.ENABLED, isEnabled)
+        .set(TOKENS.COMMENTS, comment)
         .returning(new Field[]{TOKENS.ID}).fetchOne();
 
     return tokenGenerator.getToken();

@@ -40,7 +40,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -136,8 +135,12 @@ public class TokenResource {
 
     String token;
     try {
-      token = tokenDao.createToken(tokenTypeToCreate.get(), authenticatedServiceUser.getName(),
-          createTokenRequest.getUserEmail());
+      token = tokenDao.createToken(
+          tokenTypeToCreate.get(),
+          authenticatedServiceUser.getName(),
+          createTokenRequest.getUserEmail(),
+          createTokenRequest.isEnabled(),
+          createTokenRequest.getComments());
     } catch (Exception e) {
       LOGGER.error(e.getMessage(), e);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

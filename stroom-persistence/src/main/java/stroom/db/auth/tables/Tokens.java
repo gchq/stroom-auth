@@ -37,7 +37,7 @@ import stroom.db.auth.tables.records.TokensRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tokens extends TableImpl<TokensRecord> {
 
-    private static final long serialVersionUID = 222491173;
+    private static final long serialVersionUID = 879334393;
 
     /**
      * The reference instance of <code>auth.tokens</code>
@@ -101,6 +101,11 @@ public class Tokens extends TableImpl<TokensRecord> {
      * The column <code>auth.tokens.updated_by_user</code>.
      */
     public final TableField<TokensRecord, String> UPDATED_BY_USER = createField("updated_by_user", org.jooq.impl.SQLDataType.VARCHAR.length(255), this, "");
+
+    /**
+     * The column <code>auth.tokens.comments</code>.
+     */
+    public final TableField<TokensRecord, String> COMMENTS = createField("comments", org.jooq.impl.SQLDataType.VARCHAR.length(500), this, "");
 
     /**
      * Create a <code>auth.tokens</code> table reference

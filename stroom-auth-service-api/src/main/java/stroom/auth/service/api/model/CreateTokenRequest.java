@@ -19,15 +19,19 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * CreateTokenRequest
+ * A request to create a token.
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-03T16:02:14.284+01:00")
+@ApiModel(description = "A request to create a token.")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-04T07:48:51.064+01:00")
 public class CreateTokenRequest {
   @SerializedName("userEmail")
   private String userEmail = null;
 
   @SerializedName("tokenType")
   private String tokenType = null;
+
+  @SerializedName("comments")
+  private String comments = null;
 
   @SerializedName("enabled")
   private Boolean enabled = null;
@@ -66,10 +70,10 @@ public class CreateTokenRequest {
   }
 
    /**
-   * Get userEmail
+   * The email of the user whom the token is for.
    * @return userEmail
   **/
-  @ApiModelProperty(example = "null", value = "")
+  @ApiModelProperty(example = "null", required = true, value = "The email of the user whom the token is for.")
   public String getUserEmail() {
     return userEmail;
   }
@@ -84,10 +88,10 @@ public class CreateTokenRequest {
   }
 
    /**
-   * Get tokenType
+   * The type of token to create: e.g. user, api, or email_reset.
    * @return tokenType
   **/
-  @ApiModelProperty(example = "null", value = "")
+  @ApiModelProperty(example = "null", required = true, value = "The type of token to create: e.g. user, api, or email_reset.")
   public String getTokenType() {
     return tokenType;
   }
@@ -96,16 +100,34 @@ public class CreateTokenRequest {
     this.tokenType = tokenType;
   }
 
+  public CreateTokenRequest comments(String comments) {
+    this.comments = comments;
+    return this;
+  }
+
+   /**
+   * Comments about the token.
+   * @return comments
+  **/
+  @ApiModelProperty(example = "null", value = "Comments about the token.")
+  public String getComments() {
+    return comments;
+  }
+
+  public void setComments(String comments) {
+    this.comments = comments;
+  }
+
   public CreateTokenRequest enabled(Boolean enabled) {
     this.enabled = enabled;
     return this;
   }
 
    /**
-   * Get enabled
+   * Whether or not the new token should be enabled.
    * @return enabled
   **/
-  @ApiModelProperty(example = "null", value = "")
+  @ApiModelProperty(example = "null", value = "Whether or not the new token should be enabled.")
   public Boolean getEnabled() {
     return enabled;
   }
@@ -144,13 +166,14 @@ public class CreateTokenRequest {
     CreateTokenRequest createTokenRequest = (CreateTokenRequest) o;
     return Objects.equals(this.userEmail, createTokenRequest.userEmail) &&
         Objects.equals(this.tokenType, createTokenRequest.tokenType) &&
+        Objects.equals(this.comments, createTokenRequest.comments) &&
         Objects.equals(this.enabled, createTokenRequest.enabled) &&
         Objects.equals(this.parsedTokenType, createTokenRequest.parsedTokenType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userEmail, tokenType, enabled, parsedTokenType);
+    return Objects.hash(userEmail, tokenType, comments, enabled, parsedTokenType);
   }
 
 
@@ -161,6 +184,7 @@ public class CreateTokenRequest {
     
     sb.append("    userEmail: ").append(toIndentedString(userEmail)).append("\n");
     sb.append("    tokenType: ").append(toIndentedString(tokenType)).append("\n");
+    sb.append("    comments: ").append(toIndentedString(comments)).append("\n");
     sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
     sb.append("    parsedTokenType: ").append(toIndentedString(parsedTokenType)).append("\n");
     sb.append("}");
