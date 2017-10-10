@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.AuthorisationServiceClient;
 import stroom.auth.service.config.Config;
+import stroom.auth.service.daos.TokenDao;
 import stroom.auth.service.security.ServiceUser;
 
 import javax.inject.Inject;

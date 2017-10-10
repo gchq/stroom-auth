@@ -18,10 +18,10 @@
 
 package stroom.auth.service.exceptions;
 
-public class UnsupportedFilter extends RuntimeException {
-    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UnsupportedFilter.class);
+public class UnsupportedFilterException extends RuntimeException {
+    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UnsupportedFilterException.class);
 
-    public UnsupportedFilter(String message) {
+    public UnsupportedFilterException(String message) {
         super(message);
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package stroom.auth.service.resources;
+package stroom.auth.service.session;
 
 import javax.inject.Singleton;
 import java.util.HashMap;

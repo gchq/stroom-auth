@@ -1,20 +1,22 @@
 /*
- * Copyright 2017 Crown Copyright
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   Copyright 2017 Crown Copyright
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
  */
 
-package stroom.auth.service.resources.user.v1;
+package stroom.auth.service.daos;
 
 import com.google.common.base.Strings;
 import org.jooq.Condition;
@@ -29,6 +31,7 @@ import stroom.auth.service.config.Config;
 import stroom.auth.service.exceptions.BadRequestException;
 import stroom.auth.service.exceptions.UnauthorisedException;
 import stroom.auth.service.resources.authentication.v1.Credentials;
+import stroom.auth.service.resources.user.v1.User;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.inject.Inject;

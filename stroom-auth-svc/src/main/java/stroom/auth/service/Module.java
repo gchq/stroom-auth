@@ -26,10 +26,9 @@ import stroom.auth.service.exceptions.mappers.TokenCreationExceptionMapper;
 import stroom.auth.service.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.service.resources.authentication.v1.AuthenticationResource;
 import stroom.auth.service.exceptions.mappers.UnauthorisedExceptionMapper;
-import stroom.auth.service.resources.token.v1.TokenDao;
+import stroom.auth.service.daos.TokenDao;
 import stroom.auth.service.resources.token.v1.TokenResource;
-import stroom.auth.service.resources.token.v1.TokenVerifier;
-import stroom.auth.service.resources.user.v1.UserDao;
+import stroom.auth.service.daos.UserDao;
 import stroom.auth.service.resources.user.v1.UserResource;
 
 public final class Module extends AbstractModule {

@@ -18,16 +18,16 @@
 
 package stroom.auth.service.exceptions.mappers;
 
-import stroom.auth.service.exceptions.UnsupportedFilter;
+import stroom.auth.service.exceptions.UnsupportedFilterException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
-public class UnsupportedFilterExceptionMapper implements ExceptionMapper<UnsupportedFilter> {
+public class UnsupportedFilterExceptionMapper implements ExceptionMapper<UnsupportedFilterException> {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UnsupportedFilterExceptionMapper.class);
 
     @Override
-    public Response toResponse(UnsupportedFilter exception) {
+    public Response toResponse(UnsupportedFilterException exception) {
         LOGGER.debug(exception.getMessage());
         // 422 is UNPROCESSABLE_ENTITY - we understand the request and the request is fine but we don't support this yet
         return Response.status(422).entity(exception.getMessage()).build();

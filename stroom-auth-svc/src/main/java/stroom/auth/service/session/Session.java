@@ -16,7 +16,7 @@
  *
  */
 
-package stroom.auth.service.resources;
+package stroom.auth.service.session;
 
 public class Session {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Session.class);

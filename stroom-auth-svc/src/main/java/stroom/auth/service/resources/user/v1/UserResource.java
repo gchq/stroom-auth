@@ -33,10 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.AuthorisationServiceClient;
 import stroom.auth.service.config.Config;
+import stroom.auth.service.daos.UserMapper;
 import stroom.auth.service.security.ServiceUser;
 import stroom.db.auth.tables.records.UsersRecord;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
