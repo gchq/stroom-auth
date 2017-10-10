@@ -19,10 +19,12 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Strings;
 import io.dropwizard.jersey.sessions.Session;
-import org.jooq.DSLContext;
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.auth.TokenBuilderFactory;
 import stroom.auth.resources.user.v1.User;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
@@ -46,10 +48,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -68,6 +72,7 @@ public final class AuthenticationResource {
   private SessionManager sessionManager;
   private EmailSender emailSender;
   private CertificateManager certificateManager;
+  private TokenBuilderFactory tokenBuilderFactory;
 
   @Inject
   public AuthenticationResource(
@@ -77,7 +82,8 @@ public final class AuthenticationResource {
           TokenVerifier tokenVerifier,
           SessionManager sessionManager,
           EmailSender emailSender,
-          CertificateManager certificateManager) {
+          CertificateManager certificateManager,
+          TokenBuilderFactory tokenBuilderFactory) {
     this.config = config;
     this.dnPattern = Pattern.compile(config.getCertificateDnPattern());
     this.tokenDao = tokenDao;
@@ -86,6 +92,7 @@ public final class AuthenticationResource {
     this.sessionManager = sessionManager;
     this.emailSender = emailSender;
     this.certificateManager = certificateManager;
+    this.tokenBuilderFactory = tokenBuilderFactory;
   }
 
   @GET
@@ -98,13 +105,12 @@ public final class AuthenticationResource {
     return Response.status(Status.OK).entity("Welcome to the authentication service").build();
   }
 
+  @Deprecated
   @GET
   @Path("/checkCertificate")
   @Timed
   @NotNull
-  public final Response checkCertificate(
-          @Context @NotNull HttpServletRequest httpServletRequest,
-          @Context @NotNull DSLContext database) throws URISyntaxException {
+  public final Response checkCertificate(@Context @NotNull HttpServletRequest httpServletRequest) throws URISyntaxException {
     String dn = httpServletRequest.getHeader("X-SSL-CLIENT-S-DN");
     String cn = certificateManager.getCn(dn);
     LOGGER.debug("Found CN in DN; logging user in.");
@@ -115,28 +121,123 @@ public final class AuthenticationResource {
     return  Response.status(Status.OK).entity(token).build();
   }
 
+  @Deprecated
   @GET
   @Path("/checkSession")
   @Timed
   @NotNull
   public final Response checkSession(
           @Session HttpSession session,
-          @Context @NotNull HttpServletRequest httpServletRequest,
-          @Context @NotNull DSLContext database) throws URISyntaxException {
+          @Context @NotNull HttpServletRequest httpServletRequest) throws URISyntaxException {
     boolean isAuthenticated = sessionManager.isAuthenticated(session.getId());
     LOGGER.debug("Checking session is authenticated: " + isAuthenticated);
     return Response.status(Status.OK).entity(isAuthenticated).build();
   }
 
+  @GET
+  @Path("/authenticate")
+  @Timed
+  public final Response handleAuthenticationRequest(
+          @Session HttpSession httpSession,
+          @Context @NotNull HttpServletRequest httpServletRequest,
+          @QueryParam("scope") @Nullable String scope,
+          @QueryParam("response_type") @Nullable String responseType,
+          @QueryParam("client_id") @NotNull String clientId,
+          @QueryParam("redirect_url") @NotNull String redirectUrl,
+          @QueryParam("nonce") @NotNull String nonce,
+          @QueryParam("state") @Nullable String state) throws URISyntaxException {
+    if(!Strings.isNullOrEmpty(scope)
+            || !Strings.isNullOrEmpty(responseType)
+            || !Strings.isNullOrEmpty(state)){
+      throw new NotImplementedException("You tried to use scope, code, or state, and these aren't yet supported");
+    }
 
+    stroom.auth.Session session = sessionManager.getOrCreate(httpSession.getId());
+
+    Optional<String> optionalCn = certificateManager.getCertificate(httpServletRequest);
+    if(optionalCn.isPresent()) {
+      session.setAuthenticated(true);
+      String accessCode = SessionManager.createAccessCode();
+      session.setAccessCode(accessCode);
+      String subject = optionalCn.get(); //TODO We might need to use a new user, or look one up.
+      session.setNonce(nonce);
+      session.setState(state);
+      session.setClientId(clientId);
+      String idToken = tokenBuilderFactory
+              .newBuilder(Token.TokenType.USER)
+              .subject(subject)
+              .nonce(nonce)
+              .state(state)
+              .build();
+      session.setIdToken(idToken);
+
+      String successParams = String.format("?code=%s&state=%s", accessCode, state);
+      String successUrl = redirectUrl + successParams;
+      return Response.seeOther(new URI(successUrl)).build();
+    }
+
+    String failureParams = String.format("?error=login_required&state=%s&redirectUrl=%s", state, redirectUrl);
+    String failureUrl = this.config.getLoginUrl() + failureParams;
+    return Response.seeOther(new URI(failureUrl)).build();
+  }
+
+  /**
+   * We expect the user to have a session if they're trying to log in.
+   * If they don't then they need to be directed to an application that will submit
+   * an AuthenticationRequest to /authenticate.
+   */
+  @POST
+  @Path("/authenticate")
+  @Consumes({"application/json"})
+  @Produces({"application/json"})
+  @Timed
+  @NotNull
+  public final Response handleLogin(
+          @Session HttpSession httpSession,
+          @Nullable Credentials credentials) throws URISyntaxException {
+    Optional<stroom.auth.Session> optionalSession = sessionManager.get(httpSession.getId());
+    if(!optionalSession.isPresent()){
+      return Response
+              .status(422)
+              .entity("You have no session. Please make an AuthenticationRequest to the Authentication Service.")
+              .build();
+    }
+    stroom.auth.Session session = optionalSession.get();
+
+    boolean areCredentialsValid = userDao.areCredentialsValid(credentials);
+    if(!areCredentialsValid) {
+      LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
+      userDao.incrementLoginFailures(credentials.getEmail());
+      throw new UnauthorisedException("Invalid credentials");
+    }
+
+    session.setAuthenticated(true);
+
+    String accessCode = SessionManager.createAccessCode();
+    session.setAccessCode(accessCode);
+
+    String idToken = tokenBuilderFactory
+            .newBuilder(Token.TokenType.USER)
+            .subject(credentials.getEmail())
+            .nonce(session.getNonce())
+            .state(session.getState())
+            .build();
+    session.setIdToken(idToken);
+
+    LOGGER.debug("Login for {} succeeded", credentials.getEmail());
+    userDao.resetUserLogin(credentials.getEmail());
+
+    return Response.status(Status.OK).entity(accessCode).build();
+  }
+
+  @Deprecated
   @POST
   @Path("/login")
   @Consumes({"application/json"})
   @Produces({"application/json"})
   @Timed
   @NotNull
-  public final Response authenticateAndReturnToken(
-      @Context @NotNull DSLContext database, @Nullable Credentials credentials) throws URISyntaxException {
+  public final Response authenticateAndReturnToken(@Nullable Credentials credentials) throws URISyntaxException {
     Response response;
 
     boolean areCredentialsValid = userDao.areCredentialsValid(credentials);
@@ -156,7 +257,7 @@ public final class AuthenticationResource {
   @Path("reset/{email}")
   @Timed
   @NotNull
-  public final Response resetEmail(@Context @NotNull DSLContext database, @PathParam("email") String emailAddress) {
+  public final Response resetEmail(@PathParam("email") String emailAddress) {
     User user = userDao.get(emailAddress);
     String resetToken = tokenDao.createEmailResetToken(emailAddress);
     emailSender.send(user, resetToken);
@@ -168,7 +269,7 @@ public final class AuthenticationResource {
   @Path("/verify/{token}")
   @Timed
   @NotNull
-  public final Response verifyToken(@Context @NotNull DSLContext database, @PathParam("token") String token){
+  public final Response verifyToken(@PathParam("token") String token){
     Optional<String> usersEmail = tokenVerifier.verifyToken(token);
     if(usersEmail.isPresent()) {
       return Response.status(Status.OK).entity(usersEmail.get()).build();

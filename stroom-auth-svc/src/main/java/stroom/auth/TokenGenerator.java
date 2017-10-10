@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import stroom.auth.config.TokenConfig;
 import stroom.auth.exceptions.TokenCreationException;
 import stroom.auth.resources.token.v1.Token;
+import stroom.auth.resources.token.v1.Token.TokenType;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -38,18 +39,18 @@ public final class TokenGenerator {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenGenerator.class);
 
   private TokenConfig config;
-  private Token.TokenType tokenType;
+  private TokenType tokenType;
   private String user;
 
   private String token = "";
   private String errorMessage = "";
   private Timestamp expiresOn;
 
-  public TokenGenerator(Token.TokenType tokenType, @NotNull String user, TokenConfig config) throws TokenCreationException {
-    this.config = config;
+  public TokenGenerator(TokenType tokenType, String user, TokenConfig config) throws TokenCreationException {
     Preconditions.checkNotNull(user);
     Preconditions.checkNotNull(tokenType);
     Preconditions.checkNotNull(config);
+    this.config = config;
     this.tokenType = tokenType;
     this.user = user;
   }
@@ -116,6 +117,7 @@ public final class TokenGenerator {
     }
     claims.setSubject(user);
     claims.setIssuer(this.config.getJwsIssuer());
+
     return claims;
   }
 

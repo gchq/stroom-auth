@@ -25,6 +25,10 @@ public class Session {
     private String idToken;
     private String sessionId;
     private boolean isAuthenticated;
+    private String userEmail;
+    private String nonce;
+    private String state;
+    private String clientId;
 
     public String getAccessCode() {
         return accessCode;
@@ -56,5 +60,29 @@ public class Session {
 
     public void setAuthenticated(boolean authenticated) {
         isAuthenticated = authenticated;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setNonce(String nonce) {
+        this.nonce = nonce;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getNonce() {
+        return nonce;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }

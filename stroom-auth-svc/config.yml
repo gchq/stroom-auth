@@ -53,6 +53,7 @@ token:
   jwsIssuer: ${JWS_ISSUER:- stroom}
   jwsSecret: ${JWS_SECRET:- CHANGE_ME}
   requireExpirationTime: ${JWS_REQUIRE_EXPIRATION_TIME:- false}
+  algorithm: ${JWS_ALGORITHM:- HS256}
 
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?}
 loginUrl: ${AUTH_UI:- http://localhost/auth/login}

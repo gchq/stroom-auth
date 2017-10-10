@@ -22,10 +22,22 @@ import stroom.auth.exceptions.NoCertificateException;
 
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public class CertificateManager {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(CertificateManager.class);
+
+    public Optional<String> getCertificate(HttpServletRequest httpServletRequest){
+        String dn = httpServletRequest.getHeader("X-SSL-CLIENT-S-DN");
+        String cn = null;
+        try {
+            cn = getCn(dn);
+        } catch (NoCertificateException e) {
+            LOGGER.debug(e.getMessage());
+        }
+        return Optional.ofNullable(cn);
+    }
 
     public String getCn(String dn){
         if (dn == null) {

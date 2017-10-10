@@ -22,6 +22,7 @@ import org.jooq.Configuration;
 import stroom.auth.AuthorisationServiceClient;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
+import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
 import stroom.auth.config.TokenConfig;
@@ -54,6 +55,7 @@ public final class Module extends AbstractModule {
     bind(TokenVerifier.class);
     bind(EmailSender.class);
     bind(CertificateManager.class);
+    bind(TokenBuilderFactory.class);
 
     bind(UnauthorisedExceptionMapper.class);
     bind(BadRequestExceptionMapper.class);

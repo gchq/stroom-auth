@@ -55,6 +55,11 @@ public class TokenConfig {
   @JsonProperty
   private boolean requireExpirationTime = true;
 
+  @Valid
+  @NotNull
+  @JsonProperty
+  private String algorithm;
+
   public final byte[] getJwsSecretAsBytes() {
     return jwsSecret.getBytes(Charset.defaultCharset());
   }
@@ -106,5 +111,13 @@ public class TokenConfig {
 
   public void setRequireExpirationTime(boolean requireExpirationTime) {
     this.requireExpirationTime = requireExpirationTime;
+  }
+
+  public String getAlgorithm() {
+    return algorithm;
+  }
+
+  public void setAlgorithm(String algorithm) {
+    this.algorithm = algorithm;
   }
 }
