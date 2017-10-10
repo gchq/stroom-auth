@@ -29,14 +29,20 @@ import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.flyway.FlywayBundle;
 import io.dropwizard.flyway.FlywayFactory;
+import io.dropwizard.jersey.sessions.SessionFactoryProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.Configuration;
 import stroom.auth.service.config.Config;
+import stroom.auth.service.exceptions.mappers.BadRequestExceptionMapper;
+import stroom.auth.service.exceptions.mappers.TokenCreationExceptionMapper;
+import stroom.auth.service.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.service.resources.authentication.v1.AuthenticationResource;
+import stroom.auth.service.exceptions.mappers.UnauthorisedExceptionMapper;
 import stroom.auth.service.resources.token.v1.TokenResource;
 import stroom.auth.service.resources.user.v1.UserResource;
 import stroom.auth.service.security.AuthenticationFilter;
@@ -81,8 +87,15 @@ public final class App extends Application<Config> {
     Configuration jooqConfig = this.jooqBundle.getConfiguration();
     injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
     registerResources(environment);
+    registerExceptionMappers(environment);
+    configureSessionHandling(environment);
     configureCors(environment);
     migrate(config, environment);
+  }
+
+  private static void configureSessionHandling(Environment environment) {
+    environment.servlets().setSessionHandler(new SessionHandler());
+    environment.jersey().register(SessionFactoryProvider.class);
   }
 
 
@@ -99,6 +112,13 @@ public final class App extends Application<Config> {
     environment.jersey().register(injector.getInstance(AuthenticationResource.class));
     environment.jersey().register(injector.getInstance(UserResource.class));
     environment.jersey().register(injector.getInstance(TokenResource.class));
+  }
+
+  private void registerExceptionMappers(Environment environment) {
+    environment.jersey().register(injector.getInstance(UnauthorisedExceptionMapper.class));
+    environment.jersey().register(injector.getInstance(BadRequestExceptionMapper.class));
+    environment.jersey().register(injector.getInstance(TokenCreationExceptionMapper.class));
+    environment.jersey().register(injector.getInstance(UnsupportedFilterExceptionMapper.class));
   }
 
   private static final void configureAuthentication(Config config, Environment environment) {

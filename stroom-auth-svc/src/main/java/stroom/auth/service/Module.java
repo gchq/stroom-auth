@@ -21,10 +21,15 @@ import com.google.inject.Provides;
 import org.jooq.Configuration;
 import stroom.auth.service.config.Config;
 import stroom.auth.service.config.TokenConfig;
+import stroom.auth.service.exceptions.mappers.BadRequestExceptionMapper;
+import stroom.auth.service.exceptions.mappers.TokenCreationExceptionMapper;
+import stroom.auth.service.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.service.resources.authentication.v1.AuthenticationResource;
+import stroom.auth.service.exceptions.mappers.UnauthorisedExceptionMapper;
 import stroom.auth.service.resources.token.v1.TokenDao;
 import stroom.auth.service.resources.token.v1.TokenResource;
 import stroom.auth.service.resources.token.v1.TokenVerifier;
+import stroom.auth.service.resources.user.v1.UserDao;
 import stroom.auth.service.resources.user.v1.UserResource;
 
 public final class Module extends AbstractModule {
@@ -42,7 +47,15 @@ public final class Module extends AbstractModule {
     bind(TokenResource.class);
     bind(AuthorisationServiceClient.class);
     bind(TokenDao.class);
+    bind(UserDao.class);
     bind(TokenVerifier.class);
+    bind(EmailSender.class);
+    bind(CertificateManager.class);
+
+    bind(UnauthorisedExceptionMapper.class);
+    bind(BadRequestExceptionMapper.class);
+    bind(TokenCreationExceptionMapper.class);
+    bind(UnsupportedFilterExceptionMapper.class);
   }
 
   @Provides

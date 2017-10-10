@@ -37,3 +37,11 @@ Obviously you'll lose test data if you do this.
 4. Delete the old models at `stroom-persistence/src/main/java/stroom`.
 5. Run `./gradlew generateAuthdbJooqSchemaSource` to generate the models again
 6. Restart app
+
+### Dropping all tables
+```sql
+drop table tokens;
+drop table users;
+drop table token_types;
+drop table schema_version;
+```

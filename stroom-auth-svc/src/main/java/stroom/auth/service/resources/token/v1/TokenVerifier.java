@@ -28,14 +28,18 @@ public class TokenVerifier {
 
   @Inject
   public void init(){
-    consumer = new JwtConsumerBuilder()
+    JwtConsumerBuilder builder = new JwtConsumerBuilder()
         .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
-        .setRequireExpirationTime() // the JWT must have an expiration time
         .setRequireSubject() // the JWT must have a subject claim
         .setVerificationKey(new HmacKey(tokenConfig.getJwsSecretAsBytes())) // verify the signature with the public key
         .setRelaxVerificationKeyValidation() // relaxes key length requirement
-        .setExpectedIssuer(tokenConfig.getJwsIssuer())
-        .build();
+        .setExpectedIssuer(tokenConfig.getJwsIssuer());
+
+    if(tokenConfig.isRequireExpirationTime()){
+      builder = builder.setRequireExpirationTime();
+    }
+
+    consumer = builder.build();
   }
 
   public Optional<String> verifyToken(String token){

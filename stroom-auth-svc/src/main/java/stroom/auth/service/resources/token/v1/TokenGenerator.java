@@ -24,10 +24,12 @@ import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.config.TokenConfig;
+import stroom.auth.service.exceptions.TokenCreationException;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 final class TokenGenerator {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenGenerator.class);
@@ -47,7 +49,6 @@ final class TokenGenerator {
     Preconditions.checkNotNull(config);
     this.tokenType = tokenType;
     this.user = user;
-    createToken();
   }
 
   public String getToken() {
@@ -62,16 +63,16 @@ final class TokenGenerator {
     return expiresOn;
   }
 
-  private final void createToken() throws TokenCreationException {
+  public final void createToken() throws TokenCreationException {
     switch(tokenType){
       case API:
-        createToken(config.getMinutesUntilExpirationForApiToken());
+        createToken(Optional.of(config.getMinutesUntilExpirationForApiToken()));
         break;
       case USER:
-        createToken(config.getMinutesUntilExpirationForUserToken());
+        createToken(Optional.of(config.getMinutesUntilExpirationForUserToken()));
         break;
       case EMAIL_RESET:
-        createToken(config.getMinutesUntilExpirationForEmailResetToken());
+        createToken(Optional.of(config.getMinutesUntilExpirationForEmailResetToken()));
         break;
       default:
         errorMessage = "Unknown token type:" + tokenType.toString();
@@ -80,7 +81,11 @@ final class TokenGenerator {
     }
   }
 
-  private final void createToken(long expirationInMinutes) throws TokenCreationException {
+  public void createTokenWithoutExpiration() throws TokenCreationException {
+    createToken(Optional.empty());
+  }
+
+  private final void createToken(Optional<Integer> expirationInMinutes) throws TokenCreationException {
     byte[] jwsSecret = this.config.getJwsSecretAsBytes();
     JwtClaims jwtClaims = getClaimsForUser(user, expirationInMinutes);
     this.token = toToken(jwsSecret, jwtClaims);
@@ -100,10 +105,12 @@ final class TokenGenerator {
     }
   }
 
-  private final JwtClaims getClaimsForUser(String user, long expirationInMinutes) throws TokenCreationException {
+  private final JwtClaims getClaimsForUser(String user, Optional<Integer> expirationInMinutes) throws TokenCreationException {
     JwtClaims claims = new JwtClaims();
-    this.expiresOn = Timestamp.valueOf(LocalDateTime.now().plusMinutes(expirationInMinutes));
-    claims.setExpirationTimeMinutesInTheFuture(expirationInMinutes);
+    if(expirationInMinutes.isPresent()) {
+      this.expiresOn = Timestamp.valueOf(LocalDateTime.now().plusMinutes(expirationInMinutes.get()));
+      claims.setExpirationTimeMinutesInTheFuture(expirationInMinutes.get());
+    }
     claims.setSubject(user);
     claims.setIssuer(this.config.getJwsIssuer());
     return claims;

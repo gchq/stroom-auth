@@ -33,7 +33,9 @@ import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.config.TokenConfig;
-import stroom.auth.service.resources.DaoException;
+import stroom.auth.service.exceptions.BadRequestException;
+import stroom.auth.service.exceptions.TokenCreationException;
+import stroom.auth.service.exceptions.UnsupportedFilter;
 import stroom.db.auth.tables.Users;
 import stroom.db.auth.tables.records.TokensRecord;
 
@@ -67,7 +69,7 @@ public class TokenDao {
     database = DSL.using(this.jooqConfig);
   }
 
-  public SearchResponse searchTokens(SearchRequest searchRequest) throws DaoException {
+  public SearchResponse searchTokens(SearchRequest searchRequest) {
     // Create some vars to allow the rest of this method to be more succinct.
     int page = searchRequest.getPage();
     int limit = searchRequest.getLimit();
@@ -96,7 +98,7 @@ public class TokenDao {
     else {
       orderByField = TokenDao.getOrderBy(orderBy, orderDirection);
       if (!orderByField.isPresent()) {
-        throw DaoException.newBadRequest("Invalid orderBy: " + orderBy);
+        throw new BadRequestException("Invalid orderBy: " + orderBy);
       }
     }
 
@@ -133,6 +135,22 @@ public class TokenDao {
     return searchResponse;
   }
 
+  public String createEmailResetToken(String emailAddress) {
+    return createToken(
+            Token.TokenType.EMAIL_RESET, "authenticationResource",
+            emailAddress,
+            true, "Created for password reset");
+  }
+
+  public String createToken(String recipientUserEmail) {
+    return createToken(
+            Token.TokenType.USER,
+            "authenticationResource",
+            recipientUserEmail,
+            true,
+            "Created for username/password user");
+  }
+
   /**
    * Create a token for a specific user.
    */
@@ -141,7 +159,7 @@ public class TokenDao {
       String issuingUserEmail,
       String recipientUserEmail,
       boolean isEnabled,
-      String comment) throws TokenCreationException {
+      String comment) {
 
     Record1<Integer> userRecord = database
         .select(USERS.ID)
@@ -154,6 +172,7 @@ public class TokenDao {
     int recipientUserId = userRecord.get(USERS.ID);
 
     TokenGenerator tokenGenerator = new TokenGenerator(tokenType, recipientUserEmail, tokenConfig);
+    tokenGenerator.createToken();
 
     int issuingUserId = database
         .select(USERS.ID)
@@ -356,7 +375,7 @@ public class TokenDao {
    * For now we can't sensible implement anything unless we have a better idea of requirements.
    */
   private static Optional<List<Condition>> getConditions(Map<String, String> filters, Users issueingUsers,
-                                                         Users tokenOwnerUsers, Users updatingUsers) throws DaoException {
+                                                         Users tokenOwnerUsers, Users updatingUsers) {
     // We need to set up conditions
     List<Condition> conditions = new ArrayList<>();
     final String unsupportedFilterMessage = "Unsupported filter: ";
@@ -370,12 +389,12 @@ public class TokenDao {
             condition = TOKENS.ENABLED.eq(Boolean.valueOf(filters.get(key)));
             break;
           case "expires_on":
-            throw DaoException.newUnprocessableEntity(unsupportedFilterMessage + key);
+            throw new UnsupportedFilter(unsupportedFilterMessage + key);
           case "user_email":
             condition = tokenOwnerUsers.EMAIL.contains(filters.get(key));
             break;
           case "issued_on":
-            throw DaoException.newUnprocessableEntity(unsupportedFilterMessage + key);
+            throw new UnsupportedFilter(unsupportedFilterMessage + key);
           case "issued_by_user":
             condition = issueingUsers.EMAIL.contains(filters.get(key));
             break;
@@ -392,11 +411,11 @@ public class TokenDao {
             condition = updatingUsers.EMAIL.contains(filters.get(key));
             break;
           case "updated_on":
-            throw DaoException.newUnprocessableEntity(unsupportedFilterMessage + key);
+            throw new UnsupportedFilter(unsupportedFilterMessage + key);
           case "user_id":
-            throw DaoException.newUnprocessableEntity(unsupportedFilterMessage + key);
+            throw new UnsupportedFilter(unsupportedFilterMessage + key);
           default:
-            throw DaoException.newUnprocessableEntity(unknownFilterMessage + key);
+            throw new UnsupportedFilter(unknownFilterMessage + key);
         }
 
         conditions.add(condition);

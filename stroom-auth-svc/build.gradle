@@ -102,6 +102,7 @@ dependencies {
     compile deps.dropwizard_core
     compile deps.dropwizard_flyway
     compile deps.dropwizard_jooq
+    compile deps.dropwizard_jersey
     compile deps.dropwizard_auth
     compile deps.dropwizard_auth_jwt
     compile deps.bcrypt

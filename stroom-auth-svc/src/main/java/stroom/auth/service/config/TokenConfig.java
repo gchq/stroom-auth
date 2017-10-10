@@ -48,6 +48,11 @@ public class TokenConfig {
   @JsonProperty
   private String jwsSecret = "CHANGE_ME";
 
+  @Valid
+  @NotNull
+  @JsonProperty
+  private boolean requireExpirationTime = true;
+
   public final byte[] getJwsSecretAsBytes() {
     return jwsSecret.getBytes(Charset.defaultCharset());
   }
@@ -56,17 +61,48 @@ public class TokenConfig {
     return minutesUntilExpirationForUserToken;
   }
 
+  public void setMinutesUntilExpirationForUserToken(int minutesUntilExpirationForUserToken) {
+    this.minutesUntilExpirationForUserToken = minutesUntilExpirationForUserToken;
+  }
+
   public int getMinutesUntilExpirationForApiToken() {
     return minutesUntilExpirationForApiToken;
+  }
+
+  public void setMinutesUntilExpirationForApiToken(int minutesUntilExpirationForApiToken) {
+    this.minutesUntilExpirationForApiToken = minutesUntilExpirationForApiToken;
   }
 
   public int getMinutesUntilExpirationForEmailResetToken() {
     return minutesUntilExpirationForEmailResetToken;
   }
 
+  public void setMinutesUntilExpirationForEmailResetToken(int minutesUntilExpirationForEmailResetToken) {
+    this.minutesUntilExpirationForEmailResetToken = minutesUntilExpirationForEmailResetToken;
+  }
+
   public String getJwsIssuer() {
     return jwsIssuer;
   }
 
+  public void setJwsIssuer(String jwsIssuer) {
+    this.jwsIssuer = jwsIssuer;
+  }
 
+  public String getJwsSecret() {
+    return this.jwsSecret;
+  }
+
+  public void setJwsSecret(String jwsSecret){
+    this.jwsSecret = jwsSecret;
+  }
+
+
+  public boolean isRequireExpirationTime() {
+    return requireExpirationTime;
+  }
+
+  public void setRequireExpirationTime(boolean requireExpirationTime) {
+    this.requireExpirationTime = requireExpirationTime;
+  }
 }

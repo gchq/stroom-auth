@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.service.AuthorisationServiceClient;
 import stroom.auth.service.config.Config;
-import stroom.auth.service.resources.DaoException;
 import stroom.auth.service.security.ServiceUser;
 
 import javax.inject.Inject;
@@ -101,12 +100,7 @@ public class TokenResource {
       }
     }
 
-    SearchResponse results;
-    try {
-      results = tokenDao.searchTokens(searchRequest);
-    } catch (DaoException e) {
-      return Response.status(e.getEquivalentHttpReturnCode()).entity(e.getMessage()).build();
-    }
+    SearchResponse results = tokenDao.searchTokens(searchRequest);
 
     LOGGER.info("Returning tokens: found " + results.getTokens().size());
     return Response.status(Response.Status.OK).entity(results).build();
