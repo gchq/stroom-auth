@@ -20,16 +20,15 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
-import stroom.auth.service.resources.token.v1.Token;
+import stroom.auth.resources.token.v1.Token;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.auth.service.resources.support.HttpAsserts.assertBadRequest;
 import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
-import static stroom.auth.service.resources.token.v1.Token.TokenType.API;
+import static stroom.auth.resources.token.v1.Token.TokenType.API;
 
 /**
  * TODO: create with issued date in the past; create with expiry date in the past; create with invalid token type

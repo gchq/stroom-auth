@@ -21,7 +21,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 import stroom.auth.service.resources.support.Base_IT;
-import stroom.auth.service.resources.user.v1.User;
+import stroom.auth.resources.user.v1.User;
 
 import java.io.IOException;
 import java.time.Instant;

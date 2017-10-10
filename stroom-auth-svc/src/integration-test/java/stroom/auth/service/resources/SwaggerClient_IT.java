@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static stroom.auth.service.resources.token.v1.Token.TokenType.API;
+import static stroom.auth.resources.token.v1.Token.TokenType.API;
 
 public class SwaggerClient_IT extends TokenResource_IT{
 

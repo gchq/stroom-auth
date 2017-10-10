@@ -21,8 +21,8 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-import stroom.auth.service.resources.token.v1.SearchRequest;
-import stroom.auth.service.resources.token.v1.Token;
+import stroom.auth.resources.token.v1.SearchRequest;
+import stroom.auth.resources.token.v1.Token;
 
 import java.io.IOException;
 import java.time.Instant;

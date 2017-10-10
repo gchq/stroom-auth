@@ -21,7 +21,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.service.resources.user.v1.User;
+import stroom.auth.resources.user.v1.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

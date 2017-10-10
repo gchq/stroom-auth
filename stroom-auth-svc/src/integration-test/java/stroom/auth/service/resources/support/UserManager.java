@@ -22,7 +22,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import stroom.auth.service.resources.user.v1.User;
+import stroom.auth.resources.user.v1.User;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;

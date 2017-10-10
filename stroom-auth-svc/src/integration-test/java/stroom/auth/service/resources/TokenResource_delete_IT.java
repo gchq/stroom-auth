@@ -20,9 +20,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
-import stroom.auth.service.resources.token.v1.SearchRequest;
-import stroom.auth.service.resources.token.v1.Token;
-import stroom.auth.service.resources.user.v1.User;
+import stroom.auth.resources.token.v1.SearchRequest;
+import stroom.auth.resources.token.v1.Token;
+import stroom.auth.resources.user.v1.User;
 
 import java.io.IOException;
 import java.time.Instant;
