@@ -20,28 +20,27 @@ import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
+import queryString from 'query-string'
+
 import LoginUI from './LoginUI'
-import { checkForRememberMeToken } from '../../modules/login'
+import { checkForRememberMeToken, changeRedirectUrl } from '../../modules/login'
 import { relativePath } from '../../relativePush'
 
 class Login extends Component {
   componentWillMount () {
     checkForRememberMeToken(this.context.store.dispatch)
+    const queryParams = queryString.parse(this.props.location.search)
+    const redirectUrl = queryParams['redirectUrl']
+    this.context.store.dispatch(changeRedirectUrl(redirectUrl))
   }
 
   render () {
     const { token } = this.props
     let referrer = relativePath('/')
-    if (this.props.location.state) {
-      referrer = this.props.location.state.referrer
-    }
     return (
       <div>
         {token ? (
-          <Redirect to={{
-            pathname: referrer,
-            state: {referrer: '/login'}
-          }} />
+          <Redirect to={referrer + '/login'} />
         ) : (
           <LoginUI />
         )}

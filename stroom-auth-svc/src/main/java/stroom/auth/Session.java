@@ -85,4 +85,12 @@ public class Session {
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
+
+    public void forgetIdToken() {
+        this.idToken = null;
+    }
+
+    public void forgetAccessCode() {
+        this.accessCode = null;
+    }
 }

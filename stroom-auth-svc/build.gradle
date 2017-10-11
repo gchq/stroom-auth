@@ -131,9 +131,12 @@ swagger {
     apiSource {
         springmvc = false //makes it search for jersey annotations
         outputFormats = 'json,yaml'
-        locations = ['stroom.auth.service.resources.token.v1.TokenResource',
-                     'stroom.auth.service.resources.token.v1.SearchRequest',
-                    'javax.ws.rs.core.Response']
+        locations = ['stroom.auth.resources.token.v1.TokenResource',
+                     'stroom.auth.resources.token.v1.SearchRequest',
+                     'stroom.auth.resources.authentication.v1.AuthenticationResource',
+                     'stroom.auth.resources.authentication.v1.Credentials',
+                     'stroom.auth.resources.authentication.v1.IdTokenRequest',
+                     'javax.ws.rs.core.Response']
         schemes = [
                 'http',
                 'https' ]

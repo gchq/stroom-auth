@@ -19,9 +19,10 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Strings;
 import io.dropwizard.jersey.sessions.Session;
-import org.apache.commons.lang3.NotImplementedException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.TokenBuilderFactory;
@@ -55,12 +56,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Singleton
 @Path("/authentication/v1")
 @Produces(MediaType.APPLICATION_JSON)
+@Api(description = "Stroom Authentication API")
 public final class AuthenticationResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationResource.class);
 
@@ -138,7 +141,6 @@ public final class AuthenticationResource {
   @Path("/authenticate")
   @Timed
   public final Response handleAuthenticationRequest(
-          @Session HttpSession httpSession,
           @Context @NotNull HttpServletRequest httpServletRequest,
           @QueryParam("scope") @Nullable String scope,
           @QueryParam("response_type") @Nullable String responseType,
@@ -146,13 +148,16 @@ public final class AuthenticationResource {
           @QueryParam("redirect_url") @NotNull String redirectUrl,
           @QueryParam("nonce") @NotNull String nonce,
           @QueryParam("state") @Nullable String state) throws URISyntaxException {
-    if(!Strings.isNullOrEmpty(scope)
-            || !Strings.isNullOrEmpty(responseType)
-            || !Strings.isNullOrEmpty(state)){
-      throw new NotImplementedException("You tried to use scope, code, or state, and these aren't yet supported");
-    }
 
-    stroom.auth.Session session = sessionManager.getOrCreate(httpSession.getId());
+    Optional<String> sessionId = Arrays.stream(httpServletRequest.getCookies())
+            .filter(cookie -> cookie.getName().equals("authSession"))
+            .map(cookie -> cookie.getValue())
+            .findFirst();
+    stroom.auth.Session session = sessionManager.getOrCreate(sessionId.get());
+    session.setNonce(nonce);
+    session.setState(state);
+    session.setClientId(clientId);
+    session.setAuthenticated(false);
 
     Optional<String> optionalCn = certificateManager.getCertificate(httpServletRequest);
     if(optionalCn.isPresent()) {
@@ -160,9 +165,6 @@ public final class AuthenticationResource {
       String accessCode = SessionManager.createAccessCode();
       session.setAccessCode(accessCode);
       String subject = optionalCn.get(); //TODO We might need to use a new user, or look one up.
-      session.setNonce(nonce);
-      session.setState(state);
-      session.setClientId(clientId);
       String idToken = tokenBuilderFactory
               .newBuilder(Token.TokenType.USER)
               .subject(subject)
@@ -193,9 +195,8 @@ public final class AuthenticationResource {
   @Timed
   @NotNull
   public final Response handleLogin(
-          @Session HttpSession httpSession,
           @Nullable Credentials credentials) throws URISyntaxException {
-    Optional<stroom.auth.Session> optionalSession = sessionManager.get(httpSession.getId());
+    Optional<stroom.auth.Session> optionalSession = sessionManager.get(credentials.getSessionId());
     if(!optionalSession.isPresent()){
       return Response
               .status(422)
@@ -251,6 +252,33 @@ public final class AuthenticationResource {
     userDao.resetUserLogin(credentials.getEmail());
     String token = tokenDao.createToken(credentials.getEmail());
     return Response.status(Status.OK).entity(token).build();
+  }
+
+  //TODO: Should this be in TokenResource
+  /**
+   * This is a POST because we need the sessionId.
+   */
+  @ApiOperation(
+          value = "Convert a previously provided access code into an ID token",
+          response = String.class)
+  @POST
+  @Path("idToken")
+  @Timed
+  public final Response getIdToken(
+          @Session HttpSession httpSession,
+          @ApiParam("idTokenRequest") @NotNull IdTokenRequest idTokenRequest) {
+    stroom.auth.Session session = this.sessionManager.getOrCreate(idTokenRequest.getSessionId());
+    boolean accessCodesMatch = session.getAccessCode().equals(idTokenRequest.getAccessCode());
+
+    if(!accessCodesMatch){
+      return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
+    }
+    String idToken = session.getIdToken();
+
+    session.forgetIdToken();
+    session.forgetAccessCode();
+
+    return Response.status(Status.OK).entity(idToken).build();
   }
 
   @GET

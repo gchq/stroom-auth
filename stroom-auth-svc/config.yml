@@ -56,7 +56,7 @@ token:
   algorithm: ${JWS_ALGORITHM:- HS256}
 
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?}
-loginUrl: ${AUTH_UI:- http://localhost/auth/login}
+loginUrl: ${AUTH_UI:- http://localhost:3000/login}
 stroomUrl: ${STROOM_UI:- http://localhost:8099}
 resetPasswordUrl: ${RESET_PASSWORD_URL:- 'http://localhost/resetPassword/?token=%s'}
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://localhost}

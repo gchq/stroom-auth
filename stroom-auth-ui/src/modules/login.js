@@ -28,6 +28,7 @@ export const SHOW_LOADER = 'login/SHOW_LOADER'
 export const SHOW_UNAUTHORIZED_DIALOG = 'login/SHOW_UNAUTHORIZED_DIALOG'
 export const CHANGE_LOGGED_IN_USER = 'login/CHANGE_LOGGED_IN_USER'
 export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS'
+export const SET_REDIRECT_URL = 'login/SET_REDIRECT_URL'
 
 const initialState = {
   token: '',
@@ -77,6 +78,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         canManageUsers: action.canManageUsers
+      }
+
+    case SET_REDIRECT_URL:
+      return {
+        ...state,
+        redirectUrl: action.redirectUrl
       }
 
     default:
@@ -155,38 +162,52 @@ const setCanManagerUsers = (canManageUsers) => {
   }
 }
 
+export const changeRedirectUrl = (redirectUrl) => {
+  return {
+    type: SET_REDIRECT_URL,
+    redirectUrl
+  }
+}
+
 export const login = (credentials) => {
-  return dispatch => {
+  return (dispatch, getState) => {
     const { email, password, rememberMe } = credentials
 
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))
 
     const loginServiceUrl = process.env.REACT_APP_LOGIN_URL
-    // Call the authentication service to get a token.
-    // If successful we re-direct to Stroom, otherwise we display a message.
-    // It's essential we return the promise, otherwise any errors we get won't be handled.
-    return fetch(loginServiceUrl, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: 'post',
-      mode: 'cors',
-      body: JSON.stringify({
-        email,
-        password
+    const redirectUrl = getState().login.redirectUrl
+
+    try {
+      // Our cookie, created by Stroom, should look like this: 'JSESSIONID=node079gwmzqm8gstic3limh8h1f40.node0'
+      // We'll split it to get the actual sessionId.
+      // const sessionId = document.cookie.split('=')[1].split('.')[0]
+      const authSession = getCookie('authSession')
+      // Call the authentication service to get a token.
+      // If successful we re-direct to Stroom, otherwise we display a message.
+      // It's essential we return the promise, otherwise any errors we get won't be handled.
+      return fetch(loginServiceUrl, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'post',
+        mode: 'cors',
+        body: JSON.stringify({
+          email,
+          password,
+          sessionId: authSession
+        })
       })
-    })
-      .then(handleStatus)
-      .then(getBody)
-      // TODO restore referrer
-      // .then(jwsToken => processToken(jwsToken, dispatch, referrer))
-      .then(jwsToken => {
-        dispatch(storeLoggedInUser(email))
-        dispatch(canManageUsers(jwsToken))
-        processToken(jwsToken, email, dispatch, rememberMe, null)
-      })
+        .then(handleStatus)
+        .then(getBody)
+        .then(accessCode => {
+          window.location.href = `${redirectUrl}/?accessCode=${accessCode}`
+        })
+    } catch (err) {
+      console.log("TODO: Couldn't get a session ID - handle it somehow. Probably redirect to Stroom?")
+    }
   }
 }
 
@@ -252,4 +273,20 @@ export const canManageUsers = (jwsToken) => {
         }
       })
   }
+}
+
+function getCookie (cname) {
+  var name = cname + '='
+  var decodedCookie = decodeURIComponent(document.cookie)
+  var ca = decodedCookie.split(';')
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i]
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1)
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length)
+    }
+  }
+  return ''
 }

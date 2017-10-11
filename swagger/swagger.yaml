@@ -16,6 +16,25 @@ schemes:
 - "http"
 - "https"
 paths:
+  /authentication/v1/idToken:
+    post:
+      summary: "Convert a previously provided access code into an ID token"
+      description: ""
+      operationId: "getIdToken"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "idTokenRequest"
+        required: false
+        schema:
+          $ref: "#/definitions/IdTokenRequest"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
   /token/v1:
     post:
       summary: "Submit a search request for tokens"
@@ -85,6 +104,19 @@ definitions:
         - "API"
         - "EMAIL_RESET"
     description: "A request to create a token."
+  IdTokenRequest:
+    type: "object"
+    required:
+    - "accessCode"
+    - "sessionId"
+    properties:
+      sessionId:
+        type: "string"
+        description: "The session ID to which this request is linked."
+      accessCode:
+        type: "string"
+        description: "The previously provided access code."
+    description: "A request to retrieve an ID token using an access code."
   SearchRequest:
     type: "object"
     required:

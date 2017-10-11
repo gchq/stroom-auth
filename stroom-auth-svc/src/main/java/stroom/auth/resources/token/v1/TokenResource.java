@@ -52,7 +52,7 @@ import java.util.Optional;
 @Path("/token/v1")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Api(description = "Stroom Auth API")
+@Api(description = "Stroom Token API")
 public class TokenResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 

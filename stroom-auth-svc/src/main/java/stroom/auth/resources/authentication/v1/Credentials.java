@@ -27,6 +27,8 @@ public final class Credentials {
   private String email = "";
   @NotNull
   private String password = "";
+  //TODO: @NotNull - will need to change ITs
+  private String sessionId = "";
 
   @JsonProperty("email")
   @NotNull
@@ -46,5 +48,13 @@ public final class Credentials {
 
   public final void setPassword(@NotNull String password) {
     this.password = password;
+  }
+
+  public String getSessionId() {
+    return sessionId;
+  }
+
+  public void setSessionId(String sessionId) {
+    this.sessionId = sessionId;
   }
 }

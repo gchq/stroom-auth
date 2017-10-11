@@ -23,6 +23,7 @@ import stroom.auth.config.Config;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +51,7 @@ public class SessionManager {
         SecureRandom secureRandom = new SecureRandom();
         byte[] bytes = new byte[20];
         secureRandom.nextBytes(bytes);
-        String accessCode = new String(bytes);
+        String accessCode = Base64.getEncoder().encodeToString(bytes);
         return accessCode;
     }
 
