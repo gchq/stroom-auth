@@ -147,13 +147,11 @@ public final class AuthenticationResource {
           @QueryParam("client_id") @NotNull String clientId,
           @QueryParam("redirect_url") @NotNull String redirectUrl,
           @QueryParam("nonce") @NotNull String nonce,
-          @QueryParam("state") @Nullable String state) throws URISyntaxException {
+          @QueryParam("state") @Nullable String state,
+          @QueryParam("sessionId") @NotNull String sessionId) throws URISyntaxException {
 
-    Optional<String> sessionId = Arrays.stream(httpServletRequest.getCookies())
-            .filter(cookie -> cookie.getName().equals("authSession"))
-            .map(cookie -> cookie.getValue())
-            .findFirst();
-    stroom.auth.Session session = sessionManager.getOrCreate(sessionId.get());
+    LOGGER.info("Received an AuthenticationRequest for session " + sessionId);
+    stroom.auth.Session session = sessionManager.getOrCreate(sessionId);
     session.setNonce(nonce);
     session.setState(state);
     session.setClientId(clientId);
@@ -178,7 +176,8 @@ public final class AuthenticationResource {
       return Response.seeOther(new URI(successUrl)).build();
     }
 
-    String failureParams = String.format("?error=login_required&state=%s&redirectUrl=%s", state, redirectUrl);
+    String failureParams = String.format("?error=login_required&state=%s&redirectUrl=%s&sessionId=%s",
+            state, redirectUrl, sessionId);
     String failureUrl = this.config.getLoginUrl() + failureParams;
     return Response.seeOther(new URI(failureUrl)).build();
   }
@@ -196,6 +195,7 @@ public final class AuthenticationResource {
   @NotNull
   public final Response handleLogin(
           @Nullable Credentials credentials) throws URISyntaxException {
+    LOGGER.info("Received a login request for session " + credentials.getSessionId());
     Optional<stroom.auth.Session> optionalSession = sessionManager.get(credentials.getSessionId());
     if(!optionalSession.isPresent()){
       return Response
@@ -267,6 +267,7 @@ public final class AuthenticationResource {
   public final Response getIdToken(
           @Session HttpSession httpSession,
           @ApiParam("idTokenRequest") @NotNull IdTokenRequest idTokenRequest) {
+    LOGGER.info("Providing an id_token for sessionId" + idTokenRequest.getSessionId());
     stroom.auth.Session session = this.sessionManager.getOrCreate(idTokenRequest.getSessionId());
     boolean accessCodesMatch = session.getAccessCode().equals(idTokenRequest.getAccessCode());
 

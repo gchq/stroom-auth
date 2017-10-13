@@ -18,6 +18,8 @@ import { push } from 'react-router-redux'
 import { relativePush } from '../relativePush'
 import { SubmissionError } from 'redux-form'
 
+import Cookies from 'cookies-js'
+
 import { HttpError } from '../ErrorTypes'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
@@ -183,7 +185,7 @@ export const login = (credentials) => {
       // Our cookie, created by Stroom, should look like this: 'JSESSIONID=node079gwmzqm8gstic3limh8h1f40.node0'
       // We'll split it to get the actual sessionId.
       // const sessionId = document.cookie.split('=')[1].split('.')[0]
-      const authSession = getCookie('authSession')
+      const sessionId = Cookies.get('sessionId')
       // Call the authentication service to get a token.
       // If successful we re-direct to Stroom, otherwise we display a message.
       // It's essential we return the promise, otherwise any errors we get won't be handled.
@@ -197,13 +199,13 @@ export const login = (credentials) => {
         body: JSON.stringify({
           email,
           password,
-          sessionId: authSession
+          sessionId: sessionId
         })
       })
         .then(handleStatus)
         .then(getBody)
         .then(accessCode => {
-          window.location.href = `${redirectUrl}/?accessCode=${accessCode}`
+          window.location.href = `${redirectUrl}/?accessCode=${accessCode}&sessionId=${sessionId}`
         })
     } catch (err) {
       console.log("TODO: Couldn't get a session ID - handle it somehow. Probably redirect to Stroom?")
@@ -273,20 +275,4 @@ export const canManageUsers = (jwsToken) => {
         }
       })
   }
-}
-
-function getCookie (cname) {
-  var name = cname + '='
-  var decodedCookie = decodeURIComponent(document.cookie)
-  var ca = decodedCookie.split(';')
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i]
-    while (c.charAt(0) === ' ') {
-      c = c.substring(1)
-    }
-    if (c.indexOf(name) === 0) {
-      return c.substring(name.length, c.length)
-    }
-  }
-  return ''
 }

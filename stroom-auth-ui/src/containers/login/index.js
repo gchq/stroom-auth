@@ -21,6 +21,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import queryString from 'query-string'
+import Cookies from 'cookies-js'
 
 import LoginUI from './LoginUI'
 import { checkForRememberMeToken, changeRedirectUrl } from '../../modules/login'
@@ -31,7 +32,9 @@ class Login extends Component {
     checkForRememberMeToken(this.context.store.dispatch)
     const queryParams = queryString.parse(this.props.location.search)
     const redirectUrl = queryParams['redirectUrl']
+    const sessionId = queryParams['sessionId']
     this.context.store.dispatch(changeRedirectUrl(redirectUrl))
+    Cookies.set('sessionId', sessionId)
   }
 
   render () {
