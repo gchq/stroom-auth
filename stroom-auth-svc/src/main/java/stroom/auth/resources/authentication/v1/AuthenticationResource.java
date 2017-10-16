@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.auth.RelyingParty;
 import stroom.auth.TokenBuilderFactory;
 import stroom.auth.resources.user.v1.User;
 import stroom.auth.CertificateManager;
@@ -152,16 +153,16 @@ public final class AuthenticationResource {
 
     LOGGER.info("Received an AuthenticationRequest for session " + sessionId);
     stroom.auth.Session session = sessionManager.getOrCreate(sessionId);
-    session.setNonce(nonce);
-    session.setState(state);
-    session.setClientId(clientId);
+    RelyingParty relyingParty = session.getOrCreateRelyingParty(clientId);
+    relyingParty.setNonce(nonce);
+    relyingParty.setState(state);
     session.setAuthenticated(false);
 
     Optional<String> optionalCn = certificateManager.getCertificate(httpServletRequest);
     if(optionalCn.isPresent()) {
       session.setAuthenticated(true);
       String accessCode = SessionManager.createAccessCode();
-      session.setAccessCode(accessCode);
+      relyingParty.setAccessCode(accessCode);
       String subject = optionalCn.get(); //TODO We might need to use a new user, or look one up.
       String idToken = tokenBuilderFactory
               .newBuilder(Token.TokenType.USER)
@@ -169,15 +170,20 @@ public final class AuthenticationResource {
               .nonce(nonce)
               .state(state)
               .build();
-      session.setIdToken(idToken);
+      relyingParty.setIdToken(idToken);
 
       String successParams = String.format("?code=%s&state=%s", accessCode, state);
       String successUrl = redirectUrl + successParams;
       return Response.seeOther(new URI(successUrl)).build();
     }
 
-    String failureParams = String.format("?error=login_required&state=%s&redirectUrl=%s&sessionId=%s",
-            state, redirectUrl, sessionId);
+    String failureParams = String.format(
+            "?error=login_required&" +
+                    "state=%s&" +
+                    "clientId=%s&" +
+                    "redirectUrl=%s&" +
+                    "sessionId=%s",
+            state, clientId, redirectUrl, sessionId);
     String failureUrl = this.config.getLoginUrl() + failureParams;
     return Response.seeOther(new URI(failureUrl)).build();
   }
@@ -215,15 +221,17 @@ public final class AuthenticationResource {
     session.setAuthenticated(true);
 
     String accessCode = SessionManager.createAccessCode();
-    session.setAccessCode(accessCode);
+    RelyingParty relyingParty = session.getRelyingParty(credentials.getRequestingClientId());
+
+    relyingParty.setAccessCode(accessCode);
 
     String idToken = tokenBuilderFactory
             .newBuilder(Token.TokenType.USER)
             .subject(credentials.getEmail())
-            .nonce(session.getNonce())
-            .state(session.getState())
+            .nonce(relyingParty.getNonce())
+            .state(relyingParty.getState())
             .build();
-    session.setIdToken(idToken);
+    relyingParty.setIdToken(idToken);
 
     LOGGER.debug("Login for {} succeeded", credentials.getEmail());
     userDao.resetUserLogin(credentials.getEmail());
@@ -269,15 +277,16 @@ public final class AuthenticationResource {
           @ApiParam("idTokenRequest") @NotNull IdTokenRequest idTokenRequest) {
     LOGGER.info("Providing an id_token for sessionId" + idTokenRequest.getSessionId());
     stroom.auth.Session session = this.sessionManager.getOrCreate(idTokenRequest.getSessionId());
-    boolean accessCodesMatch = session.getAccessCode().equals(idTokenRequest.getAccessCode());
+    RelyingParty relyingParty = session.getRelyingParty(idTokenRequest.getRequestingClientId());
+    boolean accessCodesMatch = relyingParty.getAccessCode().equals(idTokenRequest.getAccessCode());
 
     if(!accessCodesMatch){
       return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
     }
-    String idToken = session.getIdToken();
+    String idToken = relyingParty.getIdToken();
 
-    session.forgetIdToken();
-    session.forgetAccessCode();
+    relyingParty.forgetIdToken();
+    relyingParty.forgetAccessCode();
 
     return Response.status(Status.OK).entity(idToken).build();
   }

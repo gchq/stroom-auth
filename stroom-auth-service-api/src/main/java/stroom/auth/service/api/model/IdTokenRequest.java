@@ -22,13 +22,16 @@ import io.swagger.annotations.ApiModelProperty;
  * A request to retrieve an ID token using an access code.
  */
 @ApiModel(description = "A request to retrieve an ID token using an access code.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-11T11:58:07.157+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-13T15:20:07.360+01:00")
 public class IdTokenRequest {
   @SerializedName("sessionId")
   private String sessionId = null;
 
   @SerializedName("accessCode")
   private String accessCode = null;
+
+  @SerializedName("requestingClientId")
+  private String requestingClientId = null;
 
   public IdTokenRequest sessionId(String sessionId) {
     this.sessionId = sessionId;
@@ -66,6 +69,24 @@ public class IdTokenRequest {
     this.accessCode = accessCode;
   }
 
+  public IdTokenRequest requestingClientId(String requestingClientId) {
+    this.requestingClientId = requestingClientId;
+    return this;
+  }
+
+   /**
+   * The clientId of the relying party requesting the id_token.
+   * @return requestingClientId
+  **/
+  @ApiModelProperty(example = "null", required = true, value = "The clientId of the relying party requesting the id_token.")
+  public String getRequestingClientId() {
+    return requestingClientId;
+  }
+
+  public void setRequestingClientId(String requestingClientId) {
+    this.requestingClientId = requestingClientId;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -77,12 +98,13 @@ public class IdTokenRequest {
     }
     IdTokenRequest idTokenRequest = (IdTokenRequest) o;
     return Objects.equals(this.sessionId, idTokenRequest.sessionId) &&
-        Objects.equals(this.accessCode, idTokenRequest.accessCode);
+        Objects.equals(this.accessCode, idTokenRequest.accessCode) &&
+        Objects.equals(this.requestingClientId, idTokenRequest.requestingClientId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sessionId, accessCode);
+    return Objects.hash(sessionId, accessCode, requestingClientId);
   }
 
 
@@ -93,6 +115,7 @@ public class IdTokenRequest {
     
     sb.append("    sessionId: ").append(toIndentedString(sessionId)).append("\n");
     sb.append("    accessCode: ").append(toIndentedString(accessCode)).append("\n");
+    sb.append("    requestingClientId: ").append(toIndentedString(requestingClientId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

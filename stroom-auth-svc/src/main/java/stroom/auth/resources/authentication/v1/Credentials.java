@@ -30,6 +30,8 @@ public final class Credentials {
   //TODO: @NotNull - will need to change ITs
   private String sessionId = "";
 
+  private String requestingClientId = "";
+
   @JsonProperty("email")
   @NotNull
   public final String getEmail() {
@@ -56,5 +58,13 @@ public final class Credentials {
 
   public void setSessionId(String sessionId) {
     this.sessionId = sessionId;
+  }
+
+  public String getRequestingClientId() {
+    return requestingClientId;
+  }
+
+  public void setRequestingClientId(String requestingClientId) {
+    this.requestingClientId = requestingClientId;
   }
 }

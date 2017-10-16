@@ -24,7 +24,7 @@ import queryString from 'query-string'
 import Cookies from 'cookies-js'
 
 import LoginUI from './LoginUI'
-import { checkForRememberMeToken, changeRedirectUrl } from '../../modules/login'
+import { checkForRememberMeToken, changeRedirectUrl, changeClientIdUrl } from '../../modules/login'
 import { relativePath } from '../../relativePush'
 
 class Login extends Component {
@@ -32,8 +32,10 @@ class Login extends Component {
     checkForRememberMeToken(this.context.store.dispatch)
     const queryParams = queryString.parse(this.props.location.search)
     const redirectUrl = queryParams['redirectUrl']
+    const clientId = queryParams['clientId']
     const sessionId = queryParams['sessionId']
     this.context.store.dispatch(changeRedirectUrl(redirectUrl))
+    this.context.store.dispatch(changeClientIdUrl(clientId))
     Cookies.set('sessionId', sessionId)
   }
 

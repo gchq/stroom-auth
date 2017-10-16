@@ -126,7 +126,7 @@
     },
     "IdTokenRequest" : {
       "type" : "object",
-      "required" : [ "accessCode", "sessionId" ],
+      "required" : [ "accessCode", "requestingClientId", "sessionId" ],
       "properties" : {
         "sessionId" : {
           "type" : "string",
@@ -135,6 +135,10 @@
         "accessCode" : {
           "type" : "string",
           "description" : "The previously provided access code."
+        },
+        "requestingClientId" : {
+          "type" : "string",
+          "description" : "The clientId of the relying party requesting the id_token."
         }
       },
       "description" : "A request to retrieve an ID token using an access code."

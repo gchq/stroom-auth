@@ -31,6 +31,7 @@ export const SHOW_UNAUTHORIZED_DIALOG = 'login/SHOW_UNAUTHORIZED_DIALOG'
 export const CHANGE_LOGGED_IN_USER = 'login/CHANGE_LOGGED_IN_USER'
 export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS'
 export const SET_REDIRECT_URL = 'login/SET_REDIRECT_URL'
+export const SET_CLIENT_ID = 'login/SET_CLIENT_ID'
 
 const initialState = {
   token: '',
@@ -86,6 +87,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         redirectUrl: action.redirectUrl
+      }
+
+    case SET_CLIENT_ID:
+      return {
+        ...state,
+        clientId: action.clientId
       }
 
     default:
@@ -164,10 +171,19 @@ const setCanManagerUsers = (canManageUsers) => {
   }
 }
 
+/** This is the URL to redirect to after logging in, e.g. Stroom's location. */
 export const changeRedirectUrl = (redirectUrl) => {
   return {
     type: SET_REDIRECT_URL,
     redirectUrl
+  }
+}
+
+/** This is the client ID of the relying party that originally requested authentication, e.g. Stroom. */
+export const changeClientIdUrl = (clientId) => {
+  return {
+    type: SET_CLIENT_ID,
+    clientId
   }
 }
 
@@ -180,6 +196,7 @@ export const login = (credentials) => {
 
     const loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     const redirectUrl = getState().login.redirectUrl
+    const clientId = getState().login.clientId
 
     try {
       // Our cookie, created by Stroom, should look like this: 'JSESSIONID=node079gwmzqm8gstic3limh8h1f40.node0'
@@ -199,7 +216,8 @@ export const login = (credentials) => {
         body: JSON.stringify({
           email,
           password,
-          sessionId: sessionId
+          sessionId,
+          requestingClientId: clientId
         })
       })
         .then(handleStatus)

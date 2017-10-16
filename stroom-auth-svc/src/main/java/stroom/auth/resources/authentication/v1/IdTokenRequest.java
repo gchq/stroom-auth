@@ -21,17 +21,27 @@ package stroom.auth.resources.authentication.v1;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotNull;
+
 @ApiModel(description = "A request to retrieve an ID token using an access code.")
 public class IdTokenRequest {
     @ApiModelProperty(
             value = "The session ID to which this request is linked.",
             required = true)
+    @NotNull
     private String sessionId;
 
     @ApiModelProperty(
             value = "The previously provided access code.",
             required = true)
+    @NotNull
     private String accessCode;
+
+    @ApiModelProperty(
+            value = "The clientId of the relying party requesting the id_token.",
+            required = true)
+    @NotNull
+    private String requestingClientId;
 
     public String getSessionId() {
         return sessionId;
@@ -47,5 +57,13 @@ public class IdTokenRequest {
 
     public void setAccessCode(String accessCode) {
         this.accessCode = accessCode;
+    }
+
+    public String getRequestingClientId() {
+        return requestingClientId;
+    }
+
+    public void setRequestingClientId(String requestingClientId) {
+        this.requestingClientId = requestingClientId;
     }
 }

@@ -18,33 +18,17 @@
 
 package stroom.auth;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Session {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Session.class);
 
-    private String accessCode;
-    private String idToken;
     private String sessionId;
     private boolean isAuthenticated;
     private String userEmail;
-    private String nonce;
-    private String state;
-    private String clientId;
+    private Map<String, RelyingParty> relyingParties = new HashMap<>();
 
-    public String getAccessCode() {
-        return accessCode;
-    }
-
-    public void setAccessCode(String accessCode) {
-        this.accessCode = accessCode;
-    }
-
-    public String getIdToken() {
-        return idToken;
-    }
-
-    public void setIdToken(String idToken) {
-        this.idToken = idToken;
-    }
 
     public String getSessionId() {
         return sessionId;
@@ -66,31 +50,17 @@ public class Session {
         this.userEmail = userEmail;
     }
 
-    public void setNonce(String nonce) {
-        this.nonce = nonce;
+    public RelyingParty getOrCreateRelyingParty(String clientId) {
+        if(relyingParties.containsKey(clientId)){
+            return relyingParties.get(clientId);
+        }
+
+        RelyingParty newRelyingParty = new RelyingParty(clientId);
+        relyingParties.put(clientId, newRelyingParty);
+        return newRelyingParty;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getNonce() {
-        return nonce;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public void forgetIdToken() {
-        this.idToken = null;
-    }
-
-    public void forgetAccessCode() {
-        this.accessCode = null;
+    public RelyingParty getRelyingParty(String requestingClientId) {
+        return relyingParties.get(requestingClientId);
     }
 }
