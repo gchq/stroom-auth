@@ -18,6 +18,7 @@
 
 package stroom.auth;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,5 +63,9 @@ public class Session {
 
     public RelyingParty getRelyingParty(String requestingClientId) {
         return relyingParties.get(requestingClientId);
+    }
+
+    public Collection<RelyingParty> getRelyingParties() {
+        return this.relyingParties.values();
     }
 }
