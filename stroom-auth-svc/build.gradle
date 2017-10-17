@@ -136,6 +136,7 @@ swagger {
                      'stroom.auth.resources.authentication.v1.AuthenticationResource',
                      'stroom.auth.resources.authentication.v1.Credentials',
                      'stroom.auth.resources.authentication.v1.IdTokenRequest',
+                     'stroom.auth.resources.session.v1.SessionResource',
                      'javax.ws.rs.core.Response']
         schemes = [
                 'http',

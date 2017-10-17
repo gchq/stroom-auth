@@ -18,10 +18,15 @@
 
 package stroom.auth;
 
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientResponse;
 import stroom.auth.config.Config;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
@@ -35,6 +40,9 @@ public class SessionManager {
     Map<String, Session> sessions = new HashMap<>();
     private Config config;
     private TokenBuilderFactory tokenBuilderFactory;
+
+    private Client logoutClient = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
+
 
     @Inject
     public SessionManager(Config config, TokenBuilderFactory tokenBuilderFactory){
@@ -51,7 +59,7 @@ public class SessionManager {
         SecureRandom secureRandom = new SecureRandom();
         byte[] bytes = new byte[20];
         secureRandom.nextBytes(bytes);
-        String accessCode = Base64.getEncoder().encodeToString(bytes);
+        String accessCode = Base64.getUrlEncoder().encodeToString(bytes);
         return accessCode;
     }
 
@@ -67,5 +75,26 @@ public class SessionManager {
 
     public Optional<Session> get(String id) {
         return Optional.ofNullable(sessions.get(id));
+    }
+
+    public void logout(String sessionId) {
+        Optional<Session> session = get(sessionId);
+        if(!session.isPresent()){
+            // We might get a logout for a session that doesn't exist - e.g. if there's been a bounce. It's
+            // not necessarily an error and we need to handle it gracefully.
+            LOGGER.warn("Tried to log out of a session that doesn't exist: " +sessionId);
+            return;
+        }
+
+        session.get().getRelyingParties().forEach(relyingParty -> {
+            String logoutUrl = relyingParty.getLogoutUri() + "/" + sessionId;
+            Response response = logoutClient
+                    .target(logoutUrl)
+                    .request()
+                    .get();
+            if(response.getStatus() != Response.Status.OK.getStatusCode()){
+                throw new RuntimeException("Unable to log out a relying party! I tried the following URL: " + logoutUrl);
+            }
+        });
     }
 }

@@ -24,7 +24,7 @@ import stroom.auth.service.api.model.Token;
 /**
  * SearchResponse
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-13T15:20:07.360+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-16T10:38:22.749+01:00")
 public class SearchResponse {
   @SerializedName("tokens")
   private List<Token> tokens = new ArrayList<Token>();

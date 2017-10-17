@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create**](DefaultApi.md#create) | **POST** /token/v1 | Submit a search request for tokens
 [**getIdToken**](DefaultApi.md#getIdToken) | **POST** /authentication/v1/idToken | Convert a previously provided access code into an ID token
+[**logout**](DefaultApi.md#logout) | **GET** /session/v1/logout/{sessionId} | Log a user out of their session
 [**search**](DefaultApi.md#search) | **POST** /token/v1/search | Submit a search request for tokens
 
 
@@ -97,6 +98,51 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="logout"></a>
+# **logout**
+> Response logout(sessionId)
+
+Log a user out of their session
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.DefaultApi;
+
+
+DefaultApi apiInstance = new DefaultApi();
+String sessionId = "sessionId_example"; // String | 
+try {
+    Response result = apiInstance.logout(sessionId);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#logout");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **sessionId** | **String**|  |
+
+### Return type
+
+[**Response**](Response.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="search"></a>

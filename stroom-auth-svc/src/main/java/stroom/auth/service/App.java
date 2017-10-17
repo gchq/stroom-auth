@@ -43,6 +43,7 @@ import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
 import stroom.auth.exceptions.mappers.UnauthorisedExceptionMapper;
+import stroom.auth.resources.session.v1.SessionResource;
 import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
 import stroom.auth.service.security.AuthenticationFilter;
@@ -112,6 +113,7 @@ public final class App extends Application<Config> {
     environment.jersey().register(injector.getInstance(AuthenticationResource.class));
     environment.jersey().register(injector.getInstance(UserResource.class));
     environment.jersey().register(injector.getInstance(TokenResource.class));
+    environment.jersey().register(injector.getInstance(SessionResource.class));
   }
 
   private void registerExceptionMappers(Environment environment) {

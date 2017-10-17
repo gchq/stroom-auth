@@ -42,6 +42,29 @@
         }
       }
     },
+    "/session/v1/logout/{sessionId}" : {
+      "get" : {
+        "summary" : "Log a user out of their session",
+        "description" : "",
+        "operationId" : "logout",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sessionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
     "/token/v1" : {
       "post" : {
         "summary" : "Submit a search request for tokens",
@@ -142,6 +165,23 @@
         }
       },
       "description" : "A request to retrieve an ID token using an access code."
+    },
+    "Response" : {
+      "type" : "object",
+      "properties" : {
+        "context" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        },
+        "cancelled" : {
+          "type" : "boolean"
+        },
+        "done" : {
+          "type" : "boolean"
+        }
+      }
     },
     "SearchRequest" : {
       "type" : "object",

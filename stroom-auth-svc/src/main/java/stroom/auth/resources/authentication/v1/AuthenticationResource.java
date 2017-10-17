@@ -57,7 +57,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -262,7 +261,7 @@ public final class AuthenticationResource {
     return Response.status(Status.OK).entity(token).build();
   }
 
-  //TODO: Should this be in TokenResource
+  //TODO: Should this be in TokenResource?
   /**
    * This is a POST because we need the sessionId.
    */
