@@ -18,8 +18,6 @@ import { push } from 'react-router-redux'
 import { relativePush } from '../relativePush'
 import { SubmissionError } from 'redux-form'
 
-import Cookies from 'cookies-js'
-
 import { HttpError } from '../ErrorTypes'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
@@ -32,6 +30,7 @@ export const CHANGE_LOGGED_IN_USER = 'login/CHANGE_LOGGED_IN_USER'
 export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS'
 export const SET_REDIRECT_URL = 'login/SET_REDIRECT_URL'
 export const SET_CLIENT_ID = 'login/SET_CLIENT_ID'
+export const SET_SESSION_ID = 'login/SET_SESSION_ID'
 
 const initialState = {
   token: '',
@@ -93,6 +92,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         clientId: action.clientId
+      }
+
+    case SET_SESSION_ID:
+      return {
+        ...state,
+        sessionId: action.sessionId
       }
 
     default:
@@ -187,6 +192,13 @@ export const changeClientIdUrl = (clientId) => {
   }
 }
 
+export const changeSessionId = (sessionId) => {
+  return {
+    type: SET_SESSION_ID,
+    sessionId
+  }
+}
+
 export const login = (credentials) => {
   return (dispatch, getState) => {
     const { email, password, rememberMe } = credentials
@@ -197,12 +209,9 @@ export const login = (credentials) => {
     const loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     const redirectUrl = getState().login.redirectUrl
     const clientId = getState().login.clientId
+    const sessionId = getState().login.sessionId
 
     try {
-      // Our cookie, created by Stroom, should look like this: 'JSESSIONID=node079gwmzqm8gstic3limh8h1f40.node0'
-      // We'll split it to get the actual sessionId.
-      // const sessionId = document.cookie.split('=')[1].split('.')[0]
-      const sessionId = Cookies.get('sessionId')
       // Call the authentication service to get a token.
       // If successful we re-direct to Stroom, otherwise we display a message.
       // It's essential we return the promise, otherwise any errors we get won't be handled.
