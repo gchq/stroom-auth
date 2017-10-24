@@ -211,7 +211,7 @@ export const changeSelectedRow = (tokenId) => {
 
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
-    const securityToken = getState().login.token
+    const securityToken = getState().authentication.idToken
     const tokenUrl = `${process.env.REACT_APP_TOKEN_URL}/${tokenId}/state/?enabled=${isEnabled}`
     fetch(tokenUrl, {
       headers: {

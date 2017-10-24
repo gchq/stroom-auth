@@ -164,7 +164,7 @@ class TokenSearch extends Component {
               }}
               onFetchData={(state, instance) => {
                   // TODO call to show the loading state
-                this.fetchTokens(this.props.token, state)
+                this.fetchTokens(this.props.idToken, state)
               }} />
           </div>
         </div>
@@ -178,7 +178,7 @@ TokenSearch.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  token: state.login.token,
+  idToken: state.authentication.idToken,
   showSearchLoader: state.tokenSearch.showSearchLoader,
   results: state.tokenSearch.results,
   totalPages: state.tokenSearch.totalPages,

@@ -73,7 +73,7 @@ export function updateResults (results) {
 export const performUserSearch = (jwsToken) => {
   return (dispatch, getState) => {
     if (jwsToken === undefined) {
-      jwsToken = getState().login.token
+      jwsToken = getState().authentication.idToken
     }
     dispatch(showSearchLoader(true))
 

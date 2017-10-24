@@ -39,11 +39,11 @@ class Login extends Component {
   }
 
   render () {
-    const { token } = this.props
+    const { idToken } = this.props
     let referrer = relativePath('/')
     return (
       <div>
-        {token ? (
+        {idToken ? (
           <Redirect to={referrer + '/login'} />
         ) : (
           <LoginUI />
@@ -62,7 +62,7 @@ Login.contextTypes = {
 }
 
 const mapStateToProps = state => ({
-  token: state.login.token
+  idToken: state.authentication.idToken
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

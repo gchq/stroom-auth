@@ -46,7 +46,7 @@ class Home extends Component {
       <div className='content-floating-with-appbar vertical'>
         <NavLink to={relativePath('/')}>
           <Card className='Home-card'
-            onClick={() => this.props.goToStroom(this.props.token)}
+            onClick={() => this.props.goToStroom(this.props.idToken)}
             onMouseOver={() => this.setState({stroomLinkShadow: 3})}
             onMouseOut={() => this.setState({stroomLinkShadow: 1})}
             zDepth={this.state.stroomLinkShadow}>
@@ -114,8 +114,8 @@ Home.contextTypes = {
 }
 
 const mapStateToProps = state => ({
-  token: state.login.token,
-  canManageUsers: state.login.canManageUsers
+  idToken: state.authentication.idToken,
+  canManageUsers: state.authorisation.canManageUsers
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

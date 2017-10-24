@@ -118,7 +118,7 @@ function formatDate (dateString) {
 
 export const saveChanges = (editedUser) => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     const { id, email, password, first_name, last_name, comments, state } = editedUser
 
     const userServiceUrl = `${process.env.REACT_APP_USER_URL}/${id}`
@@ -150,7 +150,7 @@ export const saveChanges = (editedUser) => {
 
 export const createUser = (newUser) => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     const { email, password, first_name, last_name, comments, state } = newUser
 
     dispatch(showCreateLoader(true))
@@ -186,7 +186,7 @@ export const createUser = (newUser) => {
 
 export const fetchUser = (userId) => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     // TODO: remove any errors
     // TODO: show loading spinner
     const userServiceUrl = process.env.REACT_APP_USER_URL + '/' + userId
@@ -214,7 +214,7 @@ export const fetchUser = (userId) => {
 
 export const deleteSelectedUser = (userId) => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     const userIdToDelete = getState().userSearch.selectedUserRowId
     const userServiceUrl = process.env.REACT_APP_USER_URL + '/' + userIdToDelete
     fetch(userServiceUrl, {
@@ -239,7 +239,7 @@ export const deleteSelectedUser = (userId) => {
 
 export const changePasswordForCurrentUser = () => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     const userServiceUrl = process.env.REACT_APP_USER_URL + '/me'
     fetch(userServiceUrl, {
       headers: {
@@ -263,7 +263,7 @@ export const changePasswordForCurrentUser = () => {
 export const changePassword = (userId) => {
   return (dispatch, getState) => {
     const userServiceUrl = `${process.env.REACT_APP_USER_URL}/${userId}`
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     const newPassword = getState().form.ChangePasswordForm.values.password
     fetch(userServiceUrl, {
       headers: {
@@ -288,7 +288,7 @@ export const changePassword = (userId) => {
 export const submitPasswordChangeRequest = (formData) => {
   return (dispatch, getState) => {
     const userServiceUrl = `${process.env.REACT_APP_AUTHENTICATION_URL}/reset/${formData.emailAddress}`
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     fetch(userServiceUrl, {
       headers: {
         'Accept': 'application/json',

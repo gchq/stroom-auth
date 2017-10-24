@@ -54,10 +54,7 @@ const ReduxUserCreateForm = reduxForm({
 })(UserCreateForm)
 
 const mapStateToProps = state => ({
-  // token: state.login.token,
   showCreateLoader: state.user.showCreateLoader,
-  // email: state.user.email,
-  // password: state.user.password,
   errorStatus: state.user.errorStatus,
   errorText: state.user.errorText
 })

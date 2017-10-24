@@ -53,8 +53,7 @@ import { relativePath } from '../../relativePush'
 
 class App extends Component {
   isLoggedIn () {
-    // TODO: This is temporary, until the openId flow has been rolled out everywhere.
-    return !!this.props.token || !!this.props.idToken
+    return !!this.props.idToken
   }
 
   render () {
@@ -94,18 +93,11 @@ class App extends Component {
           <div >
             <BrowserRouter basename={process.env.REACT_APP_ROOT_PATH} />
             <Switch>
-              <Route exact path={relativePath('/')} render={() => (
-                this.isLoggedIn() ? (
-                  <Home />
-                ) : (
-                  <Redirect to={{
-                    pathname: process.env.REACT_APP_ROOT_PATH + '/login',
-                    state: {referrer: relativePath('/')}}} />
-                )
-              )} />
-
+              {/* Authentication routes */}
               <Route exact path={relativePath('/handleAuthentication')} component={HandleAuthenticationResponse} />
+              <Route exact path={relativePath('/handleAuthenticationResponse')} component={HandleAuthenticationResponse} />
 
+              {/* Routes not requiring authentication */}
               <Route exact path={relativePath('/login')} component={Login} />
               <Route exact path={relativePath('/logout')} component={Logout} />
               <Route exact path={relativePath('/newUser')} component={NewUser} />
@@ -114,67 +106,36 @@ class App extends Component {
               <Route exact path={relativePath('/resetPasswordRequest')} component={ResetPasswordRequest} />
               <Route exact path={relativePath('/Unauthorised')} component={Unauthorised} />
 
+              {/* Routes requiring authentication */}
+              <Route exact path={relativePath('/')} render={() => (
+                this.isLoggedIn() ? <Home /> : <AuthenticationRequest referrer='/' />
+              )} />
+
               <Route exact path={relativePath('/userSearch')} render={() => (
                 this.isLoggedIn() ? <UserSearch /> : <AuthenticationRequest referrer='/userSearch' />
               )} />
 
-              <Route exact path={relativePath('/handleAuthenticationResponse')} component={HandleAuthenticationResponse} />
-
               <Route exact path={relativePath('/changepassword')} render={(route) => (
-                this.isLoggedIn() ? (
-                  <ChangePassword />
-                ) : (
-                   // We record the referrer because Login needs it to redirect back to after a successful login.
-                  <Redirect to={{
-                    pathname: relativePath('/login'),
-                    state: {referrer: route.location.pathname}}} />
-                )
+                this.isLoggedIn() ? <ChangePassword /> : <AuthenticationRequest referrer={route.location.pathname} />
               )} />
 
               <Route exact path={relativePath('/user')} render={() => (
-                this.isLoggedIn() ? (
-                  <UserCreate />
-                ) : (
-                  // We record the referrer because Login needs it to redirect back to after a successful login.
-                  <Redirect to={{
-                    pathname: relativePath('/login'),
-                    state: {referrer: relativePath('/user')}}} />
-                )
+                this.isLoggedIn() ? <UserCreate /> : <AuthenticationRequest referrer='/user' />
               )} />
 
               <Route exact path={relativePath('/user/:userId')} render={(route) => (
-                this.isLoggedIn() ? (
-                  <UserEdit />
-                ) : (
-                  // We record the referrer because Login needs it to redirect back to after a successful login.
-                  <Redirect to={{
-                    pathname: relativePath('/login'),
-                    state: {referrer: route.location.pathname}}} />
-                )
+                this.isLoggedIn() ? <UserEdit /> : <AuthenticationRequest referrer={route.location.pathname} />
               )} />
 
               <Route exact path={relativePath('/tokens')} render={() => (
-                  this.isLoggedIn() ? (
-                    <TokenSearch />
-                  ) : (
-                      // We record the referrer because Login needs it to redirect back to after a successful login.
-                    <Redirect to={{
-                      pathname: relativePath('/login'),
-                      state: {referrer: relativePath('/tokens')}}} />
-                  )
+                  this.isLoggedIn() ? <TokenSearch /> : <AuthenticationRequest referrer='/token' />
               )} />
 
               <Route exact path={relativePath('/token/newApiToken')} render={() => (
-                  this.isLoggedIn() ? (
-                    <TokenCreate />
-                  ) : (
-                      // We record the referrer because Login needs it to redirect back to after a successful login.
-                    <Redirect to={{
-                      pathname: relativePath('/login'),
-                      state: {referrer: relativePath('/token/newApiToken')}}} />
-                  )
+                  this.isLoggedIn() ? <TokenCreate /> : <AuthenticationRequest referrer='/token/newApiToken' />
               )} />
 
+              {/* Fall through to 404 */}
               <Route component={PathNotFound} />
 
             </Switch>
@@ -207,12 +168,11 @@ App.contextTypes = {
 }
 
 App.propTypes = {
-  token: PropTypes.string.isRequired,
+  idToken: PropTypes.string.isRequired,
   showUnauthorizedDialog: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
-  token: state.login.token,
   idToken: state.authentication.idToken,
   showUnauthorizedDialog: state.login.showUnauthorizedDialog
 })

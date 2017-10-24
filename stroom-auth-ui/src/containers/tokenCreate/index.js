@@ -52,7 +52,7 @@ export class TokenCreateForm extends Component {
                       name='email'
                       openOnFocus
                       dataSource={this.props.matchingAutoCompleteResults}
-                      onChange={(_, autoCompleteText) => this.props.userAutoCompleteChange(autoCompleteText, this.props.token)}
+                      onChange={(_, autoCompleteText) => this.props.userAutoCompleteChange(autoCompleteText, this.props.idToken)}
                       />
                   </div>
                 </div>
@@ -102,7 +102,7 @@ const ReduxTokenCreateForm = reduxForm({
 })(TokenCreateForm)
 
 const mapStateToProps = state => ({
-  token: state.login.token,
+  idToken: state.authentication.idToken,
   matchingAutoCompleteResults: state.token.matchingAutoCompleteResults,
   showTokenCreatedDialog: state.token.showTokenCreatedDialog,
   newlyCreatedToken: state.token.newlyCreatedToken,

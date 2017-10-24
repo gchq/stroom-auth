@@ -21,6 +21,7 @@ import sjcl from 'sjcl'
 
 import { relativePush } from '../relativePush'
 import { getBody } from './fetchFunctions'
+import { canManageUsers } from './authorisation'
 
 export const TOKEN_ID_CHANGE = 'authentication/TOKEN_ID_CHANGE'
 
@@ -77,6 +78,7 @@ export const handleAuthenticationResponse = (accessCode, sessionId) => {
         localStorage.removeItem('nonce')
         localStorage.removeItem('preAuthenticationRequestReferrer')
         dispatch(changeIdToken(idToken))
+        dispatch(canManageUsers(idToken))
       } else {
         console.error('Nonce does not match.')
         // We fall through and push to the referrer, which will mean we attempt log in again.

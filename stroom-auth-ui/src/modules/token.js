@@ -93,7 +93,7 @@ export function toggleAlertVisibility (alertText) {
 
 export const deleteSelectedToken = (tokenId) => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     const tokenIdToDelete = getState().tokenSearch.selectedTokenRowId
     const tokenServiceUrl = process.env.REACT_APP_TOKEN_URL + '/' + tokenIdToDelete
     fetch(tokenServiceUrl, {
@@ -118,7 +118,7 @@ export const deleteSelectedToken = (tokenId) => {
 
 export const createToken = (newToken) => {
   return (dispatch, getState) => {
-    const jwsToken = getState().login.token
+    const jwsToken = getState().authentication.idToken
     const { email } = newToken
 
     // TODO wire this in
