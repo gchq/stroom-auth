@@ -45,13 +45,16 @@ import ResetPasswordRequest from '../../containers/resetPasswordRequest'
 import ConfirmPasswordResetEmail from '../../containers/confirmPasswordResetEmail'
 import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
+import AuthenticationRequest from '../../containers/authenticationRequest'
+import HandleAuthenticationResponse from '../../containers/handleAuthenticationResponse'
 import {handleSessionTimeout} from '../../modules/login'
 import { goToStroom } from '../../modules/sidebar'
 import { relativePath } from '../../relativePush'
 
 class App extends Component {
   isLoggedIn () {
-    return !!this.props.token
+    // TODO: This is temporary, until the openId flow has been rolled out everywhere.
+    return !!this.props.token || !!this.props.idToken
   }
 
   render () {
@@ -101,6 +104,8 @@ class App extends Component {
                 )
               )} />
 
+              <Route exact path={relativePath('/handleAuthentication')} component={HandleAuthenticationResponse} />
+
               <Route exact path={relativePath('/login')} component={Login} />
               <Route exact path={relativePath('/logout')} component={Logout} />
               <Route exact path={relativePath('/newUser')} component={NewUser} />
@@ -110,15 +115,10 @@ class App extends Component {
               <Route exact path={relativePath('/Unauthorised')} component={Unauthorised} />
 
               <Route exact path={relativePath('/userSearch')} render={() => (
-                this.isLoggedIn() ? (
-                  <UserSearch />
-                ) : (
-                  // We record the referrer because Login needs it to redirect back to after a successful login.
-                  <Redirect to={{
-                    pathname: relativePath('/login'),
-                    state: {referrer: relativePath('/userSearch')}}} />
-                )
+                this.isLoggedIn() ? <UserSearch /> : <AuthenticationRequest referrer='/userSearch' />
               )} />
+
+              <Route exact path={relativePath('/handleAuthenticationResponse')} component={HandleAuthenticationResponse} />
 
               <Route exact path={relativePath('/changepassword')} render={(route) => (
                 this.isLoggedIn() ? (
@@ -213,6 +213,7 @@ App.propTypes = {
 
 const mapStateToProps = state => ({
   token: state.login.token,
+  idToken: state.authentication.idToken,
   showUnauthorizedDialog: state.login.showUnauthorizedDialog
 })
 

@@ -159,7 +159,8 @@ UserSearch.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  token: state.login.token,
+  // token: state.login.token,
+  token: state.authentication.idToken,
   showSearchLoader: state.userSearch.showSearchLoader,
   results: state.userSearch.results,
   errorStatus: state.user.errorStatus,

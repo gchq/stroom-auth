@@ -23,6 +23,7 @@ import user from './user'
 import userSearch from './userSearch'
 import token from './token'
 import tokenSearch from './tokenSearch'
+import authentication from './authentication'
 
 export default combineReducers({
   routing: routerReducer,
@@ -31,5 +32,6 @@ export default combineReducers({
   userSearch,
   token,
   tokenSearch,
+  authentication,
   form: formReducer
 })
