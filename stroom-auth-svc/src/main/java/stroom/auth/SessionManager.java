@@ -97,4 +97,11 @@ public class SessionManager {
             }
         });
     }
+
+    public Session create(String sessionId) {
+        Session session = new Session();
+        session.setSessionId(sessionId);
+        sessions.put(sessionId, session);
+        return session;
+    }
 }

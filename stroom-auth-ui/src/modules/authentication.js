@@ -52,6 +52,12 @@ export const handleAuthenticationResponse = (accessCode, sessionId) => {
   return (dispatch) => {
     const idTokenRequestUrl = process.env.REACT_APP_AUTHENTICATION_URL + '/idToken'
 
+    // If we're not passed a sessionId we will have one from when we submitted the request.
+    // TODO: change the AuthenticationService so that it doesn't redirect with a sessionId?
+    if (sessionId === undefined) {
+      sessionId = Cookies.get('sessionId')
+    }
+
     fetch(idTokenRequestUrl, {
       headers: {
         'Accept': 'application/json',
@@ -114,6 +120,7 @@ export const sendAuthenticationRequest = (referrer) => {
     localStorage.setItem('preAuthenticationRequestReferrer', referrer)
 
     // Compose the new URL
+    // TODO: if we don't pass a sessionId we will always get a login request (?). We could use this for persistent login.
     const authenticationRequestParams = `?scope=openid&response_type=code&client_id=${clientId}&redirect_url=${redirectUrl}&state=${state}&nonce=${nonceHash}&sessionId=${sessionId}`
     const authenticationRequestUrl = process.env.REACT_APP_AUTHENTICATION_URL + '/authenticate/' + authenticationRequestParams
 

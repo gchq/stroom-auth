@@ -151,15 +151,43 @@ public final class AuthenticationResource {
           @QueryParam("sessionId") @NotNull String sessionId) throws URISyntaxException {
 
     LOGGER.info("Received an AuthenticationRequest for session " + sessionId);
-    stroom.auth.Session session = sessionManager.getOrCreate(sessionId);
-    RelyingParty relyingParty = session.getOrCreateRelyingParty(clientId);
+    boolean isAuthenticated = false;
+
+    // Set up the session if we need to
+    Optional<stroom.auth.Session> optionalSession = sessionManager.get(sessionId);
+    if(optionalSession.isPresent()){
+      isAuthenticated = optionalSession.get().isAuthenticated();
+    }
+    else {
+      optionalSession = Optional.of(sessionManager.create(sessionId));
+      optionalSession.get().setAuthenticated(false);
+    }
+    RelyingParty relyingParty = optionalSession.get().getOrCreateRelyingParty(clientId);
     relyingParty.setNonce(nonce);
     relyingParty.setState(state);
-    session.setAuthenticated(false);
 
+    // Log the user in using a session
+    if(isAuthenticated) {
+      String accessCode = SessionManager.createAccessCode();
+      relyingParty.setAccessCode(accessCode);
+      String subject = optionalSession.get().getUserEmail();
+      String idToken = tokenBuilderFactory
+              .newBuilder(Token.TokenType.USER)
+              .subject(subject)
+              .nonce(relyingParty.getNonce())
+              .state(relyingParty.getState())
+              .build();
+      relyingParty.setIdToken(idToken);
+
+      String successParams = String.format("?accessCode=%s&state=%s", accessCode, state);
+      String successUrl = redirectUrl + successParams;
+      return Response.seeOther(new URI(successUrl)).build();
+    }
+
+    // Log the user in using a certificate
     Optional<String> optionalCn = certificateManager.getCertificate(httpServletRequest);
     if(optionalCn.isPresent()) {
-      session.setAuthenticated(true);
+      optionalSession.get().setAuthenticated(true);
       String accessCode = SessionManager.createAccessCode();
       relyingParty.setAccessCode(accessCode);
       String subject = optionalCn.get(); //TODO We might need to use a new user, or look one up.
@@ -171,11 +199,12 @@ public final class AuthenticationResource {
               .build();
       relyingParty.setIdToken(idToken);
 
-      String successParams = String.format("?code=%s&state=%s", accessCode, state);
+      String successParams = String.format("?accessCode=%s&state=%s", accessCode, state);
       String successUrl = redirectUrl + successParams;
       return Response.seeOther(new URI(successUrl)).build();
     }
 
+    // The user has not been logged in so we re-direct to the login page.
     String failureParams = String.format(
             "?error=login_required&" +
                     "state=%s&" +
@@ -218,6 +247,7 @@ public final class AuthenticationResource {
     }
 
     session.setAuthenticated(true);
+    session.setUserEmail(credentials.getEmail());
 
     String accessCode = SessionManager.createAccessCode();
     RelyingParty relyingParty = session.getRelyingParty(credentials.getRequestingClientId());

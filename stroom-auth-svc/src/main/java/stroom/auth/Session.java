@@ -30,7 +30,6 @@ public class Session {
     private String userEmail;
     private Map<String, RelyingParty> relyingParties = new HashMap<>();
 
-
     public String getSessionId() {
         return sessionId;
     }
@@ -45,10 +44,6 @@ public class Session {
 
     public void setAuthenticated(boolean authenticated) {
         isAuthenticated = authenticated;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
     }
 
     public RelyingParty getOrCreateRelyingParty(String clientId) {
@@ -67,5 +62,13 @@ public class Session {
 
     public Collection<RelyingParty> getRelyingParties() {
         return this.relyingParties.values();
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
     }
 }
