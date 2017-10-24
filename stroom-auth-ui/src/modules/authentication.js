@@ -48,6 +48,40 @@ function changeIdToken (idToken) {
   }
 }
 
+export const sendAuthenticationRequest = (referrer) => {
+  return (dispatch, getState) => {
+    const clientId = process.env.REACT_APP_CLIENT_ID
+    const redirectUrl = process.env.REACT_APP_ADVERTISED_URL + '/handleAuthenticationResponse'
+    const state = ''
+
+    // Get or create sessionId and cookie
+    let sessionId = Cookies.get('sessionId')
+    // TODO: No - we need to leave it to the AuthenticationService. Also change this in Stroom.
+    if (sessionId === undefined) {
+      // If we don't have a cookie we need to create one.
+      sessionId = uuidv4()
+      Cookies.set('sessionId', sessionId)
+    }
+
+    // Create nonce and store, and create nonce hash
+    const nonce = uuidv4()
+    const nonceHashBytes = sjcl.hash.sha256.hash(nonce)
+    const nonceHash = sjcl.codec.hex.fromBits(nonceHashBytes)
+    localStorage.setItem('nonce', nonce)
+
+    // We need to remember where the user was going
+    localStorage.setItem('preAuthenticationRequestReferrer', referrer)
+
+    // Compose the new URL
+    // TODO: if we don't pass a sessionId we will always get a login request (?). We could use this for persistent login.
+    const authenticationRequestParams = `?scope=openid&response_type=code&client_id=${clientId}&redirect_url=${redirectUrl}&state=${state}&nonce=${nonceHash}&sessionId=${sessionId}`
+    const authenticationRequestUrl = process.env.REACT_APP_AUTHENTICATION_URL + '/authenticate/' + authenticationRequestParams
+
+    // We hand off to the authenticationService.
+    window.location.href = authenticationRequestUrl
+  }
+}
+
 export const handleAuthenticationResponse = (accessCode, sessionId) => {
   return (dispatch) => {
     const idTokenRequestUrl = process.env.REACT_APP_AUTHENTICATION_URL + '/idToken'
@@ -93,38 +127,5 @@ export const handleAuthenticationResponse = (accessCode, sessionId) => {
       }
       dispatch(relativePush(referrer))
     })
-  }
-}
-
-export const sendAuthenticationRequest = (referrer) => {
-  return (dispatch, getState) => {
-    const clientId = process.env.REACT_APP_CLIENT_ID
-    const redirectUrl = process.env.REACT_APP_ADVERTISED_URL + '/handleAuthenticationResponse'
-    const state = ''
-
-    // Get or create sessionId and cookie
-    let sessionId = Cookies.get('sessionId')
-    if (sessionId === undefined) {
-      // If we don't have a cookie we need to create one.
-      sessionId = uuidv4()
-      Cookies.set('sessionId', sessionId)
-    }
-
-    // Create nonce and store, and create nonce hash
-    const nonce = uuidv4()
-    const nonceHashBytes = sjcl.hash.sha256.hash(nonce)
-    const nonceHash = sjcl.codec.hex.fromBits(nonceHashBytes)
-    localStorage.setItem('nonce', nonce)
-
-    // We need to remember where the user was going
-    localStorage.setItem('preAuthenticationRequestReferrer', referrer)
-
-    // Compose the new URL
-    // TODO: if we don't pass a sessionId we will always get a login request (?). We could use this for persistent login.
-    const authenticationRequestParams = `?scope=openid&response_type=code&client_id=${clientId}&redirect_url=${redirectUrl}&state=${state}&nonce=${nonceHash}&sessionId=${sessionId}`
-    const authenticationRequestUrl = process.env.REACT_APP_AUTHENTICATION_URL + '/authenticate/' + authenticationRequestParams
-
-    // We hand off to the authenticationService.
-    window.location.href = authenticationRequestUrl
   }
 }
