@@ -16,6 +16,8 @@
 
 import { SubmissionError } from 'redux-form'
 
+import Cookies from 'cookies-js'
+
 import { HttpError } from '../ErrorTypes'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
@@ -190,7 +192,7 @@ export const login = (credentials) => {
     const loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     const redirectUrl = getState().login.redirectUrl
     const clientId = getState().login.clientId
-    const sessionId = getState().login.sessionId
+    const sessionId = Cookies.get('sessionId')
 
     try {
       // Call the authentication service to get a token.

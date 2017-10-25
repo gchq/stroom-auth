@@ -249,9 +249,8 @@ public final class AuthenticationResource {
               "?error=login_required&" +
                       "state=%s&" +
                       "clientId=%s&" +
-                      "redirectUrl=%s&" +
-                      "sessionId=%s",
-              state, clientId, redirectUrl, sessionId);
+                      "redirectUrl=%s",
+              state, clientId, redirectUrl);
       String failureUrl = this.config.getLoginUrl() + failureParams;
       responseBuilder = seeOther(new URI(failureUrl));
     }
