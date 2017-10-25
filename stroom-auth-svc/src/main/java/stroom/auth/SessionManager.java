@@ -79,12 +79,15 @@ public class SessionManager {
 
     public void logout(String sessionId) {
         Optional<Session> session = get(sessionId);
+
         if(!session.isPresent()){
             // We might get a logout for a session that doesn't exist - e.g. if there's been a bounce. It's
             // not necessarily an error and we need to handle it gracefully.
             LOGGER.warn("Tried to log out of a session that doesn't exist: " +sessionId);
             return;
         }
+
+        session.get().setAuthenticated(false);
 
         session.get().getRelyingParties().forEach(relyingParty -> {
             String logoutUrl = relyingParty.getLogoutUri() + "/" + sessionId;

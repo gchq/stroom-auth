@@ -15,7 +15,6 @@
  */
 
 import jwtDecode from 'jwt-decode'
-import Cookies from 'cookies-js'
 import uuidv4 from 'uuid/v4'
 import sjcl from 'sjcl'
 

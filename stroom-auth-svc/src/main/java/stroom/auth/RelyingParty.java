@@ -33,6 +33,15 @@ public class RelyingParty {
     private String nonce;
     private String state;
 
+    public boolean accessCodesMatch(String accessCodeToMatch){
+        if(this.accessCode == null){
+            return false;
+        }
+        else {
+            return accessCode.equals(accessCodeToMatch);
+        }
+    }
+
     public void forgetIdToken() {
         this.idToken = null;
     }

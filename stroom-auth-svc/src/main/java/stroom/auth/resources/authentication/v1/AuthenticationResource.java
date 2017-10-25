@@ -154,37 +154,37 @@ public final class AuthenticationResource {
           @QueryParam("client_id") @NotNull String clientId,
           @QueryParam("redirect_url") @NotNull String redirectUrl,
           @QueryParam("nonce") @NotNull String nonce,
-          @QueryParam("state") @Nullable String state) throws URISyntaxException {
+          @QueryParam("state") @Nullable String state,
+          @QueryParam("sessionId") @Nullable String sessionId) throws URISyntaxException {
     boolean isAuthenticated = false;
 
-
-    // Try and get the sessionId from the cookie. If there isn't one then we'll
-    // create a new sessionId and add it to a new cookie.
-    Optional<String> optionalSessionId = Optional.empty();
-    if(httpServletRequest.getCookies() != null) {
-      optionalSessionId = Arrays.stream(httpServletRequest.getCookies())
-              .filter(cookie -> cookie.getName().equals("sessionId"))
-              .findFirst()
-              .map(cookie -> cookie.getValue());
-    }
-    String sessionId;
     Optional<NewCookie> optionalNewSessionCookie = Optional.empty();
-    if(!optionalSessionId.isPresent()){
-      sessionId = UUID.randomUUID().toString();
-      optionalNewSessionCookie = Optional.of(new NewCookie(
-              "sessionId", sessionId,
-              "/",
-              "localhost",//TODO: use the advertised host
-              "Stroom session cookie",
-              604800, // 1 week
-              false // TODO: make this true!
-      ));
-    }
-    else {
-      sessionId = optionalSessionId.get();
-    }
-    LOGGER.info("Received an AuthenticationRequest for session " + sessionId);
+    if(sessionId == null) {
+      // Try and get the sessionId from the cookie. If there isn't one then we'll
+      // create a new sessionId and add it to a new cookie.
+      Optional<String> optionalSessionId = Optional.empty();
+      if (httpServletRequest.getCookies() != null) {
+        optionalSessionId = Arrays.stream(httpServletRequest.getCookies())
+                .filter(cookie -> cookie.getName().equals("sessionId"))
+                .findFirst()
+                .map(cookie -> cookie.getValue());
+      }
 
+      if (!optionalSessionId.isPresent()) {
+        sessionId = UUID.randomUUID().toString();
+        optionalNewSessionCookie = Optional.of(new NewCookie(
+                "sessionId", sessionId,
+                "/",
+                "localhost",//TODO: use the advertised host
+                "Stroom session cookie",
+                604800, // 1 week
+                false // TODO: make this true!
+        ));
+      } else {
+        sessionId = optionalSessionId.get();
+      }
+      LOGGER.info("Received an AuthenticationRequest for session " + sessionId);
+    }
 
     // We need to make sure our understanding of the session is correct
     Optional<stroom.auth.Session> optionalSession = sessionManager.get(sessionId);
@@ -402,7 +402,7 @@ public final class AuthenticationResource {
     LOGGER.info("Providing an id_token for sessionId" + idTokenRequest.getSessionId());
     stroom.auth.Session session = this.sessionManager.getOrCreate(idTokenRequest.getSessionId());
     RelyingParty relyingParty = session.getRelyingParty(idTokenRequest.getRequestingClientId());
-    boolean accessCodesMatch = relyingParty.getAccessCode().equals(idTokenRequest.getAccessCode());
+    boolean accessCodesMatch = relyingParty.accessCodesMatch(idTokenRequest.getAccessCode());
 
     if(!accessCodesMatch){
       return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
