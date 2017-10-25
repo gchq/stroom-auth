@@ -192,6 +192,9 @@ export const login = (credentials) => {
     const loginServiceUrl = process.env.REACT_APP_LOGIN_URL
     const redirectUrl = getState().login.redirectUrl
     const clientId = getState().login.clientId
+
+    // We need to post the sessionId in the credentials, otherwise the 
+    // authenticationService will have no way of marking the session as valid.
     const sessionId = Cookies.get('sessionId')
 
     try {
