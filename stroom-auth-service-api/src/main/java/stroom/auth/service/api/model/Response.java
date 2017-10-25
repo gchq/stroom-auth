@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Response
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-16T10:38:22.749+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-25T07:24:20.005+01:00")
 public class Response {
   @SerializedName("context")
   private Map<String, Object> context = new HashMap<String, Object>();

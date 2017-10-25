@@ -17,10 +17,33 @@ schemes:
 - "https"
 paths:
   /authentication/v1/idToken:
+    get:
+      summary: "Convert a previously provided access code into an ID token"
+      description: ""
+      operationId: "getIdTokenWithGet"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "accessCode"
+        in: "query"
+        required: true
+        type: "string"
+      - name: "clientId"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+      security:
+      - openid:
+        - "get:idToken"
     post:
       summary: "Convert a previously provided access code into an ID token"
       description: ""
-      operationId: "getIdToken"
+      operationId: "getIdTokenWithPost"
       produces:
       - "application/json"
       parameters:

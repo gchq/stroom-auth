@@ -26,8 +26,7 @@ import { handleAuthenticationResponse } from '../../modules/authentication.js'
 class HandleAuthenticationResponse extends Component {
   componentDidMount () {
     const accessCode = queryString.parse(this.context.router.route.location.search).accessCode
-    const sessionId = queryString.parse(this.context.router.route.location.search).sessionId
-    this.context.store.dispatch(handleAuthenticationResponse(accessCode, sessionId))
+    this.context.store.dispatch(handleAuthenticationResponse(accessCode))
   }
 
   render () {

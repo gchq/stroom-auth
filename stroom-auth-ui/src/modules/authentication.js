@@ -54,15 +54,6 @@ export const sendAuthenticationRequest = (referrer) => {
     const redirectUrl = process.env.REACT_APP_ADVERTISED_URL + '/handleAuthenticationResponse'
     const state = ''
 
-    // Get or create sessionId and cookie
-    let sessionId = Cookies.get('sessionId')
-    // TODO: No - we need to leave it to the AuthenticationService. Also change this in Stroom.
-    if (sessionId === undefined) {
-      // If we don't have a cookie we need to create one.
-      sessionId = uuidv4()
-      Cookies.set('sessionId', sessionId)
-    }
-
     // Create nonce and store, and create nonce hash
     const nonce = uuidv4()
     const nonceHashBytes = sjcl.hash.sha256.hash(nonce)
@@ -73,8 +64,7 @@ export const sendAuthenticationRequest = (referrer) => {
     localStorage.setItem('preAuthenticationRequestReferrer', referrer)
 
     // Compose the new URL
-    // TODO: if we don't pass a sessionId we will always get a login request (?). We could use this for persistent login.
-    const authenticationRequestParams = `?scope=openid&response_type=code&client_id=${clientId}&redirect_url=${redirectUrl}&state=${state}&nonce=${nonceHash}&sessionId=${sessionId}`
+    const authenticationRequestParams = `?scope=openid&response_type=code&client_id=${clientId}&redirect_url=${redirectUrl}&state=${state}&nonce=${nonceHash}`
     const authenticationRequestUrl = process.env.REACT_APP_AUTHENTICATION_URL + '/authenticate/' + authenticationRequestParams
 
     // We hand off to the authenticationService.
@@ -82,28 +72,22 @@ export const sendAuthenticationRequest = (referrer) => {
   }
 }
 
-export const handleAuthenticationResponse = (accessCode, sessionId) => {
+export const handleAuthenticationResponse = (accessCode) => {
   return (dispatch) => {
-    const idTokenRequestUrl = process.env.REACT_APP_AUTHENTICATION_URL + '/idToken'
+    const idTokenRequestUrl = `${process.env.REACT_APP_AUTHENTICATION_URL}/idToken/`
+    const idTokenRequestParams = `?accessCode=${accessCode}&clientId=${process.env.REACT_APP_CLIENT_ID}`
+    const url = idTokenRequestUrl + idTokenRequestParams
 
-    // If we're not passed a sessionId we will have one from when we submitted the request.
-    // TODO: change the AuthenticationService so that it doesn't redirect with a sessionId?
-    if (sessionId === undefined) {
-      sessionId = Cookies.get('sessionId')
-    }
-
-    fetch(idTokenRequestUrl, {
+    // The cookie including the sessionId will be sent along with this request.
+    // The 'credentials' key makes this happen.
+    fetch(url, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      method: 'post',
-      mode: 'cors',
-      body: JSON.stringify({
-        sessionId,
-        accessCode,
-        requestingClientId: process.env.REACT_APP_CLIENT_ID
-      })
+      method: 'get',
+      credentials: 'include',
+      mode: 'cors'
     })
     .then(getBody)
     .then(idToken => {
