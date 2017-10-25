@@ -215,7 +215,7 @@ export const login = (credentials) => {
         .then(handleStatus)
         .then(getBody)
         .then(accessCode => {
-          window.location.href = `${redirectUrl}/?accessCode=${accessCode}&sessionId=${sessionId}`
+          window.location.href = `${redirectUrl}/?accessCode=${accessCode}`
         })
     } catch (err) {
       console.log("TODO: Couldn't get a session ID - handle it somehow. Probably redirect to Stroom?")
