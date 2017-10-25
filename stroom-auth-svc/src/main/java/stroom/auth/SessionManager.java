@@ -90,15 +90,21 @@ public class SessionManager {
         session.get().setAuthenticated(false);
 
         session.get().getRelyingParties().forEach(relyingParty -> {
-            String logoutUrl = relyingParty.getLogoutUri() + "/" + sessionId;
-            Response response = logoutClient
-                    .target(logoutUrl)
-                    .request()
-                    .get();
-            if(response.getStatus() != Response.Status.OK.getStatusCode()){
-                throw new RuntimeException("Unable to log out a relying party! I tried the following URL: " + logoutUrl);
+            // Not all relying parties can have a logout URI, i.e. remote web apps.
+            // So we need to check for null here.
+            if(relyingParty.getLogoutUri() != null) {
+                String logoutUrl = relyingParty.getLogoutUri() + "/" + sessionId;
+                Response response = logoutClient
+                        .target(logoutUrl)
+                        .request()
+                        .get();
+                if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+                    throw new RuntimeException("Unable to log out a relying party! I tried the following URL: " + logoutUrl);
+                }
             }
         });
+
+        sessions.remove(sessionId);
     }
 
     public Session create(String sessionId) {

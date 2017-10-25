@@ -32,7 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.xml.ws.Response;
+import javax.ws.rs.core.Response;
 
 @Singleton
 @Path("/session/v1")
@@ -58,6 +58,6 @@ public class SessionResource {
     public final Response logout(@PathParam("sessionId") String sessionId){
         sessionManager.logout(sessionId);
         LOGGER.info("Logging out session {}", sessionId);
-        return null;
+        return Response.status(Response.Status.OK).build();
     }
 }
