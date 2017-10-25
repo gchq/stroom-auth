@@ -342,14 +342,13 @@ public final class AuthenticationResource {
 
   //TODO: Should this be in TokenResource?
   /**
-   * This is a POST because we need the sessionId.
+   * This is one of two idToken endpoints. One a GET and one a POST. The GET is used
+   * by clients that send cookies, e.g. browsers and JavaScript.
+   * The POST is for other clients, e.g. Swagger.
    */
   @ApiOperation(
           value = "Convert a previously provided access code into an ID token",
-          response = String.class,
-          authorizations = {@Authorization(
-                  value = "openid",
-          scopes = {@AuthorizationScope(scope = "get:idToken", description = "TODO")})})
+          response = String.class)
   @GET
   @Path("idToken")
   @Timed
@@ -387,7 +386,9 @@ public final class AuthenticationResource {
 
   //TODO: Should this be in TokenResource?
   /**
-   * This is a POST because we need the sessionId.
+   * This is one of two idToken endpoints. One a GET and one a POST. The GET is used
+   * by clients that send cookies, e.g. browsers and JavaScript.
+   * The POST is for other clients, e.g. Swagger.
    */
   @ApiOperation(
           value = "Convert a previously provided access code into an ID token",

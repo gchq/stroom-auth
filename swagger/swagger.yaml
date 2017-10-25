@@ -37,9 +37,6 @@ paths:
           description: "successful operation"
           schema:
             type: "string"
-      security:
-      - openid:
-        - "get:idToken"
     post:
       summary: "Convert a previously provided access code into an ID token"
       description: ""

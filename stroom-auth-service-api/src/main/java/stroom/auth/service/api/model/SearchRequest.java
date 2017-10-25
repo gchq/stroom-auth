@@ -25,7 +25,7 @@ import java.util.Map;
  * A request for a search over tokens.
  */
 @ApiModel(description = "A request for a search over tokens.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-25T07:24:20.005+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-25T07:41:31.161+01:00")
 public class SearchRequest {
   @SerializedName("page")
   private Integer page = null;

@@ -18,7 +18,7 @@ import stroom.auth.service.Pair;
 import java.util.Map;
 import java.util.List;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-25T07:24:20.005+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-25T07:41:31.161+01:00")
 public class ApiKeyAuth implements Authentication {
   private final String location;
   private final String paramName;

@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  * A request to create a token.
  */
 @ApiModel(description = "A request to create a token.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-25T07:24:20.005+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-25T07:41:31.161+01:00")
 public class CreateTokenRequest {
   @SerializedName("userEmail")
   private String userEmail = null;
