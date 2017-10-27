@@ -153,6 +153,9 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
       })
     }
 
+    // We only want to see API keys, not user keys.
+    filters.token_type = 'API'
+
     const body = filters
         ? JSON.stringify({
           page,

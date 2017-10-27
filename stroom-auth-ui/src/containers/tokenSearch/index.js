@@ -66,18 +66,18 @@ class TokenSearch extends Component {
     )
   }
 
-  getTokenTypeCellFilter (filter, onChange) {
-    return (
-      <select
-        onChange={event => onChange(event.target.value)}
-        style={{ width: '100%' }}
-        value={filter ? filter.value : 'all'}>
-        <option value=''>Show all</option>
-        <option value='user'>User only</option>
-        <option value='api'>API only</option>
-      </select>
-    )
-  }
+  // getTokenTypeCellFilter (filter, onChange) {
+  //   return (
+  //     <select
+  //       onChange={event => onChange(event.target.value)}
+  //       style={{ width: '100%' }}
+  //       value={filter ? filter.value : 'all'}>
+  //       <option value=''>Show all</option>
+  //       <option value='user'>User only</option>
+  //       <option value='api'>API only</option>
+  //     </select>
+  //   )
+  // }
 
   formatDate (dateString) {
     const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
@@ -118,12 +118,12 @@ class TokenSearch extends Component {
       Header: 'API key',
       accessor: 'token',
       width: 200
-    }, {
+    }, /* This column may be used to filter the keys by 'API' or 'User'. We're not doing that at the moment so it's disabled{
       Header: 'API key type',
       accessor: 'token_type',
       Filter: ({filter, onChange}) => this.getTokenTypeCellFilter(filter, onChange),
       width: 220
-    }, {
+    }, */ {
       Header: 'Updated by user',
       accessor: 'updated_by_user',
       width: 400
