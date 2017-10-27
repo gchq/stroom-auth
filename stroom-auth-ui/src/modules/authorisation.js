@@ -1,7 +1,7 @@
 export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS'
 
 const initialState = {
-  canManagerUsers: false
+  canManageUsers: false
 }
 
 export default (state = initialState, action) => {

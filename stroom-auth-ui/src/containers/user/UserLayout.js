@@ -80,13 +80,15 @@ class UserLayout extends Component {
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
-            <NavLink to={relativePath('/')}>
+            { /* <NavLink to={relativePath('/')}>
               <Home />
             </NavLink>
-            <KeyboardArrowRight />
+            <KeyboardArrowRight /> */ }
+            
             <NavLink to={relativePath('/userSearch')}>
-              <ToolbarTitle text='Users' className='UserLayout-toolbarTitle' />
+              <ToolbarTitle text='All users' className='UserLayout-toolbarTitle' />
             </NavLink>
+
             {showCreate || showEdit ? (<KeyboardArrowRight />) : (undefined)}
             {showCreate ? (<ToolbarTitle text='Create' className='UserLayout-toolbarTitle' />) : (undefined)}
             {showEdit ? (<ToolbarTitle text='Edit' className='UserLayout-toolbarTitle' />) : (undefined)}
@@ -150,10 +152,10 @@ class UserLayout extends Component {
             <FlatButton
               label='OK'
               primary
-              onTouchTap={this.handleHelpDialogClose} />}
+              onTouchTap={() => this.handleHelpDialogClose()} />}
           modal={false}
           open={this.state.isHelpDialogOpen}
-          onRequestClose={this.handleHelpDialogClose}>
+          onRequestClose={() => this.handleHelpDialogClose()}>
           <p>This area is for managing user accounts.</p>
           <p>The list of users here do not include those who might have logged in using certificates or LDAP credentials.</p>
         </Dialog>

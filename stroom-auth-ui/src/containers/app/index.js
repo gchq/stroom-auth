@@ -59,7 +59,7 @@ class App extends Component {
   render () {
     return (
       <div className='App'>
-        {this.isLoggedIn() ? (
+        { /* this.isLoggedIn() ? (
           <AppBar
             title={<NavLink to={relativePath('/')}><img src={logo} className='App-logo' alt='Stroom logo' /></NavLink>}
             iconElementLeft={<div />}
@@ -87,7 +87,7 @@ class App extends Component {
               </div>
               }
           />
-        ) : (<div />)}
+        ) : (<div />) */ }
 
         <main className='main'>
           <div >
@@ -128,7 +128,7 @@ class App extends Component {
               )} />
 
               <Route exact path={relativePath('/tokens')} render={() => (
-                  this.isLoggedIn() ? <TokenSearch /> : <AuthenticationRequest referrer='/token' />
+                  this.isLoggedIn() ? <TokenSearch /> : <AuthenticationRequest referrer='/tokens' />
               )} />
 
               <Route exact path={relativePath('/token/newApiToken')} render={() => (
