@@ -18,6 +18,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
+import { NavLink } from 'react-router-dom'
 
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -41,6 +42,12 @@ const UserCreateForm = props => {
                 disabled={pristine || submitting}
                 type='submit'
                 label='Create the user' />
+              &nbsp; &nbsp;
+              <NavLink to='/userSearch'>
+                <RaisedButton
+                  primary
+                  label='Cancel' />
+              </NavLink>
             </div>
           </form>
         </div>

@@ -18,6 +18,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
+import { NavLink } from 'react-router-dom'
 
 import { AutoComplete } from 'redux-form-material-ui'
 import Card from 'material-ui/Card'
@@ -64,6 +65,12 @@ export class TokenCreateForm extends Component {
                   disabled={pristine || submitting}
                   type='submit'
                   label='Issue API token to user' />
+                &nbsp;&nbsp;
+                <NavLink to='/tokens'>
+                  <RaisedButton
+                    primary
+                    label='Cancel' />
+                </NavLink>
               </div>
             </form>
           </div>
