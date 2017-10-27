@@ -72,6 +72,21 @@ class UserSearch extends Component {
     )
   }
 
+  getStateCellFilter (filter, onChange) {
+    return (
+      <select
+        onChange={event => onChange(event.target.value)}
+        style={{ width: '100%' }}
+        value={filter ? filter.value : 'all'}
+      >
+        <option value=''>Show all</option>
+        <option value='enabled'>Enabled only</option>
+        <option value='locked'>Locked only</option>
+        <option value='disabled'>Disabled only</option>
+      </select>
+    )
+  }
+
   formatDate (dateString) {
     const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
     return dateString ? dateFormat(dateString, dateFormatString) : ''
@@ -93,7 +108,8 @@ class UserSearch extends Component {
       Header: 'State',
       accessor: 'state',
       width: 100,
-      Cell: row => this.renderStateCell(row.value)
+      Cell: row => this.renderStateCell(row.value),
+      Filter: ({filter, onChange}) => this.getStateCellFilter(filter, onChange)
     }, {
       Header: 'Last login',
       accessor: 'last_login',
