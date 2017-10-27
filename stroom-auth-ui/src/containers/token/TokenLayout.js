@@ -32,7 +32,6 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
 import Add from 'material-ui-icons/Add'
 import Delete from 'material-ui-icons/Delete'
 import Help from 'material-ui-icons/Help'
-import Home from 'material-ui-icons/Home'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import TokenSearch from '../tokenSearch'
@@ -132,7 +131,7 @@ class TokenLayout extends Component {
           onRequestClose={() => toggleAlertVisibility('')}
         />
         <Dialog
-          title={<div><span><Help color={blue600} /></span> &nbsp;<span>Tokens</span></div>}
+          title={<div><span><Help color={blue600} /></span> &nbsp;<span>API Keys</span></div>}
           actions={
             <FlatButton
               label='OK'
@@ -141,11 +140,8 @@ class TokenLayout extends Component {
           modal={false}
           open={this.state.isHelpDialogOpen}
           onRequestClose={() => this.handleHelpDialogClose()}>
-          <p>This area is for managing tokens.</p>
-          <p>There are two types of tokens: user tokens and API tokens. A user token is that which is issued to a user
-            after they log in. The system then uses that token to authenticate them with the various services they might
-            need to use to perform whatever it is they want to do. An API token is one issued to a user for them to
-            use with their application - it allows them to write an application that integrates with Stroom.</p>
+          <p>This area is for managing API keys.</p>
+          <p>An API token is issued to a user so they may create an application that integrates with Stroom.</p>
         </Dialog>
       </Paper>
 

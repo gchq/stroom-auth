@@ -115,11 +115,11 @@ class TokenSearch extends Component {
       Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
       width: 120
     }, {
-      Header: 'Token',
+      Header: 'API key',
       accessor: 'token',
       width: 200
     }, {
-      Header: 'Token type',
+      Header: 'API key type',
       accessor: 'token_type',
       Filter: ({filter, onChange}) => this.getTokenTypeCellFilter(filter, onChange),
       width: 220
