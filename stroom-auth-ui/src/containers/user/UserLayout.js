@@ -84,9 +84,9 @@ class UserLayout extends Component {
               <Home />
             </NavLink>
             <KeyboardArrowRight /> */ }
-            
+
             <NavLink to={relativePath('/userSearch')}>
-              <ToolbarTitle text='All users' className='UserLayout-toolbarTitle' />
+              <ToolbarTitle text='Users' className='UserLayout-toolbarTitle' />
             </NavLink>
 
             {showCreate || showEdit ? (<KeyboardArrowRight />) : (undefined)}

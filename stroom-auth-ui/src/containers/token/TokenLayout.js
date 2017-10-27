@@ -78,12 +78,12 @@ class TokenLayout extends Component {
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
           <ToolbarGroup>
-            <NavLink to={relativePath('/')}>
+            { /* <NavLink to={relativePath('/')}>
               <Home />
             </NavLink>
-            <KeyboardArrowRight />
+    <KeyboardArrowRight /> */ }
             <NavLink to={relativePath('/tokens')}>
-              <ToolbarTitle text='Tokens' className='UserLayout-toolbarTitle' />
+              <ToolbarTitle text='API keys' className='UserLayout-toolbarTitle' />
             </NavLink>
             {showCreate ? (<KeyboardArrowRight />) : (undefined)}
             {showCreate ? (<ToolbarTitle text='Create' className='UserLayout-toolbarTitle' />) : (undefined)}
@@ -102,7 +102,7 @@ class TokenLayout extends Component {
             {showCreateButton ? (
               <div className='UserLayout-toolbarButton'>
                 <NavLink to={relativePath('/token/newApiToken')}>
-                  <RaisedButton label='Issue API token' primary className='UserSearch-appButton'
+                  <RaisedButton label='Issue API key' primary className='UserSearch-appButton'
                     icon={<Add color={fullWhite} />} />
                 </NavLink>
               </div>
