@@ -58,6 +58,8 @@ public class Keys {
 
     public static final ForeignKey<TokensRecord, UsersRecord> FK_ISSUED_TO = ForeignKeys0.FK_ISSUED_TO;
     public static final ForeignKey<TokensRecord, TokenTypesRecord> FK_TOKEN_TYPE_ID = ForeignKeys0.FK_TOKEN_TYPE_ID;
+    public static final ForeignKey<TokensRecord, UsersRecord> FK_ISSUED_BY_USER = ForeignKeys0.FK_ISSUED_BY_USER;
+    public static final ForeignKey<TokensRecord, UsersRecord> FK_UPDATED_BY_USER = ForeignKeys0.FK_UPDATED_BY_USER;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -81,5 +83,7 @@ public class Keys {
     private static class ForeignKeys0 extends AbstractKeys {
         public static final ForeignKey<TokensRecord, UsersRecord> FK_ISSUED_TO = createForeignKey(stroom.db.auth.Keys.KEY_USERS_PRIMARY, Tokens.TOKENS, "fk_issued_to", Tokens.TOKENS.USER_ID);
         public static final ForeignKey<TokensRecord, TokenTypesRecord> FK_TOKEN_TYPE_ID = createForeignKey(stroom.db.auth.Keys.KEY_TOKEN_TYPES_PRIMARY, Tokens.TOKENS, "fk_token_type_id", Tokens.TOKENS.TOKEN_TYPE_ID);
+        public static final ForeignKey<TokensRecord, UsersRecord> FK_ISSUED_BY_USER = createForeignKey(stroom.db.auth.Keys.KEY_USERS_PRIMARY, Tokens.TOKENS, "fk_issued_by_user", Tokens.TOKENS.ISSUED_BY_USER);
+        public static final ForeignKey<TokensRecord, UsersRecord> FK_UPDATED_BY_USER = createForeignKey(stroom.db.auth.Keys.KEY_USERS_PRIMARY, Tokens.TOKENS, "fk_updated_by_user", Tokens.TOKENS.UPDATED_BY_USER);
     }
 }

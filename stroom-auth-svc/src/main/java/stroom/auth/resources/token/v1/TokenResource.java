@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import stroom.auth.AuthorisationServiceClient;
 import stroom.auth.config.Config;
 import stroom.auth.daos.TokenDao;
+import stroom.auth.daos.UserDao;
+import stroom.auth.resources.user.v1.User;
 import stroom.auth.service.security.ServiceUser;
 
 import javax.inject.Inject;
@@ -57,16 +59,19 @@ public class TokenResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 
   private final Config config;
-  private TokenDao tokenDao;
-  private AuthorisationServiceClient authorisationServiceClient;
+  private final TokenDao tokenDao;
+  private final UserDao userDao;
+  private final AuthorisationServiceClient authorisationServiceClient;
 
   @Inject
-  public TokenResource(AuthorisationServiceClient authorisationServiceClient,
-                       Config config,
-                       TokenDao tokenDao) {
+  public TokenResource(final AuthorisationServiceClient authorisationServiceClient,
+                       final Config config,
+                       final TokenDao tokenDao,
+                       final UserDao userDao) {
     this.authorisationServiceClient = authorisationServiceClient;
     this.config = config;
     this.tokenDao = tokenDao;
+    this.userDao = userDao;
   }
 
   /**
@@ -226,7 +231,9 @@ public class TokenResource {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
-    tokenDao.enableOrDisableToken(tokenId, enabled);
+    User updatingUser = userDao.get(authenticatedServiceUser.getName());
+
+    tokenDao.enableOrDisableToken(tokenId, enabled, updatingUser);
     return Response.status(Response.Status.OK).build();
   }
 }

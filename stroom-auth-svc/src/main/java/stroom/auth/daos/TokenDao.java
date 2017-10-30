@@ -23,7 +23,6 @@ import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Field;
-import org.jooq.JSONFormat;
 import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Result;
@@ -42,8 +41,8 @@ import stroom.auth.exceptions.UnsupportedFilterException;
 import stroom.auth.resources.token.v1.SearchRequest;
 import stroom.auth.resources.token.v1.SearchResponse;
 import stroom.auth.resources.token.v1.Token;
+import stroom.auth.resources.user.v1.User;
 import stroom.db.auth.tables.Users;
-import stroom.db.auth.tables.records.TokensRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -295,7 +294,7 @@ public class TokenDao {
         issueingUsers.EMAIL.as("issued_by_user"),
         TOKENS.TOKEN.as("token"),
         TOKEN_TYPES.TOKEN_TYPE.as("token_type"),
-        TOKENS.UPDATED_BY_USER.as("updated_by_user"),
+        updatingUsers.EMAIL.as("updated_by_user"),
         TOKENS.UPDATED_ON.as("updated_on"),
         TOKENS.USER_ID.as("user_id"));
 
@@ -367,10 +366,12 @@ public class TokenDao {
     return Optional.of(orderByField);
   }
 
-  public void enableOrDisableToken(int tokenId, boolean enabled) {
+  public void enableOrDisableToken(int tokenId, boolean enabled, User updatingUser) {
     Object result = database
         .update(TOKENS)
         .set(TOKENS.ENABLED, enabled)
+        .set(TOKENS.UPDATED_ON, Timestamp.from(Instant.now()))
+        .set(TOKENS.UPDATED_BY_USER, updatingUser.getId())
         .where(TOKENS.ID.eq((tokenId)))
         .execute();
   }

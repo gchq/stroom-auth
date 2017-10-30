@@ -37,7 +37,7 @@ import stroom.db.auth.tables.records.TokensRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tokens extends TableImpl<TokensRecord> {
 
-    private static final long serialVersionUID = 879334393;
+    private static final long serialVersionUID = -814702375;
 
     /**
      * The reference instance of <code>auth.tokens</code>
@@ -75,7 +75,7 @@ public class Tokens extends TableImpl<TokensRecord> {
     /**
      * The column <code>auth.tokens.expires_on</code>.
      */
-    public final TableField<TokensRecord, Timestamp> EXPIRES_ON = createField("expires_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("current_timestamp()", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<TokensRecord, Timestamp> EXPIRES_ON = createField("expires_on", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>auth.tokens.issued_on</code>.
@@ -100,7 +100,7 @@ public class Tokens extends TableImpl<TokensRecord> {
     /**
      * The column <code>auth.tokens.updated_by_user</code>.
      */
-    public final TableField<TokensRecord, String> UPDATED_BY_USER = createField("updated_by_user", org.jooq.impl.SQLDataType.VARCHAR.length(255), this, "");
+    public final TableField<TokensRecord, Integer> UPDATED_BY_USER = createField("updated_by_user", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>auth.tokens.comments</code>.
@@ -166,7 +166,7 @@ public class Tokens extends TableImpl<TokensRecord> {
      */
     @Override
     public List<ForeignKey<TokensRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<TokensRecord, ?>>asList(Keys.FK_ISSUED_TO, Keys.FK_TOKEN_TYPE_ID);
+        return Arrays.<ForeignKey<TokensRecord, ?>>asList(Keys.FK_ISSUED_TO, Keys.FK_TOKEN_TYPE_ID, Keys.FK_ISSUED_BY_USER, Keys.FK_UPDATED_BY_USER);
     }
 
     /**

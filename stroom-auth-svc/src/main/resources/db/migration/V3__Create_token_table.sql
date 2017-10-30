@@ -40,7 +40,7 @@ CREATE TABLE tokens (
     issued_by_user		  MEDIUMINT NOT NULL,
     enabled               BIT DEFAULT 1,
     updated_on 			  TIMESTAMP NULL,
-    updated_by_user 	  VARCHAR(255) NULL,
+    updated_by_user 	  MEDIUMINT NULL,
     PRIMARY KEY           (id),
     UNIQUE 			      (id),
     CONSTRAINT            `fk_issued_to`
@@ -49,6 +49,10 @@ CREATE TABLE tokens (
         ON UPDATE RESTRICT, -- We don't want the user's ID changing if we have a token
     CONSTRAINT            `fk_issued_by_user`
         FOREIGN KEY(issued_by_user) REFERENCES users(id)
+        ON DELETE CASCADE -- We want tokens to be removed when users are
+        ON UPDATE RESTRICT, -- We don't want the user's ID changing if we have a token
+    CONSTRAINT            `fk_updated_by_user`
+        FOREIGN KEY(updated_by_user) REFERENCES users(id)
         ON DELETE CASCADE -- We want tokens to be removed when users are
         ON UPDATE RESTRICT, -- We don't want the user's ID changing if we have a token
     CONSTRAINT            `fk_token_type_id`
