@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response;
 @Singleton
 @Path("/session/v1")
 @Produces(MediaType.APPLICATION_JSON)
-@Api(description = "Stroom Session API")
+@Api(description = "Stroom Session API", tags = {"Session"})
 public class SessionResource {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SessionResource.class);
 

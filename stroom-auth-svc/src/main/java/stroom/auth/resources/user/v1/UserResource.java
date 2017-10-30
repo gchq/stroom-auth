@@ -22,6 +22,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import io.dropwizard.auth.Auth;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -60,6 +61,7 @@ import static stroom.db.auth.Tables.USERS;
 @Singleton
 @Path("/user/v1")
 @Produces({"application/json"})
+@Api(description = "Stroom User API", tags = {"User"})
 public final class UserResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 

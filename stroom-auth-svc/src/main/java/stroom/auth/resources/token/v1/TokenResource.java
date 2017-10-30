@@ -54,7 +54,7 @@ import java.util.Optional;
 @Path("/token/v1")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Api(description = "Stroom Token API")
+@Api(description = "Stroom API Key API", tags = {"ApiKey"})
 public class TokenResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 
@@ -85,7 +85,8 @@ public class TokenResource {
   @Timed
   @ApiOperation(
       value = "Submit a search request for tokens",
-      response = SearchResponse.class)
+      response = SearchResponse.class,
+      tags = {"ApiKey"})
   public final Response search (
       @Auth @NotNull ServiceUser authenticatedServiceUser,
       @ApiParam("SearchRequest") @NotNull @Valid SearchRequest searchRequest) {
@@ -119,7 +120,8 @@ public class TokenResource {
   @Timed
   @ApiOperation(
       value = "Create a new token.",
-      response = String.class)
+      response = String.class,
+      tags = {"ApiKey"})
   public final Response create(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
       @ApiParam("CreateTokenRequest") @NotNull CreateTokenRequest createTokenRequest) {

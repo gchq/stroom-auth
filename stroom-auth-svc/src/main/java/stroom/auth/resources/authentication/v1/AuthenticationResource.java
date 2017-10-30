@@ -70,7 +70,7 @@ import static javax.ws.rs.core.Response.*;
 @Singleton
 @Path("/authentication/v1")
 @Produces(MediaType.APPLICATION_JSON)
-@Api(description = "Stroom Authentication API")
+@Api(description = "Stroom Authentication API", tags = {"Authentication"})
 public final class AuthenticationResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationResource.class);
 
@@ -115,36 +115,10 @@ public final class AuthenticationResource {
     return status(Status.OK).entity("Welcome to the authentication service").build();
   }
 
-  @Deprecated
-  @GET
-  @Path("/checkCertificate")
-  @Timed
-  @NotNull
-  public final Response checkCertificate(@Context @NotNull HttpServletRequest httpServletRequest) throws URISyntaxException {
-    String dn = httpServletRequest.getHeader("X-SSL-CLIENT-S-DN");
-    String cn = certificateManager.getCn(dn);
-    LOGGER.debug("Found CN in DN; logging user in.");
-    // Get and return a token based on the CN
-    String token = tokenDao.createToken(
-            Token.TokenType.USER, "authenticationResource",
-            cn, true, "Created for a certificate user.")
-            .getToken();
-    return status(Status.OK).entity(token).build();
-  }
-
-  @Deprecated
-  @GET
-  @Path("/checkSession")
-  @Timed
-  @NotNull
-  public final Response checkSession(
-          @Session HttpSession session,
-          @Context @NotNull HttpServletRequest httpServletRequest) throws URISyntaxException {
-    boolean isAuthenticated = sessionManager.isAuthenticated(session.getId());
-    LOGGER.debug("Checking session is authenticated: " + isAuthenticated);
-    return status(Status.OK).entity(isAuthenticated).build();
-  }
-
+  @ApiOperation(
+          value = "Submit an OpenId AuthenticationRequest.",
+          response = String.class
+  )
   @GET
   @Path("/authenticate")
   @Timed
@@ -317,28 +291,28 @@ public final class AuthenticationResource {
     return status(Status.OK).entity(accessCode).build();
   }
 
-  @Deprecated
-  @POST
-  @Path("/login")
-  @Consumes({"application/json"})
-  @Produces({"application/json"})
-  @Timed
-  @NotNull
-  public final Response authenticateAndReturnToken(@Nullable Credentials credentials) throws URISyntaxException {
-    Response response;
-
-    boolean areCredentialsValid = userDao.areCredentialsValid(credentials);
-    if(!areCredentialsValid) {
-      LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
-      userDao.incrementLoginFailures(credentials.getEmail());
-      throw new UnauthorisedException("Invalid credentials");
-    }
-
-    LOGGER.debug("Login for {} succeeded", credentials.getEmail());
-    userDao.resetUserLogin(credentials.getEmail());
-    String token = tokenDao.createToken(credentials.getEmail());
-    return status(Status.OK).entity(token).build();
-  }
+//  @Deprecated
+//  @POST
+//  @Path("/login")
+//  @Consumes({"application/json"})
+//  @Produces({"application/json"})
+//  @Timed
+//  @NotNull
+//  public final Response authenticateAndReturnToken(@Nullable Credentials credentials) throws URISyntaxException {
+//    Response response;
+//
+//    boolean areCredentialsValid = userDao.areCredentialsValid(credentials);
+//    if(!areCredentialsValid) {
+//      LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
+//      userDao.incrementLoginFailures(credentials.getEmail());
+//      throw new UnauthorisedException("Invalid credentials");
+//    }
+//
+//    LOGGER.debug("Login for {} succeeded", credentials.getEmail());
+//    userDao.resetUserLogin(credentials.getEmail());
+//    String token = tokenDao.createToken(credentials.getEmail());
+//    return status(Status.OK).entity(token).build();
+//  }
 
   //TODO: Should this be in TokenResource?
   /**
