@@ -113,7 +113,7 @@ public class TokenResource {
   @Path("/")
   @Timed
   @ApiOperation(
-      value = "Submit a search request for tokens",
+      value = "Create a new token.",
       response = String.class)
   public final Response create(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
@@ -130,7 +130,7 @@ public class TokenResource {
         .entity("Unknown token type:" + createTokenRequest.getTokenType()).build();
     }
 
-    String token;
+    Token token;
     try {
       token = tokenDao.createToken(
           tokenTypeToCreate.get(),
@@ -143,7 +143,7 @@ public class TokenResource {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
     }
 
-    return Response.status(Response.Status.OK).entity(token).build();
+    return Response.status(Response.Status.OK).entity(token.getId()).build();
   }
 
   @DELETE
@@ -207,13 +207,13 @@ public class TokenResource {
       return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
     }
 
-    Optional<String> tokenResult  = tokenDao.readById(tokenId);
+     Optional<Token> optionalToken = tokenDao.readById(tokenId);
 
-    if(!tokenResult.isPresent()){
+    if(!optionalToken.isPresent()){
       return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
+    return Response.status(Response.Status.OK).entity(optionalToken.get()).build();
   }
 
   @GET

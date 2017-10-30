@@ -127,7 +127,8 @@ public final class AuthenticationResource {
     // Get and return a token based on the CN
     String token = tokenDao.createToken(
             Token.TokenType.USER, "authenticationResource",
-            cn, true, "Created for a certificate user.");
+            cn, true, "Created for a certificate user.")
+            .getToken();
     return status(Status.OK).entity(token).build();
   }
 

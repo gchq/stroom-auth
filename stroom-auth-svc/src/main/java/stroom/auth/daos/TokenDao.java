@@ -145,7 +145,8 @@ public class TokenDao {
     return createToken(
             Token.TokenType.EMAIL_RESET, "authenticationResource",
             emailAddress,
-            true, "Created for password reset");
+            true, "Created for password reset")
+            .getToken();
   }
 
   public String createToken(String recipientUserEmail) {
@@ -154,13 +155,14 @@ public class TokenDao {
             "authenticationResource",
             recipientUserEmail,
             true,
-            "Created for username/password user");
+            "Created for username/password user")
+            .getToken();
   }
 
   /**
    * Create a token for a specific user.
    */
-  public String createToken(
+  public Token createToken(
       Token.TokenType tokenType,
       String issuingUserEmail,
       String recipientUserEmail,
@@ -194,7 +196,7 @@ public class TokenDao {
         .fetchOne()
         .get(TOKEN_TYPES.ID);
 
-    TokensRecord tokenRecord = (TokensRecord) database
+    Token tokenRecord = database
         .insertInto((Table) TOKENS)
         .set(TOKENS.USER_ID, recipientUserId)
         .set(TOKENS.TOKEN_TYPE_ID, tokenTypeId)
@@ -204,9 +206,11 @@ public class TokenDao {
         .set(TOKENS.ISSUED_BY_USER, issuingUserId)
         .set(TOKENS.ENABLED, isEnabled)
         .set(TOKENS.COMMENTS, comment)
-        .returning(new Field[]{TOKENS.ID}).fetchOne();
+        .returning(new Field[]{TOKENS.ID})
+        .fetchOne()
+        .into(Token.class);
 
-    return tokenGenerator.getToken();
+    return tokenRecord;
   }
 
   public void deleteAllTokens() {
@@ -221,7 +225,7 @@ public class TokenDao {
     database.deleteFrom(TOKENS).where(TOKENS.TOKEN.eq(token)).execute();
   }
 
-  public Optional<String> readById(int tokenId) {
+  public Optional<Token> readById(int tokenId) {
 
     // We need these aliased tables because we're joining tokens to users twice.
     Users issueingUsers = USERS.as("issueingUsers");
@@ -232,17 +236,13 @@ public class TokenDao {
     SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
         getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
 
-    Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> result =
+    Token token =
         selectFrom
         .where(new Condition[]{TOKENS.ID.eq(Integer.valueOf(tokenId))})
-        .fetch();
+        .fetchOne()
+        .into(Token.class);
 
-    if(result.isEmpty()){
-      return Optional.empty();
-    }
-
-    String serialisedResults = result.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
-    return Optional.of(serialisedResults);
+    return Optional.of(token);
   }
 
 
