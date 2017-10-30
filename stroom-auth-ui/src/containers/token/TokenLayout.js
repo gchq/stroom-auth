@@ -77,6 +77,7 @@ class TokenLayout extends Component {
     const showCreateButton = showSearch
     const showEditButton = showSearch
     const deleteButtonDisabled = !selectedTokenRowId
+    const editButtonDisabled = !selectedTokenRowId
     return (
       <Paper className='UserLayout-main' zDepth={0}>
         <Toolbar>
@@ -111,20 +112,21 @@ class TokenLayout extends Component {
               </div>
             ) : (undefined)}
 
+            {showEditButton ? (
+              <div className='UserLayout-toolbarButton'>
+                <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
+                  <RaisedButton label='View/Edit' primary className='UserSearch-appButton'
+                    disabled={editButtonDisabled}
+                    icon={<Edit color={fullWhite} />} />
+                </NavLink>
+              </div>
+            ) : (undefined)}
+
             {showSearch ? (
               <div className='UserLayout-toolbarButton'>
                 <RaisedButton label='Delete' primary
                   icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
                   onClick={() => this.deleteToken()} />
-              </div>
-            ) : (undefined)}
-
-            {showEditButton ? (
-              <div className='UserLayout-toolbarButton'>
-                <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
-                  <RaisedButton label='View/Edit' primary className='UserSearch-appButton'
-                    icon={<Edit color={fullWhite} />} />
-                </NavLink>
               </div>
             ) : (undefined)}
 
