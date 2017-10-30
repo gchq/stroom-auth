@@ -36,6 +36,7 @@ import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import TokenSearch from '../tokenSearch'
 import TokenCreate from '../tokenCreate'
+import TokenEdit from '../tokenEdit'
 import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
 import { relativePath } from '../../relativePush'
 
@@ -71,6 +72,7 @@ class TokenLayout extends Component {
     const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props
     const showSearch = show === 'search'
     const showCreate = show === 'create'
+    const showEdit = show === 'edit'
     const showCreateButton = showSearch
     const deleteButtonDisabled = !selectedTokenRowId
     return (
@@ -123,6 +125,7 @@ class TokenLayout extends Component {
         <div className='User-content'>
           {showSearch ? (<TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
           {showCreate ? (<TokenCreate />) : (undefined)}
+          {showEdit ? (<TokenEdit />) : (undefined)}
         </div>
         <Snackbar
           open={showAlert}

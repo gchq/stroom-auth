@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { initialize } from 'redux-form'
 
+import { relativePush } from '../relativePush'
 import { HttpError } from '../ErrorTypes'
-import { handleErrors, getBody } from './fetchFunctions'
+import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
 import { performTokenSearch, changeSelectedRow } from './tokenSearch'
 import { performUserSearch } from './userSearch'
 
@@ -24,6 +26,7 @@ export const TOGGLE_ALERT_VISIBILITY = 'token/TOGGLE_ALERT_VISIBILITY'
 export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = 'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS'
 export const CLOSE_TOKEN_CREATED_DIALOG = 'token/CLOSE_TOKEN_CREATED_DIALOGUE'
 export const SHOW_TOKEN_CREATED_DIALOG = 'token/SHOW_TOKEN_CREATED_DIALOGUE'
+export const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN'
 
 const initialState = {
   showAlert: false,
@@ -70,6 +73,12 @@ export default (state = initialState, action) => {
         showTokenCreatedDialog: false,
         newlyCreatedToken: '',
         newlyCreatedTokenUser: ''
+      }
+
+    case CHANGE_READ_CREATED_TOKEN:
+      return {
+        ...state,
+        lastReadToken: action.lastReadToken
       }
 
     default:
@@ -141,16 +150,46 @@ export const createToken = (newToken) => {
     })
         .then(handleStatus)
         .then(getBody)
-        .then((body) => {
+        .then((newApiKeyId) => {
           // TODO wire this in
           // dispatch(showCreateLoader(false))
-          dispatch({
-            type: SHOW_TOKEN_CREATED_DIALOG,
-            newlyCreatedToken: body,
-            newlyCreatedTokenUser: email
-          })
+          dispatch(relativePush(`/token/${newApiKeyId}`))
+          // dispatch({
+          //   type: SHOW_TOKEN_CREATED_DIALOG,
+          //   newlyCreatedToken: body,
+          //   newlyCreatedTokenUser: email
+          // })
         })
         .catch(error => handleErrors(error, dispatch, jwsToken))
+  }
+}
+
+export const fetchApiKey = (apiKeyId) => {
+  return (dispatch, getState) => {
+    const jwsToken = getState().authentication.idToken
+    // TODO: remove any errors
+    // TODO: show loading spinner
+    const apiKeyServiceUrl = process.env.REACT_APP_TOKEN_URL + '/' + apiKeyId
+    fetch(apiKeyServiceUrl, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwsToken
+      },
+      method: 'get',
+      mode: 'cors'
+    })
+    .then(handleStatus)
+    .then(getJsonBody)
+    .then(apiKey => {
+      dispatch({
+        type: CHANGE_READ_CREATED_TOKEN,
+        lastReadToken: apiKey
+      })
+      // Use the redux-form action creator to re-initialize the form with this API key
+      dispatch(initialize('TokenEditForm', apiKey))
+    })
+    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 

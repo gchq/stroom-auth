@@ -36,7 +36,7 @@ import logo from './logo.svg'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import {UserCreate, UserEdit, UserSearch} from '../../containers/user'
-import {TokenCreate, TokenSearch} from '../../containers/token'
+import {TokenCreate, TokenSearch, TokenEdit} from '../../containers/token'
 import NewUser from '../../containers/newUser'
 import PathNotFound from '../../containers/pathNotFound'
 import ResetPassword from '../../containers/resetPassword'
@@ -133,6 +133,10 @@ class App extends Component {
 
               <Route exact path={relativePath('/token/newApiToken')} render={() => (
                   this.isLoggedIn() ? <TokenCreate /> : <AuthenticationRequest referrer='/token/newApiToken' />
+              )} />
+
+              <Route exact path={relativePath('/token/:tokenId')} render={(route) => (
+                this.isLoggedIn() ? <TokenEdit /> : <AuthenticationRequest referrer={route.location.pathname} />
               )} />
 
               {/* Fall through to 404 */}

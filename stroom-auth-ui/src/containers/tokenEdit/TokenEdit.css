@@ -14,25 +14,6 @@
  * limitations under the License.
  */
 
-.User-button {
-    background-color: #1e88e5;
-}
-
-.UserLayout-toolbarTitle {
-    /* The default colourings for the toolbar and title is low-contrast grey-on-grey. Changing for improved accessibility. */
-    color:black !important;
-    padding:0 !important;
-}
-
-.UserLayout-badge {
-    padding:0 !important;
-}
-
-.UserLayout-main {
-  width: 100%;
-  height: 100%;
-}
-
-.UserLayout-toolbarButton {
-    padding-left:10px;
+.TokenEditForm-field {
+    width: 800px !important;
 }

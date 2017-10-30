@@ -64,7 +64,7 @@ export class TokenCreateForm extends Component {
                   primary
                   disabled={pristine || submitting}
                   type='submit'
-                  label='Issue API token to user' />
+                  label='Create API key' />
                 &nbsp;&nbsp;
                 <NavLink to='/tokens'>
                   <RaisedButton

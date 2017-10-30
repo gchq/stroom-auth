@@ -35,10 +35,6 @@ export class TokenCreate extends Component {
   }
 }
 
-TokenCreate.contextTypes = {
-  store: PropTypes.object.isRequired
-}
-
 export class TokenSearch extends Component {
   componentWillMount () {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
@@ -52,6 +48,27 @@ export class TokenSearch extends Component {
   }
 }
 
+export class TokenEdit extends Component {
+  componentWillMount () {
+    // We're going to store what we're displaying in the state. We could also detect what to display from the route.
+    this.context.store.dispatch(changeVisibleContainer('edit'))
+  }
+
+  render () {
+    return (
+      <TokenLayout />
+    )
+  }
+}
+
+TokenCreate.contextTypes = {
+  store: PropTypes.object.isRequired
+}
+
 TokenSearch.contextTypes = {
+  store: PropTypes.object.isRequired
+}
+
+TokenEdit.contextTypes = {
   store: PropTypes.object.isRequired
 }
