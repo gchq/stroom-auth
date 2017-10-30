@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Field, reduxForm } from 'redux-form'
 import { NavLink } from 'react-router-dom'
 
-import { TextField } from 'redux-form-material-ui'
+import { SelectField, TextField, Toggle } from 'redux-form-material-ui'
+import { MenuItem } from 'material-ui/Menu'
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -31,64 +32,131 @@ import ContentCopy from 'material-ui-icons/ContentCopy'
 import { amber900 } from 'material-ui/styles/colors'
 
 import './TokenEdit.css'
+import {toggleEnabledState} from '../../modules/token'
 import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
 
-const TokenEditUi = props => {
-  const { handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility, form, token } = props
+export class TokenEditUi extends Component {
 
-  const jws = token !== undefined ? token.token : ''
+  render () {
+    const { handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility, form, token, toggleEnabledState } = this.props
 
-  return (
-    <Card className='EditUserForm-card'>
-      <form onSubmit={handleSubmit}>
-        <div className='field-container'>
-          <div className='label-container'>
-            <label>Issued to</label>
+    const jws = token !== undefined ? token.token : ''
+
+    return (
+      <Card className='EditUserForm-card'>
+        <form onSubmit={handleSubmit}>
+          <div className='field-container'>
+            <div className='label-container'>
+              <label>Issued to</label>
+            </div>
+            <div className='input-container'>
+              <Field
+                disabled
+                className='TokenEditForm-field'
+                name='user_email'
+                component={TextField}
+                />
+            </div>
           </div>
-          <div className='input-container'>
-            <Field
-              disabled
-              className='TokenEditForm-field'
-              name='user_email'
-              component={TextField}
-              />
+          <div className='field-container'>
+            <div className='label-container'>
+              <label>API key</label>
+            </div>
+            <div className='input-container'>
+              <Field
+                disabled
+                className='TokenEditForm-field'
+                name='token'
+                component={TextField}
+                />
+            </div>
           </div>
-        </div>
-        <div className='field-container'>
-          <div className='label-container'>
-            <label>API key</label>
+          <div className='field-container'>
+            <div className='label-container'>
+              <label>Enabled</label>
+            </div>
+            <div className='input-container'>
+              <Field
+                className='TokenEditForm-field'
+                name='enabled' component={Toggle}
+                onChange={() => toggleEnabledState()} />
+            </div>
           </div>
-          <div className='input-container'>
-            <Field
-              disabled
-              className='TokenEditForm-field'
-              name='token'
-              component={TextField}
-              />
+          <div className='field-container'>
+            <div className='label-container'>
+              <label>Expires on</label>
+            </div>
+            <div className='input-container'>
+              <Field
+                disabled
+                className='TokenEditForm-field'
+                name='expires_on'
+                component={TextField}
+                />
+            </div>
           </div>
-        </div>
-        <br />
-        <CopyToClipboard text={jws}>
-          <RaisedButton
-            label='Copy API key to clipboard'
-            primary
-            icon={<ContentCopy color={amber900} />} />
-        </CopyToClipboard >
-        &nbsp;&nbsp;
-        <NavLink to='/tokens'>
-          <RaisedButton
-            primary
-            label='OK' />
-        </NavLink>
-      </form>
-      <Snackbar
-        open={showAlert}
-        message={alertText}
-        autoHideDuration={4000}
-        onRequestClose={() => toggleAlertVisibility('')}
-      />
-    </Card>
-  )
+          <div className='field-container'>
+            <div className='label-container'>
+              <label>Issued on</label>
+            </div>
+            <div className='input-container'>
+              <Field
+                disabled
+                className='TokenEditForm-field'
+                name='issued_on'
+                component={TextField}
+                />
+            </div>
+          </div>
+          <div className='field-container'>
+            <div className='label-container'>
+              <label>Updated on</label>
+            </div>
+            <div className='input-container'>
+              <Field
+                disabled
+                className='TokenEditForm-field'
+                name='updated_on'
+                component={TextField}
+                />
+            </div>
+          </div>
+          <div className='field-container'>
+            <div className='label-container'>
+              <label>Updated by</label>
+            </div>
+            <div className='input-container'>
+              <Field
+                disabled
+                className='TokenEditForm-field'
+                name='updated_by_user'
+                component={TextField}
+                />
+            </div>
+          </div>
+          <br />
+          <CopyToClipboard text={jws}>
+            <RaisedButton
+              label='Copy API key to clipboard'
+              primary
+              icon={<ContentCopy color={amber900} />} />
+          </CopyToClipboard >
+          &nbsp;&nbsp;
+          <NavLink to='/tokens'>
+            <RaisedButton
+              primary
+              label='OK' />
+          </NavLink>
+        </form>
+        <Snackbar
+          open={showAlert}
+          message={alertText}
+          autoHideDuration={4000}
+          onRequestClose={() => toggleAlertVisibility('')}
+        />
+      </Card>
+    )
+  }
 }
 
 const ReduxTokenEditUi = reduxForm({
@@ -103,7 +171,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   onSubmit,
-  toggleAlertVisibility
+  toggleAlertVisibility,
+  toggleEnabledState
 }, dispatch)
 
 export default connect(

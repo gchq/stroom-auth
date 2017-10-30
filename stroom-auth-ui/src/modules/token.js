@@ -18,7 +18,7 @@ import { initialize } from 'redux-form'
 import { relativePush } from '../relativePush'
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
-import { performTokenSearch, changeSelectedRow } from './tokenSearch'
+import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from './tokenSearch'
 import { performUserSearch } from './userSearch'
 
 export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER'
@@ -190,5 +190,13 @@ function handleStatus (response) {
     return Promise.reject(new HttpError(response.status, 'This token already exists!'))
   } else {
     return Promise.reject(new HttpError(response.status, response.statusText))
+  }
+}
+
+export function toggleEnabledState () {
+  return (dispatch, getState) => {
+    const tokenId = getState().form.TokenEditForm.values.id
+    const nextState = getState().form.TokenEditForm.values.enabled ? 'false' : 'true'
+    dispatch(setEnabledStateOnToken(tokenId, nextState))
   }
 }
