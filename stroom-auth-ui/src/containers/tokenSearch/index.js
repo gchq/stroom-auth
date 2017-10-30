@@ -107,17 +107,13 @@ class TokenSearch extends Component {
       accessor: 'expires_on',
       Cell: row => this.formatDate(row.value),
       Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
-      width: 225
+      width: 210
     }, {
       Header: 'Issued on',
       accessor: 'issued_on',
       Cell: row => this.formatDate(row.value),
       Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
-      width: 120
-    }, {
-      Header: 'API key',
-      accessor: 'token',
-      width: 200
+      width: 210
     }, /* This column may be used to filter the keys by 'API' or 'User'. We're not doing that at the moment so it's disabled{
       Header: 'API key type',
       accessor: 'token_type',
