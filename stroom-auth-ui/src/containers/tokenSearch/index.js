@@ -122,13 +122,13 @@ class TokenSearch extends Component {
     }, */ {
       Header: 'Updated by user',
       accessor: 'updated_by_user',
-      width: 400
+      width: 200
     }, {
       Header: 'Updated on',
       accessor: 'updated_on',
       Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
       Cell: row => this.formatDate(row.value),
-      width: 400
+      width: 210
     }]
   }
 
