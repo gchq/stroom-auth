@@ -1,12 +1,11 @@
-# DefaultApi
+# ApiKeyApi
 
 All URIs are relative to *http://localhost:8080/*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create**](DefaultApi.md#create) | **POST** /token/v1 | Create a new token.
-[**logout**](DefaultApi.md#logout) | **GET** /session/v1/logout/{sessionId} | Log a user out of their session
-[**search**](DefaultApi.md#search) | **POST** /token/v1/search | Submit a search request for tokens
+[**create**](ApiKeyApi.md#create) | **POST** /token/v1 | Create a new token.
+[**search**](ApiKeyApi.md#search) | **POST** /token/v1/search | Submit a search request for tokens
 
 
 <a name="create"></a>
@@ -21,16 +20,16 @@ Create a new token.
 ```java
 // Import classes:
 //import stroom.auth.service.ApiException;
-//import stroom.auth.service.api.DefaultApi;
+//import stroom.auth.service.api.ApiKeyApi;
 
 
-DefaultApi apiInstance = new DefaultApi();
+ApiKeyApi apiInstance = new ApiKeyApi();
 CreateTokenRequest body = new CreateTokenRequest(); // CreateTokenRequest | CreateTokenRequest
 try {
     String result = apiInstance.create(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling DefaultApi#create");
+    System.err.println("Exception when calling ApiKeyApi#create");
     e.printStackTrace();
 }
 ```
@@ -54,50 +53,6 @@ No authorization required
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="logout"></a>
-# **logout**
-> logout(sessionId)
-
-Log a user out of their session
-
-
-
-### Example
-```java
-// Import classes:
-//import stroom.auth.service.ApiException;
-//import stroom.auth.service.api.DefaultApi;
-
-
-DefaultApi apiInstance = new DefaultApi();
-String sessionId = "sessionId_example"; // String | 
-try {
-    apiInstance.logout(sessionId);
-} catch (ApiException e) {
-    System.err.println("Exception when calling DefaultApi#logout");
-    e.printStackTrace();
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **sessionId** | **String**|  |
-
-### Return type
-
-null (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
 <a name="search"></a>
 # **search**
 > SearchResponse search(body)
@@ -110,16 +65,16 @@ Submit a search request for tokens
 ```java
 // Import classes:
 //import stroom.auth.service.ApiException;
-//import stroom.auth.service.api.DefaultApi;
+//import stroom.auth.service.api.ApiKeyApi;
 
 
-DefaultApi apiInstance = new DefaultApi();
+ApiKeyApi apiInstance = new ApiKeyApi();
 SearchRequest body = new SearchRequest(); // SearchRequest | SearchRequest
 try {
     SearchResponse result = apiInstance.search(body);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling DefaultApi#search");
+    System.err.println("Exception when calling ApiKeyApi#search");
     e.printStackTrace();
 }
 ```

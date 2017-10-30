@@ -12,12 +12,62 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "localhost:8080"
 basePath: "/"
+tags:
+- name: "ApiKey"
+- name: "Authentication"
+- name: "Session"
+- name: "User"
 schemes:
 - "http"
 - "https"
 paths:
+  /authentication/v1/authenticate:
+    get:
+      tags:
+      - "Authentication"
+      summary: "Submit an OpenId AuthenticationRequest."
+      description: ""
+      operationId: "handleAuthenticationRequest"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "scope"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "response_type"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "client_id"
+        in: "query"
+        required: true
+        type: "string"
+      - name: "redirect_url"
+        in: "query"
+        required: true
+        type: "string"
+      - name: "nonce"
+        in: "query"
+        required: true
+        type: "string"
+      - name: "state"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "sessionId"
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
   /authentication/v1/idToken:
     get:
+      tags:
+      - "Authentication"
       summary: "Convert a previously provided access code into an ID token"
       description: ""
       operationId: "getIdTokenWithGet"
@@ -38,6 +88,8 @@ paths:
           schema:
             type: "string"
     post:
+      tags:
+      - "Authentication"
       summary: "Convert a previously provided access code into an ID token"
       description: ""
       operationId: "getIdTokenWithPost"
@@ -57,6 +109,8 @@ paths:
             type: "string"
   /session/v1/logout/{sessionId}:
     get:
+      tags:
+      - "Session"
       summary: "Log a user out of their session"
       description: ""
       operationId: "logout"
@@ -70,13 +124,13 @@ paths:
         required: true
         type: "string"
       responses:
-        200:
+        default:
           description: "successful operation"
-          schema:
-            $ref: "#/definitions/Response"
   /token/v1:
     post:
-      summary: "Submit a search request for tokens"
+      tags:
+      - "ApiKey"
+      summary: "Create a new token."
       description: ""
       operationId: "create"
       consumes:
@@ -97,6 +151,8 @@ paths:
             type: "string"
   /token/v1/search:
     post:
+      tags:
+      - "ApiKey"
       summary: "Submit a search request for tokens"
       description: ""
       operationId: "search"
@@ -160,17 +216,6 @@ definitions:
         type: "string"
         description: "The clientId of the relying party requesting the id_token."
     description: "A request to retrieve an ID token using an access code."
-  Response:
-    type: "object"
-    properties:
-      context:
-        type: "object"
-        additionalProperties:
-          type: "object"
-      cancelled:
-        type: "boolean"
-      done:
-        type: "boolean"
   SearchRequest:
     type: "object"
     required:
