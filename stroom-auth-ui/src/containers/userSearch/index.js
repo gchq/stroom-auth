@@ -119,7 +119,7 @@ class UserSearch extends Component {
       Header: 'Login failures',
       accessor: 'login_failures',
       width: 120
-    }, {
+    }, /*{
       Header: 'Updated by',
       accessor: 'updated_by_user',
       width: 200
@@ -128,10 +128,10 @@ class UserSearch extends Component {
       accessor: 'updated_on',
       Cell: row => this.formatDate(row.value),
       width: 220
-    }, {
+    }, */ {
       Header: 'Comments',
       accessor: 'comments',
-      width: 400
+      width: 600
     }]
   }
 

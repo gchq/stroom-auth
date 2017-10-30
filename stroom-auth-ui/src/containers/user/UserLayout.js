@@ -116,7 +116,7 @@ class UserLayout extends Component {
             {showSearch ? (
               <div className='UserLayout-toolbarButton'>
                 <NavLink to={relativePath(`/user/${selectedUserRowId}`)}>
-                  <RaisedButton label='Edit' primary
+                  <RaisedButton label='View/Edit' primary
                     icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
                 </NavLink>
               </div>
