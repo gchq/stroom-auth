@@ -26,6 +26,24 @@
   } ],
   "schemes" : [ "http", "https" ],
   "paths" : {
+    "/authentication/v1" : {
+      "get" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "A welcome message.",
+        "description" : "",
+        "operationId" : "welcome",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
     "/authentication/v1/authenticate" : {
       "get" : {
         "tags" : [ "Authentication" ],
@@ -77,6 +95,22 @@
             }
           }
         }
+      },
+      "post" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Handle a login request made using username and password credentials.",
+        "description" : "",
+        "operationId" : "handleLogin",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
       }
     },
     "/authentication/v1/idToken" : {
@@ -120,6 +154,52 @@
           "schema" : {
             "$ref" : "#/definitions/IdTokenRequest"
           }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/authentication/v1/reset/{email}" : {
+      "get" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Reset a user account using an email address.",
+        "description" : "",
+        "operationId" : "resetEmail",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/authentication/v1/verify/{token}" : {
+      "get" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Verify the authenticity and current-ness of a JWS token.",
+        "description" : "",
+        "operationId" : "verifyToken",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
         } ],
         "responses" : {
           "200" : {
@@ -335,6 +415,123 @@
           "in" : "query",
           "required" : true,
           "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/user/v1" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Get all users.",
+        "description" : "",
+        "operationId" : "getAll",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "Create a user.",
+        "description" : "",
+        "operationId" : "createUser",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/user/v1/me" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Get the details of the currently logged-in user.",
+        "description" : "",
+        "operationId" : "readCurrentUser",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/user/v1/{id}" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Get a user by ID.",
+        "description" : "",
+        "operationId" : "getUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "User" ],
+        "summary" : "Update a user.",
+        "description" : "",
+        "operationId" : "updateUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "User" ],
+        "summary" : "Delete a user by ID.",
+        "description" : "",
+        "operationId" : "deleteUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
         } ],
         "responses" : {
           "200" : {

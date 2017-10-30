@@ -23,6 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -76,6 +77,10 @@ public final class UserResource {
     this.config = config;
   }
 
+  @ApiOperation(
+          value = "Get all users.",
+          response = String.class,
+          tags = {"User"})
   @GET
   @Path("/")
   @Timed
@@ -101,7 +106,10 @@ public final class UserResource {
     return Response.status(Response.Status.OK).entity(usersAsJson).build();
   }
 
-
+  @ApiOperation(
+          value = "Create a user.",
+          response = String.class,
+          tags = {"User"})
   @POST
   @Path("/")
   @Timed
@@ -148,6 +156,10 @@ public final class UserResource {
     return Response.status(Response.Status.OK).entity(usersRecord.getId()).build();
   }
 
+  @ApiOperation(
+          value = "Get the details of the currently logged-in user.",
+          response = String.class,
+          tags = {"User"})
   @GET
   @Path("/me")
   @Timed
@@ -187,6 +199,10 @@ public final class UserResource {
     return response;
   }
 
+  @ApiOperation(
+          value = "Get a user by ID.",
+          response = String.class,
+          tags = {"User"})
   @GET
   @Path("{id}")
   @Timed
@@ -255,6 +271,10 @@ public final class UserResource {
     }
   }
 
+  @ApiOperation(
+          value = "Update a user.",
+          response = String.class,
+          tags = {"User"})
   @PUT
   @Path("{id}")
   @Timed
@@ -294,6 +314,10 @@ public final class UserResource {
     return response;
   }
 
+  @ApiOperation(
+          value = "Delete a user by ID.",
+          response = String.class,
+          tags = {"User"})
   @DELETE
   @Path("{id}")
   @Timed

@@ -18,7 +18,7 @@ import stroom.auth.service.Pair;
 import java.util.Map;
 import java.util.List;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-30T15:19:39.683Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-30T15:31:53.493Z")
 public class OAuth implements Authentication {
   private String accessToken;
 

@@ -7,6 +7,10 @@ Method | HTTP request | Description
 [**getIdTokenWithGet**](AuthenticationApi.md#getIdTokenWithGet) | **GET** /authentication/v1/idToken | Convert a previously provided access code into an ID token
 [**getIdTokenWithPost**](AuthenticationApi.md#getIdTokenWithPost) | **POST** /authentication/v1/idToken | Convert a previously provided access code into an ID token
 [**handleAuthenticationRequest**](AuthenticationApi.md#handleAuthenticationRequest) | **GET** /authentication/v1/authenticate | Submit an OpenId AuthenticationRequest.
+[**handleLogin**](AuthenticationApi.md#handleLogin) | **POST** /authentication/v1/authenticate | Handle a login request made using username and password credentials.
+[**resetEmail**](AuthenticationApi.md#resetEmail) | **GET** /authentication/v1/reset/{email} | Reset a user account using an email address.
+[**verifyToken**](AuthenticationApi.md#verifyToken) | **GET** /authentication/v1/verify/{token} | Verify the authenticity and current-ness of a JWS token.
+[**welcome**](AuthenticationApi.md#welcome) | **GET** /authentication/v1 | A welcome message.
 
 
 <a name="getIdTokenWithGet"></a>
@@ -156,5 +160,177 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="handleLogin"></a>
+# **handleLogin**
+> String handleLogin()
+
+Handle a login request made using username and password credentials.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.AuthenticationApi;
+
+
+AuthenticationApi apiInstance = new AuthenticationApi();
+try {
+    String result = apiInstance.handleLogin();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling AuthenticationApi#handleLogin");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="resetEmail"></a>
+# **resetEmail**
+> String resetEmail(email)
+
+Reset a user account using an email address.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.AuthenticationApi;
+
+
+AuthenticationApi apiInstance = new AuthenticationApi();
+String email = "email_example"; // String | 
+try {
+    String result = apiInstance.resetEmail(email);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling AuthenticationApi#resetEmail");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **email** | **String**|  |
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="verifyToken"></a>
+# **verifyToken**
+> String verifyToken(token)
+
+Verify the authenticity and current-ness of a JWS token.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.AuthenticationApi;
+
+
+AuthenticationApi apiInstance = new AuthenticationApi();
+String token = "token_example"; // String | 
+try {
+    String result = apiInstance.verifyToken(token);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling AuthenticationApi#verifyToken");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **token** | **String**|  |
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="welcome"></a>
+# **welcome**
+> String welcome()
+
+A welcome message.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.AuthenticationApi;
+
+
+AuthenticationApi apiInstance = new AuthenticationApi();
+try {
+    String result = apiInstance.welcome();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling AuthenticationApi#welcome");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

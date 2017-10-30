@@ -105,6 +105,10 @@ public final class AuthenticationResource {
     this.tokenBuilderFactory = tokenBuilderFactory;
   }
 
+  @ApiOperation(
+          value = "A welcome message.",
+          response = String.class,
+          tags = {"Authentication"})
   @GET
   @Path("/")
   @Consumes({"application/json"})
@@ -117,8 +121,8 @@ public final class AuthenticationResource {
 
   @ApiOperation(
           value = "Submit an OpenId AuthenticationRequest.",
-          response = String.class
-  )
+          response = String.class,
+          tags = {"Authentication"})
   @GET
   @Path("/authenticate")
   @Timed
@@ -243,6 +247,10 @@ public final class AuthenticationResource {
    * If they don't then they need to be directed to an application that will submit
    * an AuthenticationRequest to /authenticate.
    */
+  @ApiOperation(
+          value = "Handle a login request made using username and password credentials.",
+          response = String.class,
+          tags = {"Authentication"})
   @POST
   @Path("/authenticate")
   @Consumes({"application/json"})
@@ -322,7 +330,8 @@ public final class AuthenticationResource {
    */
   @ApiOperation(
           value = "Convert a previously provided access code into an ID token",
-          response = String.class)
+          response = String.class,
+          tags = {"Authentication"})
   @GET
   @Path("idToken")
   @Timed
@@ -366,7 +375,8 @@ public final class AuthenticationResource {
    */
   @ApiOperation(
           value = "Convert a previously provided access code into an ID token",
-          response = String.class)
+          response = String.class,
+          tags = {"Authentication"})
   @POST
   @Path("idToken")
   @Timed
@@ -389,7 +399,10 @@ public final class AuthenticationResource {
     return Response.status(Status.OK).entity(idToken).build();
   }
 
-
+  @ApiOperation(
+          value = "Reset a user account using an email address.",
+          response = String.class,
+          tags = {"Authentication"})
   @GET
   @Path("reset/{email}")
   @Timed
@@ -402,6 +415,10 @@ public final class AuthenticationResource {
     return response;
   }
 
+  @ApiOperation(
+          value = "Verify the authenticity and current-ness of a JWS token.",
+          response = String.class,
+          tags = {"Authentication"})
   @GET
   @Path("/verify/{token}")
   @Timed
