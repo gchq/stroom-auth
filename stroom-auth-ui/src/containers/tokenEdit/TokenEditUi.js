@@ -43,7 +43,7 @@ const TokenEditUi = props => {
       <form onSubmit={handleSubmit}>
         <div className='field-container'>
           <div className='label-container'>
-            <label>Issued to user</label>
+            <label>Issued to</label>
           </div>
           <div className='input-container'>
             <Field

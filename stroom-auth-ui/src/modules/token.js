@@ -24,17 +24,12 @@ import { performUserSearch } from './userSearch'
 export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER'
 export const TOGGLE_ALERT_VISIBILITY = 'token/TOGGLE_ALERT_VISIBILITY'
 export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = 'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS'
-export const CLOSE_TOKEN_CREATED_DIALOG = 'token/CLOSE_TOKEN_CREATED_DIALOGUE'
-export const SHOW_TOKEN_CREATED_DIALOG = 'token/SHOW_TOKEN_CREATED_DIALOGUE'
 export const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN'
 
 const initialState = {
   showAlert: false,
   alertText: '',
-  matchingAutoCompleteResults: [],
-  showTokenCreatedDialog: false,
-  newlyCreatedToken: '',
-  newlyCreatedTokenUser: ''
+  matchingAutoCompleteResults: []
 }
 
 export default (state = initialState, action) => {
@@ -57,22 +52,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         matchingAutoCompleteResults: action.matchingAutoCompleteResults
-      }
-
-    case SHOW_TOKEN_CREATED_DIALOG:
-      return {
-        ...state,
-        showTokenCreatedDialog: true,
-        newlyCreatedToken: action.newlyCreatedToken,
-        newlyCreatedTokenUser: action.newlyCreatedTokenUser
-      }
-
-    case CLOSE_TOKEN_CREATED_DIALOG:
-      return {
-        ...state,
-        showTokenCreatedDialog: false,
-        newlyCreatedToken: '',
-        newlyCreatedTokenUser: ''
       }
 
     case CHANGE_READ_CREATED_TOKEN:
@@ -151,14 +130,7 @@ export const createToken = (newToken) => {
         .then(handleStatus)
         .then(getBody)
         .then((newApiKeyId) => {
-          // TODO wire this in
-          // dispatch(showCreateLoader(false))
           dispatch(relativePush(`/token/${newApiKeyId}`))
-          // dispatch({
-          //   type: SHOW_TOKEN_CREATED_DIALOG,
-          //   newlyCreatedToken: body,
-          //   newlyCreatedTokenUser: email
-          // })
         })
         .catch(error => handleErrors(error, dispatch, jwsToken))
   }
@@ -209,12 +181,6 @@ export function userAutoCompleteChange (autocompleteText, securityToken) {
       matchingAutoCompleteResults
     })
   }
-}
-
-export function handleTokenCreatedDialogClose () {
-  return (dispatch) => dispatch({
-    type: CLOSE_TOKEN_CREATED_DIALOG
-  })
 }
 
 function handleStatus (response) {
