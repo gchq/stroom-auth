@@ -134,6 +134,9 @@ swagger {
         locations = [
                 'stroom.auth.resources.token.v1.TokenResource',
                 'stroom.auth.resources.token.v1.SearchRequest',
+                'stroom.auth.resources.token.v1.SearchResponse',
+                'stroom.auth.resources.token.v1.Token',
+                'stroom.auth.resources.token.v1.CreateTokenRequest',
 
                 'stroom.auth.resources.authentication.v1.AuthenticationResource',
                 'stroom.auth.resources.authentication.v1.Credentials',

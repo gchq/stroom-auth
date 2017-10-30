@@ -22,9 +22,10 @@ import java.util.List;
 import stroom.auth.service.api.model.Token;
 
 /**
- * SearchResponse
+ * A response for a search of tokens.
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-30T14:54:27.326Z")
+@ApiModel(description = "A response for a search of tokens.")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-30T15:19:39.683Z")
 public class SearchResponse {
   @SerializedName("tokens")
   private List<Token> tokens = new ArrayList<Token>();
@@ -43,10 +44,10 @@ public class SearchResponse {
   }
 
    /**
-   * Get tokens
+   * A page of results.
    * @return tokens
   **/
-  @ApiModelProperty(example = "null", value = "")
+  @ApiModelProperty(example = "null", required = true, value = "A page of results.")
   public List<Token> getTokens() {
     return tokens;
   }
@@ -61,10 +62,10 @@ public class SearchResponse {
   }
 
    /**
-   * Get totalPages
+   * The total number of pages.
    * @return totalPages
   **/
-  @ApiModelProperty(example = "null", value = "")
+  @ApiModelProperty(example = "null", required = true, value = "The total number of pages.")
   public Integer getTotalPages() {
     return totalPages;
   }

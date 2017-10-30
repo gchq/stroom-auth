@@ -149,6 +149,63 @@ paths:
           description: "successful operation"
           schema:
             type: "string"
+    delete:
+      tags:
+      - "ApiKey"
+      summary: "Delete all tokens."
+      description: ""
+      operationId: "deleteAll"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+  /token/v1/byToken/{token}:
+    get:
+      tags:
+      - "ApiKey"
+      summary: "Read a token by the token string itself."
+      description: ""
+      operationId: "read"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+    delete:
+      tags:
+      - "ApiKey"
+      summary: "Delete a token by the token string itself."
+      description: ""
+      operationId: "delete"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
   /token/v1/search:
     post:
       tags:
@@ -172,6 +229,75 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/SearchResponse"
+  /token/v1/{id}:
+    get:
+      tags:
+      - "ApiKey"
+      summary: "Read a token by ID."
+      description: ""
+      operationId: "read"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+    delete:
+      tags:
+      - "ApiKey"
+      summary: "Delete a token by ID."
+      description: ""
+      operationId: "delete"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+  /token/v1/{id}/state:
+    get:
+      tags:
+      - "ApiKey"
+      summary: "Enable or disable the state of a token."
+      description: ""
+      operationId: "toggleEnabled"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int32"
+      - name: "enabled"
+        in: "query"
+        required: true
+        type: "boolean"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
 definitions:
   CreateTokenRequest:
     type: "object"
@@ -247,14 +373,20 @@ definitions:
     description: "A request for a search over tokens."
   SearchResponse:
     type: "object"
+    required:
+    - "tokens"
+    - "totalPages"
     properties:
       tokens:
         type: "array"
+        description: "A page of results."
         items:
           $ref: "#/definitions/Token"
       totalPages:
         type: "integer"
         format: "int32"
+        description: "The total number of pages."
+    description: "A response for a search of tokens."
   Token:
     type: "object"
     properties:

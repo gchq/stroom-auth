@@ -153,6 +153,10 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity(token.getId()).build();
   }
 
+  @ApiOperation(
+          value = "Delete all tokens.",
+          response = String.class,
+          tags = {"ApiKey"})
   @DELETE
   @Path("/")
   @Timed
@@ -165,6 +169,10 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity("All tokens deleted").build();
   }
 
+  @ApiOperation(
+          value = "Delete a token by ID.",
+          response = String.class,
+          tags = {"ApiKey"})
   @DELETE
   @Path("/{id}")
   @Timed
@@ -177,6 +185,10 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity("Deleted token").build();
   }
 
+  @ApiOperation(
+          value = "Delete a token by the token string itself.",
+          response = String.class,
+          tags = {"ApiKey"})
   @DELETE
   @Path("/byToken/{token}")
   @Timed
@@ -189,6 +201,10 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity("Deleted token").build();
   }
 
+  @ApiOperation(
+          value = "Read a token by the token string itself.",
+          response = String.class,
+          tags = {"ApiKey"})
   @GET
   @Path("/byToken/{token}")
   @Timed
@@ -206,6 +222,10 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
   }
 
+  @ApiOperation(
+          value = "Read a token by ID.",
+          response = String.class,
+          tags = {"ApiKey"})
   @GET
   @Path("/{id}")
   @Timed
@@ -223,6 +243,10 @@ public class TokenResource {
     return Response.status(Response.Status.OK).entity(optionalToken.get()).build();
   }
 
+  @ApiOperation(
+          value = "Enable or disable the state of a token.",
+          response = String.class,
+          tags = {"ApiKey"})
   @GET
   @Path("/{id}/state")
   @Timed
