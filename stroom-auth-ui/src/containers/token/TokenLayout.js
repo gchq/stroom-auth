@@ -30,6 +30,7 @@ import { blue600, amber900, fullWhite } from 'material-ui/styles/colors'
 import Paper from 'material-ui/Card'
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
 import Add from 'material-ui-icons/Add'
+import Edit from 'material-ui-icons/Edit'
 import Delete from 'material-ui-icons/Delete'
 import Help from 'material-ui-icons/Help'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
@@ -74,6 +75,7 @@ class TokenLayout extends Component {
     const showCreate = show === 'create'
     const showEdit = show === 'edit'
     const showCreateButton = showSearch
+    const showEditButton = showSearch
     const deleteButtonDisabled = !selectedTokenRowId
     return (
       <Paper className='UserLayout-main' zDepth={0}>
@@ -114,6 +116,15 @@ class TokenLayout extends Component {
                 <RaisedButton label='Delete' primary
                   icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
                   onClick={() => this.deleteToken()} />
+              </div>
+            ) : (undefined)}
+
+            {showEditButton ? (
+              <div className='UserLayout-toolbarButton'>
+                <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
+                  <RaisedButton label='View/Edit' primary className='UserSearch-appButton'
+                    icon={<Edit color={fullWhite} />} />
+                </NavLink>
               </div>
             ) : (undefined)}
 
