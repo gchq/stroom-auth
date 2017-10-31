@@ -105,27 +105,23 @@ public final class AuthenticationResource {
     this.tokenBuilderFactory = tokenBuilderFactory;
   }
 
-  @ApiOperation(
-          value = "A welcome message.",
-          response = String.class,
-          tags = {"Authentication"})
+
   @GET
   @Path("/")
   @Consumes({"application/json"})
   @Produces({"application/json"})
   @Timed
   @NotNull
+  @ApiOperation(value = "A welcome message.", response = String.class, tags = {"Authentication"})
   public final Response welcome() {
     return status(Status.OK).entity("Welcome to the authentication service").build();
   }
 
-  @ApiOperation(
-          value = "Submit an OpenId AuthenticationRequest.",
-          response = String.class,
-          tags = {"Authentication"})
+
   @GET
   @Path("/authenticate")
   @Timed
+  @ApiOperation(value = "Submit an OpenId AuthenticationRequest.", response = String.class, tags = {"Authentication"})
   public final Response handleAuthenticationRequest(
           @Context @NotNull HttpServletRequest httpServletRequest,
           @QueryParam("scope") @Nullable String scope,
@@ -247,16 +243,14 @@ public final class AuthenticationResource {
    * If they don't then they need to be directed to an application that will submit
    * an AuthenticationRequest to /authenticate.
    */
-  @ApiOperation(
-          value = "Handle a login request made using username and password credentials.",
-          response = String.class,
-          tags = {"Authentication"})
   @POST
   @Path("/authenticate")
   @Consumes({"application/json"})
   @Produces({"application/json"})
   @Timed
   @NotNull
+  @ApiOperation(value = "Handle a login request made using username and password credentials.",
+          response = String.class, tags = {"Authentication"})
   public final Response handleLogin(
           @Context @NotNull HttpServletRequest httpServletRequest,
           @Nullable Credentials credentials) throws URISyntaxException {
@@ -328,13 +322,11 @@ public final class AuthenticationResource {
    * by clients that send cookies, e.g. browsers and JavaScript.
    * The POST is for other clients, e.g. Swagger.
    */
-  @ApiOperation(
-          value = "Convert a previously provided access code into an ID token",
-          response = String.class,
-          tags = {"Authentication"})
   @GET
   @Path("idToken")
   @Timed
+  @ApiOperation(value = "Convert a previously provided access code into an ID token",
+          response = String.class, tags = {"Authentication"})
   public final Response getIdTokenWithGet(
           @Context @NotNull  HttpServletRequest httpServletRequest,
           @QueryParam("accessCode") @NotNull String accessCode,
@@ -373,13 +365,11 @@ public final class AuthenticationResource {
    * by clients that send cookies, e.g. browsers and JavaScript.
    * The POST is for other clients, e.g. Swagger.
    */
-  @ApiOperation(
-          value = "Convert a previously provided access code into an ID token",
-          response = String.class,
-          tags = {"Authentication"})
   @POST
   @Path("idToken")
   @Timed
+  @ApiOperation(value = "Convert a previously provided access code into an ID token",
+          response = String.class, tags = {"Authentication"})
   public final Response getIdTokenWithPost(
           @Session HttpSession httpSession,
           @ApiParam("idTokenRequest") @NotNull IdTokenRequest idTokenRequest) {
@@ -399,14 +389,12 @@ public final class AuthenticationResource {
     return Response.status(Status.OK).entity(idToken).build();
   }
 
-  @ApiOperation(
-          value = "Reset a user account using an email address.",
-          response = String.class,
-          tags = {"Authentication"})
   @GET
   @Path("reset/{email}")
   @Timed
   @NotNull
+  @ApiOperation(value = "Reset a user account using an email address.",
+          response = String.class, tags = {"Authentication"})
   public final Response resetEmail(@PathParam("email") String emailAddress) {
     User user = userDao.get(emailAddress);
     String resetToken = tokenDao.createEmailResetToken(emailAddress);
@@ -415,14 +403,12 @@ public final class AuthenticationResource {
     return response;
   }
 
-  @ApiOperation(
-          value = "Verify the authenticity and current-ness of a JWS token.",
-          response = String.class,
-          tags = {"Authentication"})
   @GET
   @Path("/verify/{token}")
   @Timed
   @NotNull
+  @ApiOperation(value = "Verify the authenticity and current-ness of a JWS token.",
+          response = String.class, tags = {"Authentication"})
   public final Response verifyToken(@PathParam("token") String token){
     Optional<String> usersEmail = tokenVerifier.verifyToken(token);
     if(usersEmail.isPresent()) {
