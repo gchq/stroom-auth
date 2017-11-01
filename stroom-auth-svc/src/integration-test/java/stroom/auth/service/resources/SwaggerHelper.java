@@ -28,23 +28,23 @@ import stroom.auth.service.api.UserApi;
 public class SwaggerHelper {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SwaggerHelper.class);
 
-    public static final AuthenticationApi newAuthApiClient(String idToken) {
+    public static AuthenticationApi newAuthApiClient(String idToken) {
         return new AuthenticationApi(newApiClient(idToken));
     }
 
-    public static final DefaultApi newDefaultApiClient(String idToken) {
+    public static DefaultApi newDefaultApiClient(String idToken) {
         return new DefaultApi(newApiClient(idToken));
     }
 
-    public static final ApiKeyApi newApiKeyApiClient(String idToken) {
+    public static ApiKeyApi newApiKeyApiClient(String idToken) {
         return new ApiKeyApi(newApiClient(idToken));
     }
 
-    public static final SessionApi newSessionApiClient(String idToken) {
+    public static SessionApi newSessionApiClient(String idToken) {
         return new SessionApi(newApiClient(idToken));
     }
 
-    public static final UserApi newUserApiClient(String idToken) {
+    public static UserApi newUserApiClient(String idToken) {
         return new UserApi(newApiClient(idToken));
     }
 

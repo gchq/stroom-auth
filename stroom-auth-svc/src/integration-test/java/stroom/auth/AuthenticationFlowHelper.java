@@ -63,7 +63,7 @@ public class AuthenticationFlowHelper {
      * <p>
      * This flow would redirect the user to login, but we're faking that too so we ignore the redirection.
      */
-    public final static String sendInitialAuthenticationRequest() {
+    public static String sendInitialAuthenticationRequest() {
         LOGGER.info("Sending initial authentication request.");
         // The authentication flow includes a redirect to login. We don't want
         // anything interactive in testing so we need to take some steps to prevent the redirect:
@@ -118,7 +118,7 @@ public class AuthenticationFlowHelper {
      * <p>
      * The sessionId would be stored in a cookie and a normal relying party would not have to do this.
      */
-    public final static String performLogin(String sessionId, String username, String password) throws ApiException {
+    public static String performLogin(String sessionId, String username, String password) throws ApiException {
         LOGGER.info("Logging the user in.");
         ApiClient apiClient = new ApiClient();
         apiClient.setBasePath("http://localhost:8099");
@@ -134,7 +134,7 @@ public class AuthenticationFlowHelper {
         return accessCode;
     }
 
-    public final static String exchangeAccessCodeForIdToken(String sessionId, String accessCode) {
+    public static String exchangeAccessCodeForIdToken(String sessionId, String accessCode) {
         LOGGER.info("Exchanging the access code for an ID token.");
         ApiClient apiClient = new ApiClient();
         apiClient.setBasePath("http://localhost:8099");

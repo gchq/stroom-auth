@@ -31,7 +31,7 @@ import java.util.HashMap;
 public final class UserMapper {
 
     @NotNull
-    public static final UsersRecord updateUserRecordWithUser(@NotNull User user, @NotNull UsersRecord usersRecord) {
+    public static UsersRecord updateUserRecordWithUser(@NotNull User user, @NotNull UsersRecord usersRecord) {
         Preconditions.checkNotNull(user);
         Preconditions.checkNotNull(usersRecord);
 
@@ -60,7 +60,7 @@ public final class UserMapper {
     }
 
     @NotNull
-    public static final Timestamp convertISO8601ToTimestamp(@Nullable String dateString) {
+    public static Timestamp convertISO8601ToTimestamp(@Nullable String dateString) {
         long millis = ZonedDateTime.parse(dateString).toInstant().toEpochMilli();
         return new Timestamp(millis);
     }

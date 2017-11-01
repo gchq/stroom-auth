@@ -38,7 +38,7 @@ public abstract class Base_IT {
     protected static TokenManager tokenManager = new TokenManager();
 
     @BeforeClass
-    public static final void setupClass() throws InterruptedException {
+    public static void setupClass() throws InterruptedException {
         appPort = appRule.getLocalPort();
         authenticationManager.setPort(appPort);
         userManager.setPort(appPort);
