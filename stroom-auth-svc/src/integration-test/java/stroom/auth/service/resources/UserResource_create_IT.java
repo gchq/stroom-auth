@@ -16,12 +16,9 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
-import stroom.auth.resources.user.v1.User;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.UserApi;
@@ -31,12 +28,6 @@ import java.time.Instant;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
-import static stroom.auth.service.resources.support.HttpAsserts.assertBadRequest;
-import static stroom.auth.service.resources.support.HttpAsserts.assertBodyNotNull;
-import static stroom.auth.service.resources.support.HttpAsserts.assertConflict;
-import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
-import static stroom.auth.service.resources.support.HttpAsserts.assertUnauthorised;
-import static stroom.auth.service.resources.support.HttpAsserts.assertUnprocessableEntity;
 
 public final class UserResource_create_IT extends Base_IT {
     @Test
@@ -45,7 +36,7 @@ public final class UserResource_create_IT extends Base_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
-                .email("email")
+                .email("create_user_"+Instant.now().toString())
                 .password("password"));
 
         assertThat(response.getStatusCode()).isEqualTo(200);

@@ -16,56 +16,39 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
-import stroom.auth.resources.user.v1.User;
+import stroom.auth.AuthenticationFlowHelper;
+import stroom.auth.service.ApiException;
+import stroom.auth.service.ApiResponse;
+import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
 import java.io.IOException;
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static stroom.auth.service.resources.support.HttpAsserts.assertUnauthorised;
 
 public final class UserResource_delete_IT extends Base_IT {
     @Test
-    public final void delete_user() throws UnirestException, IOException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        User user = new User(Instant.now().toString(), "testPassword");
-        int userId = userManager.createUser(user, jwsToken);
-        String url = userManager.getRootUrl() + userId;
+    public final void delete_user() throws UnirestException, IOException, ApiException {
+        String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+        UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
-        HttpResponse response = Unirest
-                .delete(url)
-                .header("Authorization", "Bearer " + jwsToken)
-                .header("Content-Type", "application/json")
-                .asJson();
 
-        User shouldBeNull = userManager.getUser(userId, jwsToken);
-        assertThat(shouldBeNull).isNull();
-    }
+        ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+                .email("delete_user" + Instant.now().toString())
+                .password("password"));
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getData()).isNotNull();
 
-    @Test
-    public final void delete_user_without_authorisation() throws UnirestException, IOException {
-        String adminsJws = authenticationManager.loginAsAdmin();
+        ApiResponse<String> deleteResponse = userApi.deleteUserWithHttpInfo(response.getData());
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(200);
 
-        User userA = new User(Instant.now().toString(), "testPassword");
-        userManager.createUser(userA, adminsJws);
-        String userAJws = authenticationManager.logInAsUser(userA);
-
-        User userB = new User(Instant.now().toString(), "testPassword");
-        int userBId = userManager.createUser(userB, adminsJws);
-
-        String url = userManager.getRootUrl() + userBId;
-
-        HttpResponse response = Unirest
-                .delete(url)
-                .header("Authorization", "Bearer " + userAJws)
-                .header("Content-Type", "application/json")
-                .asString();
-
-        assertUnauthorised(response);
+        try {
+            userApi.getUserWithHttpInfo(response.getData());
+        }catch(ApiException e){
+            assertThat(e.getCode()).isEqualTo(404);
+        }
     }
 }
