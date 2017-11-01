@@ -235,7 +235,7 @@ public class TokenDao {
 
         Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer> token =
                 selectFrom
-                        .where(new Condition[]{TOKENS.ID.eq(Integer.valueOf(tokenId))})
+                        .where(new Condition[]{TOKENS.ID.eq(tokenId)})
                         .fetchOne();
         if (token == null) {
             return Optional.empty();

@@ -231,7 +231,7 @@ public final class UserResource {
                         USERS.CREATED_ON,
                         USERS.CREATED_BY_USER)
                 .from(USERS)
-                .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
+                .where(new Condition[]{USERS.ID.eq(userId)})
                 .fetchOne();
         Response response;
         if (foundUserRecord == null) {
@@ -292,7 +292,7 @@ public final class UserResource {
 
         UsersRecord usersRecord = (UsersRecord) database
                 .selectFrom((Table) USERS)
-                .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
+                .where(new Condition[]{USERS.ID.eq(userId)})
                 .fetchOne();
 
         // We only need to check auth permissions if the user is trying to access a different user.
@@ -310,7 +310,7 @@ public final class UserResource {
         database
                 .update((Table) USERS)
                 .set(updatedUsersRecord)
-                .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
+                .where(new Condition[]{USERS.ID.eq(userId)}).execute();
         Response response = Response.status(Response.Status.OK).build();
         return response;
     }
@@ -334,7 +334,7 @@ public final class UserResource {
 
         database
                 .deleteFrom((Table) USERS)
-                .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
+                .where(new Condition[]{USERS.ID.eq(userId)}).execute();
         Response response = Response.status(Response.Status.OK).build();
         return response;
     }

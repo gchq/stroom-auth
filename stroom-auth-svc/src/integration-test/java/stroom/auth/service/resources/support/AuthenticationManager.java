@@ -50,8 +50,7 @@ public class AuthenticationManager {
                 .header("Content-Type", "application/json")
                 .body("{\"email\" : \"" + user.getEmail() + "\", \"password\" : \"testPassword\"}")
                 .asString();
-        String newUsersJws = (String) getJwsResponse.getBody();
-        return newUsersJws;
+        return (String) getJwsResponse.getBody();
     }
 
     public void setPort(int appPort) {

@@ -16,7 +16,6 @@
 
 package stroom.auth.service.resources.support;
 
-import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;

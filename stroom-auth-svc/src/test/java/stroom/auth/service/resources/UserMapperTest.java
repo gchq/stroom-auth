@@ -29,15 +29,15 @@ public final class UserMapperTest {
     @Test
     public final void testMappings() {
         UsersRecord usersRecord = new UsersRecord();
-        usersRecord.setId(Integer.valueOf(1));
+        usersRecord.setId(1);
         usersRecord.setEmail("email");
         usersRecord.setPasswordHash("hash");
         usersRecord.setState("enabled");
         usersRecord.setFirstName("first name");
         usersRecord.setLastName("last name");
         usersRecord.setComments("comments");
-        usersRecord.setLoginFailures(Integer.valueOf(2));
-        usersRecord.setLoginCount(Integer.valueOf(4));
+        usersRecord.setLoginFailures(2);
+        usersRecord.setLoginCount(4);
         usersRecord.setLastLogin(new Timestamp(System.currentTimeMillis()));
         usersRecord.setUpdatedOn(new Timestamp(System.currentTimeMillis()));
         usersRecord.setUpdatedByUser("updating user");
@@ -45,15 +45,15 @@ public final class UserMapperTest {
         usersRecord.setCreatedByUser("creating user");
 
         User user = new User();
-        user.setId(Integer.valueOf(2));
+        user.setId(2);
         user.setEmail("new email");
         user.setPassword_hash("new hash");
         user.setState("disabled");
         user.setFirst_name("new first name");
         user.setLast_name("new last name");
         user.setComments("new comments");
-        user.setLogin_failures(Integer.valueOf(3));
-        user.setLogin_count(Integer.valueOf(5));
+        user.setLogin_failures(3);
+        user.setLogin_count(5);
         user.setLast_login("2017-01-01T00:00:00.000Z");
         user.setUpdated_on("2017-01-02T00:00:00.000Z");
         user.setUpdated_by_user("New updating user");

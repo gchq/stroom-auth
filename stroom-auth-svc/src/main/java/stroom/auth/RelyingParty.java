@@ -34,11 +34,7 @@ public class RelyingParty {
     private String state;
 
     public boolean accessCodesMatch(String accessCodeToMatch) {
-        if (this.accessCode == null) {
-            return false;
-        } else {
-            return accessCode.equals(accessCodeToMatch);
-        }
+        return this.accessCode != null && accessCode.equals(accessCodeToMatch);
     }
 
     public void forgetIdToken() {
