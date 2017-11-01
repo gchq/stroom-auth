@@ -16,13 +16,10 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
-import stroom.auth.resources.token.v1.SearchRequest;
 import stroom.auth.resources.token.v1.Token;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.ApiResponse;
@@ -35,13 +32,13 @@ import stroom.auth.service.api.model.User;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
 import static org.assertj.core.util.Sets.newLinkedHashSet;
-import static stroom.auth.resources.token.v1.Token.TokenType.*;
-import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
+import static stroom.auth.resources.token.v1.Token.TokenType.API;
+import static stroom.auth.resources.token.v1.Token.TokenType.EMAIL_RESET;
+import static stroom.auth.resources.token.v1.Token.TokenType.USER;
 
 public class TokenResource_search_IT extends TokenResource_IT {
 
@@ -72,17 +69,17 @@ public class TokenResource_search_IT extends TokenResource_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
         apiKeyApiClient.deleteAllWithHttpInfo();
-        createUserAndTokens("user1" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user6" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user7" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user8" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user9" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user10" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user11" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user6" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user7" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user8" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user9" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user10" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user11" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
 
         // We expect three times as many tokens as users because we're creating API tokens, user tokens, and email reset tokens.
         getPageAndAssert(0, 5, 5, apiKeyApiClient);
@@ -95,58 +92,6 @@ public class TokenResource_search_IT extends TokenResource_IT {
         getPageAndAssert(6, 5, expectedFinalCount, apiKeyApiClient);
     }
 
-    private void createUserAndTokens(String userEmail, int numberOfTokens, ApiKeyApi apiKeyApi,
-                                     UserApi userApi) throws ApiException {
-        createUserAndTokens(userEmail, API, numberOfTokens, apiKeyApi, userApi);
-    }
-
-    private void createUserAndTokens(String userEmail, Token.TokenType tokenType, int numberOfTokens, ApiKeyApi apiKeyApi,
-                                     UserApi userApi) throws ApiException {
-        User user = createUser(userEmail, userApi);
-        for(int i = 0; i < numberOfTokens; i++) {
-            createToken(user.getEmail(), tokenType, apiKeyApi);
-        }
-    }
-
-    private User createUser(String userEmail, UserApi userApi) throws ApiException {
-        User user = new User();
-        user.setEmail(userEmail);
-        user.setPassword("password");
-        try {
-            userApi.createUserWithHttpInfo(user);
-        } catch(ApiException e){
-            fail("Unable to create a new user!");
-        }
-
-        return user;
-    }
-
-    private stroom.auth.service.api.model.Token createToken(String userEmail, Token.TokenType tokenType, ApiKeyApi apiKeyApi){
-        CreateTokenRequest createTokenRequest = new CreateTokenRequest();
-        createTokenRequest.setUserEmail(userEmail);
-        createTokenRequest.setTokenType(tokenType.getText());
-        stroom.auth.service.api.model.Token token = null;
-        try {
-            int id = apiKeyApi.create(createTokenRequest);
-            token = apiKeyApi.read_0(id);
-        }catch(ApiException e) {
-            fail("Unable to create a new token!");
-        }
-        return token;
-    }
-
-    private void getPageAndAssert(int page, int limit, int expectedCount, ApiKeyApi apiKeyApi) throws UnirestException, IOException, ApiException {
-        stroom.auth.service.api.model.SearchRequest searchRequest = new stroom.auth.service.api.model.SearchRequest();
-        searchRequest.setLimit(limit);
-        searchRequest.setPage(page);
-        ApiResponse<SearchResponse> searchResponse = apiKeyApi.searchWithHttpInfo(searchRequest);
-
-        assertThat(searchResponse.getData().getTokens().size()).isEqualTo(expectedCount);
-        assertThat(searchResponse.getStatusCode()).isEqualTo(200);
-    }
-
-
-
     @Test
     public void search_ordering_by_token_type() throws UnirestException, IOException, ApiException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
@@ -154,16 +99,16 @@ public class TokenResource_search_IT extends TokenResource_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
         apiKeyApiClient.deleteAllWithHttpInfo();
-        createUserAndTokens("user1" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
 
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(new stroom.auth.service.api.model.SearchRequest()
-            .page(0)
-            .limit(5)
-            .orderBy("token_type"));
+                .page(0)
+                .limit(5)
+                .orderBy("token_type"));
 
         Token.TokenType expectedType = API;
         assertThat(response.getData().getTokens().size()).isEqualTo(5);
@@ -179,18 +124,18 @@ public class TokenResource_search_IT extends TokenResource_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
         apiKeyApiClient.deleteAllWithHttpInfo();
-        createUserAndTokens("user1" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
 
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(
                 new stroom.auth.service.api.model.SearchRequest()
-                    .page(0)
-                    .limit(5)
-                    .orderBy("token_type")
-                    .orderDirection("asc"));
+                        .page(0)
+                        .limit(5)
+                        .orderBy("token_type")
+                        .orderDirection("asc"));
 
         Token.TokenType expectedType = API;
 
@@ -210,21 +155,21 @@ public class TokenResource_search_IT extends TokenResource_IT {
         // Make sure we've got a clean database
         apiKeyApiClient.deleteAllWithHttpInfo();
 
-        createUserAndTokens("user1" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user1" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user1" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
 
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(
                 new stroom.auth.service.api.model.SearchRequest()
@@ -293,33 +238,35 @@ public class TokenResource_search_IT extends TokenResource_IT {
         // Make sure we've got a clean database
         apiKeyApiClient.deleteAllWithHttpInfo();
 
-        createUserAndTokens("user1" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user1" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user1" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
 
-        createUserAndTokens("user10" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user10" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user10" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user10" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user10" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user10" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
 
-        createUserAndTokens("user11" +Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user11" +Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user11" +Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user11" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user11" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user11" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
 
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(
                 new stroom.auth.service.api.model.SearchRequest()
-                        .filters(new HashMap(){{put("user_email", "user1");}})
+                        .filters(new HashMap() {{
+                            put("user_email", "user1");
+                        }})
                         .page(0)
                         .limit(10)
                         .orderBy("expires_on"));
@@ -352,10 +299,10 @@ public class TokenResource_search_IT extends TokenResource_IT {
         try {
             ApiResponse<SearchResponse> response = apiKeyApi.searchWithHttpInfo(
                     new stroom.auth.service.api.model.SearchRequest().page(0).limit(5).orderBy("enabled").orderDirection(orderDirection));
-            if(isValid){
+            if (isValid) {
                 assertThat(response.getStatusCode()).isEqualTo(200);
             }
-        } catch(ApiException e){
+        } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(400);
         }
     }
@@ -366,37 +313,82 @@ public class TokenResource_search_IT extends TokenResource_IT {
         try {
             ApiResponse<SearchResponse> response = apiKeyApi.searchWithHttpInfo(
                     new stroom.auth.service.api.model.SearchRequest().page(0).limit(5).orderBy(orderBy));
-            if(isValid){
+            if (isValid) {
                 assertThat(response.getStatusCode()).isEqualTo(200);
             }
-        } catch(ApiException e){
+        } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(400);
         }
     }
 
     private void assertFilterValidity(String filterOn, boolean isValid, String securityToken) throws UnirestException {
-        Map<String, String> filters = new HashMap<>();
-        filters.put(filterOn, "something");
-        SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
-                .filters(filters)
-                .limit(10)
-                .orderBy("expires_on")
-                .page(0)
-                .build();
-        String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
-
-        HttpResponse response = Unirest
-                .post(searchUrl)
-                .header("Authorization", "Bearer " + securityToken)
-                .header("Content-Type", "application/json")
-                .body(serialisedSearchRequest)
-                .asString();
-
-        if (isValid) {
-            assertOk(response);
-        } else {
+        ApiKeyApi apiKeyApi = SwaggerHelper.newApiKeyApiClient(securityToken);
+        try {
+            ApiResponse<SearchResponse> response = apiKeyApi.searchWithHttpInfo(
+                    new stroom.auth.service.api.model.SearchRequest()
+                            .filters(new HashMap() {{
+                                put(filterOn, "something");
+                            }})
+                            .page(0)
+                            .limit(10)
+                            .orderBy("expires_on"));
+        } catch (ApiException e) {
+            if (isValid) {
+                fail("Request should have been valid");
+            }
             Condition<Integer> invalidResponseCodes = new Condition<>(newLinkedHashSet(400, 422)::contains, "Invalid response codes");
-            assertThat(response.getStatus()).is(invalidResponseCodes);
+            assertThat(e.getCode()).is(invalidResponseCodes);
         }
     }
+
+    private void createUserAndTokens(String userEmail, int numberOfTokens, ApiKeyApi apiKeyApi,
+                                     UserApi userApi) throws ApiException {
+        createUserAndTokens(userEmail, API, numberOfTokens, apiKeyApi, userApi);
+    }
+
+    private void createUserAndTokens(String userEmail, Token.TokenType tokenType, int numberOfTokens, ApiKeyApi apiKeyApi,
+                                     UserApi userApi) throws ApiException {
+        User user = createUser(userEmail, userApi);
+        for (int i = 0; i < numberOfTokens; i++) {
+            createToken(user.getEmail(), tokenType, apiKeyApi);
+        }
+    }
+
+    private User createUser(String userEmail, UserApi userApi) throws ApiException {
+        User user = new User();
+        user.setEmail(userEmail);
+        user.setPassword("password");
+        try {
+            userApi.createUserWithHttpInfo(user);
+        } catch (ApiException e) {
+            fail("Unable to create a new user!");
+        }
+
+        return user;
+    }
+
+    private stroom.auth.service.api.model.Token createToken(String userEmail, Token.TokenType tokenType, ApiKeyApi apiKeyApi) {
+        CreateTokenRequest createTokenRequest = new CreateTokenRequest();
+        createTokenRequest.setUserEmail(userEmail);
+        createTokenRequest.setTokenType(tokenType.getText());
+        stroom.auth.service.api.model.Token token = null;
+        try {
+            int id = apiKeyApi.create(createTokenRequest);
+            token = apiKeyApi.read_0(id);
+        } catch (ApiException e) {
+            fail("Unable to create a new token!");
+        }
+        return token;
+    }
+
+    private void getPageAndAssert(int page, int limit, int expectedCount, ApiKeyApi apiKeyApi) throws UnirestException, IOException, ApiException {
+        stroom.auth.service.api.model.SearchRequest searchRequest = new stroom.auth.service.api.model.SearchRequest();
+        searchRequest.setLimit(limit);
+        searchRequest.setPage(page);
+        ApiResponse<SearchResponse> searchResponse = apiKeyApi.searchWithHttpInfo(searchRequest);
+
+        assertThat(searchResponse.getData().getTokens().size()).isEqualTo(expectedCount);
+        assertThat(searchResponse.getStatusCode()).isEqualTo(200);
+    }
+
 }
