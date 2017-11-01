@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 <a name="create"></a>
 # **create**
-> String create(body)
+> Integer create(body)
 
 Create a new token.
 
@@ -32,7 +32,7 @@ Create a new token.
 ApiKeyApi apiInstance = new ApiKeyApi();
 CreateTokenRequest body = new CreateTokenRequest(); // CreateTokenRequest | CreateTokenRequest
 try {
-    String result = apiInstance.create(body);
+    Integer result = apiInstance.create(body);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ApiKeyApi#create");
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**String**
+**Integer**
 
 ### Authorization
 
@@ -192,7 +192,7 @@ No authorization required
 
 <a name="read"></a>
 # **read**
-> String read(token)
+> Token read(token)
 
 Read a token by the token string itself.
 
@@ -208,7 +208,7 @@ Read a token by the token string itself.
 ApiKeyApi apiInstance = new ApiKeyApi();
 String token = "token_example"; // String | 
 try {
-    String result = apiInstance.read(token);
+    Token result = apiInstance.read(token);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ApiKeyApi#read");
@@ -224,7 +224,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**String**
+[**Token**](Token.md)
 
 ### Authorization
 
@@ -237,7 +237,7 @@ No authorization required
 
 <a name="read_0"></a>
 # **read_0**
-> String read_0(id)
+> Token read_0(id)
 
 Read a token by ID.
 
@@ -253,7 +253,7 @@ Read a token by ID.
 ApiKeyApi apiInstance = new ApiKeyApi();
 Integer id = 56; // Integer | 
 try {
-    String result = apiInstance.read_0(id);
+    Token result = apiInstance.read_0(id);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ApiKeyApi#read_0");
@@ -269,7 +269,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**String**
+[**Token**](Token.md)
 
 ### Authorization
 

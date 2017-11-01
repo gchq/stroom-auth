@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 <a name="createUser"></a>
 # **createUser**
-> String createUser()
+> String createUser(body)
 
 Create a user.
 
@@ -28,8 +28,9 @@ Create a user.
 
 
 UserApi apiInstance = new UserApi();
+User body = new User(); // User | user
 try {
-    String result = apiInstance.createUser();
+    String result = apiInstance.createUser(body);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling UserApi#createUser");
@@ -38,7 +39,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**User**](User.md)| user | [optional]
 
 ### Return type
 
@@ -227,7 +231,7 @@ No authorization required
 
 <a name="updateUser"></a>
 # **updateUser**
-> String updateUser(id)
+> String updateUser(id, body)
 
 Update a user.
 
@@ -242,8 +246,9 @@ Update a user.
 
 UserApi apiInstance = new UserApi();
 Integer id = 56; // Integer | 
+User body = new User(); // User | user
 try {
-    String result = apiInstance.updateUser(id);
+    String result = apiInstance.updateUser(id, body);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling UserApi#updateUser");
@@ -256,6 +261,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **Integer**|  |
+ **body** | [**User**](User.md)| user | [optional]
 
 ### Return type
 

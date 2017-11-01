@@ -39,6 +39,7 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.Configuration;
 import stroom.auth.config.Config;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
+import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
 import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
@@ -121,6 +122,7 @@ public final class App extends Application<Config> {
     environment.jersey().register(injector.getInstance(BadRequestExceptionMapper.class));
     environment.jersey().register(injector.getInstance(TokenCreationExceptionMapper.class));
     environment.jersey().register(injector.getInstance(UnsupportedFilterExceptionMapper.class));
+    environment.jersey().register(injector.getInstance(NoSuchUserExceptionMapper.class));
   }
 
   private static final void configureAuthentication(Config config, Environment environment) {

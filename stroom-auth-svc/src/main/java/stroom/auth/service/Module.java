@@ -27,6 +27,7 @@ import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
 import stroom.auth.config.TokenConfig;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
+import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
 import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
@@ -63,6 +64,7 @@ public final class Module extends AbstractModule {
     bind(BadRequestExceptionMapper.class);
     bind(TokenCreationExceptionMapper.class);
     bind(UnsupportedFilterExceptionMapper.class);
+    bind(NoSuchUserExceptionMapper.class);
   }
 
   @Provides

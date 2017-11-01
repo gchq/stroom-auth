@@ -16,19 +16,18 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
-import stroom.auth.resources.token.v1.Token;
+import stroom.auth.AuthenticationFlowHelper;
+import stroom.auth.service.ApiException;
+import stroom.auth.service.ApiResponse;
+import stroom.auth.service.api.ApiKeyApi;
+import stroom.auth.service.api.model.CreateTokenRequest;
+import stroom.auth.service.api.model.Token;
 
 import java.io.IOException;
-import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static stroom.auth.service.resources.support.HttpAsserts.assertBadRequest;
-import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
-import static stroom.auth.resources.token.v1.Token.TokenType.API;
 
 /**
  * TODO: create with issued date in the past; create with expiry date in the past; create with invalid token type
@@ -36,46 +35,42 @@ import static stroom.auth.resources.token.v1.Token.TokenType.API;
 public class TokenResource_create_IT extends TokenResource_IT {
 
   @Test
-  public void simpleCreate() throws UnirestException, IOException {
-    String securityToken = clearTokensAndLogin();
+  public void simpleCreate() throws UnirestException, IOException, ApiException {
+    String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
-    String token = tokenManager.createToken("admin", API, securityToken);
+    ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
-    HttpResponse response = Unirest
-        .get(url + "/byToken/" + token)
-        .header("Authorization", "Bearer " + securityToken)
-        .header("Content-Type", "application/json")
-        .asString();
+    CreateTokenRequest createTokenRequest = new CreateTokenRequest();
+    createTokenRequest.setUserEmail("admin");
+    createTokenRequest.setTokenType("api");
+    createTokenRequest.setEnabled(false);
+    createTokenRequest.setComments("Created by TokenResource_create_IT");
+    int newApiKeyId = apiKeyApiClient.create(createTokenRequest);
 
-    assertOk(response);
-    tokenManager.deserialiseToken((String)response.getBody());
+    // Use the id to get the Jws
+    Token newApiKeyJws = apiKeyApiClient.read_0(newApiKeyId);
+    assertThat(newApiKeyJws).isNotNull();
+
+    // Now try and read using the api key itself
+    ApiResponse<Token> response = apiKeyApiClient.readWithHttpInfo(newApiKeyJws.getToken());
+    assertThat(response.getStatusCode()).isEqualTo(200);
   }
 
   @Test
   public void create_with_bad_user() throws UnirestException, IOException {
-    String securityToken = clearTokensAndLogin();
+    String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
-    String expiresOn = Instant.now().plusSeconds(604800).toString();
-    String issuedOn = Instant.now().toString();
+    ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
-    Token token = new Token.TokenBuilder()
-        .token(securityToken)
-        .tokenType(API.getText())
-        .enabled(true)
-        .expiresOn(expiresOn)
-        .issuedOn(issuedOn)
-        .userEmail("badUser")
-        .build();
-
-    String serializedToken = tokenManager.serialiseToken(token);
-
-    HttpResponse response = Unirest
-        .post(tokenManager.getRootUrl())
-        .header("Content-Type", "application/json")
-        .header("Authorization", "Bearer " + securityToken)
-        .body(serializedToken)
-        .asString();
-
-    assertBadRequest(response);
+    CreateTokenRequest createTokenRequest = new CreateTokenRequest();
+    createTokenRequest.setUserEmail("BAD_USER");
+    createTokenRequest.setTokenType("api");
+    createTokenRequest.setEnabled(false);
+    createTokenRequest.setComments("Created by TokenResource_create_IT");
+    try {
+      int newApiKeyId = apiKeyApiClient.create(createTokenRequest);
+    } catch (ApiException e) {
+      assertThat(e.getCode()).isEqualTo(400);
+    }
   }
 }

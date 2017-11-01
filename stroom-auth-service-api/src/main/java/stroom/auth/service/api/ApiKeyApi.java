@@ -30,6 +30,7 @@ import java.io.IOException;
 import stroom.auth.service.api.model.CreateTokenRequest;
 import stroom.auth.service.api.model.SearchRequest;
 import stroom.auth.service.api.model.SearchResponse;
+import stroom.auth.service.api.model.Token;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -114,11 +115,11 @@ public class ApiKeyApi {
      * Create a new token.
      * 
      * @param body CreateTokenRequest (optional)
-     * @return String
+     * @return Integer
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public String create(CreateTokenRequest body) throws ApiException {
-        ApiResponse<String> resp = createWithHttpInfo(body);
+    public Integer create(CreateTokenRequest body) throws ApiException {
+        ApiResponse<Integer> resp = createWithHttpInfo(body);
         return resp.getData();
     }
 
@@ -126,12 +127,12 @@ public class ApiKeyApi {
      * Create a new token.
      * 
      * @param body CreateTokenRequest (optional)
-     * @return ApiResponse&lt;String&gt;
+     * @return ApiResponse&lt;Integer&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<String> createWithHttpInfo(CreateTokenRequest body) throws ApiException {
+    public ApiResponse<Integer> createWithHttpInfo(CreateTokenRequest body) throws ApiException {
         com.squareup.okhttp.Call call = createValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
+        Type localVarReturnType = new TypeToken<Integer>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -143,7 +144,7 @@ public class ApiKeyApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call createAsync(CreateTokenRequest body, final ApiCallback<String> callback) throws ApiException {
+    public com.squareup.okhttp.Call createAsync(CreateTokenRequest body, final ApiCallback<Integer> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -165,7 +166,7 @@ public class ApiKeyApi {
         }
 
         com.squareup.okhttp.Call call = createValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
+        Type localVarReturnType = new TypeToken<Integer>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
@@ -581,11 +582,11 @@ public class ApiKeyApi {
      * Read a token by the token string itself.
      * 
      * @param token  (required)
-     * @return String
+     * @return Token
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public String read(String token) throws ApiException {
-        ApiResponse<String> resp = readWithHttpInfo(token);
+    public Token read(String token) throws ApiException {
+        ApiResponse<Token> resp = readWithHttpInfo(token);
         return resp.getData();
     }
 
@@ -593,12 +594,12 @@ public class ApiKeyApi {
      * Read a token by the token string itself.
      * 
      * @param token  (required)
-     * @return ApiResponse&lt;String&gt;
+     * @return ApiResponse&lt;Token&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<String> readWithHttpInfo(String token) throws ApiException {
+    public ApiResponse<Token> readWithHttpInfo(String token) throws ApiException {
         com.squareup.okhttp.Call call = readValidateBeforeCall(token, null, null);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
+        Type localVarReturnType = new TypeToken<Token>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -610,7 +611,7 @@ public class ApiKeyApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call readAsync(String token, final ApiCallback<String> callback) throws ApiException {
+    public com.squareup.okhttp.Call readAsync(String token, final ApiCallback<Token> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -632,7 +633,7 @@ public class ApiKeyApi {
         }
 
         com.squareup.okhttp.Call call = readValidateBeforeCall(token, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
+        Type localVarReturnType = new TypeToken<Token>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
@@ -700,11 +701,11 @@ public class ApiKeyApi {
      * Read a token by ID.
      * 
      * @param id  (required)
-     * @return String
+     * @return Token
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public String read_0(Integer id) throws ApiException {
-        ApiResponse<String> resp = read_0WithHttpInfo(id);
+    public Token read_0(Integer id) throws ApiException {
+        ApiResponse<Token> resp = read_0WithHttpInfo(id);
         return resp.getData();
     }
 
@@ -712,12 +713,12 @@ public class ApiKeyApi {
      * Read a token by ID.
      * 
      * @param id  (required)
-     * @return ApiResponse&lt;String&gt;
+     * @return ApiResponse&lt;Token&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<String> read_0WithHttpInfo(Integer id) throws ApiException {
+    public ApiResponse<Token> read_0WithHttpInfo(Integer id) throws ApiException {
         com.squareup.okhttp.Call call = read_0ValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
+        Type localVarReturnType = new TypeToken<Token>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -729,7 +730,7 @@ public class ApiKeyApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call read_0Async(Integer id, final ApiCallback<String> callback) throws ApiException {
+    public com.squareup.okhttp.Call read_0Async(Integer id, final ApiCallback<Token> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -751,7 +752,7 @@ public class ApiKeyApi {
         }
 
         com.squareup.okhttp.Call call = read_0ValidateBeforeCall(id, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
+        Type localVarReturnType = new TypeToken<Token>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }

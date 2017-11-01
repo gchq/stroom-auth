@@ -24,6 +24,7 @@ import com.google.common.base.Strings;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -117,7 +118,7 @@ public final class UserResource {
   public final Response createUser(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
       @Context @NotNull DSLContext database,
-      @NotNull User user) {
+      @ApiParam("user") @NotNull User user) {
     // Validate
     Preconditions.checkNotNull(authenticatedServiceUser);
     Preconditions.checkNotNull(database);
@@ -282,7 +283,7 @@ public final class UserResource {
   public final Response updateUser(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
       @Context @NotNull DSLContext database,
-      @NotNull User user,
+      @ApiParam("user") @NotNull User user,
       @PathParam("id") int userId) {
     // Validate
     Preconditions.checkNotNull(authenticatedServiceUser);

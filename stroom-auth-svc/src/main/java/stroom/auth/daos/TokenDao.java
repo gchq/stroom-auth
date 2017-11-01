@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 import stroom.auth.TokenGenerator;
 import stroom.auth.config.TokenConfig;
 import stroom.auth.exceptions.BadRequestException;
-import stroom.auth.exceptions.TokenCreationException;
+import stroom.auth.exceptions.NoSuchUserException;
 import stroom.auth.exceptions.UnsupportedFilterException;
 import stroom.auth.resources.token.v1.SearchRequest;
 import stroom.auth.resources.token.v1.SearchResponse;
@@ -140,7 +140,7 @@ public class TokenDao {
     return searchResponse;
   }
 
-  public String createEmailResetToken(String emailAddress) {
+  public String createEmailResetToken(String emailAddress) throws NoSuchUserException {
     return createToken(
             Token.TokenType.EMAIL_RESET, "authenticationResource",
             emailAddress,
@@ -148,7 +148,7 @@ public class TokenDao {
             .getToken();
   }
 
-  public String createToken(String recipientUserEmail) {
+  public String createToken(String recipientUserEmail) throws NoSuchUserException {
     return createToken(
             Token.TokenType.USER,
             "authenticationResource",
@@ -166,7 +166,7 @@ public class TokenDao {
       String issuingUserEmail,
       String recipientUserEmail,
       boolean isEnabled,
-      String comment) {
+      String comment) throws NoSuchUserException {
 
     Record1<Integer> userRecord = database
         .select(USERS.ID)
@@ -174,7 +174,7 @@ public class TokenDao {
         .where(USERS.EMAIL.eq(recipientUserEmail))
         .fetchOne();
     if(userRecord == null){
-      throw new TokenCreationException("Cannot find user to associate with this token!");
+      throw new NoSuchUserException("Cannot find user to associate with this token!");
     }
     int recipientUserId = userRecord.get(USERS.ID);
 
@@ -235,13 +235,15 @@ public class TokenDao {
     SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
         getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
 
-    Token token =
+    Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer> token =
         selectFrom
         .where(new Condition[]{TOKENS.ID.eq(Integer.valueOf(tokenId))})
-        .fetchOne()
-        .into(Token.class);
+        .fetchOne();
+    if(token == null){
+      return Optional.empty();
+    }
 
-    return Optional.of(token);
+    return Optional.of(token.into(Token.class));
   }
 
 

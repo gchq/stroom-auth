@@ -262,7 +262,8 @@
           "200" : {
             "description" : "successful operation",
             "schema" : {
-              "type" : "string"
+              "type" : "integer",
+              "format" : "int32"
             }
           }
         }
@@ -302,7 +303,7 @@
           "200" : {
             "description" : "successful operation",
             "schema" : {
-              "type" : "string"
+              "$ref" : "#/definitions/Token"
             }
           }
         }
@@ -376,7 +377,7 @@
           "200" : {
             "description" : "successful operation",
             "schema" : {
-              "type" : "string"
+              "$ref" : "#/definitions/Token"
             }
           }
         }
@@ -457,6 +458,15 @@
         "description" : "",
         "operationId" : "createUser",
         "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "user",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "successful operation",
@@ -514,6 +524,14 @@
         "operationId" : "updateUser",
         "produces" : [ "application/json" ],
         "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "user",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        }, {
           "name" : "id",
           "in" : "path",
           "required" : true,
@@ -704,6 +722,59 @@
           "type" : "string"
         },
         "updated_by_user" : {
+          "type" : "string"
+        }
+      }
+    },
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "first_name" : {
+          "type" : "string"
+        },
+        "last_name" : {
+          "type" : "string"
+        },
+        "comments" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        },
+        "password_hash" : {
+          "type" : "string"
+        },
+        "login_failures" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "login_count" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last_login" : {
+          "type" : "string"
+        },
+        "updated_on" : {
+          "type" : "string"
+        },
+        "updated_by_user" : {
+          "type" : "string"
+        },
+        "created_on" : {
+          "type" : "string"
+        },
+        "created_by_user" : {
           "type" : "string"
         }
       }

@@ -14,6 +14,7 @@
 package stroom.auth.service.api;
 
 import stroom.auth.service.ApiException;
+import stroom.auth.service.api.model.Credentials;
 import stroom.auth.service.api.model.IdTokenRequest;
 import org.junit.Test;
 import org.junit.Ignore;
@@ -83,6 +84,69 @@ public class AuthenticationApiTest {
         String state = null;
         String sessionId = null;
         String response = api.handleAuthenticationRequest(clientId, redirectUrl, nonce, scope, responseType, state, sessionId);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Handle a login request made using username and password credentials.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void handleLoginTest() throws ApiException {
+        Credentials body = null;
+        String response = api.handleLogin(body);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Reset a user account using an email address.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void resetEmailTest() throws ApiException {
+        String email = null;
+        String response = api.resetEmail(email);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Verify the authenticity and current-ness of a JWS token.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void verifyTokenTest() throws ApiException {
+        String token = null;
+        String response = api.verifyToken(token);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * A welcome message.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void welcomeTest() throws ApiException {
+        String response = api.welcome();
 
         // TODO: test validations
     }

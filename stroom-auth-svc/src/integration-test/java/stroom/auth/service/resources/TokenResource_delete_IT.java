@@ -16,79 +16,137 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
-import stroom.auth.resources.token.v1.SearchRequest;
-import stroom.auth.resources.token.v1.Token;
-import stroom.auth.resources.user.v1.User;
+import stroom.auth.AuthenticationFlowHelper;
+import stroom.auth.service.ApiException;
+import stroom.auth.service.ApiResponse;
+import stroom.auth.service.api.ApiKeyApi;
+import stroom.auth.service.api.UserApi;
+import stroom.auth.service.api.model.CreateTokenRequest;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TokenResource_delete_IT extends TokenResource_IT{
 
   @Test
-  public void delete() throws UnirestException, IOException {
-    String securityToken = clearTokensAndLogin();
-    String userEmail = "testUser_" + Instant.now().toString();
-    userManager.createUser(new User(userEmail, "password"), securityToken);
-    String token = tokenManager.createToken(userEmail, Token.TokenType.USER, securityToken);
-    tokenManager.createToken(userEmail, Token.TokenType.API, securityToken);
-    tokenManager.createToken(userEmail, Token.TokenType.API, securityToken);
-    tokenManager.deleteToken(token, securityToken);
+  public void delete() throws UnirestException, IOException, ApiException {
+    String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+    ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
-    SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
-        .page(0)
-        .limit(10)
-        .orderBy("expires_on")
-        .filters(new HashMap<String, String>()
-          {{
-            put("user_email", userEmail);
-          }})
-        .build();
-    String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
+    CreateTokenRequest createTokenRequest = new CreateTokenRequest();
+    createTokenRequest.setUserEmail("admin");
+    createTokenRequest.setTokenType("api");
+    createTokenRequest.setEnabled(false);
+    createTokenRequest.setComments("Created by TokenResource_create_IT");
+    Integer newApiKeyId = apiKeyApiClient.create(createTokenRequest);
+    assertThat(newApiKeyId).isNotNull();
 
-    HttpResponse response = Unirest
-        .post(searchUrl)
-        .header("Authorization", "Bearer " + securityToken)
-        .header("Content-Type", "application/json")
-        .body(serialisedSearchRequest)
-        .asString();
+    // Check that the token we just created has been saved.
+    stroom.auth.service.api.model.Token newApiKeyJws = apiKeyApiClient.read_0(newApiKeyId);
+    assertThat(newApiKeyJws).isNotNull();
 
-    List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
-    assertThat(tokens.size()).isEqualTo(2);
+    ApiResponse<String> deleteResponse = apiKeyApiClient.delete_0WithHttpInfo(newApiKeyId);
+    assertThat(deleteResponse.getStatusCode()).isEqualTo(200);
+
+    // Check that the token we just created has been saved.
+    try {
+      apiKeyApiClient.read_0WithHttpInfo(newApiKeyId);
+    } catch (ApiException ex) {
+      assertThat(ex.getCode()).isEqualTo(404);
+    }
   }
 
   @Test
-  public void deleteAll() throws UnirestException, IOException {
-    String securityToken = clearTokensAndLogin();
-    String userEmail = "testUser_" + Instant.now().toString();
-    createUserAndTokens(userEmail, securityToken);
-    tokenManager.deleteAllTokens(securityToken);
+  public void deleteAll() throws UnirestException, IOException, ApiException {
+    String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+    ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
-    SearchRequest searchRequest = new SearchRequest.SearchRequestBuilder()
-        .page(0)
-        .limit(10)
-        .orderBy("expires_on")
-        .build();
-    String serialisedSearchRequest = tokenManager.serialiseSearchRequest(searchRequest);
+    // Set up users and tokens
 
-    String newSecurityToken = clearTokensAndLogin();
-    HttpResponse response = Unirest
-        .post(searchUrl)
-        .header("Authorization", "Bearer " + newSecurityToken)
-        .header("Content-Type", "application/json")
-        .body(serialisedSearchRequest)
-        .asString();
-    List<Token> tokens = tokenManager.deserialiseTokens((String)response.getBody()).getTokens();
-    // We can't access tokens without a token for the admin user
-    assertThat(tokens.size()).isEqualTo(1);
+    UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
+    stroom.auth.service.api.model.User user1 = new stroom.auth.service.api.model.User();
+    String user1Email = "user" + Instant.now().toString();
+    user1.setEmail(user1Email);
+    user1.setPassword("password");
+    userApi.createUser(user1);
+
+    CreateTokenRequest createTokenRequest1 = new CreateTokenRequest();
+    createTokenRequest1.setTokenType("API");
+    createTokenRequest1.setUserEmail(user1Email);
+    int key1Id = apiKeyApiClient.create(createTokenRequest1);
+
+    CreateTokenRequest createTokenRequest2 = new CreateTokenRequest();
+    createTokenRequest2.setTokenType("API");
+    createTokenRequest2.setUserEmail(user1Email);
+    int key2Id = apiKeyApiClient.create(createTokenRequest2);
+
+
+    stroom.auth.service.api.model.User user2 = new stroom.auth.service.api.model.User();
+    String user2Email = "user" + Instant.now().toString();
+    user2.setEmail(user2Email);
+    user2.setPassword("password");
+    userApi.createUser(user2);
+
+    CreateTokenRequest createTokenRequest3 = new CreateTokenRequest();
+    createTokenRequest3.setTokenType("API");
+    createTokenRequest3.setUserEmail(user2Email);
+    int key3Id = apiKeyApiClient.create(createTokenRequest3);
+
+    CreateTokenRequest createTokenRequest4 = new CreateTokenRequest();
+    createTokenRequest4.setTokenType("API");
+    createTokenRequest4.setUserEmail(user2Email);
+    int key4Id = apiKeyApiClient.create(createTokenRequest4);
+
+    CreateTokenRequest createTokenRequest5 = new CreateTokenRequest();
+    createTokenRequest5.setTokenType("API");
+    createTokenRequest5.setUserEmail(user2Email);
+    int key5Id = apiKeyApiClient.create(createTokenRequest5);
+
+
+    // Verify users and tokens were created
+    stroom.auth.service.api.model.Token key1 = apiKeyApiClient.read_0(key1Id);
+    assertThat(key1).isNotNull();
+    stroom.auth.service.api.model.Token key2 = apiKeyApiClient.read_0(key2Id);
+    assertThat(key2).isNotNull();
+    stroom.auth.service.api.model.Token key3 = apiKeyApiClient.read_0(key3Id);
+    assertThat(key3).isNotNull();
+    stroom.auth.service.api.model.Token key4 = apiKeyApiClient.read_0(key4Id);
+    assertThat(key4).isNotNull();
+    stroom.auth.service.api.model.Token key5 = apiKeyApiClient.read_0(key5Id);
+    assertThat(key5).isNotNull();
+
+    ApiResponse response = apiKeyApiClient.deleteAllWithHttpInfo();
+    assertThat(response.getStatusCode()).isEqualTo(200);
+
+    try {
+      apiKeyApiClient.read_0(key1Id);
+    }catch (ApiException e) {
+      assertThat(e.getCode()).isEqualTo(404);
+    }
+    try {
+      apiKeyApiClient.read_0(key2Id);
+    }catch (ApiException e) {
+      assertThat(e.getCode()).isEqualTo(404);
+    }
+    try {
+      apiKeyApiClient.read_0(key3Id);
+    }catch (ApiException e) {
+      assertThat(e.getCode()).isEqualTo(404);
+    }
+    try {
+      apiKeyApiClient.read_0(key4Id);
+    }catch (ApiException e) {
+      assertThat(e.getCode()).isEqualTo(404);
+    }
+    try {
+      apiKeyApiClient.read_0(key5Id);
+    }catch (ApiException e) {
+      assertThat(e.getCode()).isEqualTo(404);
+    }
   }
 
 }

@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.RelyingParty;
 import stroom.auth.TokenBuilderFactory;
+import stroom.auth.exceptions.NoSuchUserException;
 import stroom.auth.resources.user.v1.User;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
@@ -395,7 +396,7 @@ public final class AuthenticationResource {
   @NotNull
   @ApiOperation(value = "Reset a user account using an email address.",
           response = String.class, tags = {"Authentication"})
-  public final Response resetEmail(@PathParam("email") String emailAddress) {
+  public final Response resetEmail(@PathParam("email") String emailAddress) throws NoSuchUserException {
     User user = userDao.get(emailAddress);
     String resetToken = tokenDao.createEmailResetToken(emailAddress);
     emailSender.send(user, resetToken);

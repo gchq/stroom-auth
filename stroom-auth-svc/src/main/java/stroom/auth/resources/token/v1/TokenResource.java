@@ -120,7 +120,7 @@ public class TokenResource {
   @Timed
   @ApiOperation(
       value = "Create a new token.",
-      response = String.class,
+      response = Integer.class,
       tags = {"ApiKey"})
   public final Response create(
       @Auth @NotNull ServiceUser authenticatedServiceUser,
@@ -203,7 +203,7 @@ public class TokenResource {
 
   @ApiOperation(
           value = "Read a token by the token string itself.",
-          response = String.class,
+          response = Token.class,
           tags = {"ApiKey"})
   @GET
   @Path("/byToken/{token}")
@@ -224,7 +224,7 @@ public class TokenResource {
 
   @ApiOperation(
           value = "Read a token by ID.",
-          response = String.class,
+          response = Token.class,
           tags = {"ApiKey"})
   @GET
   @Path("/{id}")

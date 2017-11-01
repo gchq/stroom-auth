@@ -17,6 +17,7 @@ import stroom.auth.service.ApiException;
 import stroom.auth.service.api.model.CreateTokenRequest;
 import stroom.auth.service.api.model.SearchRequest;
 import stroom.auth.service.api.model.SearchResponse;
+import stroom.auth.service.api.model.Token;
 import org.junit.Test;
 import org.junit.Ignore;
 
@@ -45,7 +46,86 @@ public class ApiKeyApiTest {
     @Test
     public void createTest() throws ApiException {
         CreateTokenRequest body = null;
-        String response = api.create(body);
+        Integer response = api.create(body);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Delete a token by the token string itself.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void deleteTest() throws ApiException {
+        String token = null;
+        String response = api.delete(token);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Delete all tokens.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void deleteAllTest() throws ApiException {
+        String response = api.deleteAll();
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Delete a token by ID.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void delete_0Test() throws ApiException {
+        Integer id = null;
+        String response = api.delete_0(id);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Read a token by the token string itself.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void readTest() throws ApiException {
+        String token = null;
+        Token response = api.read(token);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Read a token by ID.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void read_0Test() throws ApiException {
+        Integer id = null;
+        Token response = api.read_0(id);
 
         // TODO: test validations
     }
@@ -62,6 +142,23 @@ public class ApiKeyApiTest {
     public void searchTest() throws ApiException {
         SearchRequest body = null;
         SearchResponse response = api.search(body);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Enable or disable the state of a token.
+     *
+     * 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void toggleEnabledTest() throws ApiException {
+        Integer id = null;
+        Boolean enabled = null;
+        String response = api.toggleEnabled(id, enabled);
 
         // TODO: test validations
     }

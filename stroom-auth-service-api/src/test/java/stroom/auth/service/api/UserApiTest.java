@@ -14,6 +14,7 @@
 package stroom.auth.service.api;
 
 import stroom.auth.service.ApiException;
+import stroom.auth.service.api.model.User;
 import org.junit.Test;
 import org.junit.Ignore;
 
@@ -41,7 +42,8 @@ public class UserApiTest {
      */
     @Test
     public void createUserTest() throws ApiException {
-        String response = api.createUser();
+        User body = null;
+        String response = api.createUser(body);
 
         // TODO: test validations
     }
@@ -119,7 +121,8 @@ public class UserApiTest {
     @Test
     public void updateUserTest() throws ApiException {
         Integer id = null;
-        String response = api.updateUser(id);
+        User body = null;
+        String response = api.updateUser(id, body);
 
         // TODO: test validations
     }
