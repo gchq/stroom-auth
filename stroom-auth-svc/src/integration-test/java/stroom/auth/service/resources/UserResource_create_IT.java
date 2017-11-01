@@ -20,11 +20,17 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
+import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.user.v1.User;
+import stroom.auth.service.ApiException;
+import stroom.auth.service.ApiResponse;
+import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
 import java.time.Instant;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.api.Java6Assertions.fail;
 import static stroom.auth.service.resources.support.HttpAsserts.assertBadRequest;
 import static stroom.auth.service.resources.support.HttpAsserts.assertBodyNotNull;
 import static stroom.auth.service.resources.support.HttpAsserts.assertConflict;
@@ -34,113 +40,69 @@ import static stroom.auth.service.resources.support.HttpAsserts.assertUnprocessa
 
 public final class UserResource_create_IT extends Base_IT {
     @Test
-    public final void create_user() throws UnirestException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        User user = new User(Instant.now().toString(), "testPassword");
-        String serializedUser = userManager.serialiseUser(user);
+    public final void create_user() throws UnirestException, ApiException {
+        String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+        UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
-        HttpResponse response = Unirest
-                .post(userManager.getRootUrl())
-                .header("Authorization", "Bearer " + jwsToken)
-                .header("Content-Type", "application/json")
-                .body(serializedUser)
-                .asString();
+        ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+                .email("email")
+                .password("password"));
 
-        assertOk(response);
-        assertBodyNotNull(response);
-    }
-
-    @Test
-    public final void create_user_missing_user() throws UnirestException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        HttpResponse response = Unirest
-                .post(userManager.getRootUrl())
-                .header("Authorization", "Bearer " + jwsToken)
-                .header("Content-Type", "application/json")
-                .asString();
-
-        assertUnprocessableEntity(response);
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getData()).isNotNull();
     }
 
     @Test
     public final void create_user_missing_name() throws UnirestException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        User user = new User("", "testPassword");
-        String serializedUser = userManager.serialiseUser(user);
+        String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+        UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
-        HttpResponse response = Unirest
-                .post(userManager.getRootUrl())
-                .header("Authorization", "Bearer " + jwsToken)
-                .header("Content-Type", "application/json")
-                .body(serializedUser)
-                .asString();
-
-        assertBadRequest(response);
+        try {
+            userApi.createUser(new stroom.auth.service.api.model.User()
+                    .email("")
+                    .password("password"));
+            fail("Should throw an exception!");
+        } catch(ApiException e ){
+            assertThat(e.getCode()).isEqualTo(400);
+        }
     }
 
     @Test
-    public final void create_user_missing_password() throws UnirestException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        User user = new User(Instant.now().toString(), "");
-        String serializedUser = userManager.serialiseUser(user);
+    public final void create_user_missing_password() throws UnirestException, ApiException {
+        String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+        UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
-        HttpResponse response = Unirest
-                .post(userManager.getRootUrl())
-                .header("Authorization", "Bearer " + jwsToken)
-                .header("Content-Type", "application/json")
-                .body(serializedUser)
-                .asString();
-
-        assertBadRequest(response);
+        try {
+            userApi.createUser(new stroom.auth.service.api.model.User()
+                    .email("create_user_missing_password" + Instant.now().toString())
+                    .password(""));
+            fail("Should throw an exception!");
+        } catch(ApiException e ){
+            assertThat(e.getCode()).isEqualTo(400);
+        }
     }
 
     @Test
-    public final void create_user_with_duplicate_name() throws UnirestException {
-        String jwsToken = authenticationManager.loginAsAdmin();
+    public final void create_user_with_duplicate_name() throws UnirestException, ApiException {
+        String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+        UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
+
         String emailToBeReused = Instant.now().toString();
-        User user = new User(emailToBeReused, "testPassword");
-        String serializedUser = userManager.serialiseUser(user);
+        ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+                .email(emailToBeReused)
+                .password("password"));
 
-        HttpResponse response = Unirest
-                .post(userManager.getRootUrl())
-                .header("Authorization", "Bearer " + jwsToken)
-                .header("Content-Type", "application/json")
-                .body(serializedUser)
-                .asString();
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getData()).isNotNull();
 
-        assertOk(response);
-        assertBodyNotNull(response);
-
-        User duplicateUser = new User(emailToBeReused, "testPassword");
-        String duplicateSerializedUser = userManager.serialiseUser(duplicateUser);
-        HttpResponse duplicateResponse = Unirest
-                .post(userManager.getRootUrl())
-                .header("Authorization", "Bearer " + jwsToken)
-                .header("Content-Type", "application/json")
-                .body(duplicateSerializedUser)
-                .asString();
-
-        assertConflict(duplicateResponse);
+        try {
+            userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+                    .email(emailToBeReused)
+                    .password("password"));
+            fail("Should have had an exception!");
+        }catch(ApiException e){
+            assertThat(e.getCode()).isEqualTo(409);
+        }
     }
 
-    @Test
-    public final void create_user_with_no_authorisation() throws UnirestException {
-        String adminsJws = authenticationManager.loginAsAdmin();
-        User user = new User(Instant.now().toString(), "testPassword");
-        userManager.createUser(user, adminsJws);
-        String newUsersJws = authenticationManager.logInAsUser(user);
-
-        // Try to use this new user to create another user
-        User anotherUser = new User(Instant.now().toString(), "testPassword");
-        String serializedAnotherUser = userManager.serialiseUser(anotherUser);
-        HttpResponse createAnotherUserResponse = Unirest
-                .post(userManager.getRootUrl())
-                .header("Authorization", "Bearer " + newUsersJws)
-                .header("Content-Type", "application/json")
-                .body(serializedAnotherUser)
-                .asString();
-
-        // This new user won't have permission to create users, so this request should be rejected.
-        assertUnauthorised(createAnotherUserResponse);
-    }
 }
