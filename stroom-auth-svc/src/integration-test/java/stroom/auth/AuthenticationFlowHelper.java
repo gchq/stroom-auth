@@ -46,12 +46,16 @@ public class AuthenticationFlowHelper {
     private static final String PRETEND_NONCE_HASH = "0123456789";
 
     public static String authenticateAsAdmin() {
+        return authenticateAs("admin", "admin");
+    }
+
+    public static String authenticateAs(String userEmail, String password) {
         String sessionId = sendInitialAuthenticationRequest();
         String accessCode = null;
         try {
-            accessCode = performLogin(sessionId, "admin", "admin");
+            accessCode = performLogin(sessionId, userEmail, password);
         } catch (ApiException e) {
-            fail("Could not log the user in as 'admin/admin'!");
+            fail("Could not log the user in as '"+userEmail+"/"+password+"'!");
         }
         String idToken = exchangeAccessCodeForIdToken(sessionId, accessCode);
         checkIdTokenContainsNonce(idToken);

@@ -16,11 +16,13 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
+import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.user.v1.User;
+import stroom.auth.service.ApiException;
+import stroom.auth.service.ApiResponse;
+import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
 import java.io.IOException;
@@ -29,79 +31,76 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
-import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
-import static stroom.auth.service.resources.support.HttpAsserts.assertUnauthorised;
 
 public final class UserResource_read_IT extends Base_IT {
 
     @Test
-    public final void search_users() throws UnirestException, IOException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        String url = userManager.getRootUrl();
-        HttpResponse response = Unirest
-                .get(url)
-                .header("Authorization", "Bearer " + jwsToken)
-                .asString();
-        assertThat(response.getStatus()).isEqualTo(200);
+    public final void search_users() throws UnirestException, IOException, ApiException {
+        UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
+        ApiResponse<String> response = userApi.getAllWithHttpInfo();
+        assertThat(response.getStatusCode()).isEqualTo(200);
     }
 
     @Test
-    public final void read_current_user() throws UnirestException, IOException, InterruptedException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        HttpResponse response = Unirest
-                .get(userManager.getMeUrl())
-                .header("Authorization", "Bearer " + jwsToken)
-                .asString();
-        String body = (String) response.getBody();
-        List<User> user = userManager.deserialiseUsers(body);
+    public final void read_current_user() throws UnirestException, IOException, InterruptedException, ApiException {
+        UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
+        ApiResponse<String> response = userApi.readCurrentUserWithHttpInfo();
+        List<User> user = userManager.deserialiseUsers(response.getData());
+
         if (user != null) {
             assertThat(user.get(0).getEmail()).isEqualTo("admin");
         } else fail("No users found");
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatusCode()).isEqualTo(200);
     }
 
     @Test
-    public final void read_user_that_doesnt_exist() throws UnirestException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        String url = userManager.getRootUrl() + "97862345983458";
-        HttpResponse response = Unirest
-                .get(url)
-                .header("Authorization", "Bearer " + jwsToken)
-                .asJson();
-        assertThat(response.getStatus()).isEqualTo(404);
+    public final void read_user_that_doesnt_exist() throws UnirestException, ApiException {
+        UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
+        try {
+            userApi.getUser(129387298);
+            fail("Expected a 404 exception!");
+        }catch(ApiException e) {
+            assertThat(e.getCode()).isEqualTo(404);
+        }
     }
 
     @Test
-    public final void read_other_user_with_authorisation() throws UnirestException {
-        String adminsJws = authenticationManager.loginAsAdmin();
-        User user = new User(Instant.now().toString(), "testPassword");
-        int userId = userManager.createUser(user, adminsJws);
+    public final void read_other_user_with_authorisation() throws UnirestException, ApiException {
+        UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
-        String url = userManager.getRootUrl() + userId;
-        HttpResponse response = Unirest
-                .get(url)
-                .header("Authorization", "Bearer " + adminsJws)
-                .asString();
-        assertOk(response);
+        ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+            .email("read_other_user_with_authorisation_" + Instant.now().toString())
+            .password("password"));
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getData()).isNotNull();
+
+        String user = userApi.getUser(response.getData());
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        assertThat(response.getData()).isNotNull();
     }
 
     @Test
-    public final void read_other_user_without_authorisation() throws UnirestException {
-        String adminsJws = authenticationManager.loginAsAdmin();
+    public final void read_other_user_without_authorisation() throws UnirestException, ApiException {
+        UserApi adminUserApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
-        User userA = new User(Instant.now().toString(), "testPassword");
-        userManager.createUser(userA, adminsJws);
+        String userEmailA = "userEmailA_" + Instant.now().toString();
+        ApiResponse<Integer> responseA = adminUserApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+                .email(userEmailA)
+                .password("password"));
 
-        User userB = new User(Instant.now().toString(), "testPassword");
-        int userBId = userManager.createUser(userB, adminsJws);
+        String userEmailB = "userEmailB_" + Instant.now().toString();
+        ApiResponse<Integer> responseB = adminUserApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+                .email(userEmailB)
+                .password("password"));
 
-        String userAJws = authenticationManager.logInAsUser(userA);
-        String url = userManager.getRootUrl() + userBId;
-        HttpResponse response = Unirest
-                .get(url)
-                .header("Authorization", "Bearer " + userAJws)
-                .asString();
-        assertUnauthorised(response);
+        UserApi userApiA = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAs(userEmailA, "password"));
+        try {
+            userApiA.getUser(responseB.getData());
+            fail("Expected a 403!");
+        }catch(ApiException e){
+            //TODO: This should be a 403 surely?
+            assertThat(e.getCode()).isEqualTo(401);
+        }
     }
 
 }
