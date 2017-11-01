@@ -42,7 +42,7 @@ public class HttpAsserts {
     }
 
     public static void assertBodyNotNull(HttpResponse response) {
-        String body = new String((String) response.getBody());
+        String body = (String) response.getBody();
         assertThat(body).isNotNull();
     }
 }

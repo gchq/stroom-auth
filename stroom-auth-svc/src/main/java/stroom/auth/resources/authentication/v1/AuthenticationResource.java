@@ -42,6 +42,7 @@ import stroom.auth.resources.user.v1.User;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
@@ -143,7 +144,7 @@ public final class AuthenticationResource {
                 optionalSessionId = Arrays.stream(httpServletRequest.getCookies())
                         .filter(cookie -> cookie.getName().equals("sessionId"))
                         .findFirst()
-                        .map(cookie -> cookie.getValue());
+                        .map(Cookie::getValue);
             }
 
             if (!optionalSessionId.isPresent()) {
@@ -251,7 +252,7 @@ public final class AuthenticationResource {
             response = String.class, tags = {"Authentication"})
     public final Response handleLogin(
             @Context @NotNull HttpServletRequest httpServletRequest,
-            @ApiParam("Credentials") @Nullable Credentials credentials) throws URISyntaxException {
+            @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
         LOGGER.info("Received a login request for session " + credentials.getSessionId());
         Optional<stroom.auth.Session> optionalSession = sessionManager.get(credentials.getSessionId());
         if (!optionalSession.isPresent()) {
@@ -335,7 +336,7 @@ public final class AuthenticationResource {
         Optional<String> sessionId = Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> cookie.getName().equals("sessionId"))
                 .findFirst()
-                .map(cookie -> cookie.getValue());
+                .map(Cookie::getValue);
         if (!sessionId.isPresent()) {
             throw new RuntimeException("TODO: what happens now? Redirect to authentication request and start again I think.");
         }

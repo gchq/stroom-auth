@@ -269,9 +269,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         List<Token> results = tokenManager.deserialiseTokens((String) response.getBody()).getTokens();
         int expectedNumberOfTokens = 9; // 3 users should match the filter and they'll have 3 tokens each (API, USER, EMAIL_RESET)
         assertThat(results.size()).isEqualTo(expectedNumberOfTokens);
-        results.forEach(result -> {
-            assertThat(result.getUser_email()).contains("user1");
-        });
+        results.forEach(result -> assertThat(result.getUser_email()).contains("user1"));
     }
 
     @Test
@@ -312,9 +310,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         List<Token> results = tokenManager.deserialiseTokens((String) response.getBody()).getTokens();
         int expectedNumberOfTokens = 9; // 3 users should match the filter and they'll have 3 tokens each (API, USER, EMAIL_RESET)
         assertThat(results.size()).isEqualTo(expectedNumberOfTokens);
-        results.forEach(result -> {
-            assertThat(result.getUser_email()).contains("user1");
-        });
+        results.forEach(result -> assertThat(result.getUser_email()).contains("user1"));
     }
 
     @Test

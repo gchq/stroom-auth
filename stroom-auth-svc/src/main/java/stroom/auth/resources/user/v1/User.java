@@ -231,7 +231,7 @@ public final class User {
         }
 
         String validationMessages = validationErrors.stream()
-                .map(validationError -> validationError.getMessage())
+                .map(UserValidationError::getMessage)
                 .reduce((validationMessage1, validationMessage2) -> validationMessage1 + validationMessage2).orElse("");
         boolean isValid = validationErrors.size() == 0;
         return Pair.of(isValid, validationMessages);

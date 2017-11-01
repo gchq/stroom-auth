@@ -156,7 +156,7 @@ public final class Config extends Configuration {
         Integer port = serverFactory.getApplicationConnectors().stream()
                 .filter(connectorFactory -> connectorFactory instanceof HttpConnectorFactory)
                 .map(connectorFactory -> (HttpConnectorFactory) connectorFactory)
-                .map(httpConnectorFactory -> httpConnectorFactory.getPort())
+                .map(HttpConnectorFactory::getPort)
                 .findFirst()
                 .get();
         return port;
