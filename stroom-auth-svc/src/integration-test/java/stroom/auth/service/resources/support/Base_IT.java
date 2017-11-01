@@ -25,7 +25,7 @@ import stroom.auth.service.App;
 public abstract class Base_IT {
 
     @ClassRule
-    public static final DropwizardAppRule appRule = new DropwizardAppRule(App.class, "config.yml", new ConfigOverride[0]);
+    public static final DropwizardAppRule appRule = new DropwizardAppRule(App.class, "config.yml");
 
     protected static String BASE_TASKS_URL;
     protected static String HEALTH_CHECKS_URL;

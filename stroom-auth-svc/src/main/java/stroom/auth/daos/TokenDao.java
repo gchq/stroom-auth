@@ -126,7 +126,7 @@ public class TokenDao {
                 database.selectCount();
         SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
                 fromCount = TokenDao.getFrom(selectCount, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
-        int count = (Integer) fromCount
+        int count = fromCount
                 .where(conditions.get())
                 .fetchOne(0, int.class);
         // We need to round up so we always have enough pages even if there's a remainder.
