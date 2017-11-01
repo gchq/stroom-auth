@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 <a name="createUser"></a>
 # **createUser**
-> String createUser(body)
+> Integer createUser(body)
 
 Create a user.
 
@@ -30,7 +30,7 @@ Create a user.
 UserApi apiInstance = new UserApi();
 User body = new User(); // User | user
 try {
-    String result = apiInstance.createUser(body);
+    Integer result = apiInstance.createUser(body);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling UserApi#createUser");
@@ -46,7 +46,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**String**
+**Integer**
 
 ### Authorization
 

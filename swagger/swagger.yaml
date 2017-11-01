@@ -410,7 +410,8 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: "string"
+            type: "integer"
+            format: "int32"
   /user/v1/me:
     get:
       tags:

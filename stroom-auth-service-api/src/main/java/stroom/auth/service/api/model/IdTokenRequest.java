@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  * A request to retrieve an ID token using an access code.
  */
 @ApiModel(description = "A request to retrieve an ID token using an access code.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-01T10:45:36.027Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-11-01T12:04:58.875Z")
 public class IdTokenRequest {
   @SerializedName("sessionId")
   private String sessionId = null;

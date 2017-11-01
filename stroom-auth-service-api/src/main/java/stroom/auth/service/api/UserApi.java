@@ -112,11 +112,11 @@ public class UserApi {
      * Create a user.
      * 
      * @param body user (optional)
-     * @return String
+     * @return Integer
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public String createUser(User body) throws ApiException {
-        ApiResponse<String> resp = createUserWithHttpInfo(body);
+    public Integer createUser(User body) throws ApiException {
+        ApiResponse<Integer> resp = createUserWithHttpInfo(body);
         return resp.getData();
     }
 
@@ -124,12 +124,12 @@ public class UserApi {
      * Create a user.
      * 
      * @param body user (optional)
-     * @return ApiResponse&lt;String&gt;
+     * @return ApiResponse&lt;Integer&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<String> createUserWithHttpInfo(User body) throws ApiException {
+    public ApiResponse<Integer> createUserWithHttpInfo(User body) throws ApiException {
         com.squareup.okhttp.Call call = createUserValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
+        Type localVarReturnType = new TypeToken<Integer>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -141,7 +141,7 @@ public class UserApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call createUserAsync(User body, final ApiCallback<String> callback) throws ApiException {
+    public com.squareup.okhttp.Call createUserAsync(User body, final ApiCallback<Integer> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -163,7 +163,7 @@ public class UserApi {
         }
 
         com.squareup.okhttp.Call call = createUserValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
+        Type localVarReturnType = new TypeToken<Integer>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }

@@ -87,6 +87,11 @@ public class TokenDao {
         Users tokenOwnerUsers = USERS.as("tokenOwnerUsers");
         Users updatingUsers = USERS.as("updatingUsers");
 
+        // Use a default if there's no order direction specified in the request
+        if(orderDirection == null){
+            orderDirection = "asc";
+        }
+
         Field userEmail = tokenOwnerUsers.EMAIL.as("user_email");
         // Special cases
         Optional<SortField> orderByField;
@@ -115,7 +120,7 @@ public class TokenDao {
         Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> results =
                 selectFrom
                         .where(conditions.get())
-                        .orderBy(orderByField.get(), TOKENS.ID.asc())
+                        .orderBy(orderByField.get())
                         .limit(limit)
                         .offset(offset)
                         .fetch();

@@ -35,6 +35,6 @@ public class SwaggerClient_IT extends TokenResource_IT {
         assertThat(searchResponse).isNotNull();
         // I used isGreaterThan because although we'll definitely have
         // an admin key a developer might have created another.
-        assertThat(searchResponse.getTokens().size()).isGreaterThan(1);
+        assertThat(searchResponse.getTokens().size()).isGreaterThanOrEqualTo(1);
     }
 }

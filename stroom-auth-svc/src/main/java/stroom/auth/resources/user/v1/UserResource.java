@@ -109,7 +109,7 @@ public final class UserResource {
 
     @ApiOperation(
             value = "Create a user.",
-            response = String.class,
+            response = Integer.class,
             tags = {"User"})
     @POST
     @Path("/")
