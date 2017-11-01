@@ -151,7 +151,7 @@ public final class Config extends Configuration {
         return tokenConfig;
     }
 
-    private final Integer getPort() {
+    private Integer getPort() {
         DefaultServerFactory serverFactory = (DefaultServerFactory) this.getServerFactory();
         Integer port = serverFactory.getApplicationConnectors().stream()
                 .filter(connectorFactory -> connectorFactory instanceof HttpConnectorFactory)

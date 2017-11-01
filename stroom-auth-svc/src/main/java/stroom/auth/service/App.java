@@ -125,13 +125,13 @@ public final class App extends Application<Config> {
         environment.jersey().register(injector.getInstance(NoSuchUserExceptionMapper.class));
     }
 
-    private static final void configureAuthentication(Config config, Environment environment) {
+    private static void configureAuthentication(Config config, Environment environment) {
         environment.jersey().register(new AuthDynamicFeature(AuthenticationFilter.get(config.getTokenConfig())));
         environment.jersey().register(new Binder(ServiceUser.class));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
     }
 
-    private static final void configureCors(Environment environment) {
+    private static void configureCors(Environment environment) {
         Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS");
@@ -139,7 +139,7 @@ public final class App extends Application<Config> {
         cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "*");
     }
 
-    private static final void migrate(Config config, Environment environment) {
+    private static void migrate(Config config, Environment environment) {
         ManagedDataSource dataSource = config.getDataSourceFactory().build(environment.metrics(), "flywayDataSource");
         Flyway flyway = config.getFlywayFactory().build(dataSource);
         flyway.migrate();

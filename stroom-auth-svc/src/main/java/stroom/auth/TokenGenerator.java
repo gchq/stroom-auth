@@ -87,13 +87,13 @@ public final class TokenGenerator {
         createToken(Optional.empty());
     }
 
-    private final void createToken(Optional<Integer> expirationInMinutes) throws TokenCreationException {
+    private void createToken(Optional<Integer> expirationInMinutes) throws TokenCreationException {
         byte[] jwsSecret = this.config.getJwsSecretAsBytes();
         JwtClaims jwtClaims = getClaimsForUser(user, expirationInMinutes);
         this.token = toToken(jwsSecret, jwtClaims);
     }
 
-    private final String toToken(byte[] key, JwtClaims claims) {
+    private String toToken(byte[] key, JwtClaims claims) {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setPayload(claims.toJson());
         jws.setAlgorithmHeaderValue("HS256");
@@ -107,7 +107,7 @@ public final class TokenGenerator {
         }
     }
 
-    private final JwtClaims getClaimsForUser(String user, Optional<Integer> expirationInMinutes) throws TokenCreationException {
+    private JwtClaims getClaimsForUser(String user, Optional<Integer> expirationInMinutes) throws TokenCreationException {
         JwtClaims claims = new JwtClaims();
         if (expirationInMinutes.isPresent()) {
             this.expiresOn = Timestamp.valueOf(LocalDateTime.now().plusMinutes(expirationInMinutes.get()));

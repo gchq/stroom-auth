@@ -48,7 +48,7 @@ public class SwaggerHelper {
         return new UserApi(newApiClient(idToken));
     }
 
-    private static final ApiClient newApiClient(String idToken) {
+    private static ApiClient newApiClient(String idToken) {
         ApiClient apiClient = new ApiClient();
         apiClient.setBasePath("http://localhost:8099");
         apiClient.addDefaultHeader("Authorization", "Bearer " + idToken);

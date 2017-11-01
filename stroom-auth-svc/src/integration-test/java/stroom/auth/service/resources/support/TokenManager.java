@@ -105,14 +105,14 @@ public class TokenManager {
         return rootUrl;
     }
 
-    private final JsonAdapter tokenListMapper() {
+    private JsonAdapter tokenListMapper() {
         Moshi moshi = new Moshi.Builder().build();
         ParameterizedType type = Types.newParameterizedType(List.class, Token.class);
         JsonAdapter<List<Token>> jsonAdapter = moshi.adapter(type);
         return jsonAdapter;
     }
 
-    private final JsonAdapter searchResponseMapper() {
+    private JsonAdapter searchResponseMapper() {
         Moshi moshi = new Moshi.Builder().build();
         JsonAdapter<SearchResponse> jsonAdapter = moshi.adapter(SearchResponse.class);
         return jsonAdapter;

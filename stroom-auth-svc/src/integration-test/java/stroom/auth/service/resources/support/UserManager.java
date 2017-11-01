@@ -70,7 +70,7 @@ public class UserManager {
         return new Moshi.Builder().build().adapter(User.class).toJson(user);
     }
 
-    private final JsonAdapter userListMapper() {
+    private JsonAdapter userListMapper() {
         Moshi moshi = new Moshi.Builder().build();
         ParameterizedType type = Types.newParameterizedType(List.class, User.class);
         JsonAdapter<List<User>> jsonAdapter = moshi.adapter(type);
