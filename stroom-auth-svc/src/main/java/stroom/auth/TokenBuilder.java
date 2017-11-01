@@ -81,17 +81,11 @@ public class TokenBuilder {
 
     public String build() {
         JwtClaims claims = new JwtClaims();
-        if (expirationInMinutes.isPresent()) {
-            claims.setExpirationTimeMinutesInTheFuture(expirationInMinutes.get());
-        }
+        expirationInMinutes.ifPresent(claims::setExpirationTimeMinutesInTheFuture);
         claims.setSubject(subject);
         claims.setIssuer(issuer);
-        if (nonce.isPresent()) {
-            claims.setClaim("nonce", nonce.get());
-        }
-        if (state.isPresent()) {
-            claims.setClaim("state", state.get());
-        }
+        nonce.ifPresent(nonce -> claims.setClaim("nonce", nonce));
+        state.ifPresent(state -> claims.setClaim("state", state));
 
         JsonWebSignature jws = new JsonWebSignature();
         jws.setPayload(claims.toJson());

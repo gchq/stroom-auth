@@ -109,10 +109,11 @@ public final class TokenGenerator {
 
     private JwtClaims getClaimsForUser(String user, Optional<Integer> expirationInMinutes) throws TokenCreationException {
         JwtClaims claims = new JwtClaims();
-        if (expirationInMinutes.isPresent()) {
-            this.expiresOn = Timestamp.valueOf(LocalDateTime.now().plusMinutes(expirationInMinutes.get()));
-            claims.setExpirationTimeMinutesInTheFuture(expirationInMinutes.get());
-        }
+        expirationInMinutes.ifPresent(expirationInMins -> {
+            this.expiresOn = Timestamp.valueOf(LocalDateTime.now().plusMinutes(expirationInMins));
+            claims.setExpirationTimeMinutesInTheFuture(expirationInMins);
+        });
+
         claims.setSubject(user);
         claims.setIssuer(this.config.getJwsIssuer());
 

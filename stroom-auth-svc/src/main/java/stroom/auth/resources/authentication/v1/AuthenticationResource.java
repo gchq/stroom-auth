@@ -231,9 +231,7 @@ public final class AuthenticationResource {
         }
 
         // If we've created a new session cookie then we need to make sure it goes back to the user agent.
-        if (optionalNewSessionCookie.isPresent()) {
-            responseBuilder.cookie(optionalNewSessionCookie.get());
-        }
+        optionalNewSessionCookie.ifPresent(responseBuilder::cookie);
 
         return responseBuilder.build();
     }
@@ -413,10 +411,8 @@ public final class AuthenticationResource {
             response = String.class, tags = {"Authentication"})
     public final Response verifyToken(@PathParam("token") String token) {
         Optional<String> usersEmail = tokenVerifier.verifyToken(token);
-        if (usersEmail.isPresent()) {
-            return status(Status.OK).entity(usersEmail.get()).build();
-        } else {
-            return status(Status.UNAUTHORIZED).build();
-        }
+        return usersEmail
+                .map(s -> status(Status.OK).entity(s).build())
+                .orElseGet(() -> status(Status.UNAUTHORIZED).build());
     }
 }

@@ -212,13 +212,9 @@ public class TokenResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
-        Optional<Token> tokenResult = tokenDao.readByToken(token);
-
-        if (!tokenResult.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
+        return tokenDao.readByToken(token)
+                .map(tokenResult -> Response.status(Response.Status.OK).entity(tokenResult).build())
+                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @ApiOperation(
@@ -233,13 +229,9 @@ public class TokenResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
-        Optional<Token> optionalToken = tokenDao.readById(tokenId);
-
-        if (!optionalToken.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        return Response.status(Response.Status.OK).entity(optionalToken.get()).build();
+        return tokenDao.readById(tokenId)
+                .map(token -> Response.status(Response.Status.OK).entity(token).build())
+                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @ApiOperation(
