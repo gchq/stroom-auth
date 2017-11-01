@@ -20,11 +20,16 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
+import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.user.v1.User;
+import stroom.auth.service.ApiException;
+import stroom.auth.service.ApiResponse;
+import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
@@ -32,24 +37,23 @@ import static stroom.auth.service.resources.support.HttpAsserts.assertUnauthoris
 
 public final class UserResource_update_IT extends Base_IT {
     @Test
-    public final void update_user() throws UnirestException, IOException {
-        String jwsToken = authenticationManager.loginAsAdmin();
-        User user = new User(Instant.now().toString(), "testPassword");
+    public final void update_user() throws UnirestException, IOException, ApiException {
+        UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
-        // First create a user to update
-        int userId = userManager.createUser(user, jwsToken);
-        user.setEmail("New email" + Instant.now().toString());
-        String serialisedUser = userManager.serialiseUser(user);
-        String url = userManager.getRootUrl() + userId;
-        HttpResponse response = Unirest
-                .put(url)
-                .header("Authorization", "Bearer " + jwsToken)
-                .header("Content-Type", "application/json")
-                .body(serialisedUser)
-                .asJson();
-        assertThat(response.getStatus()).isEqualTo(200);
+        ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+                .email("update_user_" + Instant.now().toString())
+                .password("password"));
 
-        User updatedUser = userManager.getUser(userId, jwsToken);
+        User user = userManager.deserialiseUsers(userApi.getUser(response.getData())).get(0);
+
+        user.setEmail("new email" + Instant.now().toString());
+
+        userApi.updateUser(response.getData(), new stroom.auth.service.api.model.User()
+            .id(user.getId())
+            .email(user.getEmail()));
+
+        User updatedUser = userManager.deserialiseUsers(userApi.getUser(response.getData())).get(0);
+
         assertThat(updatedUser.getEmail()).isEqualTo(user.getEmail());
     }
 
