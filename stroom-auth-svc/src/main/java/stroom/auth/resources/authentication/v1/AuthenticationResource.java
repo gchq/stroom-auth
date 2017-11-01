@@ -253,7 +253,7 @@ public final class AuthenticationResource {
           response = String.class, tags = {"Authentication"})
   public final Response handleLogin(
           @Context @NotNull HttpServletRequest httpServletRequest,
-          @Nullable Credentials credentials) throws URISyntaxException {
+          @ApiParam("Credentials") @Nullable Credentials credentials) throws URISyntaxException {
     LOGGER.info("Received a login request for session " + credentials.getSessionId());
     Optional<stroom.auth.Session> optionalSession = sessionManager.get(credentials.getSessionId());
     if(!optionalSession.isPresent()){

@@ -81,7 +81,6 @@ ext.deps = [
     curator_service_discovery: "org.apache.curator:curator-x-discovery:$versions.curator",
     simple_java_mail: 'org.simplejavamail:simple-java-mail:4.3.0',
     swagger_annotations: "io.swagger:swagger-annotations:$versions.swagger",
-
 ]
 
 ext.testDeps = [

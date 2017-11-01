@@ -19,30 +19,32 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * A request to retrieve an ID token using an access code.
+ * Credentials
  */
-@ApiModel(description = "A request to retrieve an ID token using an access code.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-31T12:03:35.751Z")
-public class IdTokenRequest {
+public class Credentials {
   @SerializedName("sessionId")
   private String sessionId = null;
-
-  @SerializedName("accessCode")
-  private String accessCode = null;
 
   @SerializedName("requestingClientId")
   private String requestingClientId = null;
 
-  public IdTokenRequest sessionId(String sessionId) {
+  @SerializedName("email")
+  private String email = null;
+
+  @SerializedName("password")
+  private String password = null;
+
+  public Credentials sessionId(String sessionId) {
     this.sessionId = sessionId;
     return this;
   }
 
    /**
-   * The session ID to which this request is linked.
+   * Get sessionId
    * @return sessionId
   **/
-  @ApiModelProperty(example = "null", required = true, value = "The session ID to which this request is linked.")
+  @ApiModelProperty(example = "null", value = "")
   public String getSessionId() {
     return sessionId;
   }
@@ -51,40 +53,58 @@ public class IdTokenRequest {
     this.sessionId = sessionId;
   }
 
-  public IdTokenRequest accessCode(String accessCode) {
-    this.accessCode = accessCode;
-    return this;
-  }
-
-   /**
-   * The previously provided access code.
-   * @return accessCode
-  **/
-  @ApiModelProperty(example = "null", required = true, value = "The previously provided access code.")
-  public String getAccessCode() {
-    return accessCode;
-  }
-
-  public void setAccessCode(String accessCode) {
-    this.accessCode = accessCode;
-  }
-
-  public IdTokenRequest requestingClientId(String requestingClientId) {
+  public Credentials requestingClientId(String requestingClientId) {
     this.requestingClientId = requestingClientId;
     return this;
   }
 
    /**
-   * The clientId of the relying party requesting the id_token.
+   * Get requestingClientId
    * @return requestingClientId
   **/
-  @ApiModelProperty(example = "null", required = true, value = "The clientId of the relying party requesting the id_token.")
+  @ApiModelProperty(example = "null", value = "")
   public String getRequestingClientId() {
     return requestingClientId;
   }
 
   public void setRequestingClientId(String requestingClientId) {
     this.requestingClientId = requestingClientId;
+  }
+
+  public Credentials email(String email) {
+    this.email = email;
+    return this;
+  }
+
+   /**
+   * Get email
+   * @return email
+  **/
+  @ApiModelProperty(example = "null", required = true, value = "")
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public Credentials password(String password) {
+    this.password = password;
+    return this;
+  }
+
+   /**
+   * Get password
+   * @return password
+  **/
+  @ApiModelProperty(example = "null", required = true, value = "")
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
 
@@ -96,26 +116,28 @@ public class IdTokenRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    IdTokenRequest idTokenRequest = (IdTokenRequest) o;
-    return Objects.equals(this.sessionId, idTokenRequest.sessionId) &&
-        Objects.equals(this.accessCode, idTokenRequest.accessCode) &&
-        Objects.equals(this.requestingClientId, idTokenRequest.requestingClientId);
+    Credentials credentials = (Credentials) o;
+    return Objects.equals(this.sessionId, credentials.sessionId) &&
+        Objects.equals(this.requestingClientId, credentials.requestingClientId) &&
+        Objects.equals(this.email, credentials.email) &&
+        Objects.equals(this.password, credentials.password);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sessionId, accessCode, requestingClientId);
+    return Objects.hash(sessionId, requestingClientId, email, password);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class IdTokenRequest {\n");
+    sb.append("class Credentials {\n");
     
     sb.append("    sessionId: ").append(toIndentedString(sessionId)).append("\n");
-    sb.append("    accessCode: ").append(toIndentedString(accessCode)).append("\n");
     sb.append("    requestingClientId: ").append(toIndentedString(requestingClientId)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("}");
     return sb.toString();
   }

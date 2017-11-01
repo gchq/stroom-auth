@@ -25,7 +25,7 @@ import stroom.auth.service.api.model.Token;
  * A response for a search of tokens.
  */
 @ApiModel(description = "A response for a search of tokens.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-30T15:31:53.493Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-10-31T12:03:35.751Z")
 public class SearchResponse {
   @SerializedName("tokens")
   private List<Token> tokens = new ArrayList<Token>();

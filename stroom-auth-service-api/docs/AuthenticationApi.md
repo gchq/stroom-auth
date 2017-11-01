@@ -164,7 +164,7 @@ No authorization required
 
 <a name="handleLogin"></a>
 # **handleLogin**
-> String handleLogin()
+> String handleLogin(body)
 
 Handle a login request made using username and password credentials.
 
@@ -178,8 +178,9 @@ Handle a login request made using username and password credentials.
 
 
 AuthenticationApi apiInstance = new AuthenticationApi();
+Credentials body = new Credentials(); // Credentials | Credentials
 try {
-    String result = apiInstance.handleLogin();
+    String result = apiInstance.handleLogin(body);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling AuthenticationApi#handleLogin");
@@ -188,7 +189,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**Credentials**](Credentials.md)| Credentials | [optional]
 
 ### Return type
 

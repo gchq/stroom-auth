@@ -91,7 +91,13 @@ paths:
       - "application/json"
       produces:
       - "application/json"
-      parameters: []
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Credentials"
+        required: false
+        schema:
+          $ref: "#/definitions/Credentials"
       responses:
         200:
           description: "successful operation"
@@ -498,6 +504,20 @@ definitions:
         - "API"
         - "EMAIL_RESET"
     description: "A request to create a token."
+  Credentials:
+    type: "object"
+    required:
+    - "email"
+    - "password"
+    properties:
+      sessionId:
+        type: "string"
+      requestingClientId:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
   IdTokenRequest:
     type: "object"
     required:

@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
+import stroom.auth.service.api.model.Credentials;
 import stroom.auth.service.api.model.IdTokenRequest;
 
 import java.lang.reflect.Type;
@@ -458,8 +459,8 @@ public class AuthenticationApi {
         return call;
     }
     /* Build call for handleLogin */
-    private com.squareup.okhttp.Call handleLoginCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = null;
+    private com.squareup.okhttp.Call handleLoginCall(Credentials body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
         
         // create path and map variables
         String localVarPath = "/authentication/v1/authenticate".replaceAll("\\{format\\}","json");
@@ -499,10 +500,10 @@ public class AuthenticationApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call handleLoginValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call handleLoginValidateBeforeCall(Credentials body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         
-        com.squareup.okhttp.Call call = handleLoginCall(progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = handleLoginCall(body, progressListener, progressRequestListener);
         return call;
 
         
@@ -514,22 +515,24 @@ public class AuthenticationApi {
     /**
      * Handle a login request made using username and password credentials.
      * 
+     * @param body Credentials (optional)
      * @return String
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public String handleLogin() throws ApiException {
-        ApiResponse<String> resp = handleLoginWithHttpInfo();
+    public String handleLogin(Credentials body) throws ApiException {
+        ApiResponse<String> resp = handleLoginWithHttpInfo(body);
         return resp.getData();
     }
 
     /**
      * Handle a login request made using username and password credentials.
      * 
+     * @param body Credentials (optional)
      * @return ApiResponse&lt;String&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<String> handleLoginWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = handleLoginValidateBeforeCall(null, null);
+    public ApiResponse<String> handleLoginWithHttpInfo(Credentials body) throws ApiException {
+        com.squareup.okhttp.Call call = handleLoginValidateBeforeCall(body, null, null);
         Type localVarReturnType = new TypeToken<String>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -537,11 +540,12 @@ public class AuthenticationApi {
     /**
      * Handle a login request made using username and password credentials. (asynchronously)
      * 
+     * @param body Credentials (optional)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call handleLoginAsync(final ApiCallback<String> callback) throws ApiException {
+    public com.squareup.okhttp.Call handleLoginAsync(Credentials body, final ApiCallback<String> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -562,7 +566,7 @@ public class AuthenticationApi {
             };
         }
 
-        com.squareup.okhttp.Call call = handleLoginValidateBeforeCall(progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = handleLoginValidateBeforeCall(body, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<String>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
