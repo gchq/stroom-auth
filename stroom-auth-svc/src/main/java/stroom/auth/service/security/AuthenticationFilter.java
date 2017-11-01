@@ -27,21 +27,21 @@ import stroom.auth.config.TokenConfig;
 
 public class AuthenticationFilter {
 
-  public static JwtAuthFilter<ServiceUser> get(TokenConfig config) {
-    final JwtConsumer consumer = new JwtConsumerBuilder()
-        .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
-        .setRequireExpirationTime() // the JWT must have an expiration time
-        .setRequireSubject() // the JWT must have a subject claim
-        .setVerificationKey(new HmacKey(config.getJwsSecretAsBytes())) // verify the signature with the public key
-        .setRelaxVerificationKeyValidation() // relaxes key length requirement
-        .setExpectedIssuer("stroom")
-        .build();
+    public static JwtAuthFilter<ServiceUser> get(TokenConfig config) {
+        final JwtConsumer consumer = new JwtConsumerBuilder()
+                .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
+                .setRequireExpirationTime() // the JWT must have an expiration time
+                .setRequireSubject() // the JWT must have a subject claim
+                .setVerificationKey(new HmacKey(config.getJwsSecretAsBytes())) // verify the signature with the public key
+                .setRelaxVerificationKeyValidation() // relaxes key length requirement
+                .setExpectedIssuer("stroom")
+                .build();
 
-    return new JwtAuthFilter.Builder<ServiceUser>()
-        .setJwtConsumer(consumer)
-        .setRealm("realm")
-        .setPrefix("Bearer")
-        .setAuthenticator(new UserAuthenticator())
-        .buildAuthFilter();
-  }
+        return new JwtAuthFilter.Builder<ServiceUser>()
+                .setJwtConsumer(consumer)
+                .setRealm("realm")
+                .setPrefix("Bearer")
+                .setAuthenticator(new UserAuthenticator())
+                .buildAuthFilter();
+    }
 }

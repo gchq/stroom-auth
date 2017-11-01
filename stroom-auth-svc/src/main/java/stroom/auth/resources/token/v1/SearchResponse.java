@@ -26,25 +26,25 @@ import java.util.List;
 @ApiModel(description = "A response for a search of tokens.")
 public class SearchResponse {
 
-  @ApiModelProperty(value = "A page of results.", required = true)
-  private List<Token> tokens;
+    @ApiModelProperty(value = "A page of results.", required = true)
+    private List<Token> tokens;
 
-  @ApiModelProperty(value = "The total number of pages.", required = true)
-  private int totalPages;
+    @ApiModelProperty(value = "The total number of pages.", required = true)
+    private int totalPages;
 
-  public int getTotalPages() {
-    return totalPages;
-  }
+    public int getTotalPages() {
+        return totalPages;
+    }
 
-  public void setTotalPages(int totalPages) {
-    this.totalPages = totalPages;
-  }
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
 
-  public List<Token> getTokens() {
-    return tokens;
-  }
+    public List<Token> getTokens() {
+        return tokens;
+    }
 
-  public void setTokens(List<Token> tokens) {
-    this.tokens = tokens;
-  }
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
+    }
 }

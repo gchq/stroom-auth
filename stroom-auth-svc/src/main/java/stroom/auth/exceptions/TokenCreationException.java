@@ -21,19 +21,19 @@ package stroom.auth.exceptions;
 import stroom.auth.resources.token.v1.Token;
 
 public class TokenCreationException extends RuntimeException {
-  private Token.TokenType tokenType;
-  private String errorMessage;
+    private Token.TokenType tokenType;
+    private String errorMessage;
 
-  public TokenCreationException(Exception e){
-    super(e);
-  }
+    public TokenCreationException(Exception e) {
+        super(e);
+    }
 
-  public TokenCreationException(String errorMessage){
-    this.errorMessage = errorMessage;
-  }
+    public TokenCreationException(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
-  public TokenCreationException(Token.TokenType tokenType, String errorMessage){
-    this.tokenType = tokenType;
-    this.errorMessage = errorMessage;
-  }
+    public TokenCreationException(Token.TokenType tokenType, String errorMessage) {
+        this.tokenType = tokenType;
+        this.errorMessage = errorMessage;
+    }
 }

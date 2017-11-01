@@ -65,288 +65,288 @@ import static stroom.db.auth.Tables.USERS;
 @Produces({"application/json"})
 @Api(description = "Stroom User API", tags = {"User"})
 public final class UserResource {
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
-  private final Config config;
-  private AuthorisationServiceClient authorisationServiceClient;
+    private final Config config;
+    private AuthorisationServiceClient authorisationServiceClient;
 
-  @Inject
-  public UserResource(@NotNull AuthorisationServiceClient authorisationServiceClient,
-                      @NotNull Config config) {
-    super();
-    this.authorisationServiceClient = authorisationServiceClient;
-    this.config = config;
-  }
-
-  @ApiOperation(
-          value = "Get all users.",
-          response = String.class,
-          tags = {"User"})
-  @GET
-  @Path("/")
-  @Timed
-  @NotNull
-  public final Response getAll(
-      @Auth @NotNull ServiceUser authenticatedServiceUser,
-      @Context @NotNull DSLContext database) {
-    Preconditions.checkNotNull(authenticatedServiceUser);
-    Preconditions.checkNotNull(database);
-
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    @Inject
+    public UserResource(@NotNull AuthorisationServiceClient authorisationServiceClient,
+                        @NotNull Config config) {
+        super();
+        this.authorisationServiceClient = authorisationServiceClient;
+        this.config = config;
     }
 
-    TableField orderByEmailField = USERS.EMAIL;
-    String usersAsJson = database
-        .selectFrom(USERS)
-        .orderBy(orderByEmailField)
-        .fetch()
-        .formatJSON((new JSONFormat())
-            .header(false)
-            .recordFormat(JSONFormat.RecordFormat.OBJECT));
-    return Response.status(Response.Status.OK).entity(usersAsJson).build();
-  }
+    @ApiOperation(
+            value = "Get all users.",
+            response = String.class,
+            tags = {"User"})
+    @GET
+    @Path("/")
+    @Timed
+    @NotNull
+    public final Response getAll(
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @Context @NotNull DSLContext database) {
+        Preconditions.checkNotNull(authenticatedServiceUser);
+        Preconditions.checkNotNull(database);
 
-  @ApiOperation(
-          value = "Create a user.",
-          response = String.class,
-          tags = {"User"})
-  @POST
-  @Path("/")
-  @Timed
-  @NotNull
-  public final Response createUser(
-      @Auth @NotNull ServiceUser authenticatedServiceUser,
-      @Context @NotNull DSLContext database,
-      @ApiParam("user") @NotNull User user) {
-    // Validate
-    Preconditions.checkNotNull(authenticatedServiceUser);
-    Preconditions.checkNotNull(database);
-
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
-    }
-
-    Pair<Boolean, String> validationResults = User.isValidForCreate(user);
-    boolean isUserValid = validationResults.getLeft();
-    if (!isUserValid) {
-      return Response.status(Response.Status.BAD_REQUEST).entity(validationResults.getRight()).build();
-    }
-
-    if (doesUserAlreadyExist(database, user.getEmail())) {
-      return Response.status(Response.Status.CONFLICT).entity(UserValidationError.USER_ALREADY_EXISTS).build();
-    }
-
-    if (Strings.isNullOrEmpty(user.getState())) {
-      user.setState(User.UserState.ENABLED.getStateText());
-    }
-
-
-    // Create the user
-    UsersRecord usersRecord = (UsersRecord) database
-        .insertInto((Table) USERS)
-        .set(USERS.EMAIL, user.getEmail())
-        .set(USERS.PASSWORD_HASH, user.generatePasswordHash())
-        .set(USERS.FIRST_NAME, user.getFirst_name())
-        .set(USERS.LAST_NAME, user.getLast_name())
-        .set(USERS.COMMENTS, user.getComments())
-        .set(USERS.STATE, user.getState())
-        .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
-        .set(USERS.CREATED_BY_USER, authenticatedServiceUser.getName())
-        .returning(new Field[]{USERS.ID}).fetchOne();
-    return Response.status(Response.Status.OK).entity(usersRecord.getId()).build();
-  }
-
-  @ApiOperation(
-          value = "Get the details of the currently logged-in user.",
-          response = String.class,
-          tags = {"User"})
-  @GET
-  @Path("/me")
-  @Timed
-  @NotNull
-  public final Response readCurrentUser(@Auth @NotNull ServiceUser authenticatedServiceUser, @Context @NotNull DSLContext database) {
-    // Validate
-    Preconditions.checkNotNull(authenticatedServiceUser);
-    Preconditions.checkNotNull(database);
-
-    // We're not checking authorisation because the current user is allowed to get infomation about themselves.
-
-    // Get the user
-    Record foundUserRecord = database
-        .select(USERS.ID,
-            USERS.EMAIL,
-            USERS.LOGIN_FAILURES,
-            USERS.LAST_LOGIN,
-            USERS.UPDATED_ON,
-            USERS.UPDATED_BY_USER,
-            USERS.CREATED_ON,
-            USERS.CREATED_BY_USER)
-        .from(USERS)
-        .where(new Condition[]{USERS.EMAIL.eq(authenticatedServiceUser.getName())}).fetchOne();
-    Result foundUserResult = database
-        .newResult(
-            USERS.ID,
-            USERS.EMAIL,
-            USERS.LOGIN_FAILURES,
-            USERS.LAST_LOGIN,
-            USERS.UPDATED_ON,
-            USERS.UPDATED_BY_USER,
-            USERS.CREATED_ON,
-            USERS.CREATED_BY_USER);
-    foundUserResult.add(foundUserRecord);
-    String foundUserJson = foundUserResult.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
-    Response response = Response.status(Response.Status.OK).entity(foundUserJson).build();
-    return response;
-  }
-
-  @ApiOperation(
-          value = "Get a user by ID.",
-          response = String.class,
-          tags = {"User"})
-  @GET
-  @Path("{id}")
-  @Timed
-  @NotNull
-  public final Response getUser(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                                @Context @NotNull DSLContext database,
-                                @PathParam("id") int userId) {
-    // Validate
-    Preconditions.checkNotNull(authenticatedServiceUser);
-    Preconditions.checkNotNull(database);
-
-    // Get the user
-    Record foundUserRecord = database
-        .select(USERS.ID,
-            USERS.EMAIL,
-            USERS.FIRST_NAME,
-            USERS.LAST_NAME,
-            USERS.COMMENTS,
-            USERS.STATE,
-            USERS.LOGIN_FAILURES,
-            USERS.LOGIN_COUNT,
-            USERS.LAST_LOGIN,
-            USERS.UPDATED_ON,
-            USERS.UPDATED_BY_USER,
-            USERS.CREATED_ON,
-            USERS.CREATED_BY_USER)
-        .from(USERS)
-        .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
-        .fetchOne();
-    Response response;
-    if (foundUserRecord == null) {
-      response = Response.status(Response.Status.NOT_FOUND).build();
-      return response;
-    } else {
-
-      // We only need to check auth permissions if the user is trying to access a different user.
-      String foundUserEmail = foundUserRecord.get(USERS.EMAIL);
-      boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
-      if (!isUserAccessingThemselves) {
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-          return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
-      }
 
-      Result foundUserResult = database.newResult(
-          USERS.ID,
-          USERS.EMAIL,
-          USERS.FIRST_NAME,
-          USERS.LAST_NAME,
-          USERS.COMMENTS,
-          USERS.STATE,
-          USERS.LOGIN_FAILURES,
-          USERS.LOGIN_COUNT,
-          USERS.LAST_LOGIN,
-          USERS.UPDATED_ON,
-          USERS.UPDATED_BY_USER,
-          USERS.CREATED_ON,
-          USERS.CREATED_BY_USER);
-      foundUserResult.add(foundUserRecord);
-      String foundUserJson = foundUserResult
-          .formatJSON((new JSONFormat())
-              .header(false)
-              .recordFormat(JSONFormat.RecordFormat.OBJECT));
-      response = Response.status(Response.Status.OK).entity(foundUserJson).build();
-      return response;
-    }
-  }
-
-  @ApiOperation(
-          value = "Update a user.",
-          response = String.class,
-          tags = {"User"})
-  @PUT
-  @Path("{id}")
-  @Timed
-  @NotNull
-  public final Response updateUser(
-      @Auth @NotNull ServiceUser authenticatedServiceUser,
-      @Context @NotNull DSLContext database,
-      @ApiParam("user") @NotNull User user,
-      @PathParam("id") int userId) {
-    // Validate
-    Preconditions.checkNotNull(authenticatedServiceUser);
-    Preconditions.checkNotNull(database);
-    Preconditions.checkNotNull(user);
-
-    UsersRecord usersRecord = (UsersRecord) database
-        .selectFrom((Table) USERS)
-        .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
-        .fetchOne();
-
-    // We only need to check auth permissions if the user is trying to access a different user.
-    String foundUserEmail = usersRecord.get(USERS.EMAIL);
-    boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
-    if (!isUserAccessingThemselves) {
-      if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-        return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
-      }
+        TableField orderByEmailField = USERS.EMAIL;
+        String usersAsJson = database
+                .selectFrom(USERS)
+                .orderBy(orderByEmailField)
+                .fetch()
+                .formatJSON((new JSONFormat())
+                        .header(false)
+                        .recordFormat(JSONFormat.RecordFormat.OBJECT));
+        return Response.status(Response.Status.OK).entity(usersAsJson).build();
     }
 
-    user.setUpdated_by_user(authenticatedServiceUser.getName());
-    user.setUpdated_on(ZonedDateTime.now().toString());
-    UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
-    database
-        .update((Table) USERS)
-        .set(updatedUsersRecord)
-        .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
-    Response response = Response.status(Response.Status.OK).build();
-    return response;
-  }
+    @ApiOperation(
+            value = "Create a user.",
+            response = String.class,
+            tags = {"User"})
+    @POST
+    @Path("/")
+    @Timed
+    @NotNull
+    public final Response createUser(
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @Context @NotNull DSLContext database,
+            @ApiParam("user") @NotNull User user) {
+        // Validate
+        Preconditions.checkNotNull(authenticatedServiceUser);
+        Preconditions.checkNotNull(database);
 
-  @ApiOperation(
-          value = "Delete a user by ID.",
-          response = String.class,
-          tags = {"User"})
-  @DELETE
-  @Path("{id}")
-  @Timed
-  @NotNull
-  public final Response deleteUser(@Auth @NotNull ServiceUser authenticatedServiceUser, @Context @NotNull DSLContext database, @PathParam("id") int userId) {
-    // Validate
-    Preconditions.checkNotNull(authenticatedServiceUser);
-    Preconditions.checkNotNull(database);
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
 
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        Pair<Boolean, String> validationResults = User.isValidForCreate(user);
+        boolean isUserValid = validationResults.getLeft();
+        if (!isUserValid) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(validationResults.getRight()).build();
+        }
+
+        if (doesUserAlreadyExist(database, user.getEmail())) {
+            return Response.status(Response.Status.CONFLICT).entity(UserValidationError.USER_ALREADY_EXISTS).build();
+        }
+
+        if (Strings.isNullOrEmpty(user.getState())) {
+            user.setState(User.UserState.ENABLED.getStateText());
+        }
+
+
+        // Create the user
+        UsersRecord usersRecord = (UsersRecord) database
+                .insertInto((Table) USERS)
+                .set(USERS.EMAIL, user.getEmail())
+                .set(USERS.PASSWORD_HASH, user.generatePasswordHash())
+                .set(USERS.FIRST_NAME, user.getFirst_name())
+                .set(USERS.LAST_NAME, user.getLast_name())
+                .set(USERS.COMMENTS, user.getComments())
+                .set(USERS.STATE, user.getState())
+                .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
+                .set(USERS.CREATED_BY_USER, authenticatedServiceUser.getName())
+                .returning(new Field[]{USERS.ID}).fetchOne();
+        return Response.status(Response.Status.OK).entity(usersRecord.getId()).build();
     }
 
-    database
-        .deleteFrom((Table) USERS)
-        .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
-    Response response = Response.status(Response.Status.OK).build();
-    return response;
-  }
+    @ApiOperation(
+            value = "Get the details of the currently logged-in user.",
+            response = String.class,
+            tags = {"User"})
+    @GET
+    @Path("/me")
+    @Timed
+    @NotNull
+    public final Response readCurrentUser(@Auth @NotNull ServiceUser authenticatedServiceUser, @Context @NotNull DSLContext database) {
+        // Validate
+        Preconditions.checkNotNull(authenticatedServiceUser);
+        Preconditions.checkNotNull(database);
 
-  private static Boolean doesUserAlreadyExist(DSLContext database, String email) {
-    int countOfSameName = database
-        .selectCount()
-        .from(USERS)
-        .where(new Condition[]{USERS.EMAIL.eq(email)})
-        .fetchOne(0, Integer.TYPE);
+        // We're not checking authorisation because the current user is allowed to get infomation about themselves.
 
-    return countOfSameName > 0;
-  }
+        // Get the user
+        Record foundUserRecord = database
+                .select(USERS.ID,
+                        USERS.EMAIL,
+                        USERS.LOGIN_FAILURES,
+                        USERS.LAST_LOGIN,
+                        USERS.UPDATED_ON,
+                        USERS.UPDATED_BY_USER,
+                        USERS.CREATED_ON,
+                        USERS.CREATED_BY_USER)
+                .from(USERS)
+                .where(new Condition[]{USERS.EMAIL.eq(authenticatedServiceUser.getName())}).fetchOne();
+        Result foundUserResult = database
+                .newResult(
+                        USERS.ID,
+                        USERS.EMAIL,
+                        USERS.LOGIN_FAILURES,
+                        USERS.LAST_LOGIN,
+                        USERS.UPDATED_ON,
+                        USERS.UPDATED_BY_USER,
+                        USERS.CREATED_ON,
+                        USERS.CREATED_BY_USER);
+        foundUserResult.add(foundUserRecord);
+        String foundUserJson = foundUserResult.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
+        Response response = Response.status(Response.Status.OK).entity(foundUserJson).build();
+        return response;
+    }
+
+    @ApiOperation(
+            value = "Get a user by ID.",
+            response = String.class,
+            tags = {"User"})
+    @GET
+    @Path("{id}")
+    @Timed
+    @NotNull
+    public final Response getUser(@Auth @NotNull ServiceUser authenticatedServiceUser,
+                                  @Context @NotNull DSLContext database,
+                                  @PathParam("id") int userId) {
+        // Validate
+        Preconditions.checkNotNull(authenticatedServiceUser);
+        Preconditions.checkNotNull(database);
+
+        // Get the user
+        Record foundUserRecord = database
+                .select(USERS.ID,
+                        USERS.EMAIL,
+                        USERS.FIRST_NAME,
+                        USERS.LAST_NAME,
+                        USERS.COMMENTS,
+                        USERS.STATE,
+                        USERS.LOGIN_FAILURES,
+                        USERS.LOGIN_COUNT,
+                        USERS.LAST_LOGIN,
+                        USERS.UPDATED_ON,
+                        USERS.UPDATED_BY_USER,
+                        USERS.CREATED_ON,
+                        USERS.CREATED_BY_USER)
+                .from(USERS)
+                .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
+                .fetchOne();
+        Response response;
+        if (foundUserRecord == null) {
+            response = Response.status(Response.Status.NOT_FOUND).build();
+            return response;
+        } else {
+
+            // We only need to check auth permissions if the user is trying to access a different user.
+            String foundUserEmail = foundUserRecord.get(USERS.EMAIL);
+            boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
+            if (!isUserAccessingThemselves) {
+                if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+                }
+            }
+
+            Result foundUserResult = database.newResult(
+                    USERS.ID,
+                    USERS.EMAIL,
+                    USERS.FIRST_NAME,
+                    USERS.LAST_NAME,
+                    USERS.COMMENTS,
+                    USERS.STATE,
+                    USERS.LOGIN_FAILURES,
+                    USERS.LOGIN_COUNT,
+                    USERS.LAST_LOGIN,
+                    USERS.UPDATED_ON,
+                    USERS.UPDATED_BY_USER,
+                    USERS.CREATED_ON,
+                    USERS.CREATED_BY_USER);
+            foundUserResult.add(foundUserRecord);
+            String foundUserJson = foundUserResult
+                    .formatJSON((new JSONFormat())
+                            .header(false)
+                            .recordFormat(JSONFormat.RecordFormat.OBJECT));
+            response = Response.status(Response.Status.OK).entity(foundUserJson).build();
+            return response;
+        }
+    }
+
+    @ApiOperation(
+            value = "Update a user.",
+            response = String.class,
+            tags = {"User"})
+    @PUT
+    @Path("{id}")
+    @Timed
+    @NotNull
+    public final Response updateUser(
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @Context @NotNull DSLContext database,
+            @ApiParam("user") @NotNull User user,
+            @PathParam("id") int userId) {
+        // Validate
+        Preconditions.checkNotNull(authenticatedServiceUser);
+        Preconditions.checkNotNull(database);
+        Preconditions.checkNotNull(user);
+
+        UsersRecord usersRecord = (UsersRecord) database
+                .selectFrom((Table) USERS)
+                .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))})
+                .fetchOne();
+
+        // We only need to check auth permissions if the user is trying to access a different user.
+        String foundUserEmail = usersRecord.get(USERS.EMAIL);
+        boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
+        if (!isUserAccessingThemselves) {
+            if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            }
+        }
+
+        user.setUpdated_by_user(authenticatedServiceUser.getName());
+        user.setUpdated_on(ZonedDateTime.now().toString());
+        UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
+        database
+                .update((Table) USERS)
+                .set(updatedUsersRecord)
+                .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
+        Response response = Response.status(Response.Status.OK).build();
+        return response;
+    }
+
+    @ApiOperation(
+            value = "Delete a user by ID.",
+            response = String.class,
+            tags = {"User"})
+    @DELETE
+    @Path("{id}")
+    @Timed
+    @NotNull
+    public final Response deleteUser(@Auth @NotNull ServiceUser authenticatedServiceUser, @Context @NotNull DSLContext database, @PathParam("id") int userId) {
+        // Validate
+        Preconditions.checkNotNull(authenticatedServiceUser);
+        Preconditions.checkNotNull(database);
+
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
+
+        database
+                .deleteFrom((Table) USERS)
+                .where(new Condition[]{USERS.ID.eq(Integer.valueOf(userId))}).execute();
+        Response response = Response.status(Response.Status.OK).build();
+        return response;
+    }
+
+    private static Boolean doesUserAlreadyExist(DSLContext database, String email) {
+        int countOfSameName = database
+                .selectCount()
+                .from(USERS)
+                .where(new Condition[]{USERS.EMAIL.eq(email)})
+                .fetchOne(0, Integer.TYPE);
+
+        return countOfSameName > 0;
+    }
 }
 

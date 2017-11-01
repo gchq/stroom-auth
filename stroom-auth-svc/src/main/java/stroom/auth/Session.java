@@ -47,7 +47,7 @@ public class Session {
     }
 
     public RelyingParty getOrCreateRelyingParty(String clientId) {
-        if(relyingParties.containsKey(clientId)){
+        if (relyingParties.containsKey(clientId)) {
             return relyingParties.get(clientId);
         }
 

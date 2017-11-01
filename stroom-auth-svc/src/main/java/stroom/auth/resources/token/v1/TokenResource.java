@@ -46,7 +46,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.Map;
 import java.util.Optional;
 
@@ -56,210 +55,210 @@ import java.util.Optional;
 @Consumes(MediaType.APPLICATION_JSON)
 @Api(description = "Stroom API Key API", tags = {"ApiKey"})
 public class TokenResource {
-  private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 
-  private final Config config;
-  private final TokenDao tokenDao;
-  private final UserDao userDao;
-  private final AuthorisationServiceClient authorisationServiceClient;
+    private final Config config;
+    private final TokenDao tokenDao;
+    private final UserDao userDao;
+    private final AuthorisationServiceClient authorisationServiceClient;
 
-  @Inject
-  public TokenResource(final AuthorisationServiceClient authorisationServiceClient,
-                       final Config config,
-                       final TokenDao tokenDao,
-                       final UserDao userDao) {
-    this.authorisationServiceClient = authorisationServiceClient;
-    this.config = config;
-    this.tokenDao = tokenDao;
-    this.userDao = userDao;
-  }
-
-  /**
-   * Default ordering is by ISSUED_ON date, in descending order so the most recent tokens are shown first.
-   * If orderBy is specified but orderDirection is not this will default to ascending.
-   *
-   * The user must have the 'Manage Users' permission to call this.
-   */
-  @POST
-  @Path("/search")
-  @Timed
-  @ApiOperation(
-      value = "Submit a search request for tokens",
-      response = SearchResponse.class,
-      tags = {"ApiKey"})
-  public final Response search (
-      @Auth @NotNull ServiceUser authenticatedServiceUser,
-      @ApiParam("SearchRequest") @NotNull @Valid SearchRequest searchRequest) {
-    Map<String, String> filters = searchRequest.getFilters();
-
-    // Check the user is authorised to call this
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+    @Inject
+    public TokenResource(final AuthorisationServiceClient authorisationServiceClient,
+                         final Config config,
+                         final TokenDao tokenDao,
+                         final UserDao userDao) {
+        this.authorisationServiceClient = authorisationServiceClient;
+        this.config = config;
+        this.tokenDao = tokenDao;
+        this.userDao = userDao;
     }
 
-    // Validate filters
-    if(filters != null) {
-      for (String key : filters.keySet()) {
-        switch (key) {
-          case "expires_on":
-          case "issued_on":
-          case "updated_on":
-            return Response.status(Response.Status.BAD_REQUEST).entity("Filtering by date is not supported.").build();
+    /**
+     * Default ordering is by ISSUED_ON date, in descending order so the most recent tokens are shown first.
+     * If orderBy is specified but orderDirection is not this will default to ascending.
+     * <p>
+     * The user must have the 'Manage Users' permission to call this.
+     */
+    @POST
+    @Path("/search")
+    @Timed
+    @ApiOperation(
+            value = "Submit a search request for tokens",
+            response = SearchResponse.class,
+            tags = {"ApiKey"})
+    public final Response search(
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @ApiParam("SearchRequest") @NotNull @Valid SearchRequest searchRequest) {
+        Map<String, String> filters = searchRequest.getFilters();
+
+        // Check the user is authorised to call this
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
-      }
+
+        // Validate filters
+        if (filters != null) {
+            for (String key : filters.keySet()) {
+                switch (key) {
+                    case "expires_on":
+                    case "issued_on":
+                    case "updated_on":
+                        return Response.status(Response.Status.BAD_REQUEST).entity("Filtering by date is not supported.").build();
+                }
+            }
+        }
+
+        SearchResponse results = tokenDao.searchTokens(searchRequest);
+
+        LOGGER.info("Returning tokens: found " + results.getTokens().size());
+        return Response.status(Response.Status.OK).entity(results).build();
     }
 
-    SearchResponse results = tokenDao.searchTokens(searchRequest);
+    @POST
+    @Path("/")
+    @Timed
+    @ApiOperation(
+            value = "Create a new token.",
+            response = Integer.class,
+            tags = {"ApiKey"})
+    public final Response create(
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @ApiParam("CreateTokenRequest") @NotNull CreateTokenRequest createTokenRequest) {
 
-    LOGGER.info("Returning tokens: found " + results.getTokens().size());
-    return Response.status(Response.Status.OK).entity(results).build();
-  }
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
 
-  @POST
-  @Path("/")
-  @Timed
-  @ApiOperation(
-      value = "Create a new token.",
-      response = Integer.class,
-      tags = {"ApiKey"})
-  public final Response create(
-      @Auth @NotNull ServiceUser authenticatedServiceUser,
-      @ApiParam("CreateTokenRequest") @NotNull CreateTokenRequest createTokenRequest) {
+        // Parse and validate tokenType
+        Optional<Token.TokenType> tokenTypeToCreate = createTokenRequest.getParsedTokenType();
+        if (!tokenTypeToCreate.isPresent()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Unknown token type:" + createTokenRequest.getTokenType()).build();
+        }
 
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        Token token;
+        try {
+            token = tokenDao.createToken(
+                    tokenTypeToCreate.get(),
+                    authenticatedServiceUser.getName(),
+                    createTokenRequest.getUserEmail(),
+                    createTokenRequest.isEnabled(),
+                    createTokenRequest.getComments());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+
+        return Response.status(Response.Status.OK).entity(token.getId()).build();
     }
 
-    // Parse and validate tokenType
-    Optional<Token.TokenType> tokenTypeToCreate = createTokenRequest.getParsedTokenType();
-    if(!tokenTypeToCreate.isPresent()){
-      return Response.status(Response.Status.BAD_REQUEST)
-        .entity("Unknown token type:" + createTokenRequest.getTokenType()).build();
+    @ApiOperation(
+            value = "Delete all tokens.",
+            response = String.class,
+            tags = {"ApiKey"})
+    @DELETE
+    @Path("/")
+    @Timed
+    public final Response deleteAll(@Auth @NotNull ServiceUser authenticatedServiceUser) {
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
+
+        tokenDao.deleteAllTokens();
+        return Response.status(Response.Status.OK).entity("All tokens deleted").build();
     }
 
-    Token token;
-    try {
-      token = tokenDao.createToken(
-          tokenTypeToCreate.get(),
-          authenticatedServiceUser.getName(),
-          createTokenRequest.getUserEmail(),
-          createTokenRequest.isEnabled(),
-          createTokenRequest.getComments());
-    } catch (Exception e) {
-      LOGGER.error(e.getMessage(), e);
-      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+    @ApiOperation(
+            value = "Delete a token by ID.",
+            response = String.class,
+            tags = {"ApiKey"})
+    @DELETE
+    @Path("/{id}")
+    @Timed
+    public final Response delete(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
+
+        tokenDao.deleteTokenById(tokenId);
+        return Response.status(Response.Status.OK).entity("Deleted token").build();
     }
 
-    return Response.status(Response.Status.OK).entity(token.getId()).build();
-  }
+    @ApiOperation(
+            value = "Delete a token by the token string itself.",
+            response = String.class,
+            tags = {"ApiKey"})
+    @DELETE
+    @Path("/byToken/{token}")
+    @Timed
+    public final Response delete(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
 
-  @ApiOperation(
-          value = "Delete all tokens.",
-          response = String.class,
-          tags = {"ApiKey"})
-  @DELETE
-  @Path("/")
-  @Timed
-  public final Response deleteAll(@Auth @NotNull ServiceUser authenticatedServiceUser) {
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        tokenDao.deleteTokenByTokenString(token);
+        return Response.status(Response.Status.OK).entity("Deleted token").build();
     }
 
-    tokenDao.deleteAllTokens();
-    return Response.status(Response.Status.OK).entity("All tokens deleted").build();
-  }
+    @ApiOperation(
+            value = "Read a token by the token string itself.",
+            response = Token.class,
+            tags = {"ApiKey"})
+    @GET
+    @Path("/byToken/{token}")
+    @Timed
+    public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
 
-  @ApiOperation(
-          value = "Delete a token by ID.",
-          response = String.class,
-          tags = {"ApiKey"})
-  @DELETE
-  @Path("/{id}")
-  @Timed
-  public final Response delete(@Auth @NotNull ServiceUser authenticatedServiceUser,@PathParam("id") int tokenId){
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        Optional<Token> tokenResult = tokenDao.readByToken(token);
+
+        if (!tokenResult.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
     }
 
-    tokenDao.deleteTokenById(tokenId);
-    return Response.status(Response.Status.OK).entity("Deleted token").build();
-  }
+    @ApiOperation(
+            value = "Read a token by ID.",
+            response = Token.class,
+            tags = {"ApiKey"})
+    @GET
+    @Path("/{id}")
+    @Timed
+    public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
 
-  @ApiOperation(
-          value = "Delete a token by the token string itself.",
-          response = String.class,
-          tags = {"ApiKey"})
-  @DELETE
-  @Path("/byToken/{token}")
-  @Timed
-  public final Response delete(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token){
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        Optional<Token> optionalToken = tokenDao.readById(tokenId);
+
+        if (!optionalToken.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.status(Response.Status.OK).entity(optionalToken.get()).build();
     }
 
-    tokenDao.deleteTokenByTokenString(token);
-    return Response.status(Response.Status.OK).entity("Deleted token").build();
-  }
+    @ApiOperation(
+            value = "Enable or disable the state of a token.",
+            response = String.class,
+            tags = {"ApiKey"})
+    @GET
+    @Path("/{id}/state")
+    @Timed
+    public final Response toggleEnabled(@Auth @NotNull ServiceUser authenticatedServiceUser,
+                                        @NotNull @PathParam("id") int tokenId,
+                                        @NotNull @QueryParam("enabled") boolean enabled) {
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
 
-  @ApiOperation(
-          value = "Read a token by the token string itself.",
-          response = Token.class,
-          tags = {"ApiKey"})
-  @GET
-  @Path("/byToken/{token}")
-  @Timed
-  public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token){
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        User updatingUser = userDao.get(authenticatedServiceUser.getName());
+
+        tokenDao.enableOrDisableToken(tokenId, enabled, updatingUser);
+        return Response.status(Response.Status.OK).build();
     }
-
-    Optional<Token> tokenResult = tokenDao.readByToken(token);
-
-    if(!tokenResult.isPresent()){
-      return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    return Response.status(Response.Status.OK).entity(tokenResult.get()).build();
-  }
-
-  @ApiOperation(
-          value = "Read a token by ID.",
-          response = Token.class,
-          tags = {"ApiKey"})
-  @GET
-  @Path("/{id}")
-  @Timed
-  public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId){
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
-    }
-
-     Optional<Token> optionalToken = tokenDao.readById(tokenId);
-
-    if(!optionalToken.isPresent()){
-      return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    return Response.status(Response.Status.OK).entity(optionalToken.get()).build();
-  }
-
-  @ApiOperation(
-          value = "Enable or disable the state of a token.",
-          response = String.class,
-          tags = {"ApiKey"})
-  @GET
-  @Path("/{id}/state")
-  @Timed
-  public final Response toggleEnabled(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                                      @NotNull @PathParam("id") int tokenId,
-                                      @NotNull @QueryParam("enabled") boolean enabled) {
-    if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
-      return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
-    }
-
-    User updatingUser = userDao.get(authenticatedServiceUser.getName());
-
-    tokenDao.enableOrDisableToken(tokenId, enabled, updatingUser);
-    return Response.status(Response.Status.OK).build();
-  }
 }

@@ -51,7 +51,7 @@ public class UserDao {
     private Config config;
 
     @Inject
-    public UserDao(Config config){
+    public UserDao(Config config) {
         this.config = config;
     }
 
@@ -60,7 +60,7 @@ public class UserDao {
         database = DSL.using(this.jooqConfig);
     }
 
-    public void resetUserLogin(String email){
+    public void resetUserLogin(String email) {
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
                 .where(new Condition[]{USERS.EMAIL.eq(email)})
@@ -76,7 +76,7 @@ public class UserDao {
                 .where(new Condition[]{USERS.EMAIL.eq(user.getEmail())}).execute();
     }
 
-    public boolean areCredentialsValid(Credentials credentials){
+    public boolean areCredentialsValid(Credentials credentials) {
         if (credentials == null
                 || Strings.isNullOrEmpty(credentials.getEmail())
                 || Strings.isNullOrEmpty(credentials.getPassword())) {
@@ -126,13 +126,13 @@ public class UserDao {
                 .set(user)
                 .where(new Condition[]{USERS.EMAIL.eq(email)}).execute();
 
-        if(shouldLock) {
+        if (shouldLock) {
             LOGGER.debug("Account {} has had too many failed access attempts and is locked", email);
             throw new UnauthorisedException("Too many failed attempts - this account is now locked");
         }
     }
 
-    public User get(String email){
+    public User get(String email) {
         User user = database
                 .selectFrom(USERS)
                 .where(USERS.EMAIL.eq(email)).fetchOne().into(User.class);

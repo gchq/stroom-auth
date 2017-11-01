@@ -33,11 +33,10 @@ public class RelyingParty {
     private String nonce;
     private String state;
 
-    public boolean accessCodesMatch(String accessCodeToMatch){
-        if(this.accessCode == null){
+    public boolean accessCodesMatch(String accessCodeToMatch) {
+        if (this.accessCode == null) {
             return false;
-        }
-        else {
+        } else {
             return accessCode.equals(accessCodeToMatch);
         }
     }

@@ -40,7 +40,9 @@ public class AuthenticationFlowHelper {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AuthenticationFlowHelper.class);
 
     private static final String CLIENT_ID = "integrationTestClient";
-    /** A real nonce hash would be a cryptographic hash of something, e.g. a UUID */
+    /**
+     * A real nonce hash would be a cryptographic hash of something, e.g. a UUID
+     */
     private static final String PRETEND_NONCE_HASH = "0123456789";
 
     public static String authenticateAsAdmin() {
@@ -58,7 +60,7 @@ public class AuthenticationFlowHelper {
 
     /**
      * This is a standard authentication request, where the user has not logged in before.
-     *
+     * <p>
      * This flow would redirect the user to login, but we're faking that too so we ignore the redirection.
      */
     public final static String sendInitialAuthenticationRequest() {
@@ -113,7 +115,7 @@ public class AuthenticationFlowHelper {
 
     /**
      * This logs the user in, using a given sessionId. In return it gets an access code.
-     *
+     * <p>
      * The sessionId would be stored in a cookie and a normal relying party would not have to do this.
      */
     public final static String performLogin(String sessionId, String username, String password) throws ApiException {
@@ -132,7 +134,7 @@ public class AuthenticationFlowHelper {
         return accessCode;
     }
 
-    public final static String exchangeAccessCodeForIdToken(String sessionId, String accessCode){
+    public final static String exchangeAccessCodeForIdToken(String sessionId, String accessCode) {
         LOGGER.info("Exchanging the access code for an ID token.");
         ApiClient apiClient = new ApiClient();
         apiClient.setBasePath("http://localhost:8099");

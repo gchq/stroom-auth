@@ -28,95 +28,95 @@ import java.util.Map;
 
 @ApiModel(description = "A request for a search over tokens.")
 public class SearchRequest {
-  @NotNull
-  @ApiModelProperty(value = "The page of search results to retrieve.", required = true)
-  private int page;
-
-  @NotNull
-  @ApiModelProperty(value = "The number of tokens in a page of search results.", required = true)
-  private int limit;
-
-  @Nullable
-  @Pattern(
-      regexp = "^enabled$|^user_email$|^issued_by_user$|^token$|^token_type$|^updated_by_user$|^expires_on$|^issued_on$|^updated_on$",
-      message = "orderBy must be one of: 'enabled', 'user_email', 'issued_by_user', 'token', 'token_type', 'updated_by_user', 'expires_on', 'issued_on', 'updated_on'")
-  @ApiModelProperty(value = "The property by which to order the results.", required = false)
-  private String orderBy;
-
-  @Nullable
-  @Pattern(regexp = "^asc$|^desc$", message = "orderDirection must be 'asc' or 'desc'")
-  @ApiModelProperty(value = "The direction in which to order the results.", required = false)
-  private String orderDirection;
-
-  @Nullable
-  @ApiModelProperty(
-      value = "How to filter the results. This is done by property, e.g. user_email, 'someone@someplace.com'.",
-      required = false)
-  private Map<String, String> filters;
-
-  public int getPage() {
-    return page;
-  }
-
-  public int getLimit() {
-    return limit;
-  }
-
-  public String getOrderBy() {
-    return orderBy;
-  }
-
-  public String getOrderDirection() {
-    return orderDirection;
-  }
-
-  public Map<String, String> getFilters() {
-    return filters;
-  }
-
-  public static final class SearchRequestBuilder {
+    @NotNull
+    @ApiModelProperty(value = "The page of search results to retrieve.", required = true)
     private int page;
+
+    @NotNull
+    @ApiModelProperty(value = "The number of tokens in a page of search results.", required = true)
     private int limit;
+
+    @Nullable
+    @Pattern(
+            regexp = "^enabled$|^user_email$|^issued_by_user$|^token$|^token_type$|^updated_by_user$|^expires_on$|^issued_on$|^updated_on$",
+            message = "orderBy must be one of: 'enabled', 'user_email', 'issued_by_user', 'token', 'token_type', 'updated_by_user', 'expires_on', 'issued_on', 'updated_on'")
+    @ApiModelProperty(value = "The property by which to order the results.", required = false)
     private String orderBy;
+
+    @Nullable
+    @Pattern(regexp = "^asc$|^desc$", message = "orderDirection must be 'asc' or 'desc'")
+    @ApiModelProperty(value = "The direction in which to order the results.", required = false)
     private String orderDirection;
+
+    @Nullable
+    @ApiModelProperty(
+            value = "How to filter the results. This is done by property, e.g. user_email, 'someone@someplace.com'.",
+            required = false)
     private Map<String, String> filters;
 
-    public SearchRequestBuilder() {
+    public int getPage() {
+        return page;
     }
 
-    public SearchRequestBuilder page(int page) {
-      this.page = page;
-      return this;
+    public int getLimit() {
+        return limit;
     }
 
-    public SearchRequestBuilder limit(int limit) {
-      this.limit = limit;
-      return this;
+    public String getOrderBy() {
+        return orderBy;
     }
 
-    public SearchRequestBuilder orderBy(String orderBy) {
-      this.orderBy = orderBy;
-      return this;
+    public String getOrderDirection() {
+        return orderDirection;
     }
 
-    public SearchRequestBuilder orderDirection(String orderDirection) {
-      this.orderDirection = orderDirection;
-      return this;
+    public Map<String, String> getFilters() {
+        return filters;
     }
 
-    public SearchRequestBuilder filters(Map<String, String> filters) {
-      this.filters = filters;
-      return this;
-    }
+    public static final class SearchRequestBuilder {
+        private int page;
+        private int limit;
+        private String orderBy;
+        private String orderDirection;
+        private Map<String, String> filters;
 
-    public SearchRequest build() {
-      SearchRequest searchRequest = new SearchRequest();
-      searchRequest.orderBy = this.orderBy;
-      searchRequest.limit = this.limit;
-      searchRequest.orderDirection = this.orderDirection;
-      searchRequest.filters = this.filters;
-      searchRequest.page = this.page;
-      return searchRequest;
+        public SearchRequestBuilder() {
+        }
+
+        public SearchRequestBuilder page(int page) {
+            this.page = page;
+            return this;
+        }
+
+        public SearchRequestBuilder limit(int limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        public SearchRequestBuilder orderBy(String orderBy) {
+            this.orderBy = orderBy;
+            return this;
+        }
+
+        public SearchRequestBuilder orderDirection(String orderDirection) {
+            this.orderDirection = orderDirection;
+            return this;
+        }
+
+        public SearchRequestBuilder filters(Map<String, String> filters) {
+            this.filters = filters;
+            return this;
+        }
+
+        public SearchRequest build() {
+            SearchRequest searchRequest = new SearchRequest();
+            searchRequest.orderBy = this.orderBy;
+            searchRequest.limit = this.limit;
+            searchRequest.orderDirection = this.orderDirection;
+            searchRequest.filters = this.filters;
+            searchRequest.page = this.page;
+            return searchRequest;
+        }
     }
-  }
 }

@@ -29,68 +29,69 @@ import java.util.Optional;
 @ApiModel(description = "A request to create a token.")
 public class CreateTokenRequest {
 
-  @NotNull
-  @ApiModelProperty(value = "The email of the user whom the token is for.", required = true)
-  private String userEmail;
+    @NotNull
+    @ApiModelProperty(value = "The email of the user whom the token is for.", required = true)
+    private String userEmail;
 
-  @NotNull
-  @Pattern(
-      regexp = "^user$|^api$|^email_reset$",
-      message = "tokenType must be one of: 'user', 'api', 'email_reset'")
-  @ApiModelProperty(value = "The type of token to create: e.g. user, api, or email_reset.", required = true)
-  private String tokenType;
+    @NotNull
+    @Pattern(
+            regexp = "^user$|^api$|^email_reset$",
+            message = "tokenType must be one of: 'user', 'api', 'email_reset'")
+    @ApiModelProperty(value = "The type of token to create: e.g. user, api, or email_reset.", required = true)
+    private String tokenType;
 
-  @Nullable
-  @ApiModelProperty(value = "Comments about the token.")
-  private String comments;
+    @Nullable
+    @ApiModelProperty(value = "Comments about the token.")
+    private String comments;
 
-  @Nullable
-  @ApiModelProperty(value = "Whether or not the new token should be enabled.")
-  private boolean enabled = true;
+    @Nullable
+    @ApiModelProperty(value = "Whether or not the new token should be enabled.")
+    private boolean enabled = true;
 
-  // Needed for serialisation
-  public CreateTokenRequest(){}
-
-  public CreateTokenRequest(String userEmail, String tokenType, boolean enabled, String comments){
-    this.userEmail = userEmail;
-    this.tokenType = tokenType;
-    this.enabled = enabled;
-    this.comments = comments;
-  }
-
-  public Optional<Token.TokenType> getParsedTokenType(){
-    switch(tokenType.toLowerCase()){
-      case "api":
-        return Optional.of(Token.TokenType.API);
-      case "user":
-        return Optional.of(Token.TokenType.USER);
-      case "email_reset":
-        return Optional.of(Token.TokenType.EMAIL_RESET);
-      default:
-        return Optional.empty();
+    // Needed for serialisation
+    public CreateTokenRequest() {
     }
-  }
 
-  @Nullable
-  public String getUserEmail() {
-    return userEmail;
-  }
+    public CreateTokenRequest(String userEmail, String tokenType, boolean enabled, String comments) {
+        this.userEmail = userEmail;
+        this.tokenType = tokenType;
+        this.enabled = enabled;
+        this.comments = comments;
+    }
 
-  @Nullable
-  public String getTokenType() {
-    return tokenType;
-  }
+    public Optional<Token.TokenType> getParsedTokenType() {
+        switch (tokenType.toLowerCase()) {
+            case "api":
+                return Optional.of(Token.TokenType.API);
+            case "user":
+                return Optional.of(Token.TokenType.USER);
+            case "email_reset":
+                return Optional.of(Token.TokenType.EMAIL_RESET);
+            default:
+                return Optional.empty();
+        }
+    }
 
-  public boolean isEnabled() {
-    return enabled;
-  }
+    @Nullable
+    public String getUserEmail() {
+        return userEmail;
+    }
 
-  @Nullable
-  public String getComments() {
-    return comments;
-  }
+    @Nullable
+    public String getTokenType() {
+        return tokenType;
+    }
 
-  public void setComments(@Nullable String comments) {
-    this.comments = comments;
-  }
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Nullable
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(@Nullable String comments) {
+        this.comments = comments;
+    }
 }

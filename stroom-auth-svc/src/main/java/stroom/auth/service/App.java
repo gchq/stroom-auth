@@ -41,9 +41,9 @@ import stroom.auth.config.Config;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
 import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
 import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
+import stroom.auth.exceptions.mappers.UnauthorisedExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
-import stroom.auth.exceptions.mappers.UnauthorisedExceptionMapper;
 import stroom.auth.resources.session.v1.SessionResource;
 import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
@@ -55,95 +55,95 @@ import javax.servlet.FilterRegistration.Dynamic;
 import java.util.EnumSet;
 
 public final class App extends Application<Config> {
-  private Injector injector;
+    private Injector injector;
 
-  public static void main(String[] args) throws Exception {
-    new App().run(args);
-  }
-
-  private final JooqBundle jooqBundle = new JooqBundle<Config>() {
-    public DataSourceFactory getDataSourceFactory(Config configuration) {
-      return configuration.getDataSourceFactory();
+    public static void main(String[] args) throws Exception {
+        new App().run(args);
     }
 
-    public JooqFactory getJooqFactory(Config configuration) {
-      return configuration.getJooqFactory();
+    private final JooqBundle jooqBundle = new JooqBundle<Config>() {
+        public DataSourceFactory getDataSourceFactory(Config configuration) {
+            return configuration.getDataSourceFactory();
+        }
+
+        public JooqFactory getJooqFactory(Config configuration) {
+            return configuration.getJooqFactory();
+        }
+
+    };
+
+    private final FlywayBundle flywayBundle = new FlywayBundle<Config>() {
+        public DataSourceFactory getDataSourceFactory(Config config) {
+            return config.getDataSourceFactory();
+        }
+
+
+        public FlywayFactory getFlywayFactory(Config config) {
+            return config.getFlywayFactory();
+        }
+    };
+
+    @Override
+    public void run(Config config, Environment environment) throws Exception {
+        configureAuthentication(config, environment);
+        Configuration jooqConfig = this.jooqBundle.getConfiguration();
+        injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
+        registerResources(environment);
+        registerExceptionMappers(environment);
+        configureSessionHandling(environment);
+        configureCors(environment);
+        migrate(config, environment);
     }
 
-  };
-
-  private final FlywayBundle flywayBundle = new FlywayBundle<Config>() {
-    public DataSourceFactory getDataSourceFactory(Config config) {
-      return config.getDataSourceFactory();
+    private static void configureSessionHandling(Environment environment) {
+        environment.servlets().setSessionHandler(new SessionHandler());
+        environment.jersey().register(SessionFactoryProvider.class);
     }
 
 
-    public FlywayFactory getFlywayFactory(Config config) {
-      return config.getFlywayFactory();
+    public void initialize(Bootstrap bootstrap) {
+        // This allows us to use templating in the YAML configuration.
+        bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
+                bootstrap.getConfigurationSourceProvider(),
+                new EnvironmentVariableSubstitutor(false)));
+        bootstrap.addBundle(this.jooqBundle);
+        bootstrap.addBundle(this.flywayBundle);
     }
-  };
 
-  @Override
-  public void run(Config config, Environment environment) throws Exception {
-    configureAuthentication(config, environment);
-    Configuration jooqConfig = this.jooqBundle.getConfiguration();
-    injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
-    registerResources(environment);
-    registerExceptionMappers(environment);
-    configureSessionHandling(environment);
-    configureCors(environment);
-    migrate(config, environment);
-  }
+    private void registerResources(Environment environment) {
+        environment.jersey().register(injector.getInstance(AuthenticationResource.class));
+        environment.jersey().register(injector.getInstance(UserResource.class));
+        environment.jersey().register(injector.getInstance(TokenResource.class));
+        environment.jersey().register(injector.getInstance(SessionResource.class));
+    }
 
-  private static void configureSessionHandling(Environment environment) {
-    environment.servlets().setSessionHandler(new SessionHandler());
-    environment.jersey().register(SessionFactoryProvider.class);
-  }
+    private void registerExceptionMappers(Environment environment) {
+        environment.jersey().register(injector.getInstance(UnauthorisedExceptionMapper.class));
+        environment.jersey().register(injector.getInstance(BadRequestExceptionMapper.class));
+        environment.jersey().register(injector.getInstance(TokenCreationExceptionMapper.class));
+        environment.jersey().register(injector.getInstance(UnsupportedFilterExceptionMapper.class));
+        environment.jersey().register(injector.getInstance(NoSuchUserExceptionMapper.class));
+    }
 
+    private static final void configureAuthentication(Config config, Environment environment) {
+        environment.jersey().register(new AuthDynamicFeature(AuthenticationFilter.get(config.getTokenConfig())));
+        environment.jersey().register(new Binder(ServiceUser.class));
+        environment.jersey().register(RolesAllowedDynamicFeature.class);
+    }
 
-  public void initialize(Bootstrap bootstrap) {
-    // This allows us to use templating in the YAML configuration.
-    bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
-        bootstrap.getConfigurationSourceProvider(),
-        new EnvironmentVariableSubstitutor(false)));
-    bootstrap.addBundle(this.jooqBundle);
-    bootstrap.addBundle(this.flywayBundle);
-  }
+    private static final void configureCors(Environment environment) {
+        Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, new String[]{"/*"});
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "*");
+    }
 
-  private void registerResources(Environment environment) {
-    environment.jersey().register(injector.getInstance(AuthenticationResource.class));
-    environment.jersey().register(injector.getInstance(UserResource.class));
-    environment.jersey().register(injector.getInstance(TokenResource.class));
-    environment.jersey().register(injector.getInstance(SessionResource.class));
-  }
-
-  private void registerExceptionMappers(Environment environment) {
-    environment.jersey().register(injector.getInstance(UnauthorisedExceptionMapper.class));
-    environment.jersey().register(injector.getInstance(BadRequestExceptionMapper.class));
-    environment.jersey().register(injector.getInstance(TokenCreationExceptionMapper.class));
-    environment.jersey().register(injector.getInstance(UnsupportedFilterExceptionMapper.class));
-    environment.jersey().register(injector.getInstance(NoSuchUserExceptionMapper.class));
-  }
-
-  private static final void configureAuthentication(Config config, Environment environment) {
-    environment.jersey().register(new AuthDynamicFeature(AuthenticationFilter.get(config.getTokenConfig())));
-    environment.jersey().register(new Binder(ServiceUser.class));
-    environment.jersey().register(RolesAllowedDynamicFeature.class);
-  }
-
-  private static final void configureCors(Environment environment) {
-    Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
-    cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, new String[]{"/*"});
-    cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS");
-    cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-    cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "*");
-  }
-
-  private static final void migrate(Config config, Environment environment) {
-    ManagedDataSource dataSource = config.getDataSourceFactory().build(environment.metrics(), "flywayDataSource");
-    Flyway flyway = config.getFlywayFactory().build(dataSource);
-    flyway.migrate();
-  }
+    private static final void migrate(Config config, Environment environment) {
+        ManagedDataSource dataSource = config.getDataSourceFactory().build(environment.metrics(), "flywayDataSource");
+        Flyway flyway = config.getFlywayFactory().build(dataSource);
+        flyway.migrate();
+    }
 }
 
 

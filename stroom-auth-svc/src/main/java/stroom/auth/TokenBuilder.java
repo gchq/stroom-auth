@@ -39,42 +39,42 @@ public class TokenBuilder {
     private Optional<String> nonce = Optional.empty();
     private Optional<String> state = Optional.empty();
 
-    public TokenBuilder subject(String subject){
+    public TokenBuilder subject(String subject) {
         this.subject = subject;
         return this;
     }
 
-    public TokenBuilder tokenType(TokenType tokenType){
+    public TokenBuilder tokenType(TokenType tokenType) {
         this.tokenType = tokenType;
         return this;
     }
 
-    public TokenBuilder expirationInMinutes(int expirationInMinutes){
+    public TokenBuilder expirationInMinutes(int expirationInMinutes) {
         this.expirationInMinutes = Optional.of(expirationInMinutes);
         return this;
     }
 
-    public TokenBuilder issuer(String issuer){
+    public TokenBuilder issuer(String issuer) {
         this.issuer = issuer;
         return this;
     }
 
-    public TokenBuilder secret(byte[] secret){
+    public TokenBuilder secret(byte[] secret) {
         this.secret = secret;
         return this;
     }
 
-    public TokenBuilder nonce(String nonce){
+    public TokenBuilder nonce(String nonce) {
         this.nonce = Optional.of(nonce);
         return this;
     }
 
-    public TokenBuilder state(String state){
+    public TokenBuilder state(String state) {
         this.state = Optional.of(state);
         return this;
     }
 
-    public TokenBuilder algorithm(String algorithm){
+    public TokenBuilder algorithm(String algorithm) {
         this.algorithm = algorithm;
         return this;
     }
@@ -86,10 +86,10 @@ public class TokenBuilder {
         }
         claims.setSubject(subject);
         claims.setIssuer(issuer);
-        if(nonce.isPresent()){
+        if (nonce.isPresent()) {
             claims.setClaim("nonce", nonce.get());
         }
-        if(state.isPresent()){
+        if (state.isPresent()) {
             claims.setClaim("state", state.get());
         }
 

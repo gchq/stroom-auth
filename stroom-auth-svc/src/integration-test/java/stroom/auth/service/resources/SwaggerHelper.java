@@ -28,27 +28,27 @@ import stroom.auth.service.api.UserApi;
 public class SwaggerHelper {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SwaggerHelper.class);
 
-    public static final AuthenticationApi newAuthApiClient(String idToken){
+    public static final AuthenticationApi newAuthApiClient(String idToken) {
         return new AuthenticationApi(newApiClient(idToken));
     }
 
-    public static final DefaultApi newDefaultApiClient(String idToken){
+    public static final DefaultApi newDefaultApiClient(String idToken) {
         return new DefaultApi(newApiClient(idToken));
     }
 
-    public static final ApiKeyApi newApiKeyApiClient(String idToken){
+    public static final ApiKeyApi newApiKeyApiClient(String idToken) {
         return new ApiKeyApi(newApiClient(idToken));
     }
 
-    public static final SessionApi newSessionApiClient(String idToken){
+    public static final SessionApi newSessionApiClient(String idToken) {
         return new SessionApi(newApiClient(idToken));
     }
 
-    public static final UserApi newUserApiClient(String idToken){
+    public static final UserApi newUserApiClient(String idToken) {
         return new UserApi(newApiClient(idToken));
     }
 
-    private static final ApiClient newApiClient(String idToken){
+    private static final ApiClient newApiClient(String idToken) {
         ApiClient apiClient = new ApiClient();
         apiClient.setBasePath("http://localhost:8099");
         apiClient.addDefaultHeader("Authorization", "Bearer " + idToken);

@@ -7,10 +7,10 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
 import org.junit.Test;
-import stroom.auth.resources.token.v1.Token;
 import stroom.auth.TokenGenerator;
 import stroom.auth.config.TokenConfig;
 import stroom.auth.exceptions.TokenCreationException;
+import stroom.auth.resources.token.v1.Token;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

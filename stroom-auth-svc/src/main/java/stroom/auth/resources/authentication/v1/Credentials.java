@@ -23,48 +23,48 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
 
 public final class Credentials {
-  @NotNull
-  private String email = "";
-  @NotNull
-  private String password = "";
-  //TODO: @NotNull - will need to change ITs
-  private String sessionId = "";
+    @NotNull
+    private String email = "";
+    @NotNull
+    private String password = "";
+    //TODO: @NotNull - will need to change ITs
+    private String sessionId = "";
 
-  private String requestingClientId = "";
+    private String requestingClientId = "";
 
-  @JsonProperty("email")
-  @NotNull
-  public final String getEmail() {
-    return this.email;
-  }
+    @JsonProperty("email")
+    @NotNull
+    public final String getEmail() {
+        return this.email;
+    }
 
-  public final void setEmail(@NotNull String email) {
-    this.email = email;
-  }
+    public final void setEmail(@NotNull String email) {
+        this.email = email;
+    }
 
-  @JsonProperty("password")
-  @NotNull
-  public final String getPassword() {
-    return this.password;
-  }
+    @JsonProperty("password")
+    @NotNull
+    public final String getPassword() {
+        return this.password;
+    }
 
-  public final void setPassword(@NotNull String password) {
-    this.password = password;
-  }
+    public final void setPassword(@NotNull String password) {
+        this.password = password;
+    }
 
-  public String getSessionId() {
-    return sessionId;
-  }
+    public String getSessionId() {
+        return sessionId;
+    }
 
-  public void setSessionId(String sessionId) {
-    this.sessionId = sessionId;
-  }
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
-  public String getRequestingClientId() {
-    return requestingClientId;
-  }
+    public String getRequestingClientId() {
+        return requestingClientId;
+    }
 
-  public void setRequestingClientId(String requestingClientId) {
-    this.requestingClientId = requestingClientId;
-  }
+    public void setRequestingClientId(String requestingClientId) {
+        this.requestingClientId = requestingClientId;
+    }
 }

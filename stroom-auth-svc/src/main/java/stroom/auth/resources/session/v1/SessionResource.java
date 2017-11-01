@@ -44,7 +44,7 @@ public class SessionResource {
     private SessionManager sessionManager;
 
     @Inject
-    public SessionResource(SessionManager sessionManager){
+    public SessionResource(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
     }
 
@@ -55,7 +55,7 @@ public class SessionResource {
     @Timed
     @NotNull
     @ApiOperation(value = "Log a user out of their session")
-    public final Response logout(@PathParam("sessionId") String sessionId){
+    public final Response logout(@PathParam("sessionId") String sessionId) {
         sessionManager.logout(sessionId);
         LOGGER.info("Logging out session {}", sessionId);
         return Response.status(Response.Status.OK).build();

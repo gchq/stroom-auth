@@ -27,58 +27,58 @@ import static org.assertj.core.api.Java6Assertions.fail;
 
 public class Login_IT extends Base_IT {
 
-  @Test
-  public void incorrect_credentials_1() throws UnirestException {
-    String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
-    try {
-      String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "admin");
-      fail("Expected a 401!");
-    } catch (ApiException e) {
-      assertThat(e.getCode()).isEqualTo(401);
+    @Test
+    public void incorrect_credentials_1() throws UnirestException {
+        String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
+        try {
+            String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "admin");
+            fail("Expected a 401!");
+        } catch (ApiException e) {
+            assertThat(e.getCode()).isEqualTo(401);
+        }
     }
-  }
 
-  @Test
-  public void incorrect_credentials_2() throws UnirestException {
-    String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
-    try {
-      String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "admin", "BAD");
-      fail("Expected a 401!");
-    } catch (ApiException e) {
-      assertThat(e.getCode()).isEqualTo(401);
+    @Test
+    public void incorrect_credentials_2() throws UnirestException {
+        String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
+        try {
+            String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "admin", "BAD");
+            fail("Expected a 401!");
+        } catch (ApiException e) {
+            assertThat(e.getCode()).isEqualTo(401);
+        }
     }
-  }
 
-  @Test
-  public void incorrect_credentials_3() throws UnirestException {
-    String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
-    try {
-      String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "BAD");
-      fail("Expected a 401!");
-    } catch (ApiException e) {
-      assertThat(e.getCode()).isEqualTo(401);
+    @Test
+    public void incorrect_credentials_3() throws UnirestException {
+        String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
+        try {
+            String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "BAD");
+            fail("Expected a 401!");
+        } catch (ApiException e) {
+            assertThat(e.getCode()).isEqualTo(401);
+        }
     }
-  }
 
-  @Test
-  public void missing_credentials_1() throws UnirestException {
-    String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
-    try {
-      String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "");
-      fail("Expected a 400!");
-    } catch (ApiException e) {
-      assertThat(e.getCode()).isEqualTo(400);
+    @Test
+    public void missing_credentials_1() throws UnirestException {
+        String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
+        try {
+            String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "");
+            fail("Expected a 400!");
+        } catch (ApiException e) {
+            assertThat(e.getCode()).isEqualTo(400);
+        }
     }
-  }
 
-  @Test
-  public void missing_credentials_2() throws UnirestException {
-    String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
-    try {
-      String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "", "");
-      fail("Expected a 400!");
-    } catch (ApiException e) {
-      assertThat(e.getCode()).isEqualTo(400);
+    @Test
+    public void missing_credentials_2() throws UnirestException {
+        String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
+        try {
+            String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "", "");
+            fail("Expected a 400!");
+        } catch (ApiException e) {
+            assertThat(e.getCode()).isEqualTo(400);
+        }
     }
-  }
 }

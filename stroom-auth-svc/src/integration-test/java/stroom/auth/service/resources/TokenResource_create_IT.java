@@ -34,43 +34,43 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class TokenResource_create_IT extends TokenResource_IT {
 
-  @Test
-  public void simpleCreate() throws UnirestException, IOException, ApiException {
-    String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+    @Test
+    public void simpleCreate() throws UnirestException, IOException, ApiException {
+        String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
-    ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
+        ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
-    CreateTokenRequest createTokenRequest = new CreateTokenRequest();
-    createTokenRequest.setUserEmail("admin");
-    createTokenRequest.setTokenType("api");
-    createTokenRequest.setEnabled(false);
-    createTokenRequest.setComments("Created by TokenResource_create_IT");
-    int newApiKeyId = apiKeyApiClient.create(createTokenRequest);
+        CreateTokenRequest createTokenRequest = new CreateTokenRequest();
+        createTokenRequest.setUserEmail("admin");
+        createTokenRequest.setTokenType("api");
+        createTokenRequest.setEnabled(false);
+        createTokenRequest.setComments("Created by TokenResource_create_IT");
+        int newApiKeyId = apiKeyApiClient.create(createTokenRequest);
 
-    // Use the id to get the Jws
-    Token newApiKeyJws = apiKeyApiClient.read_0(newApiKeyId);
-    assertThat(newApiKeyJws).isNotNull();
+        // Use the id to get the Jws
+        Token newApiKeyJws = apiKeyApiClient.read_0(newApiKeyId);
+        assertThat(newApiKeyJws).isNotNull();
 
-    // Now try and read using the api key itself
-    ApiResponse<Token> response = apiKeyApiClient.readWithHttpInfo(newApiKeyJws.getToken());
-    assertThat(response.getStatusCode()).isEqualTo(200);
-  }
-
-  @Test
-  public void create_with_bad_user() throws UnirestException, IOException {
-    String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
-
-    ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
-
-    CreateTokenRequest createTokenRequest = new CreateTokenRequest();
-    createTokenRequest.setUserEmail("BAD_USER");
-    createTokenRequest.setTokenType("api");
-    createTokenRequest.setEnabled(false);
-    createTokenRequest.setComments("Created by TokenResource_create_IT");
-    try {
-      int newApiKeyId = apiKeyApiClient.create(createTokenRequest);
-    } catch (ApiException e) {
-      assertThat(e.getCode()).isEqualTo(400);
+        // Now try and read using the api key itself
+        ApiResponse<Token> response = apiKeyApiClient.readWithHttpInfo(newApiKeyJws.getToken());
+        assertThat(response.getStatusCode()).isEqualTo(200);
     }
-  }
+
+    @Test
+    public void create_with_bad_user() throws UnirestException, IOException {
+        String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+
+        ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
+
+        CreateTokenRequest createTokenRequest = new CreateTokenRequest();
+        createTokenRequest.setUserEmail("BAD_USER");
+        createTokenRequest.setTokenType("api");
+        createTokenRequest.setEnabled(false);
+        createTokenRequest.setComments("Created by TokenResource_create_IT");
+        try {
+            int newApiKeyId = apiKeyApiClient.create(createTokenRequest);
+        } catch (ApiException e) {
+            assertThat(e.getCode()).isEqualTo(400);
+        }
+    }
 }

@@ -45,7 +45,7 @@ public class SessionManager {
 
 
     @Inject
-    public SessionManager(Config config, TokenBuilderFactory tokenBuilderFactory){
+    public SessionManager(Config config, TokenBuilderFactory tokenBuilderFactory) {
         this.config = config;
         this.tokenBuilderFactory = tokenBuilderFactory;
     }
@@ -55,7 +55,7 @@ public class SessionManager {
         return session != null && session.isAuthenticated();
     }
 
-    public static String createAccessCode(){
+    public static String createAccessCode() {
         SecureRandom secureRandom = new SecureRandom();
         byte[] bytes = new byte[20];
         secureRandom.nextBytes(bytes);
@@ -63,9 +63,9 @@ public class SessionManager {
         return accessCode;
     }
 
-    public Session getOrCreate(String sessionId){
+    public Session getOrCreate(String sessionId) {
         Session session = sessions.get(sessionId);
-        if(session == null){
+        if (session == null) {
             session = new Session();
             session.setSessionId(sessionId);
             sessions.put(sessionId, session);
@@ -80,10 +80,10 @@ public class SessionManager {
     public void logout(String sessionId) {
         Optional<Session> session = get(sessionId);
 
-        if(!session.isPresent()){
+        if (!session.isPresent()) {
             // We might get a logout for a session that doesn't exist - e.g. if there's been a bounce. It's
             // not necessarily an error and we need to handle it gracefully.
-            LOGGER.warn("Tried to log out of a session that doesn't exist: " +sessionId);
+            LOGGER.warn("Tried to log out of a session that doesn't exist: " + sessionId);
             return;
         }
 
@@ -92,7 +92,7 @@ public class SessionManager {
         session.get().getRelyingParties().forEach(relyingParty -> {
             // Not all relying parties can have a logout URI, i.e. remote web apps.
             // So we need to check for null here.
-            if(relyingParty.getLogoutUri() != null) {
+            if (relyingParty.getLogoutUri() != null) {
                 String logoutUrl = relyingParty.getLogoutUri() + "/" + sessionId;
                 Response response = logoutClient
                         .target(logoutUrl)

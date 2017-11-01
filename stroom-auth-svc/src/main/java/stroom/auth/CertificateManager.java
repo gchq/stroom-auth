@@ -28,7 +28,7 @@ import java.util.Optional;
 public class CertificateManager {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(CertificateManager.class);
 
-    public Optional<String> getCertificate(HttpServletRequest httpServletRequest){
+    public Optional<String> getCertificate(HttpServletRequest httpServletRequest) {
         String dn = httpServletRequest.getHeader("X-SSL-CLIENT-S-DN");
         String cn = null;
         try {
@@ -39,7 +39,7 @@ public class CertificateManager {
         return Optional.ofNullable(cn);
     }
 
-    public String getCn(String dn){
+    public String getCn(String dn) {
         if (dn == null) {
             LOGGER.debug("No DN in request. Redirecting to login.");
             throw new NoCertificateException();
@@ -59,7 +59,7 @@ public class CertificateManager {
             throw new NoCertificateException(message);
         }
 
-        if(!cn.isPresent()){
+        if (!cn.isPresent()) {
             throw new NoCertificateException();
         }
 

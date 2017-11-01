@@ -35,11 +35,11 @@ public class EmailSender {
     private Config config;
 
     @Inject
-    public EmailSender(Config config){
+    public EmailSender(Config config) {
         this.config = config;
     }
 
-    public void send(User user, String resetToken){
+    public void send(User user, String resetToken) {
         String resetName = user.getFirst_name() + "" + user.getLast_name();
         String resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
         String passwordResetEmailText = String.format(config.getEmailConfig().getPasswordResetText(), resetUrl);

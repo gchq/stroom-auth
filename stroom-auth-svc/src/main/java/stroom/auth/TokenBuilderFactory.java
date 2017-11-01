@@ -31,13 +31,13 @@ public class TokenBuilderFactory {
     private Config config;
 
     @Inject
-    public TokenBuilderFactory(Config config){
+    public TokenBuilderFactory(Config config) {
         this.config = config;
     }
 
-    public TokenBuilder newBuilder(TokenType tokenType){
+    public TokenBuilder newBuilder(TokenType tokenType) {
         TokenBuilder tokenBuilder = new TokenBuilder();
-        switch(tokenType) {
+        switch (tokenType) {
             case API:
                 tokenBuilder.expirationInMinutes(config.getTokenConfig().getMinutesUntilExpirationForApiToken());
                 break;

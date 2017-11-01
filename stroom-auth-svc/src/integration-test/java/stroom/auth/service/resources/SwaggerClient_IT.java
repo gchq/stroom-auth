@@ -12,29 +12,29 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class SwaggerClient_IT extends TokenResource_IT{
+public class SwaggerClient_IT extends TokenResource_IT {
 
-  @Test
-  public void search() throws UnirestException, ApiException, IOException {
-    String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
+    @Test
+    public void search() throws UnirestException, ApiException, IOException {
+        String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
-    // This should be the AuthenticationApi, but Swagger isn't putting
-    // the endpoints in the right place and I'm not sure why.
-    DefaultApi defaultApi = SwaggerHelper.newDefaultApiClient(idToken);
+        // This should be the AuthenticationApi, but Swagger isn't putting
+        // the endpoints in the right place and I'm not sure why.
+        DefaultApi defaultApi = SwaggerHelper.newDefaultApiClient(idToken);
 
-    stroom.auth.service.api.model.SearchRequest authSearchRequest = new stroom.auth.service.api.model.SearchRequest();
-    authSearchRequest.setLimit(10);
-    authSearchRequest.setPage(0);
-    authSearchRequest.setFilters(new HashMap<String, String>() {{
-      put("user_email", "admin");
-      put("token_type", "api");
-      put("enabled", "true");
-    }});
+        stroom.auth.service.api.model.SearchRequest authSearchRequest = new stroom.auth.service.api.model.SearchRequest();
+        authSearchRequest.setLimit(10);
+        authSearchRequest.setPage(0);
+        authSearchRequest.setFilters(new HashMap<String, String>() {{
+            put("user_email", "admin");
+            put("token_type", "api");
+            put("enabled", "true");
+        }});
 
-    SearchResponse searchResponse = defaultApi.search(authSearchRequest);
-    assertThat(searchResponse).isNotNull();
-    // I used isGreaterThan because although we'll definitely have
-    // an admin key a developer might have created another.
-    assertThat(searchResponse.getTokens().size()).isGreaterThan(1);
-  }
+        SearchResponse searchResponse = defaultApi.search(authSearchRequest);
+        assertThat(searchResponse).isNotNull();
+        // I used isGreaterThan because although we'll definitely have
+        // an admin key a developer might have created another.
+        assertThat(searchResponse.getTokens().size()).isGreaterThan(1);
+    }
 }

@@ -36,53 +36,53 @@ import java.util.Optional;
 
 @Singleton
 public class TokenVerifier {
-  private static final Logger LOGGER = LoggerFactory.getLogger(TokenDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenDao.class);
 
-  @Inject
-  private TokenConfig tokenConfig;
+    @Inject
+    private TokenConfig tokenConfig;
 
-  @Inject
-  private TokenDao tokenDao;
+    @Inject
+    private TokenDao tokenDao;
 
-  private JwtConsumer consumer;
+    private JwtConsumer consumer;
 
-  @Inject
-  public void init(){
-    JwtConsumerBuilder builder = new JwtConsumerBuilder()
-        .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
-        .setRequireSubject() // the JWT must have a subject claim
-        .setVerificationKey(new HmacKey(tokenConfig.getJwsSecretAsBytes())) // verify the signature with the public key
-        .setRelaxVerificationKeyValidation() // relaxes key length requirement
-        .setExpectedIssuer(tokenConfig.getJwsIssuer());
+    @Inject
+    public void init() {
+        JwtConsumerBuilder builder = new JwtConsumerBuilder()
+                .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
+                .setRequireSubject() // the JWT must have a subject claim
+                .setVerificationKey(new HmacKey(tokenConfig.getJwsSecretAsBytes())) // verify the signature with the public key
+                .setRelaxVerificationKeyValidation() // relaxes key length requirement
+                .setExpectedIssuer(tokenConfig.getJwsIssuer());
 
-    if(tokenConfig.isRequireExpirationTime()){
-      builder = builder.setRequireExpirationTime();
+        if (tokenConfig.isRequireExpirationTime()) {
+            builder = builder.setRequireExpirationTime();
+        }
+
+        consumer = builder.build();
     }
 
-    consumer = builder.build();
-  }
+    public Optional<String> verifyToken(String token) {
+        try {
+            final JwtClaims claims = consumer.processToClaims(token);
+            claims.getSubject();
+        } catch (InvalidJwtException | MalformedClaimException e) {
+            LOGGER.warn("There was an issue with a token.");
+            return Optional.empty();
+        }
 
-  public Optional<String> verifyToken(String token){
-    try {
-      final JwtClaims claims = consumer.processToClaims(token);
-      claims.getSubject();
-    } catch (InvalidJwtException | MalformedClaimException e) {
-      LOGGER.warn("There was an issue with a token.");
-      return Optional.empty();
+        Optional<Token> tokenRecord = tokenDao.readByToken(token);
+        if (!tokenRecord.isPresent()) {
+            LOGGER.warn("I tried to verify a token but that token doesn't exist.");
+            return Optional.empty();
+        }
+
+        if (!tokenRecord.get().isEnabled()) {
+            LOGGER.warn("Someone tried to verify a token that is disabled.");
+            return Optional.empty();
+        }
+
+        // Looks like the token is fine
+        return Optional.of(tokenRecord.get().getUser_email());
     }
-
-    Optional<Token> tokenRecord = tokenDao.readByToken(token);
-    if(!tokenRecord.isPresent()){
-      LOGGER.warn("I tried to verify a token but that token doesn't exist.");
-      return Optional.empty();
-    }
-
-    if(!tokenRecord.get().isEnabled()){
-      LOGGER.warn("Someone tried to verify a token that is disabled.");
-      return Optional.empty();
-    }
-
-    // Looks like the token is fine
-    return Optional.of(tokenRecord.get().getUser_email());
-  }
 }

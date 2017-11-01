@@ -24,28 +24,28 @@ import javax.validation.constraints.NotNull;
 
 public class AuthorisationServiceConfig {
 
-  @NotNull
-  @JsonProperty
-  private String url;
+    @NotNull
+    @JsonProperty
+    private String url;
 
-  @NotNull
-  @JsonProperty
-  private String canManageUsersPath;
+    @NotNull
+    @JsonProperty
+    private String canManageUsersPath;
 
-  @NotNull
-  @JsonProperty
-  private String canManageUsersPermission;
+    @NotNull
+    @JsonProperty
+    private String canManageUsersPermission;
 
-  public String getUrl() {
-    return url;
-  }
+    public String getUrl() {
+        return url;
+    }
 
-  public String getCanManageUsersUrl() {
-    return url + canManageUsersPath;
-  }
+    public String getCanManageUsersUrl() {
+        return url + canManageUsersPath;
+    }
 
-  public String getCanManageUsersPermission() {
-    return canManageUsersPermission;
-  }
+    public String getCanManageUsersPermission() {
+        return canManageUsersPermission;
+    }
 
 }

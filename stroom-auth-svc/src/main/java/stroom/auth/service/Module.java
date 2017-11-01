@@ -26,59 +26,59 @@ import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
 import stroom.auth.config.TokenConfig;
+import stroom.auth.daos.TokenDao;
+import stroom.auth.daos.UserDao;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
 import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
 import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
+import stroom.auth.exceptions.mappers.UnauthorisedExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
-import stroom.auth.exceptions.mappers.UnauthorisedExceptionMapper;
-import stroom.auth.daos.TokenDao;
 import stroom.auth.resources.session.v1.SessionResource;
 import stroom.auth.resources.token.v1.TokenResource;
-import stroom.auth.daos.UserDao;
 import stroom.auth.resources.user.v1.UserResource;
 
 public final class Module extends AbstractModule {
-  private Config config;
-  private Configuration jooqConfig;
+    private Config config;
+    private Configuration jooqConfig;
 
-  public Module(Config config, Configuration jooqConfig) {
-    this.config = config;
-    this.jooqConfig = jooqConfig;
-  }
+    public Module(Config config, Configuration jooqConfig) {
+        this.config = config;
+        this.jooqConfig = jooqConfig;
+    }
 
-  protected void configure() {
-    bind(UserResource.class);
-    bind(AuthenticationResource.class);
-    bind(SessionResource.class);
-    bind(TokenResource.class);
-    bind(AuthorisationServiceClient.class);
-    bind(TokenDao.class);
-    bind(UserDao.class);
-    bind(TokenVerifier.class);
-    bind(EmailSender.class);
-    bind(CertificateManager.class);
-    bind(TokenBuilderFactory.class);
+    protected void configure() {
+        bind(UserResource.class);
+        bind(AuthenticationResource.class);
+        bind(SessionResource.class);
+        bind(TokenResource.class);
+        bind(AuthorisationServiceClient.class);
+        bind(TokenDao.class);
+        bind(UserDao.class);
+        bind(TokenVerifier.class);
+        bind(EmailSender.class);
+        bind(CertificateManager.class);
+        bind(TokenBuilderFactory.class);
 
-    bind(UnauthorisedExceptionMapper.class);
-    bind(BadRequestExceptionMapper.class);
-    bind(TokenCreationExceptionMapper.class);
-    bind(UnsupportedFilterExceptionMapper.class);
-    bind(NoSuchUserExceptionMapper.class);
-  }
+        bind(UnauthorisedExceptionMapper.class);
+        bind(BadRequestExceptionMapper.class);
+        bind(TokenCreationExceptionMapper.class);
+        bind(UnsupportedFilterExceptionMapper.class);
+        bind(NoSuchUserExceptionMapper.class);
+    }
 
-  @Provides
-  public Config getConfig() {
-    return config;
-  }
+    @Provides
+    public Config getConfig() {
+        return config;
+    }
 
-  @Provides
-  public TokenConfig getTokenConfig() {
-    return config.getTokenConfig();
-  }
+    @Provides
+    public TokenConfig getTokenConfig() {
+        return config.getTokenConfig();
+    }
 
-  @Provides
-  public Configuration getJooqConfig() {
-    return jooqConfig;
-  }
+    @Provides
+    public Configuration getJooqConfig() {
+        return jooqConfig;
+    }
 }
