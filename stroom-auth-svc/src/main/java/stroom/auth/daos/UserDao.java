@@ -78,18 +78,18 @@ public class UserDao {
 
     public boolean areCredentialsValid(Credentials credentials) {
         if (credentials == null
-                || Strings.isNullOrEmpty(credentials.getEmail())
-                || Strings.isNullOrEmpty(credentials.getPassword())) {
+                || Strings.isNullOrEmpty(credentials.email())
+                || Strings.isNullOrEmpty(credentials.password())) {
             throw new BadRequestException("Please provide both email and password");
         }
 
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
-                .where(new Condition[]{USERS.EMAIL.eq(credentials.getEmail())})
+                .where(new Condition[]{USERS.EMAIL.eq(credentials.email())})
                 .fetchOne();
 
         if (user == null) {
-            LOGGER.debug("Request to log in with invalid email: " + credentials.getEmail());
+            LOGGER.debug("Request to log in with invalid email: " + credentials.email());
             // We're returning a different message because we don't want to reveal that the email doesn't exist.
             throw new UnauthorisedException("Invalid credentials");
         }
@@ -97,11 +97,11 @@ public class UserDao {
         // Don't let them in if the account is locked or disabled.
         if (user.getState().equals(User.UserState.DISABLED.getStateText())
                 || user.getState().equals(User.UserState.LOCKED.getStateText())) {
-            LOGGER.debug("Account {} tried to log in but it is disabled or locked.", credentials.getEmail());
+            LOGGER.debug("Account {} tried to log in but it is disabled or locked.", credentials.email());
             throw new UnauthorisedException("This account is locked or disabled");
         }
 
-        boolean isPasswordCorrect = BCrypt.checkpw(credentials.getPassword(), user.getPasswordHash());
+        boolean isPasswordCorrect = BCrypt.checkpw(credentials.password(), user.getPasswordHash());
 
         return isPasswordCorrect;
     }

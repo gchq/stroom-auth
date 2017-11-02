@@ -26,6 +26,7 @@ buildscript {
 plugins {
     id 'com.github.johnrengelman.shadow' version '1.2.4'
     id "com.benjaminsproule.swagger" version "0.1.4" // Generates YAML/JSON from model
+    id "net.ltgt.apt" version "0.13"
 }
 
 apply plugin: 'application'
@@ -114,6 +115,9 @@ dependencies {
     compile deps.curator_service_discovery
     compile deps.simple_java_mail
     compile deps.swagger_annotations
+
+    compileOnly deps.auto_value
+    apt deps.auto_value
 
     runtime deps.mariadb_connector
 

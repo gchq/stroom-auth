@@ -253,8 +253,8 @@ public final class AuthenticationResource {
     public final Response handleLogin(
             @Context @NotNull HttpServletRequest httpServletRequest,
             @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
-        LOGGER.info("Received a login request for session " + credentials.getSessionId());
-        Optional<stroom.auth.Session> optionalSession = sessionManager.get(credentials.getSessionId());
+        LOGGER.info("Received a login request for session " + credentials.sessionId());
+        Optional<stroom.auth.Session> optionalSession = sessionManager.get(credentials.sessionId());
         if (!optionalSession.isPresent()) {
             return
                     status(422)
@@ -265,29 +265,29 @@ public final class AuthenticationResource {
 
         boolean areCredentialsValid = userDao.areCredentialsValid(credentials);
         if (!areCredentialsValid) {
-            LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
-            userDao.incrementLoginFailures(credentials.getEmail());
+            LOGGER.debug("Password for {} is incorrect", credentials.email());
+            userDao.incrementLoginFailures(credentials.email());
             throw new UnauthorisedException("Invalid credentials");
         }
 
         session.setAuthenticated(true);
-        session.setUserEmail(credentials.getEmail());
+        session.setUserEmail(credentials.email());
 
         String accessCode = SessionManager.createAccessCode();
-        RelyingParty relyingParty = session.getRelyingParty(credentials.getRequestingClientId());
+        RelyingParty relyingParty = session.getRelyingParty(credentials.requestingClientId());
 
         relyingParty.setAccessCode(accessCode);
 
         String idToken = tokenBuilderFactory
                 .newBuilder(Token.TokenType.USER)
-                .subject(credentials.getEmail())
+                .subject(credentials.email())
                 .nonce(relyingParty.getNonce())
                 .state(relyingParty.getState())
                 .build();
         relyingParty.setIdToken(idToken);
 
-        LOGGER.debug("Login for {} succeeded", credentials.getEmail());
-        userDao.resetUserLogin(credentials.getEmail());
+        LOGGER.debug("Login for {} succeeded", credentials.email());
+        userDao.resetUserLogin(credentials.email());
 
         return status(Status.OK).entity(accessCode).build();
     }

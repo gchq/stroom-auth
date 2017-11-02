@@ -18,53 +18,25 @@
 
 package stroom.auth.resources.authentication.v1;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
 
 import javax.validation.constraints.NotNull;
 
-public final class Credentials {
-    @NotNull
-    private String email = "";
-    @NotNull
-    private String password = "";
-    //TODO: @NotNull - will need to change ITs
-    private String sessionId = "";
+@AutoValue
+public abstract class Credentials {
+    public abstract String email();
+    public abstract String password();
+    public abstract String sessionId();
+    public abstract String requestingClientId();
 
-    private String requestingClientId = "";
-
-    @JsonProperty("email")
-    @NotNull
-    public final String getEmail() {
-        return this.email;
-    }
-
-    public final void setEmail(@NotNull String email) {
-        this.email = email;
-    }
-
-    @JsonProperty("password")
-    @NotNull
-    public final String getPassword() {
-        return this.password;
-    }
-
-    public final void setPassword(@NotNull String password) {
-        this.password = password;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public String getRequestingClientId() {
-        return requestingClientId;
-    }
-
-    public void setRequestingClientId(String requestingClientId) {
-        this.requestingClientId = requestingClientId;
+    @JsonCreator
+    public static Credentials create(
+            @JsonProperty("email") @NotNull String email,
+            @JsonProperty("password") @NotNull String password,
+            @JsonProperty("sessionId") @NotNull String sessionId,
+            @JsonProperty("requestingClientId") @NotNull String requestingClientId) {
+        return new AutoValue_Credentials(email, password, sessionId, requestingClientId);
     }
 }
