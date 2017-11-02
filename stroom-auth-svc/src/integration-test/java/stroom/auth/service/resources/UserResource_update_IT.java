@@ -58,47 +58,24 @@ public final class UserResource_update_IT extends Base_IT {
     }
 
     @Test
-    public final void update_user_without_authorisation() throws UnirestException {
-        String adminsJws = authenticationManager.loginAsAdmin();
+    public final void update_self_basic_user() throws UnirestException, ApiException, IOException {
+        UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
-        User userA = new User(Instant.now().toString(), "testPassword");
-        userManager.createUser(userA, adminsJws);
-        String userAJws = authenticationManager.logInAsUser(userA);
+        String userEmailA = "update_user_" + Instant.now().toString();
+        ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+                .email(userEmailA)
+                .password("password"));
 
-        User userB = new User(Instant.now().toString(), "testPassword");
-        int userBId = userManager.createUser(userB, adminsJws);
+        User userA = userManager.deserialiseUsers(userApi.getUser(response.getData())).get(0);
+        userA.setComments("Updated user");
+        UserApi userApiA = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAs(userEmailA, "password"));
+        ApiResponse<String> userUpdateResponse = userApiA.updateUserWithHttpInfo(response.getData(), new stroom.auth.service.api.model.User()
+                .id(userA.getId())
+                .comments(userA.getComments()));
 
-        // UserA tries to update UserB
-        userB.setEmail("New email" + Instant.now().toString());
-        String serialisedUserB = userManager.serialiseUser(userB);
-        String url = userManager.getRootUrl() + userBId;
-        HttpResponse response = Unirest
-                .put(url)
-                .header("Authorization", "Bearer " + userAJws)
-                .header("Content-Type", "application/json")
-                .body(serialisedUserB)
-                .asString();
-        assertUnauthorised(response);
-    }
+        assertThat(userUpdateResponse.getStatusCode()).isEqualTo(200);
 
-    @Test
-    public final void update_self_basic_user() throws UnirestException {
-        String adminsJws = authenticationManager.loginAsAdmin();
-
-        User userA = new User(Instant.now().toString(), "testPassword");
-        int userAId = userManager.createUser(userA, adminsJws);
-        String userAJws = authenticationManager.logInAsUser(userA);
-
-        // UserA tries to update themselves
-        userA.setEmail("New email" + Instant.now().toString());
-        String serialisedUserA = userManager.serialiseUser(userA);
-        String url = userManager.getRootUrl() + userAId;
-        HttpResponse response = Unirest
-                .put(url)
-                .header("Authorization", "Bearer " + userAJws)
-                .header("Content-Type", "application/json")
-                .body(serialisedUserA)
-                .asString();
-        assertOk(response);
+        User updatedUser = userManager.deserialiseUsers(userApi.getUser(response.getData())).get(0);
+        assertThat(updatedUser.getComments()).isEqualTo("Updated user");
     }
 }
