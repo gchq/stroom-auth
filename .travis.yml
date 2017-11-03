@@ -45,9 +45,9 @@ before_script:
   - pushd ../git_work
   - git clone https://github.com/gchq/stroom-resources.git
   - pushd stroom-resources/dev-resources/compose
-  - git checkout auth #TODO change to master when Auth is released
+  - git checkout $RESOURCES_BRANCH
   # Start all the services we need to run the integration tests in stroom
-  - docker-compose -f stroom-stroomDb-stroomStatsDb-stroomAuthDb.yml up -d
+  - docker-compose -f stroom_TAG-stroomDb-stroomAuthDb.yml up -d
   - popd
   - popd
 
