@@ -37,7 +37,7 @@ CREATE TABLE tokens (
     token                 VARCHAR(255) NOT NULL,
     expires_on            TIMESTAMP NULL,
     issued_on             TIMESTAMP NOT NULL,
-    issued_by_user		  MEDIUMINT NOT NULL,
+    issued_by_user		  MEDIUMINT  NULL,
     enabled               BIT DEFAULT 1,
     updated_on 			  TIMESTAMP NULL,
     updated_by_user 	  MEDIUMINT NULL,
