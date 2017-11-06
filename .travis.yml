@@ -37,6 +37,7 @@ before_install:
 install: echo "skip 'gradle assemble' step to speed up build"
 
 before_script:
+  - export ENABLE_TOKEN_REVOCATION_CHECK=false
   # The Authorisation Service, which runs in the Stroom container, needs to talk back to the auth-service,
   # which runs on the host. So we need to add a name to the host so it points back to us.
   - export STROOM_RESOURCES_ADVERTISED_HOST=`ip route get 1 | awk '{print $NF;exit}'`
