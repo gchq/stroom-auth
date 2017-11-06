@@ -30,8 +30,8 @@ import stroom.auth.service.api.model.SearchResponse;
 import stroom.auth.service.api.model.User;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.HashMap;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
@@ -69,17 +69,17 @@ public class TokenResource_search_IT extends TokenResource_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
         apiKeyApiClient.deleteAllWithHttpInfo();
-        createUserAndTokens("user1" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user6" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user7" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user8" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user9" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user10" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user11" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user6_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user7_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user8_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user9_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user10_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user11_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
 
         // We expect three times as many tokens as users because we're creating API tokens, user tokens, and email reset tokens.
         getPageAndAssert(0, 5, 5, apiKeyApiClient);
@@ -99,11 +99,11 @@ public class TokenResource_search_IT extends TokenResource_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
         apiKeyApiClient.deleteAllWithHttpInfo();
-        createUserAndTokens("user1" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
 
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(new stroom.auth.service.api.model.SearchRequest()
                 .page(0)
@@ -124,11 +124,11 @@ public class TokenResource_search_IT extends TokenResource_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
         apiKeyApiClient.deleteAllWithHttpInfo();
-        createUserAndTokens("user1" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), 3, apiKeyApiClient, userApi);
 
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(
                 new stroom.auth.service.api.model.SearchRequest()
@@ -155,21 +155,21 @@ public class TokenResource_search_IT extends TokenResource_IT {
         // Make sure we've got a clean database
         apiKeyApiClient.deleteAllWithHttpInfo();
 
-        createUserAndTokens("user1" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user1" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user1" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
 
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(
                 new stroom.auth.service.api.model.SearchRequest()
@@ -238,29 +238,27 @@ public class TokenResource_search_IT extends TokenResource_IT {
         // Make sure we've got a clean database
         apiKeyApiClient.deleteAllWithHttpInfo();
 
-        createUserAndTokens("user1" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user1" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user1" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user2" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user3" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user4" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user5" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-
-        createUserAndTokens("user10" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user10" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user10" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
-
-        createUserAndTokens("user11" + Instant.now().toString(), API, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user11" + Instant.now().toString(), USER, 1, apiKeyApiClient, userApi);
-        createUserAndTokens("user11" + Instant.now().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user1_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user2_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user3_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user4_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user5_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user10_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user10_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user10_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user11_" + UUID.randomUUID().toString(), API, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user11_" + UUID.randomUUID().toString(), USER, 1, apiKeyApiClient, userApi);
+        createUserAndTokens("user11_" + UUID.randomUUID().toString(), EMAIL_RESET, 1, apiKeyApiClient, userApi);
 
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(
                 new stroom.auth.service.api.model.SearchRequest()

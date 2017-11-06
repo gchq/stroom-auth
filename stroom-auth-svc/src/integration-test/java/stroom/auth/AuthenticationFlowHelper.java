@@ -33,6 +33,8 @@ import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
 import stroom.auth.service.api.model.IdTokenRequest;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -40,17 +42,15 @@ public class AuthenticationFlowHelper {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AuthenticationFlowHelper.class);
 
     private static final String CLIENT_ID = "integrationTestClient";
-    /**
-     * A real nonce hash would be a cryptographic hash of something, e.g. a UUID
-     */
-    private static final String PRETEND_NONCE_HASH = "0123456789";
 
     public static String authenticateAsAdmin() {
         return authenticateAs("admin", "admin");
     }
 
     public static String authenticateAs(String userEmail, String password) {
-        String sessionId = sendInitialAuthenticationRequest();
+        // We need to use a real-ish sort of nonce otherwise the OpenId tokens might end up being identical.
+        String nonce = UUID.randomUUID().toString();
+        String sessionId = sendInitialAuthenticationRequest(nonce);
         String accessCode = null;
         try {
             accessCode = performLogin(sessionId, userEmail, password);
@@ -58,8 +58,15 @@ public class AuthenticationFlowHelper {
             fail("Could not log the user in as '"+userEmail+"/"+password+"'!");
         }
         String idToken = exchangeAccessCodeForIdToken(sessionId, accessCode);
-        checkIdTokenContainsNonce(idToken);
+        checkIdTokenContainsNonce(idToken, nonce);
         return idToken;
+    }
+
+    /**
+     * The standard authentication request, for when the client doesn't care about checking their nonce.
+     */
+    public static String sendInitialAuthenticationRequest() {
+        return sendInitialAuthenticationRequest(UUID.randomUUID().toString());
     }
 
     /**
@@ -67,7 +74,7 @@ public class AuthenticationFlowHelper {
      * <p>
      * This flow would redirect the user to login, but we're faking that too so we ignore the redirection.
      */
-    public static String sendInitialAuthenticationRequest() {
+    public static String sendInitialAuthenticationRequest(String nonce) {
         LOGGER.info("Sending initial authentication request.");
         // The authentication flow includes a redirect to login. We don't want
         // anything interactive in testing so we need to take some steps to prevent the redirect:
@@ -81,7 +88,7 @@ public class AuthenticationFlowHelper {
         authenticationRequestParams.append("&redirect_url=NOT_GOING_TO_USE_THIS");
         authenticationRequestParams.append("&state=");
         authenticationRequestParams.append("&nonce=");
-        authenticationRequestParams.append(PRETEND_NONCE_HASH);
+        authenticationRequestParams.append(nonce);
         String authenticationRequestUrl =
                 "http://localhost:8099/authentication/v1/authenticate" + authenticationRequestParams;
         // Disable redirect handling -- see note above.
@@ -159,7 +166,7 @@ public class AuthenticationFlowHelper {
         return idToken;
     }
 
-    public static void checkIdTokenContainsNonce(String idToken) {
+    public static void checkIdTokenContainsNonce(String idToken, String nonce) {
         LOGGER.info("Verifying the nonce is in the id token");
         JwtConsumer consumer = new JwtConsumerBuilder()
                 .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
@@ -175,6 +182,6 @@ public class AuthenticationFlowHelper {
             fail("Bad JWT returned from auth service");
         }
         String nonceHash = (String) claims.getClaimsMap().get("nonce");
-        assertThat(nonceHash).isEqualTo(PRETEND_NONCE_HASH);
+        assertThat(nonceHash).isEqualTo(nonce);
     }
 }

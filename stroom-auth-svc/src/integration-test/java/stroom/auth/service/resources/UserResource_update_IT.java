@@ -16,8 +16,6 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
@@ -28,12 +26,9 @@ import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
 import java.io.IOException;
-import java.time.Instant;
-import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static stroom.auth.service.resources.support.HttpAsserts.assertOk;
-import static stroom.auth.service.resources.support.HttpAsserts.assertUnauthorised;
 
 public final class UserResource_update_IT extends Base_IT {
     @Test
@@ -41,12 +36,12 @@ public final class UserResource_update_IT extends Base_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
-                .email("update_user_" + Instant.now().toString())
+                .email("update_user_" + UUID.randomUUID().toString())
                 .password("password"));
 
         User user = userManager.deserialiseUsers(userApi.getUser(response.getData())).get(0);
 
-        user.setEmail("new email" + Instant.now().toString());
+        user.setEmail("new email_" + UUID.randomUUID().toString());
 
         userApi.updateUser(response.getData(), new stroom.auth.service.api.model.User()
             .id(user.getId())
@@ -61,7 +56,7 @@ public final class UserResource_update_IT extends Base_IT {
     public final void update_self_basic_user() throws UnirestException, ApiException, IOException {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
-        String userEmailA = "update_user_" + Instant.now().toString();
+        String userEmailA = "update_user_" + UUID.randomUUID().toString();
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
                 .email(userEmailA)
                 .password("password"));

@@ -164,7 +164,7 @@ public class TokenResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
-        tokenDao.deleteAllTokens();
+        tokenDao.deleteAllTokensExceptAdmins();
         return Response.status(Response.Status.OK).entity("All tokens deleted").build();
     }
 

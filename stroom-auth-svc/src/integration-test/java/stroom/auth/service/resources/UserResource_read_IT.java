@@ -26,8 +26,8 @@ import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
@@ -69,7 +69,7 @@ public final class UserResource_read_IT extends Base_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
-            .email("read_other_user_with_authorisation_" + Instant.now().toString())
+            .email("read_other_user_with_authorisation_" + UUID.randomUUID().toString())
             .password("password"));
         assertThat(response.getStatusCode()).isEqualTo(200);
         assertThat(response.getData()).isNotNull();
@@ -83,12 +83,12 @@ public final class UserResource_read_IT extends Base_IT {
     public final void read_other_user_without_authorisation() throws UnirestException, ApiException {
         UserApi adminUserApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
-        String userEmailA = "userEmailA_" + Instant.now().toString();
+        String userEmailA = "userEmailA_" + UUID.randomUUID().toString();
         ApiResponse<Integer> responseA = adminUserApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
                 .email(userEmailA)
                 .password("password"));
 
-        String userEmailB = "userEmailB_" + Instant.now().toString();
+        String userEmailB = "userEmailB_" + UUID.randomUUID().toString();
         ApiResponse<Integer> responseB = adminUserApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
                 .email(userEmailB)
                 .password("password"));

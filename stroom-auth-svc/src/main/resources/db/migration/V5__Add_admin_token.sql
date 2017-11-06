@@ -1,4 +1,4 @@
-
+-- NB: If you update this file you must remember to update Base_IT too, otherwise the integration tests might fail!
 
 INSERT INTO tokens(
     user_id,

@@ -24,7 +24,7 @@ import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
-import java.time.Instant;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
@@ -36,7 +36,7 @@ public final class UserResource_create_IT extends Base_IT {
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
-                .email("create_user_"+Instant.now().toString())
+                .email("create_user_"+ UUID.randomUUID().toString())
                 .password("password"));
 
         assertThat(response.getStatusCode()).isEqualTo(200);
@@ -65,7 +65,7 @@ public final class UserResource_create_IT extends Base_IT {
 
         try {
             userApi.createUser(new stroom.auth.service.api.model.User()
-                    .email("create_user_missing_password" + Instant.now().toString())
+                    .email("create_user_missing_password_" + UUID.randomUUID().toString())
                     .password(""));
             fail("Should throw an exception!");
         } catch(ApiException e ){
@@ -78,7 +78,7 @@ public final class UserResource_create_IT extends Base_IT {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
-        String emailToBeReused = Instant.now().toString();
+        String emailToBeReused = UUID.randomUUID().toString();
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
                 .email(emailToBeReused)
                 .password("password"));

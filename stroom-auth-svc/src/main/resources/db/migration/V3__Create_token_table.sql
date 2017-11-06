@@ -34,7 +34,7 @@ CREATE TABLE tokens (
     id 				      MEDIUMINT NOT NULL AUTO_INCREMENT,
     user_id               MEDIUMINT NOT NULL, -- The token belongs to this user
     token_type_id         MEDIUMINT NOT NULL,
-    token                 VARCHAR(255) NOT NULL,
+    token                 VARCHAR(1000) NOT NULL,
     expires_on            TIMESTAMP NULL,
     issued_on             TIMESTAMP NOT NULL,
     issued_by_user		  MEDIUMINT  NULL,

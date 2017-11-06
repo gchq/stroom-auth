@@ -26,7 +26,7 @@ import stroom.auth.service.api.UserApi;
 import stroom.auth.service.api.model.CreateTokenRequest;
 
 import java.io.IOException;
-import java.time.Instant;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -69,7 +69,7 @@ public class TokenResource_delete_IT extends TokenResource_IT {
 
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
         stroom.auth.service.api.model.User user1 = new stroom.auth.service.api.model.User();
-        String user1Email = "user" + Instant.now().toString();
+        String user1Email = "user_" + UUID.randomUUID().toString();
         user1.setEmail(user1Email);
         user1.setPassword("password");
         userApi.createUser(user1);
@@ -86,7 +86,7 @@ public class TokenResource_delete_IT extends TokenResource_IT {
 
 
         stroom.auth.service.api.model.User user2 = new stroom.auth.service.api.model.User();
-        String user2Email = "user" + Instant.now().toString();
+        String user2Email = "user_" + UUID.randomUUID().toString();
         user2.setEmail(user2Email);
         user2.setPassword("password");
         userApi.createUser(user2);

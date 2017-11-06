@@ -25,7 +25,7 @@ import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
 import java.io.IOException;
-import java.time.Instant;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +37,7 @@ public final class UserResource_delete_IT extends Base_IT {
 
 
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
-                .email("delete_user" + Instant.now().toString())
+                .email("delete_user_" + UUID.randomUUID().toString())
                 .password("password"));
         assertThat(response.getStatusCode()).isEqualTo(200);
         assertThat(response.getData()).isNotNull();

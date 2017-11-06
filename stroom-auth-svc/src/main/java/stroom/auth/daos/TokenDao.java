@@ -23,6 +23,7 @@ import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Field;
+import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Result;
@@ -151,6 +152,40 @@ public class TokenDao {
                 .getToken();
     }
 
+    public Token createIdToken(String idToken, String subject, Timestamp expiresOn) {
+        Record1<Integer> userRecord = database
+                .select(USERS.ID)
+                .from(USERS)
+                .where(USERS.EMAIL.eq(subject))
+                .fetchOne();
+        if (userRecord == null) {
+            throw new NoSuchUserException("Cannot find user to associate with this token!");
+        }
+        int recipientUserId = userRecord.get(USERS.ID);
+
+        int tokenTypeId = database
+                .select(TOKEN_TYPES.ID)
+                .from(TOKEN_TYPES)
+                .where(TOKEN_TYPES.TOKEN_TYPE.eq(Token.TokenType.USER.getText().toLowerCase()))
+                .fetchOne()
+                .get(TOKEN_TYPES.ID);
+
+        Token tokenRecord = database
+                .insertInto((Table) TOKENS)
+                .set(TOKENS.USER_ID, recipientUserId)
+                .set(TOKENS.TOKEN_TYPE_ID, tokenTypeId)
+                .set(TOKENS.TOKEN, idToken)
+                .set(TOKENS.EXPIRES_ON, expiresOn)
+                .set(TOKENS.ISSUED_ON, Instant.now())
+                .set(TOKENS.ENABLED, true)
+                .set(TOKENS.COMMENTS, "This is an OpenId idToken created by the Authentication Service.")
+                .returning(new Field[]{TOKENS.ID})
+                .fetchOne()
+                .into(Token.class);
+
+        return tokenRecord;
+    }
+
     public String createToken(String recipientUserEmail) throws NoSuchUserException {
         return createToken(
                 Token.TokenType.USER,
@@ -183,6 +218,7 @@ public class TokenDao {
 
         TokenGenerator tokenGenerator = new TokenGenerator(tokenType, recipientUserEmail, tokenConfig);
         tokenGenerator.createToken();
+        LOGGER.info("DEBUG: token" + tokenGenerator.getToken());
 
         int issuingUserId = database
                 .select(USERS.ID)
@@ -215,8 +251,14 @@ public class TokenDao {
         return tokenRecord;
     }
 
-    public void deleteAllTokens() {
-        database.deleteFrom(TOKENS).execute();
+    public void deleteAllTokensExceptAdmins() {
+        Integer adminUserId = database.select(USERS.ID).from(USERS)
+                .where(USERS.EMAIL.eq("admin")).fetchOne().into(Integer.class);
+
+        database
+                .deleteFrom(TOKENS)
+                .where(TOKENS.USER_ID.ne(adminUserId))
+                .execute();
     }
 
     public void deleteTokenById(int tokenId) {
@@ -251,29 +293,32 @@ public class TokenDao {
 
 
     public Optional<Token> readByToken(String token) {
-
         // We need these aliased tables because we're joining tokens to users twice.
-        Users issueingUsers = USERS.as("issueingUsers");
         Users tokenOwnerUsers = USERS.as("tokenOwnerUsers");
-        Users updatingUsers = USERS.as("updatingUsers");
-
         Field userEmail = tokenOwnerUsers.EMAIL.as("user_email");
-        SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
-                TokenDao.getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
 
-        Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
-                result = selectFrom
-                .where(new Condition[]{TOKENS.TOKEN.eq(token)})
-                .fetch();
+         Record tokenResult = database.select(
+                TOKENS.ID.as("id"),
+                TOKENS.ENABLED.as("enabled"),
+                TOKENS.EXPIRES_ON.as("expires_on"),
+                userEmail,
+                TOKENS.ISSUED_ON.as("issued_on"),
+                TOKENS.TOKEN.as("token"),
+                TOKEN_TYPES.TOKEN_TYPE.as("token_type"),
+                TOKENS.UPDATED_ON.as("updated_on"),
+                TOKENS.USER_ID.as("user_id"))
+        .from(TOKENS
+                .join(TOKEN_TYPES)
+                .on(TOKENS.TOKEN_TYPE_ID.eq(TOKEN_TYPES.ID))
+                .join(tokenOwnerUsers)
+                .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID)))
+        .where(new Condition[]{TOKENS.TOKEN.eq(token)})
+                 .fetchOne();
 
-        List<Token> tokenResult = result.into(Token.class);
-
-        if (tokenResult.isEmpty()) {
-            return Optional.empty();
-        }
-
-        LOGGER.info("Number of results: " + tokenResult.size());
-        return Optional.of(tokenResult.get(0));
+         if(tokenResult == null){
+             return Optional.empty();
+         }
+         return Optional.of(tokenResult.into(Token.class));
     }
 
 
@@ -430,4 +475,5 @@ public class TokenDao {
         }
         return Optional.of(conditions);
     }
+
 }
