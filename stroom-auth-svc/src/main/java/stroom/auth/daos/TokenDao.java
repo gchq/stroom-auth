@@ -218,7 +218,6 @@ public class TokenDao {
 
         TokenGenerator tokenGenerator = new TokenGenerator(tokenType, recipientUserEmail, tokenConfig);
         tokenGenerator.createToken();
-        LOGGER.info("DEBUG: token" + tokenGenerator.getToken());
 
         int issuingUserId = database
                 .select(USERS.ID)
