@@ -39,8 +39,7 @@ install: echo "skip 'gradle assemble' step to speed up build"
 before_script:
   # The Authorisation Service, which runs in the Stroom container, needs to talk back to the auth-service,
   # which runs on the host. So we need to add a name to the host so it points back to us.
-  - ip=`ip route get 1 | awk '{print $NF;exit}'`
-  - export STROOM_RESOURCES_ADVERTISED_HOST=http://$ip:8099
+  - export STROOM_RESOURCES_ADVERTISED_HOST=`ip route get 1 | awk '{print $NF;exit}'`
   - echo $STROOM_RESOURCES_ADVERTISED_HOST
   # Increase the size of the heap
   - echo $JAVA_OPTS
