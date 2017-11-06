@@ -23,12 +23,14 @@ import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
 import stroom.auth.RelyingParty;
 import stroom.auth.SessionManager;
+import stroom.auth.TokenBuilder;
 import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
@@ -60,6 +62,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -189,12 +192,7 @@ public final class AuthenticationResource {
             String accessCode = SessionManager.createAccessCode();
             relyingParty.setAccessCode(accessCode);
             String subject = optionalSession.get().getUserEmail();
-            String idToken = tokenBuilderFactory
-                    .newBuilder(Token.TokenType.USER)
-                    .subject(subject)
-                    .nonce(relyingParty.getNonce())
-                    .state(relyingParty.getState())
-                    .build();
+            String idToken = createIdToken(subject, nonce, state);
             relyingParty.setIdToken(idToken);
 
             String successParams = String.format("?accessCode=%s&state=%s", accessCode, state);
@@ -206,13 +204,8 @@ public final class AuthenticationResource {
             optionalSession.get().setAuthenticated(true);
             String accessCode = SessionManager.createAccessCode();
             relyingParty.setAccessCode(accessCode);
-            String subject = optionalCn.get(); //TODO We might need to use a new user, or look one up.
-            String idToken = tokenBuilderFactory
-                    .newBuilder(Token.TokenType.USER)
-                    .subject(subject)
-                    .nonce(nonce)
-                    .state(state)
-                    .build();
+            String subject = optionalCn.get(); //
+            String idToken = createIdToken(subject, nonce, state);
             relyingParty.setIdToken(idToken);
 
             String successParams = String.format("?accessCode=%s&state=%s", accessCode, state);
@@ -278,12 +271,8 @@ public final class AuthenticationResource {
 
         relyingParty.setAccessCode(accessCode);
 
-        String idToken = tokenBuilderFactory
-                .newBuilder(Token.TokenType.USER)
-                .subject(credentials.getEmail())
-                .nonce(relyingParty.getNonce())
-                .state(relyingParty.getState())
-                .build();
+        String idToken = createIdToken(credentials.getEmail(), relyingParty.getNonce(), relyingParty.getState());
+
         relyingParty.setIdToken(idToken);
 
         LOGGER.debug("Login for {} succeeded", credentials.getEmail());
@@ -415,5 +404,18 @@ public final class AuthenticationResource {
         return usersEmail
                 .map(s -> status(Status.OK).entity(s).build())
                 .orElseGet(() -> status(Status.UNAUTHORIZED).build());
+    }
+
+    private String createIdToken(String subject, String nonce, String state){
+        TokenBuilder tokenBuilder = tokenBuilderFactory
+                .newBuilder(Token.TokenType.USER)
+                .subject(subject)
+                .nonce(nonce)
+                .state(state);
+        NumericDate expiresOn = tokenBuilder.expiresOn();
+        String idToken = tokenBuilder.build();
+
+        tokenDao.createIdToken(idToken, subject, new Timestamp(expiresOn.getValueInMillis()));
+        return idToken;
     }
 }

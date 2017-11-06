@@ -20,6 +20,7 @@ package stroom.auth;
 
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.NumericDate;
 import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
 import stroom.auth.resources.token.v1.Token.TokenType;
@@ -98,5 +99,12 @@ public class TokenBuilder {
         } catch (JoseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public NumericDate expiresOn() {
+        NumericDate numericDate = NumericDate.now();
+        float secondsOffset = expirationInMinutes.get() * 60;
+        numericDate.addSeconds((long)secondsOffset);
+        return numericDate;
     }
 }
