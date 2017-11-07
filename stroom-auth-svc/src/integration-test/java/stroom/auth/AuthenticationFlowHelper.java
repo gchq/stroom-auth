@@ -109,7 +109,7 @@ public class AuthenticationFlowHelper {
 
         assertThat(authenticationRequestResponse.getStatus()).isEqualTo(303);// 303 = See Other
         StringBuilder redirectionUrlBuilder = new StringBuilder();
-        redirectionUrlBuilder.append("http://localhost:3000/login?error=login_required&state=&clientId=");
+        redirectionUrlBuilder.append("http://localhost:5000/login?error=login_required&state=&clientId=");
         redirectionUrlBuilder.append(CLIENT_ID);
         redirectionUrlBuilder.append("&redirectUrl=NOT_GOING_TO_USE_THIS");
         assertThat(authenticationRequestResponse.getHeaders().get("Location").get(0))

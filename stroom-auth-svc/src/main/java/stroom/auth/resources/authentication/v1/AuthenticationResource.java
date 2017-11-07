@@ -155,10 +155,10 @@ public final class AuthenticationResource {
                 optionalNewSessionCookie = Optional.of(new NewCookie(
                         "sessionId", sessionId,
                         "/",
-                        "localhost",//TODO: use the advertised host
+                        config.getAdvertisedHost(),
                         "Stroom session cookie",
                         604800, // 1 week
-                        false // TODO: make this true!
+                        false
                 ));
             } else {
                 sessionId = optionalSessionId.get();
@@ -224,6 +224,7 @@ public final class AuthenticationResource {
             responseBuilder = seeOther(new URI(failureUrl));
         }
 
+        // TODO FMXME: This isn't getting stored in the browser
         // If we've created a new session cookie then we need to make sure it goes back to the user agent.
         optionalNewSessionCookie.ifPresent(responseBuilder::cookie);
 
@@ -243,9 +244,7 @@ public final class AuthenticationResource {
     @NotNull
     @ApiOperation(value = "Handle a login request made using username and password credentials.",
             response = String.class, tags = {"Authentication"})
-    public final Response handleLogin(
-            @Context @NotNull HttpServletRequest httpServletRequest,
-            @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
+    public final Response handleLogin(@ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
         LOGGER.info("Received a login request for session " + credentials.getSessionId());
         Optional<stroom.auth.Session> optionalSession = sessionManager.get(credentials.getSessionId());
         if (!optionalSession.isPresent()) {
@@ -281,31 +280,7 @@ public final class AuthenticationResource {
         return status(Status.OK).entity(accessCode).build();
     }
 
-//  @Deprecated
-//  @POST
-//  @Path("/login")
-//  @Consumes({"application/json"})
-//  @Produces({"application/json"})
-//  @Timed
-//  @NotNull
-//  public final Response authenticateAndReturnToken(@Nullable Credentials credentials) throws URISyntaxException {
-//    Response response;
-//
-//    boolean areCredentialsValid = userDao.areCredentialsValid(credentials);
-//    if(!areCredentialsValid) {
-//      LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
-//      userDao.incrementLoginFailures(credentials.getEmail());
-//      throw new UnauthorisedException("Invalid credentials");
-//    }
-//
-//    LOGGER.debug("Login for {} succeeded", credentials.getEmail());
-//    userDao.resetUserLogin(credentials.getEmail());
-//    String token = tokenDao.createToken(credentials.getEmail());
-//    return status(Status.OK).entity(token).build();
-//  }
-
     //TODO: Should this be in TokenResource?
-
     /**
      * This is one of two idToken endpoints. One a GET and one a POST. The GET is used
      * by clients that send cookies, e.g. browsers and JavaScript.
