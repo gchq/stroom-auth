@@ -12,3 +12,6 @@ In this repository:
 In the `stroom-resources` repository:
 * The NGINX config in `./deploy/template/nginx.conf`, currently the `location /auth` block.
 * In the `stroom-auth-service` container, in `./compose/containers/stroomAuthService.yml`, in the `AUTH_UI` environment variable.
+
+## Running
+To run in dev use `./runDev.sh`. This will correctly create an `.env.development` file.
