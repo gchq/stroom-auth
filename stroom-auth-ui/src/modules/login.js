@@ -206,6 +206,7 @@ export const login = (credentials) => {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
+        credentials: 'include', // This should include the cookies
         method: 'post',
         mode: 'cors',
         body: JSON.stringify({
