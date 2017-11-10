@@ -119,7 +119,7 @@ public class TokenResource {
     @Timed
     @ApiOperation(
             value = "Create a new token.",
-            response = Integer.class,
+            response = Token.class,
             tags = {"ApiKey"})
     public final Response create(
             @Auth @NotNull ServiceUser authenticatedServiceUser,
@@ -149,7 +149,7 @@ public class TokenResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
 
-        return Response.status(Response.Status.OK).entity(token.getId()).build();
+        return Response.status(Response.Status.OK).entity(token).build();
     }
 
     @ApiOperation(
