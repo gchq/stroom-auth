@@ -63,6 +63,7 @@ const LoginForm = props => {
               hintText='Password'
               validate={[required]}
               className='LoginForm-input'
+              type='password'
               />
             <Field
               name='rememberMe'
