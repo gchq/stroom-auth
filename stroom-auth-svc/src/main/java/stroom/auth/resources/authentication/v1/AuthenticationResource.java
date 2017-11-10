@@ -291,6 +291,36 @@ public final class AuthenticationResource {
         return status(Status.OK).entity(accessCode).build();
     }
 
+    @GET
+    @Path("/logout")
+    @Consumes({"application/json"})
+    @Produces({"application/json"})
+    @Timed
+    @NotNull
+    @ApiOperation(value = "Log a user out of their session")
+    public final Response logout(@Context @NotNull HttpServletRequest httpServletRequest) throws URISyntaxException {
+        // Get the cookie with the session - the request is invalid if there isn't one.
+        if(httpServletRequest.getCookies() != null) {
+            Optional<String> optionalSessionId = Arrays.stream(httpServletRequest.getCookies())
+                    .filter(cookie -> cookie.getName().equals("sessionId"))
+                    .findFirst()
+                    .map(Cookie::getValue);
+            if (optionalSessionId.isPresent()) {
+                sessionManager.logout(optionalSessionId.get());
+                LOGGER.info("Logged out session: {}", optionalSessionId.get());
+            }
+            else {
+                LOGGER.debug("Tried to log out but there was no session cookie!");
+            }
+        }
+        else {
+            LOGGER.debug("Tried to log out but there were no cookies!");
+        }
+        // We'll always redirect back to our root
+        return seeOther(new URI(this.config.getAdvertisedHost())).build();
+    }
+
+
     //TODO: Should this be in TokenResource?
     /**
      * This is one of two idToken endpoints. One a GET and one a POST. The GET is used
@@ -349,15 +379,13 @@ public final class AuthenticationResource {
     public final Response getIdTokenWithPost(
             @Session HttpSession httpSession,
             @ApiParam("idTokenRequest") @NotNull IdTokenRequest idTokenRequest) {
-        LOGGER.info("Providing an id_token for sessionId" + idTokenRequest.getSessionId());
-        Optional<stroom.auth.Session> session = this.sessionManager.getByAccessCode(idTokenRequest.getAccessCode());
-        if(!session.isPresent()){
+        Optional<RelyingParty> relyingParty = this.sessionManager.getByAccessCode(idTokenRequest.getAccessCode());
+        if(!relyingParty.isPresent()){
             return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
         }
-        RelyingParty relyingParty = session.get().getRelyingParty(idTokenRequest.getRequestingClientId());
-        String idToken = relyingParty.getIdToken();
-        relyingParty.forgetIdToken();
-        relyingParty.forgetAccessCode();
+        String idToken = relyingParty.get().getIdToken();
+        relyingParty.get().forgetIdToken();
+        relyingParty.get().forgetAccessCode();
         return Response.status(Status.OK).entity(idToken).build();
     }
 
