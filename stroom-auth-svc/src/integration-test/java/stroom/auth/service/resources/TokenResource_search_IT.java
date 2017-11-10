@@ -371,8 +371,8 @@ public class TokenResource_search_IT extends TokenResource_IT {
         createTokenRequest.setTokenType(tokenType.getText());
         stroom.auth.service.api.model.Token token = null;
         try {
-            int id = apiKeyApi.create(createTokenRequest);
-            token = apiKeyApi.read_0(id);
+            stroom.auth.service.api.model.Token id = apiKeyApi.create(createTokenRequest);
+            token = apiKeyApi.read_0(id.getId());
         } catch (ApiException e) {
             fail("Unable to create a new token!");
         }

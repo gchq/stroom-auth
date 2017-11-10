@@ -24,6 +24,7 @@ import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.UserApi;
 import stroom.auth.service.api.model.CreateTokenRequest;
+import stroom.auth.service.api.model.Token;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -42,19 +43,19 @@ public class TokenResource_delete_IT extends TokenResource_IT {
         createTokenRequest.setTokenType("api");
         createTokenRequest.setEnabled(false);
         createTokenRequest.setComments("Created by TokenResource_create_IT");
-        Integer newApiKeyId = apiKeyApiClient.create(createTokenRequest);
+        Token newApiKeyId = apiKeyApiClient.create(createTokenRequest);
         assertThat(newApiKeyId).isNotNull();
 
         // Check that the token we just created has been saved.
-        stroom.auth.service.api.model.Token newApiKeyJws = apiKeyApiClient.read_0(newApiKeyId);
+        stroom.auth.service.api.model.Token newApiKeyJws = apiKeyApiClient.read_0(newApiKeyId.getId());
         assertThat(newApiKeyJws).isNotNull();
 
-        ApiResponse<String> deleteResponse = apiKeyApiClient.delete_0WithHttpInfo(newApiKeyId);
+        ApiResponse<String> deleteResponse = apiKeyApiClient.delete_0WithHttpInfo(newApiKeyId.getId());
         assertThat(deleteResponse.getStatusCode()).isEqualTo(200);
 
         // Check that the token we just created has been saved.
         try {
-            apiKeyApiClient.read_0WithHttpInfo(newApiKeyId);
+            apiKeyApiClient.read_0WithHttpInfo(newApiKeyId.getId());
         } catch (ApiException ex) {
             assertThat(ex.getCode()).isEqualTo(404);
         }
@@ -77,12 +78,12 @@ public class TokenResource_delete_IT extends TokenResource_IT {
         CreateTokenRequest createTokenRequest1 = new CreateTokenRequest();
         createTokenRequest1.setTokenType("API");
         createTokenRequest1.setUserEmail(user1Email);
-        int key1Id = apiKeyApiClient.create(createTokenRequest1);
+        Token key1Id = apiKeyApiClient.create(createTokenRequest1);
 
         CreateTokenRequest createTokenRequest2 = new CreateTokenRequest();
         createTokenRequest2.setTokenType("API");
         createTokenRequest2.setUserEmail(user1Email);
-        int key2Id = apiKeyApiClient.create(createTokenRequest2);
+        Token key2Id = apiKeyApiClient.create(createTokenRequest2);
 
 
         stroom.auth.service.api.model.User user2 = new stroom.auth.service.api.model.User();
@@ -94,56 +95,56 @@ public class TokenResource_delete_IT extends TokenResource_IT {
         CreateTokenRequest createTokenRequest3 = new CreateTokenRequest();
         createTokenRequest3.setTokenType("API");
         createTokenRequest3.setUserEmail(user2Email);
-        int key3Id = apiKeyApiClient.create(createTokenRequest3);
+        Token key3Id = apiKeyApiClient.create(createTokenRequest3);
 
         CreateTokenRequest createTokenRequest4 = new CreateTokenRequest();
         createTokenRequest4.setTokenType("API");
         createTokenRequest4.setUserEmail(user2Email);
-        int key4Id = apiKeyApiClient.create(createTokenRequest4);
+        Token key4Id = apiKeyApiClient.create(createTokenRequest4);
 
         CreateTokenRequest createTokenRequest5 = new CreateTokenRequest();
         createTokenRequest5.setTokenType("API");
         createTokenRequest5.setUserEmail(user2Email);
-        int key5Id = apiKeyApiClient.create(createTokenRequest5);
+        Token key5Id = apiKeyApiClient.create(createTokenRequest5);
 
 
         // Verify users and tokens were created
-        stroom.auth.service.api.model.Token key1 = apiKeyApiClient.read_0(key1Id);
+        stroom.auth.service.api.model.Token key1 = apiKeyApiClient.read_0(key1Id.getId());
         assertThat(key1).isNotNull();
-        stroom.auth.service.api.model.Token key2 = apiKeyApiClient.read_0(key2Id);
+        stroom.auth.service.api.model.Token key2 = apiKeyApiClient.read_0(key2Id.getId());
         assertThat(key2).isNotNull();
-        stroom.auth.service.api.model.Token key3 = apiKeyApiClient.read_0(key3Id);
+        stroom.auth.service.api.model.Token key3 = apiKeyApiClient.read_0(key3Id.getId());
         assertThat(key3).isNotNull();
-        stroom.auth.service.api.model.Token key4 = apiKeyApiClient.read_0(key4Id);
+        stroom.auth.service.api.model.Token key4 = apiKeyApiClient.read_0(key4Id.getId());
         assertThat(key4).isNotNull();
-        stroom.auth.service.api.model.Token key5 = apiKeyApiClient.read_0(key5Id);
+        stroom.auth.service.api.model.Token key5 = apiKeyApiClient.read_0(key5Id.getId());
         assertThat(key5).isNotNull();
 
         ApiResponse response = apiKeyApiClient.deleteAllWithHttpInfo();
         assertThat(response.getStatusCode()).isEqualTo(200);
 
         try {
-            apiKeyApiClient.read_0(key1Id);
+            apiKeyApiClient.read_0(key1Id.getId());
         } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(404);
         }
         try {
-            apiKeyApiClient.read_0(key2Id);
+            apiKeyApiClient.read_0(key2Id.getId());
         } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(404);
         }
         try {
-            apiKeyApiClient.read_0(key3Id);
+            apiKeyApiClient.read_0(key3Id.getId());
         } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(404);
         }
         try {
-            apiKeyApiClient.read_0(key4Id);
+            apiKeyApiClient.read_0(key4Id.getId());
         } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(404);
         }
         try {
-            apiKeyApiClient.read_0(key5Id);
+            apiKeyApiClient.read_0(key5Id.getId());
         } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(404);
         }

@@ -46,10 +46,10 @@ public class TokenResource_create_IT extends TokenResource_IT {
         createTokenRequest.setTokenType("api");
         createTokenRequest.setEnabled(false);
         createTokenRequest.setComments("Created by TokenResource_create_IT");
-        int newApiKeyId = apiKeyApiClient.create(createTokenRequest);
+        Token newApiKeyId = apiKeyApiClient.create(createTokenRequest);
 
         // Use the id to get the Jws
-        Token newApiKeyJws = apiKeyApiClient.read_0(newApiKeyId);
+        Token newApiKeyJws = apiKeyApiClient.read_0(newApiKeyId.getId());
         assertThat(newApiKeyJws).isNotNull();
 
         // Now try and read using the api key itself
@@ -70,7 +70,7 @@ public class TokenResource_create_IT extends TokenResource_IT {
         createTokenRequest.setEnabled(false);
         createTokenRequest.setComments("Created by TokenResource_create_IT");
         try {
-            int newApiKeyId = apiKeyApiClient.create(createTokenRequest);
+            Token newApiKeyId = apiKeyApiClient.create(createTokenRequest);
         } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(400);
         }
