@@ -114,11 +114,11 @@ public class SessionManager {
         return session;
     }
 
-    public Optional<Session> getByAccessCode(String accessCode) {
+    public Optional<RelyingParty> getByAccessCode(String accessCode) {
         for(Session session : sessions.values()){
             for(RelyingParty relyingParty : session.getRelyingParties()){
                 if(relyingParty.getAccessCode().equals(accessCode)){
-                    return Optional.of(session);
+                    return Optional.of(relyingParty);
                 }
             }
         }

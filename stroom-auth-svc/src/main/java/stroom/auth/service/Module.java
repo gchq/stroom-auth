@@ -34,7 +34,6 @@ import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
 import stroom.auth.exceptions.mappers.UnauthorisedExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
-import stroom.auth.resources.session.v1.SessionResource;
 import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
 
@@ -50,7 +49,6 @@ public final class Module extends AbstractModule {
     protected void configure() {
         bind(UserResource.class);
         bind(AuthenticationResource.class);
-        bind(SessionResource.class);
         bind(TokenResource.class);
         bind(AuthorisationServiceClient.class);
         bind(TokenDao.class);
