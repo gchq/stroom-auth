@@ -129,8 +129,8 @@ export const createToken = (newToken) => {
     })
         .then(handleStatus)
         .then(getBody)
-        .then((newApiKeyId) => {
-          dispatch(relativePush(`/token/${newApiKeyId}`))
+        .then((newToken) => {
+          dispatch(relativePush(`/token/${newToken.id}`))
         })
         .catch(error => handleErrors(error, dispatch, jwsToken))
   }
