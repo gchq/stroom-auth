@@ -35,6 +35,7 @@ import './App.css'
 import logo from './logo.svg'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
+import LoggedOut from '../../containers/loggedOut'
 import {UserCreate, UserEdit, UserSearch} from '../../containers/user'
 import {TokenCreate, TokenSearch, TokenEdit} from '../../containers/token'
 import NewUser from '../../containers/newUser'
@@ -100,6 +101,7 @@ class App extends Component {
               {/* Routes not requiring authentication */}
               <Route exact path={relativePath('/login')} component={Login} />
               <Route exact path={relativePath('/logout')} component={Logout} />
+              <Route exact path={relativePath('/loggedOut')} component={LoggedOut} />
               <Route exact path={relativePath('/newUser')} component={NewUser} />
               <Route exact path={relativePath('/resetPassword')} component={ResetPassword} />
               <Route exact path={relativePath('/confirmPasswordResetEmail')} component={ConfirmPasswordResetEmail} />
