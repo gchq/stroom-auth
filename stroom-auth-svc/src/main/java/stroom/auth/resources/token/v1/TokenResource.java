@@ -57,18 +57,15 @@ import java.util.Optional;
 public class TokenResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 
-    private final Config config;
     private final TokenDao tokenDao;
     private final UserDao userDao;
     private final AuthorisationServiceClient authorisationServiceClient;
 
     @Inject
     public TokenResource(final AuthorisationServiceClient authorisationServiceClient,
-                         final Config config,
                          final TokenDao tokenDao,
                          final UserDao userDao) {
         this.authorisationServiceClient = authorisationServiceClient;
-        this.config = config;
         this.tokenDao = tokenDao;
         this.userDao = userDao;
     }

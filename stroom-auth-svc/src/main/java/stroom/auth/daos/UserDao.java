@@ -60,7 +60,7 @@ public class UserDao {
         database = DSL.using(this.jooqConfig);
     }
 
-    public void resetUserLogin(String email) {
+    public void recordSuccessfulLogin(String email) {
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
                 .where(new Condition[]{USERS.EMAIL.eq(email)})

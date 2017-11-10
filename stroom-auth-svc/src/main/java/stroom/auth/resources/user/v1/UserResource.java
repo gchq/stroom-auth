@@ -67,15 +67,12 @@ import static stroom.db.auth.Tables.USERS;
 public final class UserResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
-    private final Config config;
     private AuthorisationServiceClient authorisationServiceClient;
 
     @Inject
-    public UserResource(@NotNull AuthorisationServiceClient authorisationServiceClient,
-                        @NotNull Config config) {
+    public UserResource(@NotNull AuthorisationServiceClient authorisationServiceClient) {
         super();
         this.authorisationServiceClient = authorisationServiceClient;
-        this.config = config;
     }
 
     @ApiOperation(

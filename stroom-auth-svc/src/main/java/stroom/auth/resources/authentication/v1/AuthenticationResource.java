@@ -246,7 +246,9 @@ public final class AuthenticationResource {
             response = String.class, tags = {"Authentication"})
     public final Response handleLogin(@Context @NotNull HttpServletRequest httpServletRequest,
               @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
-        // Get the cookie with the session - the request is invalid if there isn't one.
+        LOGGER.info("Received a login request for session " + credentials.getSessionId());
+
+        // Get the cookie with the sessionId and then get the session - the request is invalid without one.
         Optional<String> optionalSessionId = Optional.empty();
         if (httpServletRequest.getCookies() != null) {
             optionalSessionId = Arrays.stream(httpServletRequest.getCookies())
@@ -254,16 +256,19 @@ public final class AuthenticationResource {
                     .findFirst()
                     .map(Cookie::getValue);
         }
-        LOGGER.info("Received a login request for session " + credentials.getSessionId());
+        Response noSessionResponse = status(422)
+                .entity("You have no session. Please make an AuthenticationRequest to the Authentication Service.")
+                .build();
+        if(!optionalSessionId.isPresent()){
+            return noSessionResponse;
+        }
         Optional<stroom.auth.Session> optionalSession = sessionManager.get(optionalSessionId.get());
         if (!optionalSession.isPresent()) {
-            return
-                    status(422)
-                            .entity("You have no session. Please make an AuthenticationRequest to the Authentication Service.")
-                            .build();
+            return noSessionResponse;
         }
         stroom.auth.Session session = optionalSession.get();
 
+        // Check the credentials
         boolean areCredentialsValid = userDao.areCredentialsValid(credentials);
         if (!areCredentialsValid) {
             LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
@@ -271,20 +276,22 @@ public final class AuthenticationResource {
             throw new UnauthorisedException("Invalid credentials");
         }
 
+        // Make sure the session is authenticated and ready for use
         session.setAuthenticated(true);
         session.setUserEmail(credentials.getEmail());
 
+        //The relying party is the client making this request - now that we've authenticated for them we
+        // can create the access code and id token.
         String accessCode = SessionManager.createAccessCode();
         RelyingParty relyingParty = session.getRelyingParty(credentials.getRequestingClientId());
-
         relyingParty.setAccessCode(accessCode);
-
         String idToken = createIdToken(credentials.getEmail(), relyingParty.getNonce(), relyingParty.getState());
-
         relyingParty.setIdToken(idToken);
 
         LOGGER.debug("Login for {} succeeded", credentials.getEmail());
-        userDao.resetUserLogin(credentials.getEmail());
+
+        // Reset last access, login failures, etc...
+        userDao.recordSuccessfulLogin(credentials.getEmail());
 
         return status(Status.OK).entity(accessCode).build();
     }
