@@ -127,7 +127,7 @@ export const createToken = (newToken) => {
       })
     })
         .then(handleStatus)
-        .then(getBody)
+        .then(getJsonBody)
         .then((newToken) => {
           dispatch(relativePush(`/token/${newToken.id}`))
         })
