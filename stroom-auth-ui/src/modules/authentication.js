@@ -73,13 +73,11 @@ export const sendAuthenticationRequest = (referrer) => {
 
 export const handleAuthenticationResponse = (accessCode) => {
   return (dispatch) => {
-    const idTokenRequestUrl = `${process.env.REACT_APP_AUTHENTICATION_URL}/idToken/`
-    const idTokenRequestParams = `?accessCode=${accessCode}&clientId=${process.env.REACT_APP_CLIENT_ID}`
-    const url = idTokenRequestUrl + idTokenRequestParams
+    const idTokenRequestUrl = `${process.env.REACT_APP_AUTHENTICATION_URL}/idToken?accessCode=${accessCode}`
 
     // The cookie including the sessionId will be sent along with this request.
     // The 'credentials' key makes this happen.
-    fetch(url, {
+    fetch(idTokenRequestUrl, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
