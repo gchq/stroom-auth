@@ -21,7 +21,6 @@ package stroom.auth.service.resources;
 import stroom.auth.service.ApiClient;
 import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.AuthenticationApi;
-import stroom.auth.service.api.DefaultApi;
 import stroom.auth.service.api.SessionApi;
 import stroom.auth.service.api.UserApi;
 
@@ -30,10 +29,6 @@ public class SwaggerHelper {
 
     public static AuthenticationApi newAuthApiClient(String idToken) {
         return new AuthenticationApi(newApiClient(idToken));
-    }
-
-    public static DefaultApi newDefaultApiClient(String idToken) {
-        return new DefaultApi(newApiClient(idToken));
     }
 
     public static ApiKeyApi newApiKeyApiClient(String idToken) {
