@@ -31,7 +31,6 @@ import stroom.auth.service.ApiException;
 import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
-import stroom.auth.service.api.model.IdTokenRequest;
 
 import java.util.UUID;
 
@@ -152,11 +151,7 @@ public class AuthenticationFlowHelper {
         AuthenticationApi authenticationApi = new AuthenticationApi(apiClient);
         String idToken = null;
         try {
-            IdTokenRequest idTokenRequest = new IdTokenRequest();
-            idTokenRequest.setRequestingClientId(CLIENT_ID);
-            idTokenRequest.setSessionId(sessionId);
-            idTokenRequest.setAccessCode(accessCode);
-            idToken = authenticationApi.getIdTokenWithPost(idTokenRequest);
+            idToken = authenticationApi.getIdToken(accessCode);
         } catch (ApiException e) {
             fail("Request to exchange access code for id token failed!");
         }
