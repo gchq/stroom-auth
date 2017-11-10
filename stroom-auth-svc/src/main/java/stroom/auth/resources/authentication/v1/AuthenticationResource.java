@@ -19,7 +19,6 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,7 +45,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -320,8 +318,6 @@ public final class AuthenticationResource {
         return seeOther(new URI(this.config.getAdvertisedHost())).build();
     }
 
-
-    //TODO: Should this be in TokenResource?
     /**
      * This is one of two idToken endpoints. One a GET and one a POST. The GET is used
      * by clients that send cookies, e.g. browsers and JavaScript.
@@ -332,54 +328,8 @@ public final class AuthenticationResource {
     @Timed
     @ApiOperation(value = "Convert a previously provided access code into an ID token",
             response = String.class, tags = {"Authentication"})
-    public final Response getIdTokenWithGet(
-            @Context @NotNull HttpServletRequest httpServletRequest,
-            @QueryParam("accessCode") @NotNull String accessCode,
-            @QueryParam("clientId") @NotNull String clientId) {
-
-        // Get the cookie with the session - the request is invalid if there isn't one.
-        Optional<String> sessionId = Arrays.stream(httpServletRequest.getCookies())
-                .filter(cookie -> cookie.getName().equals("sessionId"))
-                .findFirst()
-                .map(Cookie::getValue);
-        if (!sessionId.isPresent()) {
-            throw new RuntimeException("TODO: what happens now? Redirect to authentication request and start again I think.");
-        }
-
-        LOGGER.info("Providing an id_token for sessionId {}", sessionId.get());
-        stroom.auth.Session session = this.sessionManager.getOrCreate(sessionId.get());
-//    stroom.auth.Session session = this.sessionManager.getOrCreate(sessionId.get());
-        RelyingParty relyingParty = session.getRelyingParty(clientId);
-        boolean accessCodesMatch = relyingParty.getAccessCode().equals(accessCode);
-
-        if (!accessCodesMatch) {
-            return status(Status.UNAUTHORIZED).entity("Invalid access code").build();
-        }
-        String idToken = relyingParty.getIdToken();
-
-        relyingParty.forgetIdToken();
-        relyingParty.forgetAccessCode();
-
-        return status(Status.OK).entity(idToken).build();
-    }
-
-
-    //TODO: Should this be in TokenResource?
-
-    /**
-     * This is one of two idToken endpoints. One a GET and one a POST. The GET is used
-     * by clients that send cookies, e.g. browsers and JavaScript.
-     * The POST is for other clients, e.g. Swagger.
-     */
-    @POST
-    @Path("idToken")
-    @Timed
-    @ApiOperation(value = "Convert a previously provided access code into an ID token",
-            response = String.class, tags = {"Authentication"})
-    public final Response getIdTokenWithPost(
-            @Session HttpSession httpSession,
-            @ApiParam("idTokenRequest") @NotNull IdTokenRequest idTokenRequest) {
-        Optional<RelyingParty> relyingParty = this.sessionManager.getByAccessCode(idTokenRequest.getAccessCode());
+    public final Response getIdToken(@QueryParam("accessCode") @NotNull String accessCode) {
+        Optional<RelyingParty> relyingParty = this.sessionManager.getByAccessCode(accessCode);
         if(!relyingParty.isPresent()){
             return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
         }
