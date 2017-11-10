@@ -15,7 +15,6 @@ basePath: "/"
 tags:
 - name: "ApiKey"
 - name: "Authentication"
-- name: "Session"
 - name: "User"
 schemes:
 - "http"
@@ -72,10 +71,6 @@ paths:
         in: "query"
         required: false
         type: "string"
-      - name: "sessionId"
-        in: "query"
-        required: false
-        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -109,7 +104,7 @@ paths:
       - "Authentication"
       summary: "Convert a previously provided access code into an ID token"
       description: ""
-      operationId: "getIdTokenWithGet"
+      operationId: "getIdToken"
       produces:
       - "application/json"
       parameters:
@@ -117,35 +112,26 @@ paths:
         in: "query"
         required: true
         type: "string"
-      - name: "clientId"
-        in: "query"
-        required: true
-        type: "string"
       responses:
         200:
           description: "successful operation"
           schema:
             type: "string"
-    post:
+  /authentication/v1/logout:
+    get:
       tags:
       - "Authentication"
-      summary: "Convert a previously provided access code into an ID token"
+      summary: "Log a user out of their session"
       description: ""
-      operationId: "getIdTokenWithPost"
+      operationId: "logout"
+      consumes:
+      - "application/json"
       produces:
       - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "idTokenRequest"
-        required: false
-        schema:
-          $ref: "#/definitions/IdTokenRequest"
+      parameters: []
       responses:
-        200:
+        default:
           description: "successful operation"
-          schema:
-            type: "string"
   /authentication/v1/reset/{email}:
     get:
       tags:
@@ -184,25 +170,6 @@ paths:
           description: "successful operation"
           schema:
             type: "string"
-  /session/v1/logout/{sessionId}:
-    get:
-      tags:
-      - "Session"
-      summary: "Log a user out of their session"
-      description: ""
-      operationId: "logout"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "sessionId"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        default:
-          description: "successful operation"
   /token/v1:
     post:
       tags:
@@ -225,8 +192,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: "integer"
-            format: "int32"
+            $ref: "#/definitions/Token"
     delete:
       tags:
       - "ApiKey"
@@ -532,23 +498,6 @@ definitions:
         type: "string"
       password:
         type: "string"
-  IdTokenRequest:
-    type: "object"
-    required:
-    - "accessCode"
-    - "requestingClientId"
-    - "sessionId"
-    properties:
-      sessionId:
-        type: "string"
-        description: "The session ID to which this request is linked."
-      accessCode:
-        type: "string"
-        description: "The previously provided access code."
-      requestingClientId:
-        type: "string"
-        description: "The clientId of the relying party requesting the id_token."
-    description: "A request to retrieve an ID token using an access code."
   SearchRequest:
     type: "object"
     required:

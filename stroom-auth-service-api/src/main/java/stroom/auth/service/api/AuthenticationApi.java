@@ -28,7 +28,6 @@ import java.io.IOException;
 
 
 import stroom.auth.service.api.model.Credentials;
-import stroom.auth.service.api.model.IdTokenRequest;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -55,8 +54,8 @@ public class AuthenticationApi {
         this.apiClient = apiClient;
     }
 
-    /* Build call for getIdTokenWithGet */
-    private com.squareup.okhttp.Call getIdTokenWithGetCall(String accessCode, String clientId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    /* Build call for getIdToken */
+    private com.squareup.okhttp.Call getIdTokenCall(String accessCode, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
@@ -65,8 +64,6 @@ public class AuthenticationApi {
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         if (accessCode != null)
         localVarQueryParams.addAll(apiClient.parameterToPairs("", "accessCode", accessCode));
-        if (clientId != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "clientId", clientId));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -101,20 +98,15 @@ public class AuthenticationApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getIdTokenWithGetValidateBeforeCall(String accessCode, String clientId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call getIdTokenValidateBeforeCall(String accessCode, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'accessCode' is set
         if (accessCode == null) {
-            throw new ApiException("Missing the required parameter 'accessCode' when calling getIdTokenWithGet(Async)");
-        }
-        
-        // verify the required parameter 'clientId' is set
-        if (clientId == null) {
-            throw new ApiException("Missing the required parameter 'clientId' when calling getIdTokenWithGet(Async)");
+            throw new ApiException("Missing the required parameter 'accessCode' when calling getIdToken(Async)");
         }
         
         
-        com.squareup.okhttp.Call call = getIdTokenWithGetCall(accessCode, clientId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getIdTokenCall(accessCode, progressListener, progressRequestListener);
         return call;
 
         
@@ -127,12 +119,11 @@ public class AuthenticationApi {
      * Convert a previously provided access code into an ID token
      * 
      * @param accessCode  (required)
-     * @param clientId  (required)
      * @return String
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public String getIdTokenWithGet(String accessCode, String clientId) throws ApiException {
-        ApiResponse<String> resp = getIdTokenWithGetWithHttpInfo(accessCode, clientId);
+    public String getIdToken(String accessCode) throws ApiException {
+        ApiResponse<String> resp = getIdTokenWithHttpInfo(accessCode);
         return resp.getData();
     }
 
@@ -140,12 +131,11 @@ public class AuthenticationApi {
      * Convert a previously provided access code into an ID token
      * 
      * @param accessCode  (required)
-     * @param clientId  (required)
      * @return ApiResponse&lt;String&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<String> getIdTokenWithGetWithHttpInfo(String accessCode, String clientId) throws ApiException {
-        com.squareup.okhttp.Call call = getIdTokenWithGetValidateBeforeCall(accessCode, clientId, null, null);
+    public ApiResponse<String> getIdTokenWithHttpInfo(String accessCode) throws ApiException {
+        com.squareup.okhttp.Call call = getIdTokenValidateBeforeCall(accessCode, null, null);
         Type localVarReturnType = new TypeToken<String>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -154,12 +144,11 @@ public class AuthenticationApi {
      * Convert a previously provided access code into an ID token (asynchronously)
      * 
      * @param accessCode  (required)
-     * @param clientId  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getIdTokenWithGetAsync(String accessCode, String clientId, final ApiCallback<String> callback) throws ApiException {
+    public com.squareup.okhttp.Call getIdTokenAsync(String accessCode, final ApiCallback<String> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -180,126 +169,13 @@ public class AuthenticationApi {
             };
         }
 
-        com.squareup.okhttp.Call call = getIdTokenWithGetValidateBeforeCall(accessCode, clientId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /* Build call for getIdTokenWithPost */
-    private com.squareup.okhttp.Call getIdTokenWithPostCall(IdTokenRequest body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = body;
-        
-        // create path and map variables
-        String localVarPath = "/authentication/v1/idToken".replaceAll("\\{format\\}","json");
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {
-            
-        };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
-                @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                    .build();
-                }
-            });
-        }
-
-        String[] localVarAuthNames = new String[] {  };
-        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
-    }
-    
-    @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getIdTokenWithPostValidateBeforeCall(IdTokenRequest body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        
-        
-        com.squareup.okhttp.Call call = getIdTokenWithPostCall(body, progressListener, progressRequestListener);
-        return call;
-
-        
-        
-        
-        
-    }
-
-    /**
-     * Convert a previously provided access code into an ID token
-     * 
-     * @param body idTokenRequest (optional)
-     * @return String
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public String getIdTokenWithPost(IdTokenRequest body) throws ApiException {
-        ApiResponse<String> resp = getIdTokenWithPostWithHttpInfo(body);
-        return resp.getData();
-    }
-
-    /**
-     * Convert a previously provided access code into an ID token
-     * 
-     * @param body idTokenRequest (optional)
-     * @return ApiResponse&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public ApiResponse<String> getIdTokenWithPostWithHttpInfo(IdTokenRequest body) throws ApiException {
-        com.squareup.okhttp.Call call = getIdTokenWithPostValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<String>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-    /**
-     * Convert a previously provided access code into an ID token (asynchronously)
-     * 
-     * @param body idTokenRequest (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     */
-    public com.squareup.okhttp.Call getIdTokenWithPostAsync(IdTokenRequest body, final ApiCallback<String> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener = new ProgressResponseBody.ProgressListener() {
-                @Override
-                public void update(long bytesRead, long contentLength, boolean done) {
-                    callback.onDownloadProgress(bytesRead, contentLength, done);
-                }
-            };
-
-            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
-                @Override
-                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
-                    callback.onUploadProgress(bytesWritten, contentLength, done);
-                }
-            };
-        }
-
-        com.squareup.okhttp.Call call = getIdTokenWithPostValidateBeforeCall(body, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getIdTokenValidateBeforeCall(accessCode, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<String>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /* Build call for handleAuthenticationRequest */
-    private com.squareup.okhttp.Call handleAuthenticationRequestCall(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state, String sessionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call handleAuthenticationRequestCall(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
@@ -318,8 +194,6 @@ public class AuthenticationApi {
         localVarQueryParams.addAll(apiClient.parameterToPairs("", "nonce", nonce));
         if (state != null)
         localVarQueryParams.addAll(apiClient.parameterToPairs("", "state", state));
-        if (sessionId != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "sessionId", sessionId));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -354,7 +228,7 @@ public class AuthenticationApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call handleAuthenticationRequestValidateBeforeCall(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state, String sessionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call handleAuthenticationRequestValidateBeforeCall(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'clientId' is set
         if (clientId == null) {
@@ -372,7 +246,7 @@ public class AuthenticationApi {
         }
         
         
-        com.squareup.okhttp.Call call = handleAuthenticationRequestCall(clientId, redirectUrl, nonce, scope, responseType, state, sessionId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = handleAuthenticationRequestCall(clientId, redirectUrl, nonce, scope, responseType, state, progressListener, progressRequestListener);
         return call;
 
         
@@ -390,12 +264,11 @@ public class AuthenticationApi {
      * @param scope  (optional)
      * @param responseType  (optional)
      * @param state  (optional)
-     * @param sessionId  (optional)
      * @return String
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public String handleAuthenticationRequest(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state, String sessionId) throws ApiException {
-        ApiResponse<String> resp = handleAuthenticationRequestWithHttpInfo(clientId, redirectUrl, nonce, scope, responseType, state, sessionId);
+    public String handleAuthenticationRequest(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state) throws ApiException {
+        ApiResponse<String> resp = handleAuthenticationRequestWithHttpInfo(clientId, redirectUrl, nonce, scope, responseType, state);
         return resp.getData();
     }
 
@@ -408,12 +281,11 @@ public class AuthenticationApi {
      * @param scope  (optional)
      * @param responseType  (optional)
      * @param state  (optional)
-     * @param sessionId  (optional)
      * @return ApiResponse&lt;String&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<String> handleAuthenticationRequestWithHttpInfo(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state, String sessionId) throws ApiException {
-        com.squareup.okhttp.Call call = handleAuthenticationRequestValidateBeforeCall(clientId, redirectUrl, nonce, scope, responseType, state, sessionId, null, null);
+    public ApiResponse<String> handleAuthenticationRequestWithHttpInfo(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state) throws ApiException {
+        com.squareup.okhttp.Call call = handleAuthenticationRequestValidateBeforeCall(clientId, redirectUrl, nonce, scope, responseType, state, null, null);
         Type localVarReturnType = new TypeToken<String>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -427,12 +299,11 @@ public class AuthenticationApi {
      * @param scope  (optional)
      * @param responseType  (optional)
      * @param state  (optional)
-     * @param sessionId  (optional)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call handleAuthenticationRequestAsync(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state, String sessionId, final ApiCallback<String> callback) throws ApiException {
+    public com.squareup.okhttp.Call handleAuthenticationRequestAsync(String clientId, String redirectUrl, String nonce, String scope, String responseType, String state, final ApiCallback<String> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -453,7 +324,7 @@ public class AuthenticationApi {
             };
         }
 
-        com.squareup.okhttp.Call call = handleAuthenticationRequestValidateBeforeCall(clientId, redirectUrl, nonce, scope, responseType, state, sessionId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = handleAuthenticationRequestValidateBeforeCall(clientId, redirectUrl, nonce, scope, responseType, state, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<String>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -569,6 +440,112 @@ public class AuthenticationApi {
         com.squareup.okhttp.Call call = handleLoginValidateBeforeCall(body, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<String>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
+        return call;
+    }
+    /* Build call for logout */
+    private com.squareup.okhttp.Call logoutCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = null;
+        
+        // create path and map variables
+        String localVarPath = "/authentication/v1/logout".replaceAll("\\{format\\}","json");
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                    .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] {  };
+        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+    
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call logoutValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        
+        
+        com.squareup.okhttp.Call call = logoutCall(progressListener, progressRequestListener);
+        return call;
+
+        
+        
+        
+        
+    }
+
+    /**
+     * Log a user out of their session
+     * 
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public void logout() throws ApiException {
+        logoutWithHttpInfo();
+    }
+
+    /**
+     * Log a user out of their session
+     * 
+     * @return ApiResponse&lt;Void&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<Void> logoutWithHttpInfo() throws ApiException {
+        com.squareup.okhttp.Call call = logoutValidateBeforeCall(null, null);
+        return apiClient.execute(call);
+    }
+
+    /**
+     * Log a user out of their session (asynchronously)
+     * 
+     * @param callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     */
+    public com.squareup.okhttp.Call logoutAsync(final ApiCallback<Void> callback) throws ApiException {
+
+        ProgressResponseBody.ProgressListener progressListener = null;
+        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
+
+        if (callback != null) {
+            progressListener = new ProgressResponseBody.ProgressListener() {
+                @Override
+                public void update(long bytesRead, long contentLength, boolean done) {
+                    callback.onDownloadProgress(bytesRead, contentLength, done);
+                }
+            };
+
+            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
+                @Override
+                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
+                    callback.onUploadProgress(bytesWritten, contentLength, done);
+                }
+            };
+        }
+
+        com.squareup.okhttp.Call call = logoutValidateBeforeCall(progressListener, progressRequestListener);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /* Build call for resetEmail */

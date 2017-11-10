@@ -115,11 +115,11 @@ public class ApiKeyApi {
      * Create a new token.
      * 
      * @param body CreateTokenRequest (optional)
-     * @return Integer
+     * @return Token
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Integer create(CreateTokenRequest body) throws ApiException {
-        ApiResponse<Integer> resp = createWithHttpInfo(body);
+    public Token create(CreateTokenRequest body) throws ApiException {
+        ApiResponse<Token> resp = createWithHttpInfo(body);
         return resp.getData();
     }
 
@@ -127,12 +127,12 @@ public class ApiKeyApi {
      * Create a new token.
      * 
      * @param body CreateTokenRequest (optional)
-     * @return ApiResponse&lt;Integer&gt;
+     * @return ApiResponse&lt;Token&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Integer> createWithHttpInfo(CreateTokenRequest body) throws ApiException {
+    public ApiResponse<Token> createWithHttpInfo(CreateTokenRequest body) throws ApiException {
         com.squareup.okhttp.Call call = createValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<Integer>(){}.getType();
+        Type localVarReturnType = new TypeToken<Token>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -144,7 +144,7 @@ public class ApiKeyApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call createAsync(CreateTokenRequest body, final ApiCallback<Integer> callback) throws ApiException {
+    public com.squareup.okhttp.Call createAsync(CreateTokenRequest body, final ApiCallback<Token> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -166,7 +166,7 @@ public class ApiKeyApi {
         }
 
         com.squareup.okhttp.Call call = createValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Integer>(){}.getType();
+        Type localVarReturnType = new TypeToken<Token>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }

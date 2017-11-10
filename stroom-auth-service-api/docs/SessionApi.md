@@ -4,12 +4,12 @@ All URIs are relative to *http://localhost:8080/*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**logout**](SessionApi.md#logout) | **GET** /session/v1/logout/{sessionId} | Log a user out of their session
+[**logout**](SessionApi.md#logout) | **GET** /session/v1/logout | Log a user out of their session
 
 
 <a name="logout"></a>
 # **logout**
-> logout(sessionId)
+> logout()
 
 Log a user out of their session
 
@@ -23,9 +23,8 @@ Log a user out of their session
 
 
 SessionApi apiInstance = new SessionApi();
-String sessionId = "sessionId_example"; // String | 
 try {
-    apiInstance.logout(sessionId);
+    apiInstance.logout();
 } catch (ApiException e) {
     System.err.println("Exception when calling SessionApi#logout");
     e.printStackTrace();
@@ -33,10 +32,7 @@ try {
 ```
 
 ### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **sessionId** | **String**|  |
+This endpoint does not need any parameter.
 
 ### Return type
 

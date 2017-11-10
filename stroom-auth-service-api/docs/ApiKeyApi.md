@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 <a name="create"></a>
 # **create**
-> Integer create(body)
+> Token create(body)
 
 Create a new token.
 
@@ -32,7 +32,7 @@ Create a new token.
 ApiKeyApi apiInstance = new ApiKeyApi();
 CreateTokenRequest body = new CreateTokenRequest(); // CreateTokenRequest | CreateTokenRequest
 try {
-    Integer result = apiInstance.create(body);
+    Token result = apiInstance.create(body);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ApiKeyApi#create");
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Integer**
+[**Token**](Token.md)
 
 ### Authorization
 
