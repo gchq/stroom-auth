@@ -62,6 +62,7 @@ stroomUrl: ${STROOM_UI:- http://localhost:8099}
 resetPasswordUrl: ${RESET_PASSWORD_URL:- 'http://localhost/resetPassword/?token=%s'}
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://localhost}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
+sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 month
 
 authorisationService:
   url: ${AUTHORISATION_SERVICE_URL:- http://localhost:8080/api/authorisation/v1}

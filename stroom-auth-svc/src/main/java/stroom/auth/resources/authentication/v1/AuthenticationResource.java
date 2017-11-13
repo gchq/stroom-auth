@@ -150,16 +150,15 @@ public final class AuthenticationResource {
 
         if (!optionalSessionId.isPresent()) {
             sessionId = UUID.randomUUID().toString();
-            NewCookie sessionIdCookie = new NewCookie("sessionId", sessionId);
-//            NewCookie sessionIdCookie = new NewCookie(
-//                    "sessionId",
-//                    sessionId,
-//                    "/",
-//                    config.getAdvertisedHost(),
-//                    "",
-//                    "Stroom SSO Session cookie",
-//                    604800, // 1 week
-//                    false);
+//            NewCookie sessionIdCookie = new NewCookie("sessionId", sessionId);
+            NewCookie sessionIdCookie = new NewCookie(
+                    "sessionId",
+                    sessionId,
+                    "authentication/v1/",
+                    config.getAdvertisedHost(),
+                    "Stroom SSO Session cookie",
+                    config.getSessionIdCookieMaxAge(),
+                    false);
             optionalNewSessionCookie = Optional.of(sessionIdCookie);
         } else {
             sessionId = optionalSessionId.get();

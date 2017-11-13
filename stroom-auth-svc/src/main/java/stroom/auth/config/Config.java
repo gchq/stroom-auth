@@ -91,6 +91,10 @@ public final class Config extends Configuration {
     @JsonProperty("token")
     private TokenConfig tokenConfig;
 
+    @Nullable
+    @JsonProperty("sessionIdCookieMaxAge")
+    private int sessionIdCookieMaxAge;
+
     @NotNull
     @JsonProperty("authorisationService")
     private AuthorisationServiceConfig authorisationServiceConfig;
@@ -160,5 +164,10 @@ public final class Config extends Configuration {
                 .findFirst()
                 .get();
         return port;
+    }
+
+    @Nullable
+    public int getSessionIdCookieMaxAge() {
+        return sessionIdCookieMaxAge;
     }
 }
