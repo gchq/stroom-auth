@@ -1,3 +1,5 @@
+import { authorisationServiceUrl } from '../environmentVariables'
+
 export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS'
 
 const initialState = {
@@ -26,7 +28,7 @@ const setCanManagerUsers = (canManageUsers) => {
 
 export const canManageUsers = (idToken) => {
   return (dispatch) => {
-    const canManageUsersUrl = process.env.REACT_APP_AUTHORISATION_URL + '/canManageUsers'
+    const canManageUsersUrl = `${authorisationServiceUrl()}/canManageUsers`
     return fetch(canManageUsersUrl, {
       headers: {
         'Accept': 'application/json',

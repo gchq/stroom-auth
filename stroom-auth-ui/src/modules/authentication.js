@@ -22,6 +22,8 @@ import { relativePush } from '../relativePush'
 import { getBody } from './fetchFunctions'
 import { canManageUsers } from './authorisation'
 
+import { authenticationServiceUrl, authUiAdvertisedUrl, appClientId } from '../environmentVariables'
+
 export const TOKEN_ID_CHANGE = 'authentication/TOKEN_ID_CHANGE'
 
 const initialState = {
@@ -49,8 +51,8 @@ function changeIdToken (idToken) {
 
 export const sendAuthenticationRequest = (referrer) => {
   return (dispatch, getState) => {
-    const clientId = process.env.REACT_APP_CLIENT_ID
-    const redirectUrl = process.env.REACT_APP_ADVERTISED_URL + '/handleAuthenticationResponse'
+    const clientId = appClientId()
+    const redirectUrl = `${authUiAdvertisedUrl()}/handleAuthenticationResponse`
     const state = ''
 
     // Create nonce and store, and create nonce hash
@@ -64,7 +66,7 @@ export const sendAuthenticationRequest = (referrer) => {
 
     // Compose the new URL
     const authenticationRequestParams = `?scope=openid&response_type=code&client_id=${clientId}&redirect_url=${redirectUrl}&state=${state}&nonce=${nonceHash}`
-    const authenticationRequestUrl = process.env.REACT_APP_AUTHENTICATION_URL + '/authenticate/' + authenticationRequestParams
+    const authenticationRequestUrl = `${authenticationServiceUrl()}/authenticate/${authenticationRequestParams}`
 
     // We hand off to the authenticationService.
     window.location.href = authenticationRequestUrl
@@ -73,7 +75,7 @@ export const sendAuthenticationRequest = (referrer) => {
 
 export const handleAuthenticationResponse = (accessCode) => {
   return (dispatch) => {
-    const idTokenRequestUrl = `${process.env.REACT_APP_AUTHENTICATION_URL}/idToken?accessCode=${accessCode}`
+    const idTokenRequestUrl = `${authenticationServiceUrl()}/idToken?accessCode=${accessCode}`
 
     // The cookie including the sessionId will be sent along with this request.
     // The 'credentials' key makes this happen.

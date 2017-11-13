@@ -15,6 +15,7 @@
  */
 import { initialize } from 'redux-form'
 
+import { tokenServiceUrl } from '../environmentVariables'
 import { relativePush } from '../relativePush'
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
@@ -83,8 +84,7 @@ export const deleteSelectedToken = (tokenId) => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken
     const tokenIdToDelete = getState().tokenSearch.selectedTokenRowId
-    const tokenServiceUrl = process.env.REACT_APP_TOKEN_URL + '/' + tokenIdToDelete
-    fetch(tokenServiceUrl, {
+    fetch(`${tokenServiceUrl()}/${tokenIdToDelete}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -112,8 +112,7 @@ export const createToken = (newToken) => {
     // TODO wire this in
     // dispatch(showCreateLoader(true))
 
-    const tokenServiceUrl = process.env.REACT_APP_TOKEN_URL
-    fetch(tokenServiceUrl, {
+    fetch(tokenServiceUrl(), {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -141,8 +140,7 @@ export const fetchApiKey = (apiKeyId) => {
     const jwsToken = getState().authentication.idToken
     // TODO: remove any errors
     // TODO: show loading spinner
-    const apiKeyServiceUrl = process.env.REACT_APP_TOKEN_URL + '/' + apiKeyId
-    fetch(apiKeyServiceUrl, {
+    fetch(`${tokenServiceUrl()}/${apiKeyId}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

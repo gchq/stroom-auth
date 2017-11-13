@@ -19,6 +19,7 @@ import { SubmissionError } from 'redux-form'
 import Cookies from 'cookies-js'
 
 import { HttpError } from '../ErrorTypes'
+import {authenticationServiceUrl} from '../environmentVariables'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
@@ -189,7 +190,7 @@ export const login = (credentials) => {
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))
 
-    const loginServiceUrl = process.env.REACT_APP_LOGIN_URL
+    const loginServiceUrl = `${authenticationServiceUrl()}/authenticate`
     const redirectUrl = getState().login.redirectUrl
     const clientId = getState().login.clientId
 

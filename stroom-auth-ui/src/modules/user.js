@@ -17,6 +17,7 @@
 import { initialize } from 'redux-form'
 import dateFormat from 'dateformat'
 
+import { authenticationServiceUrl, userServiceUrl } from '../environmentVariables'
 import { relativePush } from '../relativePush'
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
@@ -121,8 +122,7 @@ export const saveChanges = (editedUser) => {
     const jwsToken = getState().authentication.idToken
     const { id, email, password, first_name, last_name, comments, state } = editedUser
 
-    const userServiceUrl = `${process.env.REACT_APP_USER_URL}/${id}`
-    fetch(userServiceUrl, {
+    fetch(`${userServiceUrl()}/${id}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -155,8 +155,7 @@ export const createUser = (newUser) => {
 
     dispatch(showCreateLoader(true))
 
-    const userServiceUrl = process.env.REACT_APP_USER_URL
-    fetch(userServiceUrl, {
+    fetch(userServiceUrl(), {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -189,8 +188,7 @@ export const fetchUser = (userId) => {
     const jwsToken = getState().authentication.idToken
     // TODO: remove any errors
     // TODO: show loading spinner
-    const userServiceUrl = process.env.REACT_APP_USER_URL + '/' + userId
-    fetch(userServiceUrl, {
+    fetch(`${userServiceUrl()}/${userId}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -216,8 +214,7 @@ export const deleteSelectedUser = (userId) => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken
     const userIdToDelete = getState().userSearch.selectedUserRowId
-    const userServiceUrl = process.env.REACT_APP_USER_URL + '/' + userIdToDelete
-    fetch(userServiceUrl, {
+    fetch(`${userServiceUrl()}/${userIdToDelete}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -240,8 +237,7 @@ export const deleteSelectedUser = (userId) => {
 export const changePasswordForCurrentUser = () => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken
-    const userServiceUrl = process.env.REACT_APP_USER_URL + '/me'
-    fetch(userServiceUrl, {
+    fetch(`${userServiceUrl()}/me`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -262,10 +258,9 @@ export const changePasswordForCurrentUser = () => {
 
 export const changePassword = (userId) => {
   return (dispatch, getState) => {
-    const userServiceUrl = `${process.env.REACT_APP_USER_URL}/${userId}`
     const jwsToken = getState().authentication.idToken
     const newPassword = getState().form.ChangePasswordForm.values.password
-    fetch(userServiceUrl, {
+    fetch(`${userServiceUrl()}/${userId}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -287,7 +282,7 @@ export const changePassword = (userId) => {
 
 export const submitPasswordChangeRequest = (formData) => {
   return (dispatch, getState) => {
-    const userServiceUrl = `${process.env.REACT_APP_AUTHENTICATION_URL}/reset/${formData.emailAddress}`
+    const userServiceUrl = `${authenticationServiceUrl()}/reset/${formData.emailAddress}`
     const jwsToken = getState().authentication.idToken
     fetch(userServiceUrl, {
       headers: {
