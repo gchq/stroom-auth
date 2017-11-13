@@ -150,7 +150,6 @@ public final class AuthenticationResource {
 
         if (!optionalSessionId.isPresent()) {
             sessionId = UUID.randomUUID().toString();
-//            NewCookie sessionIdCookie = new NewCookie("sessionId", sessionId);
             NewCookie sessionIdCookie = new NewCookie(
                     "sessionId",
                     sessionId,
