@@ -19,6 +19,7 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,6 +46,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -126,6 +128,7 @@ public final class AuthenticationResource {
     @Timed
     @ApiOperation(value = "Submit an OpenId AuthenticationRequest.", response = String.class, tags = {"Authentication"})
     public final Response handleAuthenticationRequest(
+            @Session HttpSession httpSession,
             @Context @NotNull HttpServletRequest httpServletRequest,
             @QueryParam("scope") @Nullable String scope,
             @QueryParam("response_type") @Nullable String responseType,
@@ -135,33 +138,8 @@ public final class AuthenticationResource {
             @QueryParam("state") @Nullable String state
         ) throws URISyntaxException {
         boolean isAuthenticated = false;
+        String sessionId = httpSession.getId();
 
-        Optional<NewCookie> optionalNewSessionCookie = Optional.empty();
-        String sessionId;
-        // Try and get the sessionId from the cookie. If there isn't one then we'll
-        // create a new sessionId and add it to a new cookie.
-        Optional<String> optionalSessionId = Optional.empty();
-        if (httpServletRequest.getCookies() != null) {
-            optionalSessionId = Arrays.stream(httpServletRequest.getCookies())
-                    .filter(cookie -> cookie.getName().equals("sessionId"))
-                    .findFirst()
-                    .map(Cookie::getValue);
-        }
-
-        if (!optionalSessionId.isPresent()) {
-            sessionId = UUID.randomUUID().toString();
-            NewCookie sessionIdCookie = new NewCookie(
-                    "sessionId",
-                    sessionId,
-                    "authentication/v1/",
-                    config.getAdvertisedHost(),
-                    "Stroom SSO Session cookie",
-                    config.getSessionIdCookieMaxAge(),
-                    false);
-            optionalNewSessionCookie = Optional.of(sessionIdCookie);
-        } else {
-            sessionId = optionalSessionId.get();
-        }
         LOGGER.info("Received an AuthenticationRequest for session " + sessionId);
 
         // We need to make sure our understanding of the session is correct
@@ -222,10 +200,6 @@ public final class AuthenticationResource {
             responseBuilder = seeOther(new URI(failureUrl));
         }
 
-        // TODO FMXME: This isn't getting stored in the browser
-        // If we've created a new session cookie then we need to make sure it goes back to the user agent.
-        optionalNewSessionCookie.ifPresent(responseBuilder::cookie);
-
         return responseBuilder.build();
     }
 
@@ -242,25 +216,17 @@ public final class AuthenticationResource {
     @NotNull
     @ApiOperation(value = "Handle a login request made using username and password credentials.",
             response = String.class, tags = {"Authentication"})
-    public final Response handleLogin(@Context @NotNull HttpServletRequest httpServletRequest,
-              @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
+    public final Response handleLogin(
+            @Session HttpSession httpSession,
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
         LOGGER.info("Received a login request for session " + credentials.getSessionId());
-
-        // Get the cookie with the sessionId and then get the session - the request is invalid without one.
-        Optional<String> optionalSessionId = Optional.empty();
-        if (httpServletRequest.getCookies() != null) {
-            optionalSessionId = Arrays.stream(httpServletRequest.getCookies())
-                    .filter(cookie -> cookie.getName().equals("sessionId"))
-                    .findFirst()
-                    .map(Cookie::getValue);
-        }
+        String sessionId = httpSession.getId();
         Response noSessionResponse = status(422)
                 .entity("You have no session. Please make an AuthenticationRequest to the Authentication Service.")
                 .build();
-        if(!optionalSessionId.isPresent()){
-            return noSessionResponse;
-        }
-        Optional<stroom.auth.Session> optionalSession = sessionManager.get(optionalSessionId.get());
+
+        Optional<stroom.auth.Session> optionalSession = sessionManager.get(sessionId);
         if (!optionalSession.isPresent()) {
             return noSessionResponse;
         }

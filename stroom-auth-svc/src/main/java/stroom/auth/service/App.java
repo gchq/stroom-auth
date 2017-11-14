@@ -95,7 +95,11 @@ public final class App extends Application<Config> {
     }
 
     private static void configureSessionHandling(Environment environment) {
-        environment.servlets().setSessionHandler(new SessionHandler());
+        SessionHandler sessionHandler = new SessionHandler();
+        // We need to give our session cookie a name other than JSESSIONID, otherwise it might
+        // clash with other services running on the same domain.
+        sessionHandler.setSessionCookie("authSessionId");
+        environment.servlets().setSessionHandler(sessionHandler);
         environment.jersey().register(SessionFactoryProvider.class);
     }
 
