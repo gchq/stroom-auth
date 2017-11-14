@@ -267,24 +267,11 @@ public final class AuthenticationResource {
     @Timed
     @NotNull
     @ApiOperation(value = "Log a user out of their session")
-    public final Response logout(@Context @NotNull HttpServletRequest httpServletRequest) throws URISyntaxException {
-        // Get the cookie with the session - the request is invalid if there isn't one.
-        if(httpServletRequest.getCookies() != null) {
-            Optional<String> optionalSessionId = Arrays.stream(httpServletRequest.getCookies())
-                    .filter(cookie -> cookie.getName().equals("sessionId"))
-                    .findFirst()
-                    .map(Cookie::getValue);
-            if (optionalSessionId.isPresent()) {
-                sessionManager.logout(optionalSessionId.get());
-                LOGGER.info("Logged out session: {}", optionalSessionId.get());
-            }
-            else {
-                LOGGER.debug("Tried to log out but there was no session cookie!");
-            }
-        }
-        else {
-            LOGGER.debug("Tried to log out but there were no cookies!");
-        }
+    public final Response logout(
+            @Session HttpSession httpSession,
+            @Context @NotNull HttpServletRequest httpServletRequest) throws URISyntaxException {
+        String sessionId = httpSession.getId();
+        sessionManager.logout(sessionId);
         // We'll always redirect back to our root
         return seeOther(new URI(this.config.getAdvertisedHost())).build();
     }
