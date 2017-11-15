@@ -56,8 +56,8 @@ before_script:
   - popd
   - popd
 
-# Use 1 local worker to avoid using too much memory as each worker will chew up ~500Mb ram
-script: ./gradlew -Pversion=$TRAVIS_TAG clean build shadowJar --info --stacktrace
+# Use wait-for-it.sh, waiting on Stroom to come up. We need the authorisation service before we can run the ITs.
+script: - ./wait-for-it/wait-for-it.sh $STROOM_RESOURCES_ADVERTISED_HOST:8080 --timeout=600 -- ./gradlew -Pversion=$TRAVIS_TAG clean build shadowJar --info --stacktrace
 
 # Conditionally tag git and build docker image.
 after_success:  "./.travis.after_success.sh"
