@@ -44,7 +44,6 @@ import stroom.auth.resources.user.v1.User;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
@@ -57,15 +56,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import static javax.ws.rs.core.Response.ResponseBuilder;
@@ -135,8 +131,7 @@ public final class AuthenticationResource {
             @QueryParam("client_id") @NotNull String clientId,
             @QueryParam("redirect_url") @NotNull String redirectUrl,
             @QueryParam("nonce") @NotNull String nonce,
-            @QueryParam("state") @Nullable String state
-        ) throws URISyntaxException {
+            @QueryParam("state") @Nullable String state) throws URISyntaxException {
         boolean isAuthenticated = false;
         String sessionId = httpSession.getId();
 

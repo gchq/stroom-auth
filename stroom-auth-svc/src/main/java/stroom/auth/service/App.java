@@ -54,6 +54,7 @@ import javax.servlet.FilterRegistration.Dynamic;
 import java.util.EnumSet;
 
 public final class App extends Application<Config> {
+    public static final String SESSION_COOKIE_NAME = "authSessionId";
     private Injector injector;
 
     public static void main(String[] args) throws Exception {
@@ -98,7 +99,7 @@ public final class App extends Application<Config> {
         SessionHandler sessionHandler = new SessionHandler();
         // We need to give our session cookie a name other than JSESSIONID, otherwise it might
         // clash with other services running on the same domain.
-        sessionHandler.setSessionCookie("authSessionId");
+        sessionHandler.setSessionCookie(SESSION_COOKIE_NAME);
         environment.servlets().setSessionHandler(sessionHandler);
         environment.jersey().register(SessionFactoryProvider.class);
     }

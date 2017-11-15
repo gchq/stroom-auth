@@ -28,7 +28,7 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
 import stroom.auth.service.ApiClient;
 import stroom.auth.service.ApiException;
-import stroom.auth.service.ApiResponse;
+import stroom.auth.service.App;
 import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
 
@@ -129,17 +129,28 @@ public class AuthenticationFlowHelper {
      * The sessionId would be stored in a cookie and a normal relying party would not have to do this.
      */
     public static String performLogin(String sessionId, String username, String password) throws ApiException {
-        LOGGER.info("Logging the user in.");
-        ApiClient apiClient = new ApiClient();
-        apiClient.setBasePath("http://localhost:8099");
-        AuthenticationApi authenticationApi = new AuthenticationApi(apiClient);
+        // We need to use UniRest again because we're not a browser and we need to manually add in the cookies.
         Credentials credentials = new Credentials();
         credentials.setEmail(username);
         credentials.setPassword(password);
-        credentials.setSessionId(sessionId);
         credentials.setRequestingClientId(CLIENT_ID);
-        ApiResponse<String> loginRequestResponse = authenticationApi.handleLoginWithHttpInfo(credentials);
-        String accessCode = loginRequestResponse.getData();
+        String cookies = App.SESSION_COOKIE_NAME + "=" + sessionId;
+        HttpResponse loginResponse = null;
+        try {
+            loginResponse = Unirest
+                    .post("http://localhost:8099/authentication/v1/authenticate")
+                    .header("Content-Type", "application/json")
+                    .header("Cookie", cookies)
+                    .body("{\"email\":\""+username+"\", \"password\":\""+password+"\", \"requestingClientId\":\""+CLIENT_ID+"\"}")
+                    .asString();
+        } catch (UnirestException e) {
+            fail("Initial authentication request failed!");
+        }
+        String accessCode = (String)loginResponse.getBody();
+        if(loginResponse.getStatus()!=200){
+            // The Swagger ApiException is useful for returning information about non-200 responses to tests.
+            throw new ApiException((String)loginResponse.getBody(), loginResponse.getStatus(), null, null);
+        }
         assertThat(accessCode).isNotEmpty();
         return accessCode;
     }
