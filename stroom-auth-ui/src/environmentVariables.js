@@ -33,7 +33,7 @@ export const tokenServiceUrl = () => {
 }
 
 export const authorisationServiceUrl = () => {
-  return `${process.env.REACT_APP_STROOM_URL}/authorisationService/v1`
+  return `${process.env.REACT_APP_STROOM_URL}/api/authorisation/v1`
 }
 
 export const stroomUrl = () => {
