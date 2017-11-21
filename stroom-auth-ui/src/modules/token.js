@@ -26,11 +26,14 @@ export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER'
 export const TOGGLE_ALERT_VISIBILITY = 'token/TOGGLE_ALERT_VISIBILITY'
 export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = 'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS'
 export const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN'
+export const SHOW_ERROR_MESSAGE = 'token/SHOW_ERROR_MESSAGE'
+export const HIDE_ERROR_MESSAGE = 'token/HIDE_ERROR_MESSAGE'
 
 const initialState = {
   showAlert: false,
   alertText: '',
-  matchingAutoCompleteResults: []
+  matchingAutoCompleteResults: [],
+  errorMessage: ''
 }
 
 export default (state = initialState, action) => {
@@ -61,6 +64,18 @@ export default (state = initialState, action) => {
         lastReadToken: action.lastReadToken
       }
 
+    case SHOW_ERROR_MESSAGE:
+      return {
+        ...state,
+        errorMessage: action.message
+      }
+
+    case HIDE_ERROR_MESSAGE:
+      return {
+        ...state,
+        errorMessage: ''
+      }
+
     default:
       return state
   }
@@ -77,6 +92,19 @@ export function toggleAlertVisibility (alertText) {
   return {
     type: TOGGLE_ALERT_VISIBILITY,
     alertText: alertText
+  }
+}
+
+function showCreateError (message) {
+  return {
+    type: SHOW_ERROR_MESSAGE,
+    message
+  }
+}
+
+function hideCreateError () {
+  return {
+    type: HIDE_ERROR_MESSAGE
   }
 }
 
@@ -106,6 +134,7 @@ export const deleteSelectedToken = (tokenId) => {
 
 export const createToken = (newToken) => {
   return (dispatch, getState) => {
+    dispatch(hideCreateError())
     const jwsToken = getState().authentication.idToken
     const { email } = newToken
 
@@ -131,7 +160,12 @@ export const createToken = (newToken) => {
         .then((newToken) => {
           dispatch(relativePush(`/token/${newToken.id}`))
         })
-        .catch(error => handleErrors(error, dispatch, jwsToken))
+        .catch(error => {
+          handleErrors(error, dispatch, jwsToken)
+          if (error.status === 400) {
+            dispatch(showCreateError('There is no such user! Please select one from the dropdown.'))
+          }
+        })
   }
 }
 

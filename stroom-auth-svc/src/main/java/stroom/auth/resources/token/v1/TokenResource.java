@@ -133,18 +133,12 @@ public class TokenResource {
                     .entity("Unknown token type:" + createTokenRequest.getTokenType()).build();
         }
 
-        Token token;
-        try {
-            token = tokenDao.createToken(
-                    tokenTypeToCreate.get(),
-                    authenticatedServiceUser.getName(),
-                    createTokenRequest.getUserEmail(),
-                    createTokenRequest.isEnabled(),
-                    createTokenRequest.getComments());
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-        }
+        Token token = tokenDao.createToken(
+                tokenTypeToCreate.get(),
+                authenticatedServiceUser.getName(),
+                createTokenRequest.getUserEmail(),
+                createTokenRequest.isEnabled(),
+                createTokenRequest.getComments());
 
         return Response.status(Response.Status.OK).entity(token).build();
     }

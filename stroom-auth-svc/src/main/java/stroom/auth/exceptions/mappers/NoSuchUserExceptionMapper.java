@@ -20,11 +20,13 @@ package stroom.auth.exceptions.mappers;
 
 import stroom.auth.exceptions.NoSuchUserException;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
+@Singleton
 public class NoSuchUserExceptionMapper implements ExceptionMapper<NoSuchUserException> {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(NoSuchUserExceptionMapper.class);
 

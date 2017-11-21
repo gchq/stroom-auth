@@ -21,3 +21,7 @@
 .CreateTokenForm-field {
   width: 400px;
 }
+
+.CreateTokenForm-errorMessage {
+  color: rgb(250, 62, 62);
+}

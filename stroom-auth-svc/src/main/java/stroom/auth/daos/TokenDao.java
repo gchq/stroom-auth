@@ -212,7 +212,7 @@ public class TokenDao {
                 .where(USERS.EMAIL.eq(recipientUserEmail))
                 .fetchOne();
         if (userRecord == null) {
-            throw new NoSuchUserException("Cannot find user to associate with this token!");
+            throw new NoSuchUserException("Cannot find user to associate with this API key!");
         }
         int recipientUserId = userRecord.get(USERS.ID);
 

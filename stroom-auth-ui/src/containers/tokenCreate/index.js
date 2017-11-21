@@ -53,6 +53,7 @@ export class TokenCreateForm extends Component {
                   </div>
                 </div>
               </div>
+              <div className='CreateTokenForm-errorMessage'> {this.props.errorMessage}</div>
               <br />
               <div>
                 <RaisedButton
@@ -81,7 +82,8 @@ const ReduxTokenCreateForm = reduxForm({
 
 const mapStateToProps = state => ({
   idToken: state.authentication.idToken,
-  matchingAutoCompleteResults: state.token.matchingAutoCompleteResults
+  matchingAutoCompleteResults: state.token.matchingAutoCompleteResults,
+  errorMessage: state.token.errorMessage
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
