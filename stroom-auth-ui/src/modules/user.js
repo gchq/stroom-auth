@@ -29,13 +29,16 @@ export const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER'
 export const SAVE_USER_TO_EDIT_FORM = 'user/SAVE_USER_TO_EDIT_FORM'
 export const CHANGE_VISIBLE_CONTAINER = 'user/CHANGE_VISIBLE_CONTAINER'
 export const TOGGLE_ALERT_VISIBILITY = 'user/TOGGLE_ALERT_VISIBILITY'
+export const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE = 'user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE'
+export const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE = 'user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE'
 
 const initialState = {
   user: '',
   password: '',
   showCreateLoader: false,
   alertText: '',
-  showAlert: false
+  showAlert: false,
+  changePasswordErrorMessage: ''
 }
 
 export default (state = initialState, action) => {
@@ -76,6 +79,18 @@ export default (state = initialState, action) => {
         alertText: action.alertText
       }
 
+    case SHOW_CHANGE_PASSWORD_ERROR_MESSAGE:
+      return {
+        ...state,
+        changePasswordErrorMessage: action.message
+      }
+
+    case HIDE_CHANGE_PASSWORD_ERROR_MESSAGE:
+      return {
+        ...state,
+        changePasswordErrorMessage: ''
+      }
+
     default:
       return state
   }
@@ -99,6 +114,19 @@ export function toggleAlertVisibility (alertText) {
   return {
     type: TOGGLE_ALERT_VISIBILITY,
     alertText: alertText
+  }
+}
+
+function showChangePasswordErrorMessage (message) {
+  return {
+    type: SHOW_CHANGE_PASSWORD_ERROR_MESSAGE,
+    message
+  }
+}
+
+function hideChangePasswordErrorMessage () {
+  return {
+    type: HIDE_CHANGE_PASSWORD_ERROR_MESSAGE
   }
 }
 
@@ -250,33 +278,45 @@ export const changePasswordForCurrentUser = () => {
     .then(getJsonBody)
     .then(getUser)
     .then(user => {
-      dispatch(changePassword(user.id))
+      dispatch(changePassword(user.email))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 
-export const changePassword = (userId) => {
+export const changePassword = (email) => {
   return (dispatch, getState) => {
+    dispatch(hideChangePasswordErrorMessage())
+
     const jwsToken = getState().authentication.idToken
-    const newPassword = getState().form.ChangePasswordForm.values.password
-    fetch(`${userServiceUrl()}/${userId}`, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwsToken
-      },
-      method: 'put',
-      mode: 'cors',
-      body: JSON.stringify({
-        password: newPassword
+    const oldPassword = getState().form.ChangePasswordForm.values.oldPassword
+    const newPassword = getState().form.ChangePasswordForm.values.newPassword
+    const newPasswordConfirmation = getState().form.ChangePasswordForm.values.newPasswordConfirmation
+
+    if (newPassword !== newPasswordConfirmation) {
+      dispatch(showChangePasswordErrorMessage('The new passwords do not match!'))
+    }
+    else {
+      fetch(`${authenticationServiceUrl()}/changePassword/`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + jwsToken
+        },
+        method: 'post',
+        mode: 'cors',
+        body: JSON.stringify({newPassword, oldPassword, email})
       })
-    })
-    .then(handleStatus)
-    .then(() => {
-      dispatch(toggleAlertVisibility('Your password has been changed'))
-    })
-    .catch(error => handleErrors(error, dispatch, jwsToken))
+      .then(handleStatus)
+      .then(() => {
+        dispatch(toggleAlertVisibility('Your password has been changed'))
+      })
+      .catch(error => {
+        if (error.status === 401) {
+          dispatch(showChangePasswordErrorMessage('The old password you supplied is not valid!'))
+        }
+      })
+    }
   }
 }
 

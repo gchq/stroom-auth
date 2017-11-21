@@ -29,8 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.config.Config;
 import stroom.auth.exceptions.BadRequestException;
+import stroom.auth.exceptions.NoSuchUserException;
 import stroom.auth.exceptions.UnauthorisedException;
-import stroom.auth.resources.authentication.v1.Credentials;
 import stroom.auth.resources.user.v1.User;
 import stroom.db.auth.tables.records.UsersRecord;
 
@@ -76,20 +76,19 @@ public class UserDao {
                 .where(new Condition[]{USERS.EMAIL.eq(user.getEmail())}).execute();
     }
 
-    public boolean areCredentialsValid(Credentials credentials) {
-        if (credentials == null
-                || Strings.isNullOrEmpty(credentials.getEmail())
-                || Strings.isNullOrEmpty(credentials.getPassword())) {
+    public boolean areCredentialsValid(String email, String password) {
+        if (Strings.isNullOrEmpty(email)
+                || Strings.isNullOrEmpty(password)) {
             throw new BadRequestException("Please provide both email and password");
         }
 
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
-                .where(new Condition[]{USERS.EMAIL.eq(credentials.getEmail())})
+                .where(new Condition[]{USERS.EMAIL.eq(email)})
                 .fetchOne();
 
         if (user == null) {
-            LOGGER.debug("Request to log in with invalid email: " + credentials.getEmail());
+            LOGGER.debug("Request to log in with invalid email: " + email);
             // We're returning a different message because we don't want to reveal that the email doesn't exist.
             throw new UnauthorisedException("Invalid credentials");
         }
@@ -97,11 +96,11 @@ public class UserDao {
         // Don't let them in if the account is locked or disabled.
         if (user.getState().equals(User.UserState.DISABLED.getStateText())
                 || user.getState().equals(User.UserState.LOCKED.getStateText())) {
-            LOGGER.debug("Account {} tried to log in but it is disabled or locked.", credentials.getEmail());
+            LOGGER.debug("Account {} tried to log in but it is disabled or locked.", email);
             throw new UnauthorisedException("This account is locked or disabled");
         }
 
-        boolean isPasswordCorrect = BCrypt.checkpw(credentials.getPassword(), user.getPasswordHash());
+        boolean isPasswordCorrect = BCrypt.checkpw(password, user.getPasswordHash());
 
         return isPasswordCorrect;
     }
@@ -137,5 +136,24 @@ public class UserDao {
                 .selectFrom(USERS)
                 .where(USERS.EMAIL.eq(email)).fetchOne().into(User.class);
         return user;
+    }
+
+    public void changePassword(String email, String newPassword) {
+        UsersRecord user = (UsersRecord) database
+                .selectFrom((Table) USERS)
+                .where(new Condition[]{USERS.EMAIL.eq(email)})
+                .fetchOne();
+
+        if(user == null){
+            throw new NoSuchUserException("Cannot change this password because I cannot find this user!");
+        }
+
+        String newPasswordHash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        user.setPasswordHash(newPasswordHash);
+
+        database.update((Table) USERS)
+                .set(user)
+                .where(new Condition[]{USERS.EMAIL.eq(email)})
+                .execute();
     }
 }

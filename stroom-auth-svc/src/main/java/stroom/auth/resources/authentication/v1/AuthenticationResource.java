@@ -19,6 +19,7 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +41,7 @@ import stroom.auth.exceptions.NoSuchUserException;
 import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.resources.token.v1.Token;
 import stroom.auth.resources.user.v1.User;
+import stroom.auth.service.security.ServiceUser;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -228,7 +230,7 @@ public final class AuthenticationResource {
         stroom.auth.Session session = optionalSession.get();
 
         // Check the credentials
-        boolean areCredentialsValid = userDao.areCredentialsValid(credentials);
+        boolean areCredentialsValid = userDao.areCredentialsValid(credentials.getEmail(), credentials.getPassword());
         if (!areCredentialsValid) {
             LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
             userDao.incrementLoginFailures(credentials.getEmail());
@@ -317,6 +319,26 @@ public final class AuthenticationResource {
         return usersEmail
                 .map(s -> status(Status.OK).entity(s).build())
                 .orElseGet(() -> status(Status.UNAUTHORIZED).build());
+    }
+
+
+    @POST
+    @Path("changePassword")
+    @Timed
+    @NotNull
+    @ApiOperation(value = "Change a user's password.",
+            response = String.class, tags = {"Authentication"})
+    public final Response changePassword(
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @ApiParam("changePasswordRequest") @NotNull ChangePasswordRequest changePasswordRequest,
+            @PathParam("id") int userId) {
+        boolean areCredentialsValid = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
+        if(!areCredentialsValid){
+            return Response.status(Status.UNAUTHORIZED).entity("The old and new passwords do not match!").build();
+        }
+
+        userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
+        return Response.status(Status.OK).entity("The password has been changed.").build();
     }
 
     private String createIdToken(String subject, String nonce, String state){

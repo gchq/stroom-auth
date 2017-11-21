@@ -37,7 +37,6 @@ import org.jooq.TableField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.AuthorisationServiceClient;
-import stroom.auth.config.Config;
 import stroom.auth.daos.UserMapper;
 import stroom.auth.service.security.ServiceUser;
 import stroom.db.auth.tables.records.UsersRecord;
@@ -282,11 +281,6 @@ public final class UserResource {
             @Context @NotNull DSLContext database,
             @ApiParam("user") @NotNull User user,
             @PathParam("id") int userId) {
-        // Validate
-        Preconditions.checkNotNull(authenticatedServiceUser);
-        Preconditions.checkNotNull(database);
-        Preconditions.checkNotNull(user);
-
         UsersRecord usersRecord = (UsersRecord) database
                 .selectFrom((Table) USERS)
                 .where(new Condition[]{USERS.ID.eq(userId)})
