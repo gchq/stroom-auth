@@ -20,7 +20,7 @@ import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 
-import Card from 'material-ui/Card'
+import { Card, CardTitle } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import './ChangePassword.css'
@@ -33,8 +33,8 @@ const ChangePassword = props => {
   return (
     <div className='content-floating-with-appbar'>
       <Card className='ChangePassword-main'>
-        <div>
-          <h3>Change your password</h3>
+        <CardTitle className='ChangePassword-title' title='Change your password' />
+        <div className='ChangePassword-contents'>
           {!showAlert ? (
             <form onSubmit={handleSubmit}>
               <div className='left-container'>
@@ -87,12 +87,14 @@ const ChangePassword = props => {
 
               <br />
 
-              <RaisedButton
-                className='ChangePassword-button'
-                primary
-                disabled={pristine || submitting}
-                type='submit'
-                label='Change password' />
+              <div className='ChangePassword-actions'>
+                <RaisedButton
+                  className='ChangePassword-button'
+                  primary
+                  disabled={pristine || submitting}
+                  type='submit'
+                  label='Change password' />
+              </div>
 
             </form>
           ) : (
