@@ -18,10 +18,10 @@ import jwtDecode from 'jwt-decode'
 import uuidv4 from 'uuid/v4'
 import sjcl from 'sjcl'
 
-import { relativePush } from '../relativePush'
+import { relativePush } from './relativePush'
 import { canManageUsers } from './authorisation'
 
-import { authenticationServiceUrl, authUiAdvertisedUrl, appClientId } from '../environmentVariables'
+import { authenticationServiceUrl, authUiAdvertisedUrl, appClientId } from './environmentVariables'
 
 export const TOKEN_ID_CHANGE = 'authentication/TOKEN_ID_CHANGE'
 
@@ -32,10 +32,10 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case TOKEN_ID_CHANGE:
-      return {
-        ...state,
-        idToken: action.idToken
-      }
+      return 
+      Object.assign({}, state,{
+          idToken: action.idToken})
+      
     default:
       return state
   }

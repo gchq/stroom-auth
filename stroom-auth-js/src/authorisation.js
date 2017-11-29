@@ -1,4 +1,4 @@
-import { authorisationServiceUrl } from '../environmentVariables'
+import { authorisationServiceUrl } from './environmentVariables'
 
 export const SET_CAN_MANAGE_USERS = 'login/SET_CAN_MANAGE_USERS'
 
@@ -9,11 +9,9 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case SET_CAN_MANAGE_USERS:
-      return {
-        ...state,
-        canManageUsers: action.canManageUsers
-      }
-
+      return 
+          Object.assign({},state,{
+              canManageUsers: action.canManageUsers})
     default:
       return state
   }
