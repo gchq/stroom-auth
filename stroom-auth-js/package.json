@@ -2,7 +2,8 @@
   "name": "stroom-auth-js",
   "version": "1.0.0",
   "description": "JS components for Stroom Auth",
-  "main": "dist/main.js",
+  "main": "dist/bundle.umd.js",
+  "module": "dist/bundle.esm.js",
   "author": "jc064522",
   "dependencies": {
     "jwt-decode": "^2.2.0",

@@ -1,3 +1,11 @@
-import authentication, {sendAuthenticationRequest, handleAuthenticationResponse} from './authentication'
+import { authenticationReducer } from './authentication'
+import { authorisationReducer } from './authorisation'
 
-export {authentication, sendAuthenticationRequest, handleAuthenticationResponse}
+import AuthenticationRequest from './AuthenticationRequest'
+import HandleAuthenticationResponse from './HandleAuthenticationResponse'
+
+export {
+    authenticationReducer,
+    authorisationReducer,
+    AuthenticationRequest,
+    HandleAuthenticationResponse}

@@ -29,12 +29,12 @@ const initialState = {
   idToken: ''
 }
 
-export default (state = initialState, action) => {
+export const authenticationReducer = (state = initialState, action) => {
   switch (action.type) {
     case TOKEN_ID_CHANGE:
-      return 
-      Object.assign({}, state,{
-          idToken: action.idToken})
+      return Object.assign({}, state, {
+        idToken: action.idToken
+      })
       
     default:
       return state

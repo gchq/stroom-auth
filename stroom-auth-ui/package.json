@@ -30,6 +30,7 @@
     "serve": "^6.0.1",
     "sjcl": "^1.0.7",
     "standard": "^10.0.3",
+    "stroom-auth-js": "file:../stroom-auth-js",
     "uuid": "^3.1.0"
   },
   "devDependencies": {

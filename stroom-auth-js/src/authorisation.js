@@ -6,7 +6,7 @@ const initialState = {
   canManageUsers: false
 }
 
-export default (state = initialState, action) => {
+export const authorisationReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_CAN_MANAGE_USERS:
       return 
