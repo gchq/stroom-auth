@@ -1,0 +1,16 @@
+{
+  "presets": [  
+      [
+          "env", {
+              "modules": false
+          }
+      ],
+      "react",
+      "stage-3",
+      "es2015-rollup"
+  ],
+    "plugins": [
+        "external-helpers",
+        "syntax-object-rest-spread",
+        "transform-object-rest-spread"]
+}
