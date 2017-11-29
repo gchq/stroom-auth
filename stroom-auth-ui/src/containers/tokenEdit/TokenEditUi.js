@@ -20,11 +20,9 @@ import { bindActionCreators } from 'redux'
 import { Field, reduxForm } from 'redux-form'
 import { NavLink } from 'react-router-dom'
 
-import { SelectField, TextField, Toggle } from 'redux-form-material-ui'
-import { MenuItem } from 'material-ui/Menu'
+import { TextField, Toggle } from 'redux-form-material-ui'
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
 import Snackbar from 'material-ui/Snackbar'
 
 import CopyToClipboard from 'react-copy-to-clipboard'
@@ -38,7 +36,7 @@ import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user
 export class TokenEditUi extends Component {
 
   render () {
-    const { handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility, form, token, toggleEnabledState } = this.props
+    const { handleSubmit, alertText, showAlert, toggleAlertVisibility, form, token, toggleEnabledState } = this.props
 
     const jws = token !== undefined ? token.token : ''
 

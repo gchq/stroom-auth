@@ -185,7 +185,7 @@ export const changeSessionId = (sessionId) => {
 
 export const login = (credentials) => {
   return (dispatch, getState) => {
-    const { email, password, rememberMe } = credentials
+    const { email, password } = credentials
 
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))

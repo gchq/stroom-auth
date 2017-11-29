@@ -33,7 +33,6 @@ import Add from 'material-ui-icons/Add'
 import Delete from 'material-ui-icons/Delete'
 import Edit from 'material-ui-icons/Edit'
 import Help from 'material-ui-icons/Help'
-import Home from 'material-ui-icons/Home'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import UserSearch from '../userSearch'

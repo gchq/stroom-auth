@@ -17,14 +17,13 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import { reducer as formReducer } from 'redux-form'
+import { authenticationReducer as authentication, authorisationReducer as authorisation } from 'stroom-auth-js'
 
 import login from './login'
 import user from './user'
 import userSearch from './userSearch'
 import token from './token'
 import tokenSearch from './tokenSearch'
-import authentication from './authentication'
-import authorisation from './authorisation'
 
 export default combineReducers({
   routing: routerReducer,

@@ -15,14 +15,12 @@
  */
 
 import React, { Component } from 'react'
-import { Redirect } from 'react-router'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import LoggedOut from '../../containers/loggedOut'
 import {logout} from '../../modules/login'
-import { relativePath } from '../../relativePush'
 
 class Logout extends Component {
   componentDidMount () {
