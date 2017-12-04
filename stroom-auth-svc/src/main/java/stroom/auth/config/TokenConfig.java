@@ -19,12 +19,15 @@
 package stroom.auth.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jose4j.jwk.PublicJsonWebKey;
+import org.jose4j.lang.JoseException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.nio.charset.Charset;
 
 public class TokenConfig {
+
     @Valid
     @NotNull
     @JsonProperty
@@ -119,5 +122,16 @@ public class TokenConfig {
 
     public void setAlgorithm(String algorithm) {
         this.algorithm = algorithm;
+    }
+
+    public PublicJsonWebKey getJwk() {
+        PublicJsonWebKey jwk = null;
+        try {
+            jwk = PublicJsonWebKey.Factory.newPublicJwk(this.getJwsSecret());
+        } catch (JoseException e) {
+            throw new RuntimeException("I was unable to create a PublicKey instance from the secret! " +
+                    "Please check the secret is correctly configured, i.e. it is valid JWK and serialised as JSON");
+        }
+        return jwk;
     }
 }

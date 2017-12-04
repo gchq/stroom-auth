@@ -19,9 +19,10 @@
 package stroom.auth;
 
 import jersey.repackaged.com.google.common.base.Preconditions;
+import org.jose4j.jwk.PublicJsonWebKey;
+import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
-import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,20 +89,18 @@ public final class TokenGenerator {
     }
 
     private void createToken(Optional<Integer> expirationInMinutes) throws TokenCreationException {
-        byte[] jwsSecret = this.config.getJwsSecretAsBytes();
-        JwtClaims jwtClaims = getClaimsForUser(user, expirationInMinutes);
-        this.token = toToken(jwsSecret, jwtClaims);
-    }
+        PublicJsonWebKey jwk = this.config.getJwk();
 
-    private String toToken(byte[] key, JwtClaims claims) {
+        JwtClaims jwtClaims = getClaimsForUser(user, expirationInMinutes);
+
         JsonWebSignature jws = new JsonWebSignature();
-        jws.setPayload(claims.toJson());
-        jws.setAlgorithmHeaderValue("HS256");
-        jws.setKey((new HmacKey(key)));
+        jws.setPayload(jwtClaims.toJson());
+        jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+        jws.setKey((jwk.getPrivateKey()));
         jws.setDoKeyValidation(false);
 
         try {
-            return jws.getCompactSerialization();
+            this.token = jws.getCompactSerialization();
         } catch (JoseException e) {
             throw new RuntimeException(e);
         }
