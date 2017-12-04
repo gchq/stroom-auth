@@ -15,7 +15,7 @@
 
 # ---- Base Node ----
 FROM alpine:3.6 AS base
-RUN apk add --no-cache nodejs-current yarn tini
+RUN apk add --no-cache nodejs-current yarn tini git
 RUN yarn global add serve
 WORKDIR /root/app
 # Set tini as entrypoint

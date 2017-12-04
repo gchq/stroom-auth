@@ -17,7 +17,7 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import { reducer as formReducer } from 'redux-form'
-import { authenticationReducer as authentication, authorisationReducer as authorisation } from 'stroom-auth-js'
+import { authenticationReducer as authentication, authorisationReducer as authorisation } from 'stroom-js'
 
 import login from './login'
 import user from './user'

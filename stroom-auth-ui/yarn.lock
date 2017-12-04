@@ -6629,8 +6629,18 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-"stroom-auth-js@file:../stroom-auth-js":
+"stroom-js@https://github.com/gchq/stroom-js.git#dist":
   version "1.0.0"
+  resolved "https://github.com/gchq/stroom-js.git#628a3cc51e7891abe222a7e8ea298194e3b22587"
+  dependencies:
+    jwt-decode "^2.2.0"
+    react-redux-router "^0.0.12"
+    sjcl "^1.0.7"
+    uuid "^3.1.0"
+
+"stroom-ui-components@https://github.com/gchq/stroom-ui-components.git#dist":
+  version "1.0.0"
+  resolved "https://github.com/gchq/stroom-ui-components.git#ac14151410f1cf5a409fb25fa199db0a5278967f"
   dependencies:
     jwt-decode "^2.2.0"
     react-redux-router "^0.0.12"
