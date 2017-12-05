@@ -20,6 +20,8 @@
 package stroom.auth.service.security;
 
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
+import org.jose4j.jwa.AlgorithmConstraints;
+import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
@@ -31,7 +33,10 @@ public class AuthenticationFilter {
         final JwtConsumer consumer = new JwtConsumerBuilder()
                 .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
                 .setRequireSubject() // the JWT must have a subject claim
-                .setVerificationKey(new HmacKey(config.getJwsSecretAsBytes())) // verify the signature with the public key
+                .setVerificationKey(config.getJwk().getPublicKey()) // verify the signature with the public key
+                .setJwsAlgorithmConstraints( // only allow the expected signature algorithm(s) in the given context
+                        new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, // which is only RS256 here
+                                AlgorithmIdentifiers.RSA_USING_SHA256))
                 .setRelaxVerificationKeyValidation() // relaxes key length requirement
                 .setExpectedIssuer("stroom")
                 .build();

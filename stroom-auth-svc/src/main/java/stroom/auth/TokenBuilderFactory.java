@@ -18,6 +18,8 @@
 
 package stroom.auth;
 
+import org.jose4j.jwk.PublicJsonWebKey;
+import org.jose4j.lang.JoseException;
 import stroom.auth.config.Config;
 import stroom.auth.exceptions.TokenCreationException;
 import stroom.auth.resources.token.v1.Token.TokenType;
@@ -53,9 +55,16 @@ public class TokenBuilderFactory {
                 throw new TokenCreationException(tokenType, errorMessage);
         }
 
+        PublicJsonWebKey jwk;
+        try {
+            jwk = PublicJsonWebKey.Factory.newPublicJwk(config.getTokenConfig().getJwsSecret());
+        } catch (JoseException e) {
+            throw new RuntimeException("It looks like the key supplied in the configuration is invalid!", e);
+        }
+
         tokenBuilder
                 .issuer(config.getTokenConfig().getJwsIssuer())
-                .secret(config.getTokenConfig().getJwsSecretAsBytes())
+                .privateVerificationKey(jwk.getPrivateKey())
                 .algorithm(config.getTokenConfig().getAlgorithm())
                 .tokenType(tokenType);
 

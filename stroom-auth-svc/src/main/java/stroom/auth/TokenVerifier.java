@@ -18,6 +18,9 @@
 
 package stroom.auth;
 
+import org.jose4j.jwa.AlgorithmConstraints;
+import org.jose4j.jwk.PublicJsonWebKey;
+import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -51,7 +54,10 @@ public class TokenVerifier {
         JwtConsumerBuilder builder = new JwtConsumerBuilder()
                 .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
                 .setRequireSubject() // the JWT must have a subject claim
-                .setVerificationKey(new HmacKey(tokenConfig.getJwsSecretAsBytes())) // verify the signature with the public key
+                .setVerificationKey(tokenConfig.getJwk().getPublicKey()) // verify the signature with the public key
+                .setJwsAlgorithmConstraints( // only allow the expected signature algorithm(s) in the given context
+                        new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, // which is only RS256 here
+                                AlgorithmIdentifiers.RSA_USING_SHA256))
                 .setRelaxVerificationKeyValidation() // relaxes key length requirement
                 .setExpectedIssuer(tokenConfig.getJwsIssuer());
 
@@ -67,7 +73,7 @@ public class TokenVerifier {
             final JwtClaims claims = consumer.processToClaims(token);
             claims.getSubject();
         } catch (InvalidJwtException | MalformedClaimException e) {
-            LOGGER.warn("There was an issue with a token.");
+            LOGGER.warn("There was an issue with a token!", e);
             return Optional.empty();
         }
 

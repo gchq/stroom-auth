@@ -18,6 +18,7 @@
 
 package stroom.auth;
 
+import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
@@ -25,6 +26,8 @@ import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
 import stroom.auth.resources.token.v1.Token.TokenType;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Optional;
 
 public class TokenBuilder {
@@ -34,11 +37,12 @@ public class TokenBuilder {
     private Optional<Integer> expirationInMinutes = Optional.empty();
     private String issuer;
     private byte[] secret;
-    private String algorithm = "HS256";
+    private String algorithm = "RS256";
 
     private String subject;
     private Optional<String> nonce = Optional.empty();
     private Optional<String> state = Optional.empty();
+    private PrivateKey privateVerificationKey;
 
     public TokenBuilder subject(String subject) {
         this.subject = subject;
@@ -62,6 +66,11 @@ public class TokenBuilder {
 
     public TokenBuilder secret(byte[] secret) {
         this.secret = secret;
+        return this;
+    }
+
+    public TokenBuilder privateVerificationKey(PrivateKey privateVerificationKey){
+        this.privateVerificationKey = privateVerificationKey;
         return this;
     }
 
@@ -90,8 +99,8 @@ public class TokenBuilder {
 
         JsonWebSignature jws = new JsonWebSignature();
         jws.setPayload(claims.toJson());
-        jws.setAlgorithmHeaderValue(algorithm);
-        jws.setKey((new HmacKey(secret)));
+        jws.setAlgorithmHeaderValue(this.algorithm);
+        jws.setKey(this.privateVerificationKey);
         jws.setDoKeyValidation(false);
 
         try {

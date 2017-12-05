@@ -51,7 +51,7 @@ public class TokenConfig {
     @Valid
     @NotNull
     @JsonProperty
-    private String jwsSecret = "CHANGE_ME";
+    private String jwsSecret;
 
     @Valid
     @NotNull
