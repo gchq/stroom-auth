@@ -1,6 +1,10 @@
-### IntelliJ IDEA
-.idea
-**/*.iml
+# IntelliJ
+# Here we ignore everything and create exceptions for what we want to share.
+*/out/
+*.iml
+/.idea/*
+!/.idea/runConfigurations
+# END OF IntelliJ
 
 ### Gradle
 .gradle
