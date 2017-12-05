@@ -97,9 +97,8 @@ public final class UserResource_read_IT extends Base_IT {
         UserApi userApiA = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAs(userEmailA, "password"));
         try {
             userApiA.getUser(responseB.getData());
-            fail("Expected a 403!");
-        }catch(ApiException e){
-            //TODO: This should be a 403 surely?
+            fail("Expected a 401!");
+        } catch(ApiException e){
             assertThat(e.getCode()).isEqualTo(401);
         }
     }
