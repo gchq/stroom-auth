@@ -4,6 +4,7 @@ All URIs are relative to *http://localhost:8080/*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**changePassword**](AuthenticationApi.md#changePassword) | **POST** /authentication/v1/changePassword | Change a user&#39;s password.
 [**getIdToken**](AuthenticationApi.md#getIdToken) | **GET** /authentication/v1/idToken | Convert a previously provided access code into an ID token
 [**handleAuthenticationRequest**](AuthenticationApi.md#handleAuthenticationRequest) | **GET** /authentication/v1/authenticate | Submit an OpenId AuthenticationRequest.
 [**handleLogin**](AuthenticationApi.md#handleLogin) | **POST** /authentication/v1/authenticate | Handle a login request made using username and password credentials.
@@ -12,6 +13,53 @@ Method | HTTP request | Description
 [**verifyToken**](AuthenticationApi.md#verifyToken) | **GET** /authentication/v1/verify/{token} | Verify the authenticity and current-ness of a JWS token.
 [**welcome**](AuthenticationApi.md#welcome) | **GET** /authentication/v1 | A welcome message.
 
+
+<a name="changePassword"></a>
+# **changePassword**
+> String changePassword(id, body)
+
+Change a user&#39;s password.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.AuthenticationApi;
+
+
+AuthenticationApi apiInstance = new AuthenticationApi();
+Integer id = 56; // Integer | 
+ChangePasswordRequest body = new ChangePasswordRequest(); // ChangePasswordRequest | changePasswordRequest
+try {
+    String result = apiInstance.changePassword(id, body);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling AuthenticationApi#changePassword");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **Integer**|  |
+ **body** | [**ChangePasswordRequest**](ChangePasswordRequest.md)| changePasswordRequest | [optional]
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
 <a name="getIdToken"></a>
 # **getIdToken**

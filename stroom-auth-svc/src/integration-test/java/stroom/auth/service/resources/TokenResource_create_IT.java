@@ -17,6 +17,7 @@
 package stroom.auth.service.resources;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.jose4j.lang.JoseException;
 import org.junit.Ignore;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
@@ -36,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TokenResource_create_IT extends TokenResource_IT {
 
     @Test
-    public void simpleCreate() throws UnirestException, IOException, ApiException {
+    public void simpleCreate() throws UnirestException, IOException, ApiException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
@@ -59,7 +60,7 @@ public class TokenResource_create_IT extends TokenResource_IT {
 
     @Test
     @Ignore("TODO: ExceptionMappers aren't working at the moment -- they need fixing.")
-    public void create_with_bad_user() throws UnirestException, IOException {
+    public void create_with_bad_user() throws UnirestException, IOException, JoseException{
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);

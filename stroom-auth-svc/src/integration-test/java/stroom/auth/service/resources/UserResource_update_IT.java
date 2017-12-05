@@ -17,6 +17,7 @@
 package stroom.auth.service.resources;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.jose4j.lang.JoseException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.user.v1.User;
@@ -32,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public final class UserResource_update_IT extends Base_IT {
     @Test
-    public final void update_user() throws UnirestException, IOException, ApiException {
+    public final void update_user() throws UnirestException, IOException, ApiException, JoseException {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
@@ -53,7 +54,7 @@ public final class UserResource_update_IT extends Base_IT {
     }
 
     @Test
-    public final void update_self_basic_user() throws UnirestException, ApiException, IOException {
+    public final void update_self_basic_user() throws UnirestException, ApiException, IOException, JoseException {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         String userEmailA = "update_user_" + UUID.randomUUID().toString();

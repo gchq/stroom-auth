@@ -98,6 +98,32 @@ paths:
           description: "successful operation"
           schema:
             type: "string"
+  /authentication/v1/changePassword:
+    post:
+      tags:
+      - "Authentication"
+      summary: "Change a user's password."
+      description: ""
+      operationId: "changePassword"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "changePasswordRequest"
+        required: false
+        schema:
+          $ref: "#/definitions/ChangePasswordRequest"
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
   /authentication/v1/idToken:
     get:
       tags:
@@ -458,6 +484,23 @@ paths:
           schema:
             type: "string"
 definitions:
+  ChangePasswordRequest:
+    type: "object"
+    required:
+    - "email"
+    - "newPassword"
+    - "oldPassword"
+    properties:
+      email:
+        type: "string"
+        description: "The email address of the user we're changing the password for."
+      oldPassword:
+        type: "string"
+        description: "The old password."
+      newPassword:
+        type: "string"
+        description: "The new password."
+    description: "A request to change a user's password."
   CreateTokenRequest:
     type: "object"
     required:

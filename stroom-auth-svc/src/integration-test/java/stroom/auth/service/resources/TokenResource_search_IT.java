@@ -18,6 +18,7 @@ package stroom.auth.service.resources;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.assertj.core.api.Condition;
+import org.jose4j.lang.JoseException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.token.v1.Token;
@@ -43,7 +44,7 @@ import static stroom.auth.resources.token.v1.Token.TokenType.USER;
 public class TokenResource_search_IT extends TokenResource_IT {
 
     @Test
-    public void simple_search() throws UnirestException, IOException, ApiException {
+    public void simple_search() throws UnirestException, IOException, ApiException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
@@ -63,7 +64,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void multipage_search() throws UnirestException, IOException, ApiException {
+    public void multipage_search() throws UnirestException, IOException, ApiException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -93,7 +94,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_ordering_by_token_type() throws UnirestException, IOException, ApiException {
+    public void search_ordering_by_token_type() throws UnirestException, IOException, ApiException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -118,7 +119,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_ordering_by_token_type_asc() throws UnirestException, IOException, ApiException {
+    public void search_ordering_by_token_type_asc() throws UnirestException, IOException, ApiException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -147,7 +148,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_ordering_by_token_type_desc() throws UnirestException, IOException, ApiException {
+    public void search_ordering_by_token_type_desc() throws UnirestException, IOException, ApiException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -186,7 +187,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void orderDirection_validity() throws UnirestException, IOException, ApiException {
+    public void orderDirection_validity() throws UnirestException, IOException, ApiException, JoseException{
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         assertOrderDirectionValidity("BAD", false, idToken);
         assertOrderDirectionValidity("ascc", false, idToken);
@@ -199,7 +200,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void orderBy_validity() throws UnirestException, IOException {
+    public void orderBy_validity() throws UnirestException, IOException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         // Bad orderBy values
@@ -230,7 +231,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_on_user() throws UnirestException, IOException, ApiException {
+    public void search_on_user() throws UnirestException, IOException, ApiException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -275,7 +276,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_on_validity() throws UnirestException, IOException {
+    public void search_on_validity() throws UnirestException, IOException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         assertFilterValidity("bad", false, idToken);

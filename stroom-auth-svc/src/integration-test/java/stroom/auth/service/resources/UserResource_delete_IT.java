@@ -17,6 +17,7 @@
 package stroom.auth.service.resources;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.jose4j.lang.JoseException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
@@ -31,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public final class UserResource_delete_IT extends Base_IT {
     @Test
-    public final void delete_user() throws UnirestException, IOException, ApiException {
+    public final void delete_user() throws UnirestException, IOException, ApiException, JoseException {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
