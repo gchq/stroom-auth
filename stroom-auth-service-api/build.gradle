@@ -15,9 +15,6 @@ plugins {
 
 apply plugin: 'idea'
 
-group = 'stroom'
-version = 'v0.1.0'
-
 shadowJar {
     // Allows us to build fat jars with lots of files
     zip64 true
@@ -28,78 +25,21 @@ repositories {
 }
 
 
-if(hasProperty('target') && target == 'android') {
+apply plugin: 'java'
+apply plugin: 'maven'
 
-    apply plugin: 'com.android.library'
-    apply plugin: 'com.github.dcendents.android-maven'
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
 
-    android {
-        compileSdkVersion 23
-        buildToolsVersion '23.0.2'
-        defaultConfig {
-            minSdkVersion 14
-            targetSdkVersion 23
-        }
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_7
-            targetCompatibility JavaVersion.VERSION_1_7
-        }
-
-        // Rename the aar correctly
-        libraryVariants.all { variant ->
-            variant.outputs.each { output ->
-                def outputFile = output.outputFile
-                if (outputFile != null && outputFile.name.endsWith('.aar')) {
-                    def fileName = "${project.name}-${variant.baseName}-${version}.aar"
-                    output.outputFile = new File(outputFile.parent, fileName)
-                }
-            }
-        }
-
-        dependencies {
-            provided 'javax.annotation:jsr250-api:1.0'
-        }
+install {
+    repositories.mavenInstaller {
+        pom.artifactId = 'swagger-java-client'
     }
+}
 
-    afterEvaluate {
-        android.libraryVariants.all { variant ->
-            def task = project.tasks.create "jar${variant.name.capitalize()}", Jar
-            task.description = "Create jar artifact for ${variant.name}"
-            task.dependsOn variant.javaCompile
-            task.from variant.javaCompile.destinationDir
-            task.destinationDir = project.file("${project.buildDir}/outputs/jar")
-            task.archiveName = "${project.name}-${variant.baseName}-${version}.jar"
-            artifacts.add('archives', task);
-        }
-    }
-
-    task sourcesJar(type: Jar) {
-        from android.sourceSets.main.java.srcDirs
-        classifier = 'sources'
-    }
-
-    artifacts {
-        archives sourcesJar
-    }
-
-} else {
-
-    apply plugin: 'java'
-    apply plugin: 'maven'
-
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
-
-    install {
-        repositories.mavenInstaller {
-            pom.artifactId = 'swagger-java-client'
-        }
-    }
-
-    task execute(type:JavaExec) {
-       main = System.getProperty('mainClass')
-       classpath = sourceSets.main.runtimeClasspath
-    }
+task execute(type:JavaExec) {
+   main = System.getProperty('mainClass')
+   classpath = sourceSets.main.runtimeClasspath
 }
 
 dependencies {

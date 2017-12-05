@@ -21,3 +21,16 @@
 #docs/*.md
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
+
+# We don't want these files generated
+pom.xml
+build.sbt
+settings.gradle
+git_push.sh
+.travis.yml
+
+# We never want to over-write these files
+README.md
+
+# We don't want to use the generated test files
+src/test/**
