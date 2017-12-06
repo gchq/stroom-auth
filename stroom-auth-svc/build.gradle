@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath('io.swagger:swagger-codegen:2.2.2') // Generates client from YAML/JSON
-    }
-}
+//buildscript {
+    //repositories {
+        //mavenCentral()
+    //}
+    //dependencies {
+        //classpath('io.swagger:swagger-codegen:2.2.2') // Generates client from YAML/JSON
+    //}
+//}
 
-plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
-    id "com.benjaminsproule.swagger" version "0.1.4" // Generates YAML/JSON from model
-}
+//plugins {
+    //id 'com.github.johnrengelman.shadow' version '1.2.4'
+    //id "com.benjaminsproule.swagger" version "0.1.4" // Generates YAML/JSON from model
+//}
 
 apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow' 
+apply plugin: 'com.benjaminsproule.swagger' 
+
 mainClassName = 'stroom.auth.service.App'
-version 'v0.1.0'
 
 jar {
     manifest {
         attributes (
             "Implementation-Title": "Stroom Auth Service",
-            "Implementation-Version": version,
+            "Implementation-Version": versions.stroomAuth,
             "Main-Class": "stroom.auth.service.App"
         )
     }
@@ -63,38 +65,38 @@ sourceSets {
     }
 }
 
-configurations {
-    testArtifacts
-    sourceArtifacts
+//configurations {
+    //testArtifacts
+    //sourceArtifacts
 
-    // This means our integration tests get all the dependencies from our tests and we don't need to specify them twice.
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
-}
+    //// This means our integration tests get all the dependencies from our tests and we don't need to specify them twice.
+    //integrationTestCompile.extendsFrom testCompile
+    //integrationTestRuntime.extendsFrom testRuntime
+//}
 
-task sources(type: Jar) {
-    baseName = "${project.name}-source"
-    from sourceSets.main.allSource
-}
+//task sources(type: Jar) {
+    //baseName = "${project.name}-source"
+    //from sourceSets.main.allSource
+//}
 
-artifacts {
-    sourceArtifacts sources
-}
+//artifacts {
+    //sourceArtifacts sources
+//}
 
-// This task lets us run the actual integration tests.
-task integrationTest(type: Test) {
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
-}
+//// This task lets us run the actual integration tests.
+//task integrationTest(type: Test) {
+    //testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    //classpath = sourceSets.integrationTest.runtimeClasspath
+//}
 
-// These lines pull the integration test task into our build process.
-check.dependsOn integrationTest
-integrationTest.mustRunAfter test
+//// These lines pull the integration test task into our build process.
+//check.dependsOn integrationTest
+//integrationTest.mustRunAfter test
 
-// This means the reports from our integration tests won't over-write the reports from our unit tests.
-tasks.withType(Test) {
-    reports.html.destination = file("${reporting.baseDir}/${name}")
-}
+//// This means the reports from our integration tests won't over-write the reports from our unit tests.
+//tasks.withType(Test) {
+    //reports.html.destination = file("${reporting.baseDir}/${name}")
+//}
 
 dependencies {
     compile project(':stroom-persistence')
