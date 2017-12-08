@@ -130,7 +130,8 @@ public class TokenConfig {
             jwk = PublicJsonWebKey.Factory.newPublicJwk(this.getJwsSecret());
         } catch (JoseException e) {
             throw new RuntimeException("I was unable to create a PublicKey instance from the secret! " +
-                    "Please check the secret is correctly configured, i.e. it is valid JWK and serialised as JSON");
+                    "Please check the secret is correctly configured, i.e. it is valid JWK and serialised as JSON. " +
+                    "The verification key was: " + this.getJwsSecret(), e);
         }
         return jwk;
     }
