@@ -13,40 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-    id 'nu.studer.jooq' version '2.0.6'
-}
+//plugins {
+    //id 'nu.studer.jooq' version '2.0.6'
+//}
+apply plugin: 'nu.studer.jooq' 
 
 dependencies {
     compile deps.jooq
+
     jooqRuntime deps.mariadb_connector
 }
 
+def propNameJooqGeneration = 'jooqGeneration'
 
-// Uncomment this to re-generate persistence classes. The database will need to be available.
-//jooq {
-//    version = '3.9.3'
-//    edition = 'OSS'
-//    authdb(sourceSets.main) {
-//        jdbc {
-//            driver = 'org.mariadb.jdbc.Driver'
-//            url = 'jdbc:mariadb://localhost:3309/auth'
-//            user = 'stroomuser'
-//            password = 'stroompassword1'
-//        }
-//        generator {
-//            name = 'org.jooq.util.DefaultGenerator'
-//            database {
-//                name = 'org.jooq.util.mariadb.MariaDBDatabase'
-//                // Add anything you want included in generation below
-//                includes = 'users|tokens|token_types'
-//                // We don't want to include flyway versioning
-//                excludes = 'schema_version'
-//            }
-//            target {
-//                packageName = 'stroom.db'
-//                directory = 'src/main/java'
-//            }
-//        }
-//    }
-//}
+//to run the jooq code generation add the following to the gradle command arguments
+//-PjooqGeneration=true
+if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
+    configure(project) {
+        //configure jooq plugin to generate code
+        jooq {
+            version = '3.9.3'
+            edition = 'OSS'
+            authdb(sourceSets.main) {
+                jdbc {
+                    driver = 'org.mariadb.jdbc.Driver'
+                    url = 'jdbc:mariadb://localhost:3309/auth'
+                    user = 'stroomuser'
+                    password = 'stroompassword1'
+                }
+                generator {
+                    name = 'org.jooq.util.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.util.mariadb.MariaDBDatabase'
+                        // Add anything you want included in generation below
+                        includes = 'users|tokens|token_types'
+                        // We don't want to include flyway versioning
+                        excludes = 'schema_version'
+                    }
+                    target {
+                        packageName = 'stroom.db'
+                        directory = 'src/main/java'
+                    }
+                }
+            }
+        }
+    }
+}
+
+

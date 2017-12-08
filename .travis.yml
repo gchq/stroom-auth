@@ -6,7 +6,6 @@ sudo: required # To ensure we get a VM rather than a container for more memory a
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.13.0
     # $TAGPERM environment variable
     # generate a token at https://github.com/settings/tokens and encrypt it
     # with `travis encrypt TAGPERM=<yoursecrettoken>`
@@ -15,23 +14,7 @@ env:
     - secure: "MMzx2PxzjMuJL7S74SxL3ZWdGiOqBh/geLJJIftY9ReswLVvJbxurB0PDYvdPw8E/bJ7ykWjR99mLBi2K7FV+SavBTVXEwvw8T8AO9TQe7x5RkIQu+jeM2wf8KfABPUDrdA7PlbA8cVO9LAUTBMTJ6E7x4+3khpqjmBZGxRzTAECDyHKeHIioDfRFkZsnn5JzcoiUk1TLk8snubIL7mE0euVylSdYUPHUO7OWe7DNzoOuWcXOQmIwuhTIDeKSv5aGLuLVbILvvngzFhpdr28dsapAgvJZMBC6dfGJbb59/RH3M7rE+WIOVjb1+npDxWsuhE8rAYJZIb5id0BqxjVyPJl05g+zIe8FICrNgRlTYqgF4uxrR02AvEAf0mDAHd+KralBA9sz8Q/IBmw7sfkq+8jYslLOa1GA/DDXjWJ/KGZPmIxj3HaMjjepyOjO2LIZIItQ2XsoUPDxra5BAUU5c7InKJpEiFw9dlhfjlJBJE1QBowUgVmlrrYBSI92mB8dQlYyyPBUP2pz5RoqnpBjyLg5vccAzWFiI76fRXmCXuZz51GmT+e2p6ZFD5rQ+KiTqpWIdz8vQ1jt+nRS9ufDzNgYeR0cykNmYnaJJETdi+LcZQefZcRN+X/bJqy4vLsYxxDSMo2IwsUgr/knSwdt4ZdKK2cDla0HyeKnwFAzOs="
 
 before_install:
-    # Print out the current versions before we change them
   - docker --version
-  - docker-compose --version
-    # Remove the old docker version
-  - sudo apt-get -y remove docker docker-engine
-    # Extra stuff required for docker CE
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    # Add the apt repo for docker
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  - sudo apt-get update
-  - sudo apt-get -y install linux-image-extra-$(uname -r) linux-image-extra-virtual apt-transport-https ca-certificates curl software-properties-common docker-ce
-  - docker --version
-    # Remove the old docker-compose
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
   - docker-compose --version
 
 install: echo "skip 'gradle assemble' step to speed up build"
@@ -57,10 +40,10 @@ before_script:
   - popd
 
 # Use wait-for-it.sh, waiting on Stroom to come up. We need the authorisation service before we can run the ITs.
-script: ./wait-for-it/wait-for-it.sh $STROOM_RESOURCES_ADVERTISED_HOST:8080 --timeout=600 -- ./gradlew -Pversion=$TRAVIS_TAG clean build shadowJar --info --stacktrace
+script: ./wait-for-it/wait-for-it.sh $STROOM_RESOURCES_ADVERTISED_HOST:8080 --timeout=600 -- ./travis.script.sh
 
 # Conditionally tag git and build docker image.
-after_success:  "./.travis.after_success.sh"
+after_success:  "./travis.after_success.sh"
 
 after_failure:
   - cd ~/build/gchq/git_work/stroom-resources/dev-resources/compose
