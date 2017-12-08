@@ -30,6 +30,7 @@ import stroom.auth.service.api.model.Token;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * TODO: create with issued date in the past; create with expiry date in the past; create with invalid token type
@@ -59,7 +60,6 @@ public class TokenResource_create_IT extends TokenResource_IT {
     }
 
     @Test
-    @Ignore("TODO: ExceptionMappers aren't working at the moment -- they need fixing.")
     public void create_with_bad_user() throws UnirestException, IOException, JoseException{
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
@@ -72,6 +72,7 @@ public class TokenResource_create_IT extends TokenResource_IT {
         createTokenRequest.setComments("Created by TokenResource_create_IT");
         try {
             Token newApiKeyId = apiKeyApiClient.create(createTokenRequest);
+            fail();
         } catch (ApiException e) {
             assertThat(e.getCode()).isEqualTo(400);
         }
