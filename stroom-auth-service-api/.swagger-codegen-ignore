@@ -34,3 +34,4 @@ README.md
 
 # We don't want to use the generated test files
 src/test/**
+src/main/AndroidManifest.xml
