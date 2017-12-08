@@ -19,6 +19,7 @@
 package stroom.auth.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.lang.JoseException;
 
@@ -50,7 +51,7 @@ public class TokenConfig {
 
     @Valid
     @NotNull
-    @JsonProperty
+    @JsonRawValue
     private String jwsSecret;
 
     @Valid
