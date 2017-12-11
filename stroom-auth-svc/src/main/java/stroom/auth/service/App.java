@@ -18,6 +18,7 @@ package stroom.auth.service;
 
 import com.bendb.dropwizard.jooq.JooqBundle;
 import com.bendb.dropwizard.jooq.JooqFactory;
+import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.dropwizard.Application;
@@ -37,6 +38,8 @@ import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.Configuration;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
 import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
@@ -46,8 +49,8 @@ import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
 import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
-import stroom.auth.service.security.AuthenticationFilter;
 import stroom.auth.service.security.ServiceUser;
+import stroom.auth.service.security.UserAuthenticator;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
@@ -85,9 +88,9 @@ public final class App extends Application<Config> {
 
     @Override
     public void run(Config config, Environment environment) throws Exception {
-        configureAuthentication(config, environment);
         Configuration jooqConfig = this.jooqBundle.getConfiguration();
         injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
+        configureAuthentication(injector.getInstance(TokenVerifier.class).getJwtConsumer(), environment);
         registerResources(environment);
         registerExceptionMappers(environment);
         configureSessionHandling(environment);
@@ -103,7 +106,6 @@ public final class App extends Application<Config> {
         environment.servlets().setSessionHandler(sessionHandler);
         environment.jersey().register(SessionFactoryProvider.class);
     }
-
 
     public void initialize(Bootstrap bootstrap) {
         // This allows us to use templating in the YAML configuration.
@@ -128,8 +130,14 @@ public final class App extends Application<Config> {
         environment.jersey().register(injector.getInstance(NoSuchUserExceptionMapper.class));
     }
 
-    private static void configureAuthentication(Config config, Environment environment) {
-        environment.jersey().register(new AuthDynamicFeature(AuthenticationFilter.get(config.getTokenConfig())));
+    private static void configureAuthentication(JwtConsumer jwtConsumer, Environment environment) {
+        JwtAuthFilter<ServiceUser> jwtAuthFilter = new JwtAuthFilter.Builder<ServiceUser>()
+                .setJwtConsumer(jwtConsumer)
+                .setRealm("realm")
+                .setPrefix("Bearer")
+                .setAuthenticator(new UserAuthenticator())
+                .buildAuthFilter();
+        environment.jersey().register(new AuthDynamicFeature(jwtAuthFilter));
         environment.jersey().register(new Binder(ServiceUser.class));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
     }

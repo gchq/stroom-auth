@@ -21,6 +21,7 @@ package stroom.auth;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.jose4j.lang.JoseException;
 import org.junit.Test;
+import stroom.auth.service.ApiException;
 import stroom.auth.service.resources.support.Base_IT;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +33,7 @@ public class AuthenticationRequestFlow_IT extends Base_IT {
      * This does nothing but initiate the login flow and expect an idToken.
      */
     @Test
-    public void simplest() throws UnirestException, JoseException {
+    public void simplest() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         assertThat(idToken).isNotEmpty();
     }

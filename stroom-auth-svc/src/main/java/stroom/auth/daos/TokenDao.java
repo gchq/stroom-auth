@@ -32,9 +32,11 @@ import org.jooq.SelectSelectStep;
 import org.jooq.SortField;
 import org.jooq.Table;
 import org.jooq.impl.DSL;
+import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.TokenGenerator;
+import stroom.auth.TokenBuilder;
+import stroom.auth.TokenBuilderFactory;
 import stroom.auth.config.TokenConfig;
 import stroom.auth.exceptions.BadRequestException;
 import stroom.auth.exceptions.NoSuchUserException;
@@ -66,7 +68,7 @@ public class TokenDao {
     private Configuration jooqConfig;
 
     @Inject
-    private TokenConfig tokenConfig;
+    private TokenBuilderFactory tokenBuilderFactory;
 
     private DSLContext database = null;
 
@@ -216,8 +218,11 @@ public class TokenDao {
         }
         int recipientUserId = userRecord.get(USERS.ID);
 
-        TokenGenerator tokenGenerator = new TokenGenerator(tokenType, recipientUserEmail, tokenConfig);
-        tokenGenerator.createToken();
+        TokenBuilder tokenBuilder = tokenBuilderFactory
+                .newBuilder(tokenType)
+                .subject(recipientUserEmail);
+        NumericDate expiresOn = tokenBuilder.expiresOn();
+        String idToken = tokenBuilder.build();
 
         int issuingUserId = database
                 .select(USERS.ID)
@@ -237,8 +242,8 @@ public class TokenDao {
                 .insertInto((Table) TOKENS)
                 .set(TOKENS.USER_ID, recipientUserId)
                 .set(TOKENS.TOKEN_TYPE_ID, tokenTypeId)
-                .set(TOKENS.TOKEN, tokenGenerator.getToken())
-                .set(TOKENS.EXPIRES_ON, tokenGenerator.getExpiresOn())
+                .set(TOKENS.TOKEN, idToken)
+                .set(TOKENS.EXPIRES_ON, new Timestamp(expiresOn.getValueInMillis()))
                 .set(TOKENS.ISSUED_ON, Instant.now())
                 .set(TOKENS.ISSUED_BY_USER, issuingUserId)
                 .set(TOKENS.ENABLED, isEnabled)

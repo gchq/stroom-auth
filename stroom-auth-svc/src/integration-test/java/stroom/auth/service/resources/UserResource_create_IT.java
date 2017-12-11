@@ -32,7 +32,7 @@ import static org.assertj.core.api.Java6Assertions.fail;
 
 public final class UserResource_create_IT extends Base_IT {
     @Test
-    public final void create_user() throws UnirestException, ApiException, JoseException {
+    public final void create_user() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
@@ -45,7 +45,7 @@ public final class UserResource_create_IT extends Base_IT {
     }
 
     @Test
-    public final void create_user_missing_name() throws UnirestException, JoseException {
+    public final void create_user_missing_name() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
@@ -60,7 +60,7 @@ public final class UserResource_create_IT extends Base_IT {
     }
 
     @Test
-    public final void create_user_missing_password() throws UnirestException, ApiException, JoseException {
+    public final void create_user_missing_password() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 
@@ -75,7 +75,7 @@ public final class UserResource_create_IT extends Base_IT {
     }
 
     @Test
-    public final void create_user_with_duplicate_name() throws UnirestException, ApiException, JoseException {
+    public final void create_user_with_duplicate_name() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 

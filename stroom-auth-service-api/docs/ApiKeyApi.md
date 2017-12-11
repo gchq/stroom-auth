@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**delete**](ApiKeyApi.md#delete) | **DELETE** /token/v1/byToken/{token} | Delete a token by the token string itself.
 [**deleteAll**](ApiKeyApi.md#deleteAll) | **DELETE** /token/v1 | Delete all tokens.
 [**delete_0**](ApiKeyApi.md#delete_0) | **DELETE** /token/v1/{id} | Delete a token by ID.
+[**getPublicKey**](ApiKeyApi.md#getPublicKey) | **GET** /token/v1/publickey | Provides access to this service&#39;s current public key. A client may use these keys to verify JWTs issued by this service.
 [**read**](ApiKeyApi.md#read) | **GET** /token/v1/byToken/{token} | Read a token by the token string itself.
 [**read_0**](ApiKeyApi.md#read_0) | **GET** /token/v1/{id} | Read a token by ID.
 [**search**](ApiKeyApi.md#search) | **POST** /token/v1/search | Submit a search request for tokens
@@ -176,6 +177,47 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **Integer**|  |
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="getPublicKey"></a>
+# **getPublicKey**
+> String getPublicKey()
+
+Provides access to this service&#39;s current public key. A client may use these keys to verify JWTs issued by this service.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.ApiKeyApi;
+
+
+ApiKeyApi apiInstance = new ApiKeyApi();
+try {
+    String result = apiInstance.getPublicKey();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling ApiKeyApi#getPublicKey");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
 
 ### Return type
 

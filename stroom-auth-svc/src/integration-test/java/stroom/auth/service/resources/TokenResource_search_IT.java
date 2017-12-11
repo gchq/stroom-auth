@@ -44,7 +44,7 @@ import static stroom.auth.resources.token.v1.Token.TokenType.USER;
 public class TokenResource_search_IT extends TokenResource_IT {
 
     @Test
-    public void simple_search() throws UnirestException, IOException, ApiException, JoseException {
+    public void simple_search() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
@@ -64,7 +64,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void multipage_search() throws UnirestException, IOException, ApiException, JoseException {
+    public void multipage_search() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -94,7 +94,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_ordering_by_token_type() throws UnirestException, IOException, ApiException, JoseException {
+    public void search_ordering_by_token_type() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -119,7 +119,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_ordering_by_token_type_asc() throws UnirestException, IOException, ApiException, JoseException {
+    public void search_ordering_by_token_type_asc() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -148,7 +148,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_ordering_by_token_type_desc() throws UnirestException, IOException, ApiException, JoseException {
+    public void search_ordering_by_token_type_desc() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -187,7 +187,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void orderDirection_validity() throws UnirestException, IOException, ApiException, JoseException{
+    public void orderDirection_validity() throws Exception{
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         assertOrderDirectionValidity("BAD", false, idToken);
         assertOrderDirectionValidity("ascc", false, idToken);
@@ -200,7 +200,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void orderBy_validity() throws UnirestException, IOException, JoseException {
+    public void orderBy_validity() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         // Bad orderBy values
@@ -231,7 +231,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_on_user() throws UnirestException, IOException, ApiException, JoseException {
+    public void search_on_user() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
@@ -276,7 +276,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     }
 
     @Test
-    public void search_on_validity() throws UnirestException, IOException, JoseException {
+    public void search_on_validity() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         assertFilterValidity("bad", false, idToken);
@@ -292,7 +292,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         assertFilterValidity("updated_by_user", true, idToken);
     }
 
-    private void assertOrderDirectionValidity(String orderDirection, boolean isValid, String idToken) throws UnirestException, ApiException {
+    private void assertOrderDirectionValidity(String orderDirection, boolean isValid, String idToken) throws Exception {
         ApiKeyApi apiKeyApi = SwaggerHelper.newApiKeyApiClient(idToken);
 
         try {
@@ -306,7 +306,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         }
     }
 
-    private void assertOrderByValidity(String orderBy, boolean isValid, String securityToken) throws UnirestException {
+    private void assertOrderByValidity(String orderBy, boolean isValid, String securityToken) throws Exception {
         ApiKeyApi apiKeyApi = SwaggerHelper.newApiKeyApiClient(securityToken);
 
         try {
@@ -320,7 +320,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         }
     }
 
-    private void assertFilterValidity(String filterOn, boolean isValid, String securityToken) throws UnirestException {
+    private void assertFilterValidity(String filterOn, boolean isValid, String securityToken) throws Exception {
         ApiKeyApi apiKeyApi = SwaggerHelper.newApiKeyApiClient(securityToken);
         try {
             ApiResponse<SearchResponse> response = apiKeyApi.searchWithHttpInfo(
@@ -380,7 +380,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         return token;
     }
 
-    private void getPageAndAssert(int page, int limit, int expectedCount, ApiKeyApi apiKeyApi) throws UnirestException, IOException, ApiException {
+    private void getPageAndAssert(int page, int limit, int expectedCount, ApiKeyApi apiKeyApi) throws Exception {
         stroom.auth.service.api.model.SearchRequest searchRequest = new stroom.auth.service.api.model.SearchRequest();
         searchRequest.setLimit(limit);
         searchRequest.setPage(page);

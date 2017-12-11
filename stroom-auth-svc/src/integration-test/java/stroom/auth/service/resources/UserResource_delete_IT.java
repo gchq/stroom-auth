@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public final class UserResource_delete_IT extends Base_IT {
     @Test
-    public final void delete_user() throws UnirestException, IOException, ApiException, JoseException {
+    public final void delete_user() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         UserApi userApi = SwaggerHelper.newUserApiClient(idToken);
 

@@ -31,10 +31,12 @@ import javax.inject.Singleton;
 public class TokenBuilderFactory {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TokenBuilderFactory.class);
     private Config config;
+    private TokenVerifier tokenVerifier;
 
     @Inject
-    public TokenBuilderFactory(Config config) {
+    public TokenBuilderFactory(Config config, TokenVerifier tokenVerifier) {
         this.config = config;
+        this.tokenVerifier = tokenVerifier;
     }
 
     public TokenBuilder newBuilder(TokenType tokenType) {
@@ -55,16 +57,9 @@ public class TokenBuilderFactory {
                 throw new TokenCreationException(tokenType, errorMessage);
         }
 
-        PublicJsonWebKey jwk;
-        try {
-            jwk = PublicJsonWebKey.Factory.newPublicJwk(config.getTokenConfig().getJwsSecret());
-        } catch (JoseException e) {
-            throw new RuntimeException("It looks like the key supplied in the configuration is invalid!", e);
-        }
-
         tokenBuilder
                 .issuer(config.getTokenConfig().getJwsIssuer())
-                .privateVerificationKey(jwk.getPrivateKey())
+                .privateVerificationKey(tokenVerifier.getJwk().getPrivateKey())
                 .algorithm(config.getTokenConfig().getAlgorithm())
                 .tokenType(tokenType);
 

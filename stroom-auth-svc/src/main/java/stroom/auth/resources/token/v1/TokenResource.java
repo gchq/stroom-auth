@@ -23,10 +23,12 @@ import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.jose4j.jwk.JsonWebKey;
+import org.jose4j.jwk.RsaJsonWebKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.AuthorisationServiceClient;
-import stroom.auth.config.Config;
+import stroom.auth.TokenVerifier;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
 import stroom.auth.resources.user.v1.User;
@@ -46,6 +48,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 import java.util.Optional;
 
@@ -59,15 +62,18 @@ public class TokenResource {
 
     private final TokenDao tokenDao;
     private final UserDao userDao;
+    private TokenVerifier tokenVerifier;
     private final AuthorisationServiceClient authorisationServiceClient;
 
     @Inject
     public TokenResource(final AuthorisationServiceClient authorisationServiceClient,
                          final TokenDao tokenDao,
-                         final UserDao userDao) {
+                         final UserDao userDao,
+                         final TokenVerifier tokenVerifier) {
         this.authorisationServiceClient = authorisationServiceClient;
         this.tokenDao = tokenDao;
         this.userDao = userDao;
+        this.tokenVerifier = tokenVerifier;
     }
 
     /**
@@ -243,5 +249,21 @@ public class TokenResource {
 
         tokenDao.enableOrDisableToken(tokenId, enabled, updatingUser);
         return Response.status(Response.Status.OK).build();
+    }
+
+    @ApiOperation(
+            value = "Provides access to this service's current public key. " +
+                    "A client may use these keys to verify JWTs issued by this service.",
+            response = String.class,
+            tags = {"ApiKey"})
+    @GET
+    @Path("/publickey")
+    @Timed
+    public final Response getPublicKey() {
+        String jwkAsJson = tokenVerifier.getJwk().toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
+        return Response
+                .status(Response.Status.OK)
+                .entity(jwkAsJson)
+                .build();
     }
 }

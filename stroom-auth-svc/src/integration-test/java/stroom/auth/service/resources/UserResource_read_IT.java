@@ -36,7 +36,7 @@ import static org.assertj.core.api.Java6Assertions.fail;
 public final class UserResource_read_IT extends Base_IT {
 
     @Test
-    public final void search_users() throws UnirestException, IOException, ApiException, JoseException {
+    public final void search_users() throws Exception {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
         ApiResponse<String> response = userApi.getAllWithHttpInfo();
         assertThat(response.getStatusCode()).isEqualTo(200);
@@ -55,7 +55,7 @@ public final class UserResource_read_IT extends Base_IT {
     }
 
     @Test
-    public final void read_user_that_doesnt_exist() throws UnirestException, ApiException, JoseException {
+    public final void read_user_that_doesnt_exist() throws Exception {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
         try {
             userApi.getUser(129387298);
@@ -66,7 +66,7 @@ public final class UserResource_read_IT extends Base_IT {
     }
 
     @Test
-    public final void read_other_user_with_authorisation() throws UnirestException, ApiException, JoseException {
+    public final void read_other_user_with_authorisation() throws Exception {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
@@ -81,7 +81,7 @@ public final class UserResource_read_IT extends Base_IT {
     }
 
     @Test
-    public final void read_other_user_without_authorisation() throws UnirestException, ApiException, JoseException {
+    public final void read_other_user_without_authorisation() throws Exception {
         UserApi adminUserApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         String userEmailA = "userEmailA_" + UUID.randomUUID().toString();

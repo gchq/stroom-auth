@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public final class UserResource_update_IT extends Base_IT {
     @Test
-    public final void update_user() throws UnirestException, IOException, ApiException, JoseException {
+    public final void update_user() throws Exception {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
@@ -54,7 +54,7 @@ public final class UserResource_update_IT extends Base_IT {
     }
 
     @Test
-    public final void update_self_basic_user() throws UnirestException, ApiException, IOException, JoseException {
+    public final void update_self_basic_user() throws Exception {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         String userEmailA = "update_user_" + UUID.randomUUID().toString();

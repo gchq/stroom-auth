@@ -320,6 +320,24 @@
         }
       }
     },
+    "/token/v1/publickey" : {
+      "get" : {
+        "tags" : [ "ApiKey" ],
+        "summary" : "Provides access to this service's current public key. A client may use these keys to verify JWTs issued by this service.",
+        "description" : "",
+        "operationId" : "getPublicKey",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
     "/token/v1/search" : {
       "post" : {
         "tags" : [ "ApiKey" ],

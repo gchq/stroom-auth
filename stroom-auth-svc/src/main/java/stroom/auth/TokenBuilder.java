@@ -18,16 +18,13 @@
 
 package stroom.auth;
 
-import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
-import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
 import stroom.auth.resources.token.v1.Token.TokenType;
 
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.Optional;
 
 public class TokenBuilder {

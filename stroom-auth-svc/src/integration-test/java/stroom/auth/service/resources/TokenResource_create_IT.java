@@ -38,7 +38,7 @@ import static org.junit.Assert.fail;
 public class TokenResource_create_IT extends TokenResource_IT {
 
     @Test
-    public void simpleCreate() throws UnirestException, IOException, ApiException, JoseException {
+    public void simpleCreate() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
@@ -60,7 +60,7 @@ public class TokenResource_create_IT extends TokenResource_IT {
     }
 
     @Test
-    public void create_with_bad_user() throws UnirestException, IOException, JoseException{
+    public void create_with_bad_user() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);

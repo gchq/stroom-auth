@@ -51,11 +51,6 @@ public class TokenConfig {
 
     @Valid
     @NotNull
-    @JsonRawValue
-    private String jwsSecret;
-
-    @Valid
-    @NotNull
     @JsonProperty
     private boolean requireExpirationTime = true;
 
@@ -63,10 +58,6 @@ public class TokenConfig {
     @NotNull
     @JsonProperty
     private String algorithm;
-
-    public final byte[] getJwsSecretAsBytes() {
-        return jwsSecret.getBytes(Charset.defaultCharset());
-    }
 
     public int getMinutesUntilExpirationForUserToken() {
         return minutesUntilExpirationForUserToken;
@@ -100,15 +91,6 @@ public class TokenConfig {
         this.jwsIssuer = jwsIssuer;
     }
 
-    public String getJwsSecret() {
-        return this.jwsSecret;
-    }
-
-    public void setJwsSecret(String jwsSecret) {
-        this.jwsSecret = jwsSecret;
-    }
-
-
     public boolean isRequireExpirationTime() {
         return requireExpirationTime;
     }
@@ -125,15 +107,4 @@ public class TokenConfig {
         this.algorithm = algorithm;
     }
 
-    public PublicJsonWebKey getJwk() {
-        PublicJsonWebKey jwk = null;
-        try {
-            jwk = PublicJsonWebKey.Factory.newPublicJwk(this.getJwsSecret());
-        } catch (JoseException e) {
-            throw new RuntimeException("I was unable to create a PublicKey instance from the secret! " +
-                    "Please check the secret is correctly configured, i.e. it is valid JWK and serialised as JSON. " +
-                    "The verification key was: " + this.getJwsSecret(), e);
-        }
-        return jwk;
-    }
 }

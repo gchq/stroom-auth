@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TokenResource_delete_IT extends TokenResource_IT {
 
     @Test
-    public void delete() throws UnirestException, IOException, ApiException, JoseException {
+    public void delete() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
@@ -63,7 +63,7 @@ public class TokenResource_delete_IT extends TokenResource_IT {
     }
 
     @Test
-    public void deleteAll() throws UnirestException, IOException, ApiException, JoseException {
+    public void deleteAll() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
 
