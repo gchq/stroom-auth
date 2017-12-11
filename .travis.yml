@@ -5,6 +5,8 @@ jdk: oraclejdk8
 sudo: required # To ensure we get a VM rather than a container for more memory and for all the apt-get stuff
 
 env:
+  - RESOURCES_BRANCH: auth
+  - STROOM_TAG: dev-SNAPSHOT
   global:
     # $TAGPERM environment variable
     # generate a token at https://github.com/settings/tokens and encrypt it
