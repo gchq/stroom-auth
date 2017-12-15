@@ -11,9 +11,11 @@ import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
 
+import stroom.db.auth.tables.JsonWebKey;
 import stroom.db.auth.tables.TokenTypes;
 import stroom.db.auth.tables.Tokens;
 import stroom.db.auth.tables.Users;
+import stroom.db.auth.tables.records.JsonWebKeyRecord;
 import stroom.db.auth.tables.records.TokenTypesRecord;
 import stroom.db.auth.tables.records.TokensRecord;
 import stroom.db.auth.tables.records.UsersRecord;
@@ -37,6 +39,7 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
+    public static final Identity<JsonWebKeyRecord, Integer> IDENTITY_JSON_WEB_KEY = Identities0.IDENTITY_JSON_WEB_KEY;
     public static final Identity<TokensRecord, Integer> IDENTITY_TOKENS = Identities0.IDENTITY_TOKENS;
     public static final Identity<TokenTypesRecord, Integer> IDENTITY_TOKEN_TYPES = Identities0.IDENTITY_TOKEN_TYPES;
     public static final Identity<UsersRecord, Integer> IDENTITY_USERS = Identities0.IDENTITY_USERS;
@@ -45,6 +48,8 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_PRIMARY = UniqueKeys0.KEY_JSON_WEB_KEY_PRIMARY;
+    public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_JSON = UniqueKeys0.KEY_JSON_WEB_KEY_JSON;
     public static final UniqueKey<TokensRecord> KEY_TOKENS_PRIMARY = UniqueKeys0.KEY_TOKENS_PRIMARY;
     public static final UniqueKey<TokensRecord> KEY_TOKENS_ID = UniqueKeys0.KEY_TOKENS_ID;
     public static final UniqueKey<TokenTypesRecord> KEY_TOKEN_TYPES_PRIMARY = UniqueKeys0.KEY_TOKEN_TYPES_PRIMARY;
@@ -66,12 +71,15 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class Identities0 extends AbstractKeys {
+        public static Identity<JsonWebKeyRecord, Integer> IDENTITY_JSON_WEB_KEY = createIdentity(JsonWebKey.JSON_WEB_KEY, JsonWebKey.JSON_WEB_KEY.ID);
         public static Identity<TokensRecord, Integer> IDENTITY_TOKENS = createIdentity(Tokens.TOKENS, Tokens.TOKENS.ID);
         public static Identity<TokenTypesRecord, Integer> IDENTITY_TOKEN_TYPES = createIdentity(TokenTypes.TOKEN_TYPES, TokenTypes.TOKEN_TYPES.ID);
         public static Identity<UsersRecord, Integer> IDENTITY_USERS = createIdentity(Users.USERS, Users.USERS.ID);
     }
 
     private static class UniqueKeys0 extends AbstractKeys {
+        public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_PRIMARY = createUniqueKey(JsonWebKey.JSON_WEB_KEY, "KEY_json_web_key_PRIMARY", JsonWebKey.JSON_WEB_KEY.ID);
+        public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_JSON = createUniqueKey(JsonWebKey.JSON_WEB_KEY, "KEY_json_web_key_json", JsonWebKey.JSON_WEB_KEY.JSON);
         public static final UniqueKey<TokensRecord> KEY_TOKENS_PRIMARY = createUniqueKey(Tokens.TOKENS, "KEY_tokens_PRIMARY", Tokens.TOKENS.ID);
         public static final UniqueKey<TokensRecord> KEY_TOKENS_ID = createUniqueKey(Tokens.TOKENS, "KEY_tokens_id", Tokens.TOKENS.ID);
         public static final UniqueKey<TokenTypesRecord> KEY_TOKEN_TYPES_PRIMARY = createUniqueKey(TokenTypes.TOKEN_TYPES, "KEY_token_types_PRIMARY", TokenTypes.TOKEN_TYPES.ID);

@@ -6,6 +6,7 @@ package stroom.db.auth;
 
 import javax.annotation.Generated;
 
+import stroom.db.auth.tables.JsonWebKey;
 import stroom.db.auth.tables.TokenTypes;
 import stroom.db.auth.tables.Tokens;
 import stroom.db.auth.tables.Users;
@@ -23,6 +24,11 @@ import stroom.db.auth.tables.Users;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>auth.json_web_key</code>.
+     */
+    public static final JsonWebKey JSON_WEB_KEY = stroom.db.auth.tables.JsonWebKey.JSON_WEB_KEY;
 
     /**
      * The table <code>auth.tokens</code>.

@@ -27,7 +27,6 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-import org.jose4j.keys.HmacKey;
 import org.jose4j.lang.JoseException;
 import stroom.auth.service.ApiClient;
 import stroom.auth.service.ApiException;

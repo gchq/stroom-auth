@@ -26,6 +26,7 @@ import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
 import stroom.auth.config.TokenConfig;
+import stroom.auth.daos.JwkDao;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
@@ -53,6 +54,7 @@ public final class Module extends AbstractModule {
         bind(AuthorisationServiceClient.class);
         bind(TokenDao.class);
         bind(UserDao.class);
+        bind(JwkDao.class);
         bind(TokenVerifier.class);
         bind(EmailSender.class);
         bind(CertificateManager.class);

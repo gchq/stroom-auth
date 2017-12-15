@@ -40,6 +40,7 @@ Obviously you'll lose test data if you do this.
 
 ### Dropping all tables
 ```sql
+drop table json_web_key;
 drop table tokens;
 drop table users;
 drop table token_types;

@@ -88,14 +88,21 @@ public final class App extends Application<Config> {
 
     @Override
     public void run(Config config, Environment environment) throws Exception {
+        // The first thing to do is set up Guice
         Configuration jooqConfig = this.jooqBundle.getConfiguration();
         injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
+
+        // We need the database before we need most other things
+        migrate(config, environment);
+
+        // And we want to configure authentication before the resources
         configureAuthentication(injector.getInstance(TokenVerifier.class).getJwtConsumer(), environment);
+
+        // Now we can configure everything else
         registerResources(environment);
         registerExceptionMappers(environment);
         configureSessionHandling(environment);
         configureCors(environment);
-        migrate(config, environment);
     }
 
     private static void configureSessionHandling(Environment environment) {

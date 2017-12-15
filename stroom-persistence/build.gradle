@@ -46,7 +46,7 @@ if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
                     database {
                         name = 'org.jooq.util.mariadb.MariaDBDatabase'
                         // Add anything you want included in generation below
-                        includes = 'users|tokens|token_types'
+                        includes = 'users|tokens|token_types|json_web_key'
                         // We don't want to include flyway versioning
                         excludes = 'schema_version'
                     }

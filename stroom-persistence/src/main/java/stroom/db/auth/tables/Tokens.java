@@ -37,7 +37,7 @@ import stroom.db.auth.tables.records.TokensRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tokens extends TableImpl<TokensRecord> {
 
-    private static final long serialVersionUID = -814702375;
+    private static final long serialVersionUID = 1557486147;
 
     /**
      * The reference instance of <code>auth.tokens</code>
@@ -70,7 +70,7 @@ public class Tokens extends TableImpl<TokensRecord> {
     /**
      * The column <code>auth.tokens.token</code>.
      */
-    public final TableField<TokensRecord, String> TOKEN = createField("token", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<TokensRecord, String> TOKEN = createField("token", org.jooq.impl.SQLDataType.VARCHAR.length(1000).nullable(false), this, "");
 
     /**
      * The column <code>auth.tokens.expires_on</code>.
@@ -85,7 +85,7 @@ public class Tokens extends TableImpl<TokensRecord> {
     /**
      * The column <code>auth.tokens.issued_by_user</code>.
      */
-    public final TableField<TokensRecord, Integer> ISSUED_BY_USER = createField("issued_by_user", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<TokensRecord, Integer> ISSUED_BY_USER = createField("issued_by_user", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>auth.tokens.enabled</code>.
