@@ -230,6 +230,7 @@ export const login = (credentials) => {
           // Otherwise we'll honour the redirect and send the user to the RP
           window.location.href = response.url
         }
+      })
     } catch (err) {
       console.log("TODO: Couldn't get a session ID - handle it somehow. Probably redirect to Stroom?")
     }
