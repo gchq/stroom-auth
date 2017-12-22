@@ -34,7 +34,7 @@ before_script:
   - mkdir -p ../git_work
   - pushd ../git_work
   - git clone https://github.com/gchq/stroom-resources.git
-  - pushd stroom-resources/dev-resources/compose
+  - pushd stroom-resources/bin
   - git checkout $RESOURCES_BRANCH
   # Start all the services we need to run the integration tests in stroom
   - nohup ./bounceIt.sh up -e -y --build kafka zookeeper stroom stroom-db stroom-stats-db stroom-auth-service-db &
