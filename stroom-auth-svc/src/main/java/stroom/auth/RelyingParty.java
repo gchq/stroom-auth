@@ -32,6 +32,7 @@ public class RelyingParty {
     private String idToken;
     private String nonce;
     private String state;
+    private String redirectUrl;
 
     public boolean accessCodesMatch(String accessCodeToMatch) {
         return this.accessCode != null && accessCode.equals(accessCodeToMatch);
@@ -93,4 +94,11 @@ public class RelyingParty {
         this.state = state;
     }
 
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
 }

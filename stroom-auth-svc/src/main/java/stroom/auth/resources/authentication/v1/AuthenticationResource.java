@@ -156,6 +156,7 @@ public final class AuthenticationResource {
         RelyingParty relyingParty = optionalSession.get().getOrCreateRelyingParty(clientId);
         relyingParty.setNonce(nonce);
         relyingParty.setState(state);
+        relyingParty.setRedirectUrl(redirectUrl);
 
 
         // Now we can check if we're logged in somehow (session or certs) and build the response accordingly
@@ -249,7 +250,7 @@ public final class AuthenticationResource {
         // Reset last access, login failures, etc...
         userDao.recordSuccessfulLogin(credentials.getEmail());
 
-        return status(Status.OK).entity(accessCode).build();
+        return seeOther(buildRedirectionUrl(relyingParty.getRedirectUrl(), accessCode, relyingParty.getState())).build();
     }
 
     @GET

@@ -217,11 +217,19 @@ export const login = (credentials) => {
           requestingClientId: clientId
         })
       })
-        .then(handleStatus)
-        .then(getBody)
-        .then(accessCode => {
-          window.location.href = `${redirectUrl}/?accessCode=${accessCode}`
-        })
+      .then(response => {
+        // First we'll handle bad credentials
+        if(response.status === 401){
+          throw new SubmissionError({password: 'Invalid login'})
+        }
+        // We'll also helpfully check for a 422, which we know might indicate there's not session
+        else if(response.status === 422){
+          //TODO: handle this sensibly
+        }
+        else {
+          // Otherwise we'll honour the redirect and send the user to the RP
+          window.location.href = response.url
+        }
     } catch (err) {
       console.log("TODO: Couldn't get a session ID - handle it somehow. Probably redirect to Stroom?")
     }
