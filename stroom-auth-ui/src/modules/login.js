@@ -224,7 +224,8 @@ export const login = (credentials) => {
         }
         // We'll also helpfully check for a 422, which we know might indicate there's not session
         else if(response.status === 422){
-          //TODO: handle this sensibly
+          throw new SubmissionError({password: 'There is no session on the authentication service! This might be caused ' +
+          'by incorrectly configured service URLs.'})
         }
         else {
           // Otherwise we'll honour the redirect and send the user to the RP
