@@ -37,7 +37,7 @@ before_script:
   - pushd stroom-resources/dev-resources/compose
   - git checkout $RESOURCES_BRANCH
   # Start all the services we need to run the integration tests in stroom
-  - docker-compose -f kafka-stroom_TAG-stroomDb-stroomStatsDb-stroomAuthDb-zk.yml up -d
+  - nohup ./bounceIt.sh up -e -y --build kafka zookeeper stroom stroom-db stroom-stats-db stroom-auth-service-db &
   - popd
   - popd
 
