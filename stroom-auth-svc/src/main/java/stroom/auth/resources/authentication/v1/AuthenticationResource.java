@@ -24,6 +24,7 @@ import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.curator.shaded.com.google.common.base.Strings;
 import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -262,11 +263,16 @@ public final class AuthenticationResource {
     @ApiOperation(value = "Log a user out of their session")
     public final Response logout(
             @Session HttpSession httpSession,
-            @Context @NotNull HttpServletRequest httpServletRequest) throws URISyntaxException {
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @QueryParam("redirect_url") @Nullable String redirectUrl) throws URISyntaxException {
         String sessionId = httpSession.getId();
         sessionManager.logout(sessionId);
-        // We'll always redirect back to our root
-        return seeOther(new URI(this.config.getAdvertisedHost())).build();
+
+        // If we have a redirect URL then we'll use that, otherwise we'll go to the advertised host.
+        final String postLogoutUrl =
+                Strings.isNullOrEmpty(redirectUrl) ? this.config.getAdvertisedHost() :redirectUrl;
+
+        return seeOther(new URI(postLogoutUrl)).build();
     }
 
     /**
