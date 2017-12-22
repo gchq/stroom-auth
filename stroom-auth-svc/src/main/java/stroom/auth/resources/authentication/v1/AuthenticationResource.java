@@ -60,6 +60,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
@@ -167,10 +168,7 @@ public final class AuthenticationResource {
             String subject = optionalSession.get().getUserEmail();
             String idToken = createIdToken(subject, nonce, state);
             relyingParty.setIdToken(idToken);
-
-            String successParams = String.format("?accessCode=%s&state=%s", accessCode, state);
-            String successUrl = redirectUrl + successParams;
-            responseBuilder = seeOther(new URI(successUrl));
+            responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
         }
         // Check for a certificate
         else if (optionalCn.isPresent()) {
@@ -180,10 +178,7 @@ public final class AuthenticationResource {
             String subject = optionalCn.get(); //
             String idToken = createIdToken(subject, nonce, state);
             relyingParty.setIdToken(idToken);
-
-            String successParams = String.format("?accessCode=%s&state=%s", accessCode, state);
-            String successUrl = redirectUrl + successParams;
-            responseBuilder = seeOther(new URI(successUrl));
+            responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
         }
         // There's no session and there's no certificate so we'll send them to the login page
         else {
@@ -352,5 +347,14 @@ public final class AuthenticationResource {
 
         tokenDao.createIdToken(idToken, subject, new Timestamp(expiresOn.getValueInMillis()));
         return idToken;
+    }
+
+    private URI buildRedirectionUrl(String redirectUrl, String accessCode, String state){
+        URI fullRedirectionUrl = UriBuilder
+                .fromUri(redirectUrl)
+                .queryParam("accessCode", accessCode)
+                .queryParam("state", state)
+                .build();
+        return fullRedirectionUrl;
     }
 }
