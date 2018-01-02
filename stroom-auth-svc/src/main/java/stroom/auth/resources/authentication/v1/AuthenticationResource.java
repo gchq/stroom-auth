@@ -130,11 +130,11 @@ public final class AuthenticationResource {
     public final Response handleAuthenticationRequest(
             @Session HttpSession httpSession,
             @Context @NotNull HttpServletRequest httpServletRequest,
-            @QueryParam("scope") @Nullable String scope,
-            @QueryParam("response_type") @Nullable String responseType,
+            @QueryParam("scope") @NotNull String scope,
+            @QueryParam("response_type") @NotNull String responseType,
             @QueryParam("client_id") @NotNull String clientId,
             @QueryParam("redirect_url") @NotNull String redirectUrl,
-            @QueryParam("nonce") @NotNull String nonce,
+            @QueryParam("nonce") @Nullable String nonce,
             @QueryParam("state") @Nullable String state) throws URISyntaxException {
         boolean isAuthenticated = false;
         String sessionId = httpSession.getId();
