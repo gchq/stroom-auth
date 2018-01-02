@@ -1,1 +1,1 @@
-docker build --tag gchq/stroom-auth-ui:v0.1.1-alpha .
+docker build --tag gchq/stroom-auth-ui:v0.1-alpha.5 .

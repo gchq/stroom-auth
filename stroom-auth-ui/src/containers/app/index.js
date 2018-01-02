@@ -42,6 +42,7 @@ import { HandleAuthenticationResponse } from 'stroom-js'
 import { handleSessionTimeout } from '../../modules/login'
 import { goToStroom } from '../../modules/sidebar'
 import { relativePath } from '../../relativePush'
+import { fetchConfig } from '../../modules/config'
 
 class App extends Component {
   isLoggedIn () {
@@ -49,41 +50,13 @@ class App extends Component {
   }
 
   render () {
+    this.context.store.dispatch(fetchConfig())
+
     return (
       <div className='App'>
-        { /* this.isLoggedIn() ? (
-          <AppBar
-            title={<NavLink to={relativePath('/')}><img src={logo} className='App-logo' alt='Stroom logo' /></NavLink>}
-            iconElementLeft={<div />}
-            iconElementRight={
-              <div className='App-appBar-buttons'>
-                <IconMenu
-                  iconButtonElement={
-                    <IconButton className='App-iconButton'><MoreVert color={fullWhite} /></IconButton>
-                    }>
-                  {this.isLoggedIn() ? (
-                    <div>
-                      <NavLink to={relativePath('/changepassword')}>
-                        <MenuItem primaryText='Change password' leftIcon={<Lock />} />
-                      </NavLink>
-                      <NavLink to={relativePath('/logout')}>
-                        <MenuItem primaryText='Log out' leftIcon={<ExitToApp />} />
-                      </NavLink>
-                    </div>
-                    ) : (
-                      <NavLink to={relativePath('/login')}>
-                        <MenuItem primaryText='Log in' />
-                      </NavLink>
-                    )}
-                </IconMenu>
-              </div>
-              }
-          />
-        ) : (<div />) */ }
-
         <main className='main'>
           <div >
-            <BrowserRouter basename={process.env.REACT_APP_ROOT_PATH} />
+            <BrowserRouter basename={''} />
             <Switch>
               {/* Authentication routes */}
               <Route exact path={relativePath('/handleAuthentication')} component={HandleAuthenticationResponse} />

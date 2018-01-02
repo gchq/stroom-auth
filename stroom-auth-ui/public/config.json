@@ -1,0 +1,10 @@
+{
+  "authenticationServiceUrl": "http://auth-service:8099/authentication/v1",
+  "userServiceUrl": "http://auth-service:8099/user/v1",
+  "tokenServiceUrl": "http://auth-service:8099/token/v1",
+  "authorisationServiceUrl": "http://localhost:8080/api/authorisation/v1",
+  "stroomUiUrl": "http://localhost:8080",
+  "advertisedUrl": "http://localhost:5000",
+  "rootPath": null,
+  "appClientId": "stroom-accounts"
+}

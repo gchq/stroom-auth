@@ -15,7 +15,16 @@
 
 # ---- Base Node ----
 FROM alpine:3.6 AS base
-RUN apk add --no-cache nodejs-current yarn tini git
+RUN apk add --no-cache \
+    nodejs-current \
+    yarn \
+    tini \
+    git \
+    # We need full, non-BusyBox sed
+    sed \
+    # jo is a JSON tool for the command line.
+    # We use it to convert environment vars to JSON. We serve this in 'public'.
+    --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ jo
 RUN yarn global add serve
 WORKDIR /root/app
 # Set tini as entrypoint
@@ -26,11 +35,24 @@ FROM base AS dependencies
 COPY package.json package.json
 RUN yarn install
 
-
 # ---- Build ----
 FROM dependencies AS build
 COPY --from=dependencies /root/app/node_modules /root/app/node_modules
 COPY src src
 COPY public public
+RUN yarn build
+
+# ---- Build ----
+FROM base
+COPY --from=build /root/app/build /root/app
 EXPOSE 5000
-CMD yarn build && serve --single --cors ./build
+
+# An run-down of the commands below:
+#   Get all relevant environment variables...
+#   ...remove the AUTH_UI tag...
+#   ...lowercase them...
+#   ...camelCase them...
+#   ...turn them into json...
+#   ...save to a file.
+#   Serve the statics.
+CMD env | grep AUTH_UI | sed 's/AUTH_UI_//g' | awk '{print tolower($0)}' | sed -r 's/_([a-z])/\U\1/g' | jo > config.json && serve --single --cors .
