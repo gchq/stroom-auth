@@ -251,7 +251,11 @@ public final class AuthenticationResource {
         // Reset last access, login failures, etc...
         userDao.recordSuccessfulLogin(credentials.getEmail());
 
-        return seeOther(buildRedirectionUrl(relyingParty.getRedirectUrl(), accessCode, relyingParty.getState())).build();
+        return status(Status.OK)
+                .entity(
+                    buildRedirectionUrl(relyingParty.getRedirectUrl(), accessCode, relyingParty.getState())
+                    .toASCIIString())
+                .build();
     }
 
     @GET

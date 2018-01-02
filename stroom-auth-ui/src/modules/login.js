@@ -191,7 +191,6 @@ export const login = (credentials) => {
     dispatch(showLoader(true))
 
     const loginServiceUrl = `${authenticationServiceUrl()}/authenticate`
-    const redirectUrl = getState().login.redirectUrl
     const clientId = getState().login.clientId
 
     // We need to post the sessionId in the credentials, otherwise the
@@ -219,35 +218,24 @@ export const login = (credentials) => {
       })
       .then(response => {
         // First we'll handle bad credentials
-        if(response.status === 401){
+        if (response.status === 401) {
           throw new SubmissionError({password: 'Invalid login'})
         }
         // We'll also helpfully check for a 422, which we know might indicate there's not session
-        else if(response.status === 422){
+        else if (response.status === 422) {
           throw new SubmissionError({password: 'There is no session on the authentication service! This might be caused ' +
           'by incorrectly configured service URLs.'})
         }
         else {
-          // Otherwise we'll honour the redirect and send the user to the RP
-          window.location.href = response.url
+          // Otherwise we'll extract what we expect to be the successful login redirect URL
+          return response.text()
         }
+      })
+      .then(redirectUrl => {
+        window.location.href = redirectUrl
       })
     } catch (err) {
       console.log("TODO: Couldn't get a session ID - handle it somehow. Probably redirect to Stroom?")
     }
   }
-}
-
-function handleStatus (response) {
-  if (response.status === 200) {
-    return Promise.resolve(response)
-  } else if (response.status === 401) {
-    throw new SubmissionError({password: 'Invalid login'})
-  } else {
-    return Promise.reject(new HttpError(response.status, response.statusText))
-  }
-}
-
-function getBody (response) {
-  return response.text()
 }
