@@ -13,5 +13,5 @@ docker push ${AUTH_SERVICE_TAG}
 AUTH_UI_TAG="gchq/stroom-auth-ui:${TRAVIS_TAG}"
 echo "Building stroom-auth-ui with tag ${AUTH_UI_TAG}"
 docker build --tag=${AUTH_UI_TAG} stroom-auth-ui/.
-echo "Pushing ${AUTH_UI_IMAGE}"
+echo "Pushing ${AUTH_UI_TAG}"
 docker push ${AUTH_UI_TAG}
