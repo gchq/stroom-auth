@@ -47,7 +47,7 @@ function updateConfig (config) {
 
 export const fetchConfig = () => {
   return (dispatch) => {
-    fetch('config.json', {method: 'get'})
+    fetch('/config.json', {method: 'get'})
     .then(response => response.json())
     .then(config => dispatch(updateConfig(config)))
   }
