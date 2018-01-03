@@ -127,18 +127,6 @@ export function showLoader (showLoader) {
   }
 }
 
-export const checkForRememberMeToken = (dispatch) => {
-  const token = localStorage.getItem('token')
-  const userEmail = localStorage.getItem('userEmail')
-
-  if (userEmail) {
-    dispatch(storeLoggedInUser(userEmail))
-  }
-  if (token) {
-    dispatch(changeToken(token))
-  }
-}
-
 export const requestWasUnauthorized = (showUnauthorizedDialog) => {
   return {
     type: SHOW_UNAUTHORIZED_DIALOG,

@@ -23,12 +23,11 @@ import { connect } from 'react-redux'
 import queryString from 'query-string'
 
 import LoginUI from './LoginUI'
-import { checkForRememberMeToken, changeRedirectUrl, changeClientIdUrl, changeSessionId } from '../../modules/login'
+import { changeRedirectUrl, changeClientIdUrl, changeSessionId } from '../../modules/login'
 import { relativePath } from '../../relativePush'
 
 class Login extends Component {
   componentWillMount () {
-    checkForRememberMeToken(this.context.store.dispatch)
     const queryParams = queryString.parse(this.props.location.search)
     const redirectUrl = queryParams['redirectUrl']
     const clientId = queryParams['clientId']
@@ -66,7 +65,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  checkForRememberMeToken
 }, dispatch)
 
 export default connect(

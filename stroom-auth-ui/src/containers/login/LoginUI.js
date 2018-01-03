@@ -65,12 +65,6 @@ const LoginForm = props => {
               className='LoginForm-input'
               type='password'
               />
-            <Field
-              name='rememberMe'
-              component={Checkbox}
-              label='Remember me?'
-              className='LoginForm-input'
-              />
             <br />
             <RaisedButton
               primary
