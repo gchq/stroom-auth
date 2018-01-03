@@ -113,7 +113,7 @@ public class TokenBuilder {
         expirationInMinutes.ifPresent(claims::setExpirationTimeMinutesInTheFuture);
         claims.setSubject(subject);
         claims.setIssuer(issuer);
-        claims.setStringClaim("authSessionId", authSessionId);
+        claims.setStringClaim("sid", authSessionId);
         nonce.ifPresent(nonce -> claims.setClaim("nonce", nonce));
         state.ifPresent(state -> claims.setClaim("state", state));
 
