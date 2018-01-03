@@ -16,8 +16,6 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.jose4j.lang.JoseException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.user.v1.User;
@@ -26,7 +24,6 @@ import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.UserApi;
 import stroom.auth.service.resources.support.Base_IT;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,7 +40,7 @@ public final class UserResource_read_IT extends Base_IT {
     }
 
     @Test
-    public final void read_current_user() throws UnirestException, IOException, InterruptedException, ApiException, JoseException {
+    public final void read_current_user() throws Exception {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
         ApiResponse<String> response = userApi.readCurrentUserWithHttpInfo();
         List<User> user = userManager.deserialiseUsers(response.getData());

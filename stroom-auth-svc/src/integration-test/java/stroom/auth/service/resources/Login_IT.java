@@ -28,7 +28,7 @@ import static org.assertj.core.api.Java6Assertions.fail;
 public class Login_IT extends Base_IT {
 
     @Test
-    public void incorrect_credentials_1() throws UnirestException {
+    public void incorrect_credentials_1() throws Exception {
         String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
         try {
             String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "admin");
@@ -39,7 +39,7 @@ public class Login_IT extends Base_IT {
     }
 
     @Test
-    public void incorrect_credentials_2() throws UnirestException {
+    public void incorrect_credentials_2() throws Exception {
         String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
         try {
             String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "admin", "BAD");
@@ -50,7 +50,7 @@ public class Login_IT extends Base_IT {
     }
 
     @Test
-    public void incorrect_credentials_3() throws UnirestException {
+    public void incorrect_credentials_3() throws Exception {
         String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
         try {
             String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "BAD");
@@ -61,7 +61,7 @@ public class Login_IT extends Base_IT {
     }
 
     @Test
-    public void missing_credentials_1() throws UnirestException {
+    public void missing_credentials_1() throws Exception {
         String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
         try {
             String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "");
@@ -72,7 +72,7 @@ public class Login_IT extends Base_IT {
     }
 
     @Test
-    public void missing_credentials_2() throws UnirestException {
+    public void missing_credentials_2() throws Exception {
         String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
         try {
             String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "", "");

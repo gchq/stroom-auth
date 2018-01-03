@@ -21,6 +21,8 @@ package stroom.auth;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.jwt.JwtClaims;
@@ -35,6 +37,9 @@ import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,11 +50,11 @@ public class AuthenticationFlowHelper {
 
     private static final String CLIENT_ID = "integrationTestClient";
 
-    public static String authenticateAsAdmin() throws JoseException, ApiException {
+    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException {
         return authenticateAs("admin", "admin");
     }
 
-    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException {
+    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException {
         // We need to use a real-ish sort of nonce otherwise the OpenId tokens might end up being identical.
         String nonce = UUID.randomUUID().toString();
         String sessionId = sendInitialAuthenticationRequest(nonce);
@@ -88,7 +93,7 @@ public class AuthenticationFlowHelper {
         authenticationRequestParams.append("&response_type=code");
         authenticationRequestParams.append("&client_id=");
         authenticationRequestParams.append(CLIENT_ID);
-        authenticationRequestParams.append("&redirect_url=NOT_GOING_TO_USE_THIS");
+        authenticationRequestParams.append("&redirect_url=http://fakedomain.com");
         authenticationRequestParams.append("&state=");
         authenticationRequestParams.append("&nonce=");
         authenticationRequestParams.append(nonce);
@@ -114,7 +119,7 @@ public class AuthenticationFlowHelper {
         StringBuilder redirectionUrlBuilder = new StringBuilder();
         redirectionUrlBuilder.append("http://localhost:5000/login?error=login_required&state=&clientId=");
         redirectionUrlBuilder.append(CLIENT_ID);
-        redirectionUrlBuilder.append("&redirectUrl=NOT_GOING_TO_USE_THIS");
+        redirectionUrlBuilder.append("&redirectUrl=http://fakedomain.com");
         assertThat(authenticationRequestResponse.getHeaders().get("Location").get(0))
                 .isEqualTo(redirectionUrlBuilder.toString());
 
@@ -132,7 +137,7 @@ public class AuthenticationFlowHelper {
      * <p>
      * The sessionId would be stored in a cookie and a normal relying party would not have to do this.
      */
-    public static String performLogin(String sessionId, String username, String password) throws ApiException {
+    public static String performLogin(String sessionId, String username, String password) throws ApiException, URISyntaxException {
         // We need to use UniRest again because we're not a browser and we need to manually add in the cookies.
         Credentials credentials = new Credentials();
         credentials.setEmail(username);
@@ -150,11 +155,19 @@ public class AuthenticationFlowHelper {
         } catch (UnirestException e) {
             fail("Initial authentication request failed!");
         }
-        String accessCode = (String)loginResponse.getBody();
+
         if(loginResponse.getStatus()!=200){
             // The Swagger ApiException is useful for returning information about non-200 responses to tests.
             throw new ApiException((String)loginResponse.getBody(), loginResponse.getStatus(), null, null);
         }
+
+        String redirectUrl = (String)loginResponse.getBody();
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(redirectUrl), "UTF-8");
+        String accessCode = params.stream()
+                .filter(pair -> pair.getName().equals("accessCode"))
+                .findFirst().orElseThrow(() -> new RuntimeException("No access code is present!"))
+                .getValue();
+
         assertThat(accessCode).isNotEmpty();
         return accessCode;
     }
@@ -168,7 +181,7 @@ public class AuthenticationFlowHelper {
         try {
             idToken = authenticationApi.getIdToken(accessCode);
         } catch (ApiException e) {
-            fail("Request to exchange access code for id token failed!");
+            fail("Request to exchange access code for id token failed!", e);
         }
 
         assertThat(idToken).isNotEmpty();
