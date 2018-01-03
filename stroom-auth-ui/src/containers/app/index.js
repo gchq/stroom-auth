@@ -52,11 +52,12 @@ class App extends Component {
   render () {
     this.context.store.dispatch(fetchConfig())
 
+    let rootPath = this.props.rootPath
     return (
       <div className='App'>
         <main className='main'>
           <div >
-            <BrowserRouter basename={''} />
+            <BrowserRouter basename={rootPath} />
             <Switch>
               {/* Authentication routes */}
               <Route exact path={relativePath('/handleAuthentication')} component={HandleAuthenticationResponse} />
@@ -144,7 +145,8 @@ App.propTypes = {
 
 const mapStateToProps = state => ({
   idToken: state.authentication.idToken,
-  showUnauthorizedDialog: state.login.showUnauthorizedDialog
+  showUnauthorizedDialog: state.login.showUnauthorizedDialog,
+  rootPath: state.config.rootPath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

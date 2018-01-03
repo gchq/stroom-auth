@@ -274,7 +274,7 @@ public final class AuthenticationResource {
 
         // If we have a redirect URL then we'll use that, otherwise we'll go to the advertised host.
         final String postLogoutUrl =
-                Strings.isNullOrEmpty(redirectUrl) ? this.config.getAdvertisedHost() :redirectUrl;
+                Strings.isNullOrEmpty(redirectUrl) ? this.config.getAdvertisedHost() : redirectUrl;
 
         return seeOther(new URI(postLogoutUrl)).build();
     }
