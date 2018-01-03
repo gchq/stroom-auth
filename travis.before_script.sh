@@ -10,9 +10,9 @@ export STROOM_RESOURCES_ADVERTISED_HOST=`ip route get 1 | awk '{print $NF;exit}'
 # Increase the size of the heap
 export JAVA_OPTS=-Xmx1024m
 
-echo "127.0.0.1 kafka" >> /etc/hosts
-echo "127.0.0.1 hbase" >> /etc/hosts
-echo "127.0.0.1 auth-service" >> /etc/hosts
+sudo echo "127.0.0.1 kafka" >> /etc/hosts
+sudo echo "127.0.0.1 hbase" >> /etc/hosts
+sudo echo "127.0.0.1 auth-service" >> /etc/hosts
 
 # Get stroom-resources and start the DBs
 mkdir -p ../git_work
