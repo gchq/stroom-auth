@@ -168,7 +168,7 @@ public final class AuthenticationResource {
             String accessCode = SessionManager.createAccessCode();
             relyingParty.setAccessCode(accessCode);
             String subject = optionalSession.get().getUserEmail();
-            String idToken = createIdToken(subject, nonce, state);
+            String idToken = createIdToken(subject, nonce, state, sessionId);
             relyingParty.setIdToken(idToken);
             responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
         }
@@ -178,7 +178,7 @@ public final class AuthenticationResource {
             String accessCode = SessionManager.createAccessCode();
             relyingParty.setAccessCode(accessCode);
             String subject = optionalCn.get(); //
-            String idToken = createIdToken(subject, nonce, state);
+            String idToken = createIdToken(subject, nonce, state, sessionId);
             relyingParty.setIdToken(idToken);
             responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
         }
@@ -243,7 +243,7 @@ public final class AuthenticationResource {
         String accessCode = SessionManager.createAccessCode();
         RelyingParty relyingParty = session.getRelyingParty(credentials.getRequestingClientId());
         relyingParty.setAccessCode(accessCode);
-        String idToken = createIdToken(credentials.getEmail(), relyingParty.getNonce(), relyingParty.getState());
+        String idToken = createIdToken(credentials.getEmail(), relyingParty.getNonce(), relyingParty.getState(), sessionId);
         relyingParty.setIdToken(idToken);
 
         LOGGER.debug("Login for {} succeeded", credentials.getEmail());
@@ -347,12 +347,13 @@ public final class AuthenticationResource {
         return Response.status(Status.OK).entity("The password has been changed.").build();
     }
 
-    private String createIdToken(String subject, String nonce, String state){
+    private String createIdToken(String subject, String nonce, String state, String authSessionId){
         TokenBuilder tokenBuilder = tokenBuilderFactory
                 .newBuilder(Token.TokenType.USER)
                 .subject(subject)
                 .nonce(nonce)
-                .state(state);
+                .state(state)
+                .authSessionId(authSessionId);
         NumericDate expiresOn = tokenBuilder.expiresOn();
         String idToken = tokenBuilder.build();
 

@@ -40,6 +40,7 @@ public class TokenBuilder {
     private Optional<String> nonce = Optional.empty();
     private Optional<String> state = Optional.empty();
     private PrivateKey privateVerificationKey;
+    private String authSessionId;
 
     public TokenBuilder subject(String subject) {
         this.subject = subject;
@@ -86,11 +87,17 @@ public class TokenBuilder {
         return this;
     }
 
+    public TokenBuilder authSessionId(String authSessionId) {
+        this.authSessionId = authSessionId;
+        return this;
+    }
+
     public String build() {
         JwtClaims claims = new JwtClaims();
         expirationInMinutes.ifPresent(claims::setExpirationTimeMinutesInTheFuture);
         claims.setSubject(subject);
         claims.setIssuer(issuer);
+        claims.setStringClaim("authSessionId", authSessionId);
         nonce.ifPresent(nonce -> claims.setClaim("nonce", nonce));
         state.ifPresent(state -> claims.setClaim("state", state));
 
@@ -113,4 +120,5 @@ public class TokenBuilder {
         numericDate.addSeconds((long)secondsOffset);
         return numericDate;
     }
+
 }
