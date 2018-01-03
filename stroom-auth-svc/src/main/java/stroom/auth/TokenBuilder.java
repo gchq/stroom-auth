@@ -87,6 +87,11 @@ public class TokenBuilder {
         return this;
     }
 
+    /**
+     * The authSessionId is needed for federated logout. It allows a back-channel (API) logout request from an RP
+     * to the IP to contain the authSessionId. The IP then requests logout from all known RPs, passing this on.
+     * If the other RPs havea map of authSessionIds to it's own sessionIds then it will be able to log the user out.
+     */
     public TokenBuilder authSessionId(String authSessionId) {
         this.authSessionId = authSessionId;
         return this;
