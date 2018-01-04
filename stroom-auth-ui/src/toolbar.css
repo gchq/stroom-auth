@@ -49,6 +49,24 @@
   height:12px !important;
 }
 
+.toolbar-toggle-small input[value='on'] + div div:nth-child(2){
+    margin-left:-15px !important;
+  }
+
+.toolbar-toggle-small div {
+  /* width:200px !important; */
+}
+
+.toolbar-toggle-small div div:nth-child(1){
+    height:10px !important;
+    /* width: 75% !important; */
+  }
+
+.toolbar-toggle-small div div:nth-child(2){
+  width:15px !important;
+  height:15px !important;
+}
+
 .toolbar-small {
   height:38px !important;
 }

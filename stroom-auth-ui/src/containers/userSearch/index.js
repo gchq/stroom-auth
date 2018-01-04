@@ -158,6 +158,11 @@ class UserSearch extends Component {
                   className:'table-header-small'
                 }
               }}
+              getTheadProps={() => {
+                return {
+                  className:'table-row-small'
+                }
+              }}
               getTrProps={(state, rowInfo) => {
                 let selected = false
                 if (rowInfo) {
