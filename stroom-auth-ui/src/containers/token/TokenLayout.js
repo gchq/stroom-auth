@@ -80,14 +80,14 @@ class TokenLayout extends Component {
     const editButtonDisabled = !selectedTokenRowId
     return (
       <Paper className='Layout-main' zDepth={0}>
-        <Toolbar className='SmallToolbar'>
+        <Toolbar className='toolbar-small'>
           <ToolbarGroup>
             { /* <NavLink to={relativePath('/')}>
               <Home />
             </NavLink>
     <KeyboardArrowRight /> */ }
             <NavLink to={relativePath('/tokens')}>
-              <ToolbarTitle text='API keys' className='SmallToolbarTitle' />
+              <ToolbarTitle text='API keys' className='toolbar-title-small' />
             </NavLink>
             {showCreate ? (<KeyboardArrowRight />) : (undefined)}
             {showCreate ? (<ToolbarTitle text='Create' className='UserLayout-toolbarTitle' />) : (undefined)}
@@ -96,7 +96,7 @@ class TokenLayout extends Component {
 
             {showSearch ? (
               <Toggle
-                className='SmallToggle'
+                className='toolbar-toggle-small'
                 label='Show filtering'
                 labelPosition='right'
                 onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
@@ -104,14 +104,14 @@ class TokenLayout extends Component {
 
             {showCreateButton ? (
               <NavLink to={relativePath('/token/newApiToken')}>
-                <RaisedButton label='Issue API key' primary className='SmallButton'
+                <RaisedButton label='Issue API key' primary className='toolbar-button-small'
                   icon={<Add color={fullWhite} />} />
               </NavLink>
             ) : (undefined)}
 
             {showEditButton ? (
               <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
-                <RaisedButton label='View/Edit' primary className='SmallButton'
+                <RaisedButton label='View/Edit' primary className='toolbar-button-small'
                   disabled={editButtonDisabled}
                   icon={<Edit color={fullWhite} />} />
               </NavLink>
@@ -122,7 +122,7 @@ class TokenLayout extends Component {
                 <RaisedButton label='Delete' primary
                   icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
                   onClick={() => this.deleteToken()}
-                  className='SmallButton' />
+                  className='toolbar-button-small' />
               </div>
             ) : (undefined)}
 

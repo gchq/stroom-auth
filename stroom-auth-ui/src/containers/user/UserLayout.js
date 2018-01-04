@@ -78,7 +78,7 @@ class UserLayout extends Component {
     const deleteButtonDisabled = !selectedUserRowId
     return (
       <Paper className='Layout-main' zDepth={0}>
-        <Toolbar className='SmallToolbar'>
+        <Toolbar className='toolbar-small'>
           <ToolbarGroup>
             { /* <NavLink to={relativePath('/')}>
               <Home />
@@ -86,18 +86,18 @@ class UserLayout extends Component {
             <KeyboardArrowRight /> */ }
 
             <NavLink to={relativePath('/userSearch')}>
-              <ToolbarTitle text='Users' className='SmallToolbarTitle' />
+              <ToolbarTitle text='Users' className='toolbar-title-small' />
             </NavLink>
 
             {showCreate || showEdit ? (<KeyboardArrowRight />) : (undefined)}
-            {showCreate ? (<ToolbarTitle text='Create' className='SmallToolbarTitle' />) : (undefined)}
-            {showEdit ? (<ToolbarTitle text='Edit' className='SmallToolbarTitle' />) : (undefined)}
+            {showCreate ? (<ToolbarTitle text='Create' className='toolbar-title-small' />) : (undefined)}
+            {showEdit ? (<ToolbarTitle text='Edit' className='toolbar-title-small' />) : (undefined)}
           </ToolbarGroup>
           <ToolbarGroup>
 
             {showSearch ? (
               <Toggle
-                className='SmallToggle'
+                className='toolbar-toggle-small'
                 label='Show filtering'
                 labelPosition='right'
                 onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
@@ -105,14 +105,14 @@ class UserLayout extends Component {
 
             {showCreateButton ? (
               <NavLink to={relativePath('/newUser')}  >
-                <RaisedButton label='Create' primary className='SmallButton'
+                <RaisedButton label='Create' primary className='toolbar-button-small'
                   icon={<Add color={fullWhite} />} />
               </NavLink>
             ) : (undefined)}
 
             {showSearch ? (
               <NavLink to={relativePath(`/user/${selectedUserRowId}`)} >
-                <RaisedButton label='View/Edit' primary className='SmallButton'
+                <RaisedButton label='View/Edit' primary className='toolbar-button-small'
                   icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
               </NavLink>
             ) : (undefined)}
@@ -123,7 +123,7 @@ class UserLayout extends Component {
                 <RaisedButton label='Delete' primary
                   icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
                   onClick={() => this.deleteSelectedUser()} 
-                  className='SmallButton'/>
+                  className='toolbar-button-small'/>
                 </div>
             ) : (undefined)}
 
