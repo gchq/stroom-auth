@@ -79,3 +79,8 @@ body {
 .SmallToolbar {
   height:38px !important;
 }
+
+.SmallTableHeader {
+  height:25px;
+  font-size: 14px;
+}

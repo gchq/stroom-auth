@@ -118,6 +118,11 @@ class TokenSearch extends Component {
               filterable={this.props.isFilteringEnabled}
               showPagination
               loading={this.props.showSearchLoader}
+              getTheadTrProps={() => {
+                return {
+                  className:'SmallTableHeader'
+                }
+              }}
               getTrProps={(state, rowInfo) => {
                 let selected = false
                 if (rowInfo) {
