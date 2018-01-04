@@ -28,6 +28,7 @@ import 'react-table/react-table.css'
 import dateFormat from 'dateformat'
 
 import './TokenSearch.css'
+import '../../table.css'
 import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from '../../modules/tokenSearch'
 
 // TODO change the CSS references from 'User' - maybe make the CSS common?

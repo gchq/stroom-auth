@@ -42,7 +42,8 @@ import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
 import { relativePath } from '../../relativePush'
 
 import '../../index.css'
-// TODO: make the CSS specific to token, or make it common
+import '../../toolbar.css'
+
 class TokenLayout extends Component {
   constructor () {
     super()

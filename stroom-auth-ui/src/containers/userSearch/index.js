@@ -27,6 +27,8 @@ import 'react-table/react-table.css'
 import dateFormat from 'dateformat'
 
 import './UserSearch.css'
+import '../../table.css'
+
 import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 
 class UserSearch extends Component {

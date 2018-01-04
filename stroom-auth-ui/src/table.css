@@ -1,0 +1,14 @@
+.SmallTableHeader {
+  height:25px;
+  font-size: 14px;
+}
+
+.SmallRow {
+  height:30px;
+  font-size:12px;
+}
+
+.SelectedRow {
+  /* This is amber100, a lighter version of the accent colour, amber900 */
+  background-color: #FFECB3 !important;
+ }
