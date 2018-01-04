@@ -20,3 +20,62 @@ body {
   font-family: sans-serif;
   background-color: #FAFAFA;
 }
+
+.Layout-main {
+  width: 100%;
+  height: 100%;
+}
+
+.SmallButton {
+  margin-left:10px !important;
+  width:125px !important;
+}
+
+/*
+ * This makes a button small
+ */
+.SmallButton button {
+  height:28px !important;
+  line-height: 28px !important;
+}
+
+
+/*
+ * This modifies the padding on the right of the button as well as the font size.
+ * It assumes there's a single span with padding.
+ */
+.SmallButton span {
+  font-size: 12px !important;
+  padding-right: 8px !important;
+}
+
+/* 
+ * A smaller icon for a button
+ * This modifies the padding on the left of the button, but only on an icon button.
+ * If the icons aren't left-aligned it might not work properly. 
+ * If there's no icon this won't have any effect. 
+ */
+.SmallButton svg {
+  margin-left: 4px !important;
+  height: 18px !important;
+}
+
+/* 
+ * This modifies the toolbar title to make it smaller.
+ */
+.SmallToolbarTitle {
+  /* The default colourings for the toolbar and title is low-contrast grey-on-grey. Changing for improved accessibility. */
+  color:black !important;
+  padding:0 !important;
+  font-size:14px !important;
+  width: 100px;
+}
+
+.SmallToggle {
+  font-size:12px;
+  height:12px !important;
+}
+
+.SmallToolbar {
+  height:38px !important;
+}
