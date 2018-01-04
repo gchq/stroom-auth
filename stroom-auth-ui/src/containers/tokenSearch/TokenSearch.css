@@ -34,8 +34,3 @@ p.warning {
   padding: 3px; 
   margin-bottom: 0;
 }
-
-.selectedRow {
-  /* This is amber100, a lighter version of the accent colour, amber900 */
-  background-color: #FFECB3 !important;
-}

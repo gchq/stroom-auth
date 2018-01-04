@@ -132,7 +132,7 @@ class TokenSearch extends Component {
                   onClick: (target, event) => {
                     this.toggleRow(rowInfo.row.id)
                   },
-                  className: selected ? 'selectedRow' : 'unselectedRow'
+                  className: selected ? 'SmallRow SelectedRow' : 'SmallRow UnselectedRow'
                 }
               }}
               onFetchData={(state, instance) => {
