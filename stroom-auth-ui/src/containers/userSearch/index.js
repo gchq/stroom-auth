@@ -155,7 +155,7 @@ class UserSearch extends Component {
               loading={this.props.showSearchLoader}
               getTheadTrProps={() => {
                 return {
-                  className:'SmallTableHeader'
+                  className:'table-header-small'
                 }
               }}
               getTrProps={(state, rowInfo) => {
@@ -167,7 +167,7 @@ class UserSearch extends Component {
                   onClick: (target, event) => {
                     this.toggleRow(rowInfo.row.id)
                   },
-                  className: selected ? 'SmallRow SelectedRow' : 'SmallRow UnselectedRow'
+                  className: selected ? 'table-row-small table-row-selected' : 'table-row-small'
                 }
               }} />
           </div>
