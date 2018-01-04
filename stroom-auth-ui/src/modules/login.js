@@ -18,7 +18,6 @@ import { SubmissionError } from 'redux-form'
 
 import Cookies from 'cookies-js'
 
-import { HttpError } from '../ErrorTypes'
 import {authenticationServiceUrl} from '../environmentVariables'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'

@@ -24,7 +24,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Avatar from 'material-ui/Avatar'
 
 import { Field, reduxForm } from 'redux-form'
-import { TextField, Checkbox } from 'redux-form-material-ui'
+import { TextField } from 'redux-form-material-ui'
 
 import './Login.css'
 import '../Layout.css'
