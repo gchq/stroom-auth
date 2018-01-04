@@ -13,9 +13,9 @@
 }
 
 .table-row-small {
-  height:30px;
+  height:25px;
   font-size:12px;
-  padding-top:2px;
+  padding-top:0px;
 }
 
 .table-row-selected{
@@ -31,7 +31,7 @@
   height: 30px !important;
 }
 
- 
+
 .table-small-container .pagination-bottom .-pagination button {
   padding: 3px;
   font-size: 13px;
