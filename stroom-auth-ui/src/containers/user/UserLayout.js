@@ -41,7 +41,7 @@ import UserEdit from '../editUser'
 import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
 import { relativePath } from '../../relativePush'
 
-import './User.css'
+import '../../index.css'
 
 class UserLayout extends Component {
   constructor () {
@@ -76,8 +76,8 @@ class UserLayout extends Component {
     const showCreateButton = showSearch
     const deleteButtonDisabled = !selectedUserRowId
     return (
-      <Paper className='UserLayout-main' zDepth={0}>
-        <Toolbar>
+      <Paper className='Layout-main' zDepth={0}>
+        <Toolbar className='SmallToolbar'>
           <ToolbarGroup>
             { /* <NavLink to={relativePath('/')}>
               <Home />
@@ -85,51 +85,48 @@ class UserLayout extends Component {
             <KeyboardArrowRight /> */ }
 
             <NavLink to={relativePath('/userSearch')}>
-              <ToolbarTitle text='Users' className='UserLayout-toolbarTitle' />
+              <ToolbarTitle text='Users' className='SmallToolbarTitle' />
             </NavLink>
 
             {showCreate || showEdit ? (<KeyboardArrowRight />) : (undefined)}
-            {showCreate ? (<ToolbarTitle text='Create' className='UserLayout-toolbarTitle' />) : (undefined)}
-            {showEdit ? (<ToolbarTitle text='Edit' className='UserLayout-toolbarTitle' />) : (undefined)}
+            {showCreate ? (<ToolbarTitle text='Create' className='SmallToolbarTitle' />) : (undefined)}
+            {showEdit ? (<ToolbarTitle text='Edit' className='SmallToolbarTitle' />) : (undefined)}
           </ToolbarGroup>
           <ToolbarGroup>
 
             {showSearch ? (
-              <div className='UserLayout-toolbarButton'>
-                <Toggle
-                  label='Show filtering'
-                  labelPosition='right'
-                  onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
-              </div>
+              <Toggle
+                className='SmallToggle'
+                label='Show filtering'
+                labelPosition='right'
+                onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
             ) : (undefined)}
 
             {showCreateButton ? (
-              <div className='UserLayout-toolbarButton'>
-                <NavLink to={relativePath('/newUser')}>
-                  <RaisedButton label='Create' primary className='UserSearch-appButton'
-                    icon={<Add color={fullWhite} />} />
-                </NavLink>
-              </div>
+              <NavLink to={relativePath('/newUser')}  >
+                <RaisedButton label='Create' primary className='SmallButton'
+                  icon={<Add color={fullWhite} />} />
+              </NavLink>
             ) : (undefined)}
 
             {showSearch ? (
-              <div className='UserLayout-toolbarButton'>
-                <NavLink to={relativePath(`/user/${selectedUserRowId}`)}>
-                  <RaisedButton label='View/Edit' primary
-                    icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
-                </NavLink>
-              </div>
+              <NavLink to={relativePath(`/user/${selectedUserRowId}`)} >
+                <RaisedButton label='View/Edit' primary className='SmallButton'
+                  icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
+              </NavLink>
             ) : (undefined)}
 
             {showSearch ? (
-              <div className='UserLayout-toolbarButton'>
+              <div>
+
                 <RaisedButton label='Delete' primary
                   icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
-                  onClick={() => this.deleteSelectedUser()} />
-              </div>
+                  onClick={() => this.deleteSelectedUser()} 
+                  className='SmallButton'/>
+                </div>
             ) : (undefined)}
 
-            <IconButton onClick={() => this.handleHelpDialogOpen()}>
+            <IconButton onClick={() => this.handleHelpDialogOpen()} >
               <Help color={blue600} hoverColor={amber900} />
             </IconButton>
           </ToolbarGroup>

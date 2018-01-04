@@ -41,8 +41,7 @@ import TokenEdit from '../tokenEdit'
 import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
 import { relativePath } from '../../relativePush'
 
-import './Token.css'
-
+import '../../index.css'
 // TODO: make the CSS specific to token, or make it common
 class TokenLayout extends Component {
   constructor () {
@@ -79,15 +78,15 @@ class TokenLayout extends Component {
     const deleteButtonDisabled = !selectedTokenRowId
     const editButtonDisabled = !selectedTokenRowId
     return (
-      <Paper className='UserLayout-main' zDepth={0}>
-        <Toolbar>
+      <Paper className='Layout-main' zDepth={0}>
+        <Toolbar className='SmallToolbar'>
           <ToolbarGroup>
             { /* <NavLink to={relativePath('/')}>
               <Home />
             </NavLink>
     <KeyboardArrowRight /> */ }
             <NavLink to={relativePath('/tokens')}>
-              <ToolbarTitle text='API keys' className='UserLayout-toolbarTitle' />
+              <ToolbarTitle text='API keys' className='SmallToolbarTitle' />
             </NavLink>
             {showCreate ? (<KeyboardArrowRight />) : (undefined)}
             {showCreate ? (<ToolbarTitle text='Create' className='UserLayout-toolbarTitle' />) : (undefined)}
@@ -95,38 +94,34 @@ class TokenLayout extends Component {
           <ToolbarGroup>
 
             {showSearch ? (
-              <div className='UserLayout-toolbarButton'>
-                <Toggle
-                  label='Show filtering'
-                  labelPosition='right'
-                  onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
-              </div>
+              <Toggle
+                className='SmallToggle'
+                label='Show filtering'
+                labelPosition='right'
+                onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
             ) : (undefined)}
 
             {showCreateButton ? (
-              <div className='UserLayout-toolbarButton'>
-                <NavLink to={relativePath('/token/newApiToken')}>
-                  <RaisedButton label='Issue API key' primary className='UserSearch-appButton'
-                    icon={<Add color={fullWhite} />} />
-                </NavLink>
-              </div>
+              <NavLink to={relativePath('/token/newApiToken')}>
+                <RaisedButton label='Issue API key' primary className='SmallButton'
+                  icon={<Add color={fullWhite} />} />
+              </NavLink>
             ) : (undefined)}
 
             {showEditButton ? (
-              <div className='UserLayout-toolbarButton'>
-                <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
-                  <RaisedButton label='View/Edit' primary className='UserSearch-appButton'
-                    disabled={editButtonDisabled}
-                    icon={<Edit color={fullWhite} />} />
-                </NavLink>
-              </div>
+              <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
+                <RaisedButton label='View/Edit' primary className='SmallButton'
+                  disabled={editButtonDisabled}
+                  icon={<Edit color={fullWhite} />} />
+              </NavLink>
             ) : (undefined)}
 
             {showSearch ? (
-              <div className='UserLayout-toolbarButton'>
+              <div>
                 <RaisedButton label='Delete' primary
                   icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
-                  onClick={() => this.deleteToken()} />
+                  onClick={() => this.deleteToken()}
+                  className='SmallButton' />
               </div>
             ) : (undefined)}
 
