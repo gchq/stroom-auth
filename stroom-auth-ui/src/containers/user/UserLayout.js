@@ -41,7 +41,7 @@ import UserEdit from '../editUser'
 import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
 import { relativePath } from '../../relativePush'
 
-import '../../index.css'
+import '../../styles/index.css'
 import '../../styles/toolbar.css'
 import '../../styles/toggle-small.css'
 

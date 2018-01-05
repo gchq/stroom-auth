@@ -41,7 +41,7 @@ import TokenEdit from '../tokenEdit'
 import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
 import { relativePath } from '../../relativePush'
 
-import '../../index.css'
+import '../../styles/index.css'
 import '../../styles/toolbar.css'
 import '../../styles/toggle-small.css'
 

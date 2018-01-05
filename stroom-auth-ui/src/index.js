@@ -24,7 +24,7 @@ import {blue600, amber900} from 'material-ui/styles/colors'
 import { MuiThemeProvider } from 'material-ui/styles'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
-import './index.css'
+import './styles/index.css'
 import App from './containers/app'
 import store, { history } from './store'
 
