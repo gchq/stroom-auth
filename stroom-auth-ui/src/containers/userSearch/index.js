@@ -121,16 +121,7 @@ class UserSearch extends Component {
       Header: 'Login failures',
       accessor: 'login_failures',
       width: 120
-    }, /*{
-      Header: 'Updated by',
-      accessor: 'updated_by_user',
-      width: 200
     }, {
-      Header: 'Updated on',
-      accessor: 'updated_on',
-      Cell: row => this.formatDate(row.value),
-      width: 220
-    }, */ {
       Header: 'Comments',
       accessor: 'comments',
       width: 600
@@ -155,12 +146,12 @@ class UserSearch extends Component {
               loading={this.props.showSearchLoader}
               getTheadTrProps={() => {
                 return {
-                  className:'table-header-small'
+                  className: 'table-header-small'
                 }
               }}
               getTheadProps={() => {
                 return {
-                  className:'table-row-small'
+                  className: 'table-row-small'
                 }
               }}
               getTrProps={(state, rowInfo) => {

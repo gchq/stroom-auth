@@ -12,6 +12,10 @@
   margin-top:1px;
 }
 
+.toggle-small-high div div {
+  margin-top:-1px !important;
+}
+
 /* 
  * This makes the toggle hole smaller
  */

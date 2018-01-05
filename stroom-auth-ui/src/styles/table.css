@@ -6,6 +6,7 @@
 .table-row-small {
   height:30px;
   font-size:12px;
+  padding-top:2px;
 }
 
 .table-row-selected{

@@ -48,7 +48,7 @@ class TokenSearch extends Component {
     let tokenId = row.original.id
     return (
       <Toggle
-        className='toggle-small'
+        className='toggle-small  toggle-small-high'
         defaultToggled={state}
         onToggle={(_, isEnabled) => this.props.setEnabledStateOnToken(tokenId, isEnabled)}
         />
