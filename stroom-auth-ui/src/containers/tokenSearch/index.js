@@ -29,6 +29,7 @@ import dateFormat from 'dateformat'
 
 import './TokenSearch.css'
 import '../../table.css'
+import '../../styles/toggle-small.css'
 import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from '../../modules/tokenSearch'
 
 // TODO change the CSS references from 'User' - maybe make the CSS common?
@@ -47,6 +48,7 @@ class TokenSearch extends Component {
     let tokenId = row.original.id
     return (
       <Toggle
+        className='toggle-small'
         defaultToggled={state}
         onToggle={(_, isEnabled) => this.props.setEnabledStateOnToken(tokenId, isEnabled)}
         />
@@ -121,7 +123,7 @@ class TokenSearch extends Component {
               loading={this.props.showSearchLoader}
               getTheadTrProps={() => {
                 return {
-                  className:'table-header-small'
+                  className: 'table-header-small'
                 }
               }}
               getTrProps={(state, rowInfo) => {

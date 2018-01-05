@@ -43,6 +43,7 @@ import { relativePath } from '../../relativePush'
 
 import '../../index.css'
 import '../../toolbar.css'
+import '../../styles/toggle-small.css'
 
 class UserLayout extends Component {
   constructor () {
@@ -97,7 +98,7 @@ class UserLayout extends Component {
 
             {showSearch ? (
               <Toggle
-                className='toolbar-toggle-small'
+                className='toggle-small'
                 label='Show filtering'
                 labelPosition='right'
                 onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
