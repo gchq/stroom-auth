@@ -116,7 +116,8 @@ class UserSearch extends Component {
       Header: 'Last login',
       accessor: 'last_login',
       Cell: row => this.formatDate(row.value),
-      width: 225
+      width: 225,
+      filterable: false
     }, {
       Header: 'Login failures',
       accessor: 'login_failures',
