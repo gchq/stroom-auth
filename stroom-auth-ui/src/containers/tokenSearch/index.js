@@ -28,7 +28,7 @@ import 'react-table/react-table.css'
 import dateFormat from 'dateformat'
 
 import './TokenSearch.css'
-import '../../table.css'
+import '../../styles/table.css'
 import '../../styles/toggle-small.css'
 import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from '../../modules/tokenSearch'
 
