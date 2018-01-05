@@ -110,13 +110,20 @@ class TokenLayout extends Component {
               </NavLink>
             ) : (undefined)}
 
-            {showEditButton ? (
-              <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
-                <RaisedButton label='View/Edit' primary className='toolbar-button-small'
-                  disabled={editButtonDisabled}
-                  icon={<Edit color={fullWhite} />} />
-              </NavLink>
-            ) : (undefined)}
+            {showEditButton
+              ? deleteButtonDisabled ? (
+                <div>
+                  <RaisedButton label='View/Edit' primary className='toolbar-button-small'
+                    disabled={editButtonDisabled}
+                    icon={<Edit color={fullWhite} />} />
+                </div>
+              ) : (
+                <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
+                  <RaisedButton label='View/Edit' primary className='toolbar-button-small'
+                    disabled={editButtonDisabled}
+                    icon={<Edit color={fullWhite} />} />
+                </NavLink>
+              ) : (undefined)}
 
             {showSearch ? (
               <div>

@@ -98,34 +98,39 @@ class UserLayout extends Component {
 
             {showSearch ? (
               <Toggle
-                className='toggle-small'
+                className='toggle-small toggle-small-low'
                 label='Show filtering'
                 labelPosition='right'
                 onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
             ) : (undefined)}
 
             {showCreateButton ? (
-              <NavLink to={relativePath('/newUser')}  >
+              <NavLink to={relativePath('/newUser')} >
                 <RaisedButton label='Create' primary className='toolbar-button-small'
                   icon={<Add color={fullWhite} />} />
               </NavLink>
             ) : (undefined)}
 
-            {showSearch ? (
-              <NavLink to={relativePath(`/user/${selectedUserRowId}`)} >
-                <RaisedButton label='View/Edit' primary className='toolbar-button-small'
-                  icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
-              </NavLink>
-            ) : (undefined)}
+            {showSearch
+              ? deleteButtonDisabled ? (
+                <div>
+                  <RaisedButton label='View/Edit' primary className='toolbar-button-small'
+                    icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
+                </div>
+              ) : (
+                <NavLink to={relativePath(`/user/${selectedUserRowId}`)} >
+                  <RaisedButton label='View/Edit' primary className='toolbar-button-small'
+                    icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
+                </NavLink>
+              ) : (undefined)}
 
             {showSearch ? (
               <div>
-
                 <RaisedButton label='Delete' primary
                   icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
-                  onClick={() => this.deleteSelectedUser()} 
-                  className='toolbar-button-small'/>
-                </div>
+                  onClick={() => this.deleteSelectedUser()}
+                  className='toolbar-button-small' />
+              </div>
             ) : (undefined)}
 
             <IconButton onClick={() => this.handleHelpDialogOpen()} >
