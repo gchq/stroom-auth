@@ -13,7 +13,7 @@ env:
     # and: https://docs.travis-ci.com/user/best-practices-security/
     - secure: "MMzx2PxzjMuJL7S74SxL3ZWdGiOqBh/geLJJIftY9ReswLVvJbxurB0PDYvdPw8E/bJ7ykWjR99mLBi2K7FV+SavBTVXEwvw8T8AO9TQe7x5RkIQu+jeM2wf8KfABPUDrdA7PlbA8cVO9LAUTBMTJ6E7x4+3khpqjmBZGxRzTAECDyHKeHIioDfRFkZsnn5JzcoiUk1TLk8snubIL7mE0euVylSdYUPHUO7OWe7DNzoOuWcXOQmIwuhTIDeKSv5aGLuLVbILvvngzFhpdr28dsapAgvJZMBC6dfGJbb59/RH3M7rE+WIOVjb1+npDxWsuhE8rAYJZIb5id0BqxjVyPJl05g+zIe8FICrNgRlTYqgF4uxrR02AvEAf0mDAHd+KralBA9sz8Q/IBmw7sfkq+8jYslLOa1GA/DDXjWJ/KGZPmIxj3HaMjjepyOjO2LIZIItQ2XsoUPDxra5BAUU5c7InKJpEiFw9dlhfjlJBJE1QBowUgVmlrrYBSI92mB8dQlYyyPBUP2pz5RoqnpBjyLg5vccAzWFiI76fRXmCXuZz51GmT+e2p6ZFD5rQ+KiTqpWIdz8vQ1jt+nRS9ufDzNgYeR0cykNmYnaJJETdi+LcZQefZcRN+X/bJqy4vLsYxxDSMo2IwsUgr/knSwdt4ZdKK2cDla0HyeKnwFAzOs="
     - RESOURCES_BRANCH: master
-    - STROOM_TAG: v6.0-alpha.5
+    - STROOM_TAG: v6-LATEST
 
 before_install:
   - docker --version
