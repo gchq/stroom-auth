@@ -105,7 +105,7 @@ class TokenLayout extends Component {
 
             {showCreateButton ? (
               <NavLink to={relativePath('/token/newApiToken')}>
-                <RaisedButton label='Issue API key' primary className='toolbar-button-small'
+                <RaisedButton label='Create' primary className='toolbar-button-small'
                   icon={<Add color={fullWhite} />} />
               </NavLink>
             ) : (undefined)}
