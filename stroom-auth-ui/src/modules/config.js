@@ -38,17 +38,9 @@ export default (state = initialState, action) => {
   }
 }
 
-function updateConfig (config) {
+export function updateConfig (config) {
   return {
     type: UPDATE_CONFIG,
     config
-  }
-}
-
-export const fetchConfig = () => {
-  return (dispatch) => {
-    fetch('/config.json', {method: 'get'})
-    .then(response => response.json())
-    .then(config => dispatch(updateConfig(config)))
   }
 }

@@ -37,12 +37,11 @@ import ResetPasswordRequest from '../../containers/resetPasswordRequest'
 import ConfirmPasswordResetEmail from '../../containers/confirmPasswordResetEmail'
 import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
-import { AuthenticationRequest } from 'stroom-js'
-import { HandleAuthenticationResponse } from 'stroom-js'
+import { AuthenticationRequest, HandleAuthenticationResponse } from 'stroom-js'
 import { handleSessionTimeout } from '../../modules/login'
 import { goToStroom } from '../../modules/sidebar'
 import { relativePath } from '../../relativePush'
-import { fetchConfig } from '../../modules/config'
+import { updateConfig } from '../../modules/config'
 
 class App extends Component {
   isLoggedIn () {
@@ -50,7 +49,11 @@ class App extends Component {
   }
 
   render () {
-    this.context.store.dispatch(fetchConfig())
+    var configuration = fetch('/config.json', {method: 'get'})
+      .then(response => response.json())
+      .then(config => config)
+
+    this.context.store.dispatch(updateConfig(configuration))
 
     let rootPath = this.props.rootPath
     return (
