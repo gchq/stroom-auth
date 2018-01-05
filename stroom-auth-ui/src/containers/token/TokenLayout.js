@@ -42,7 +42,7 @@ import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
 import { relativePath } from '../../relativePush'
 
 import '../../index.css'
-import '../../toolbar.css'
+import '../../styles/toolbar.css'
 import '../../styles/toggle-small.css'
 
 class TokenLayout extends Component {

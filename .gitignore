@@ -2,7 +2,7 @@
 # Here we ignore everything and create exceptions for what we want to share.
 */out/
 *.iml
-/.idea/*
+/**/.idea/*
 !/.idea/runConfigurations
 # END OF IntelliJ
 
