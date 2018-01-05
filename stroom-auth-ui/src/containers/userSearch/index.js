@@ -132,7 +132,7 @@ class UserSearch extends Component {
     return (
       <Paper className='UserSearch-main' zDepth={0}>
         <div className='UserSearch-content' >
-          <div>
+          <div className='table-small-container'>
             <ReactTable
               data={this.props.results}
               className='-striped -highlight UserSearch-table'

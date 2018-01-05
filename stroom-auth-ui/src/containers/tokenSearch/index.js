@@ -111,7 +111,7 @@ class TokenSearch extends Component {
     return (
       <Paper className='UserSearch-main' zDepth={0}>
         <div className='UserSearch-content' >
-          <div>
+          <div className='table-small-container'>
             <ReactTable
               data={this.props.results}
               pages={this.props.totalPages}
