@@ -3,6 +3,14 @@
   height:12px !important;
 }
 
+/*
+ * This 'low' style can be used where the reduced toggle size 
+ * needs an alignment tweak, i.e. for when it has a label.
+ */
+.toggle-small-low div div {
+  margin-top:1px;
+}
+
 /* 
  * This makes the toggle hole smaller
  */

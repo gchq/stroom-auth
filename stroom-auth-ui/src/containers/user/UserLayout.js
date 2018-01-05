@@ -42,7 +42,7 @@ import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
 import { relativePath } from '../../relativePush'
 
 import '../../styles/index.css'
-import '../../styles/toolbar.css'
+import '../../styles/toolbar-small.css'
 import '../../styles/toggle-small.css'
 
 class UserLayout extends Component {

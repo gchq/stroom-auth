@@ -42,7 +42,7 @@ import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
 import { relativePath } from '../../relativePush'
 
 import '../../styles/index.css'
-import '../../styles/toolbar.css'
+import '../../styles/toolbar-small.css'
 import '../../styles/toggle-small.css'
 
 class TokenLayout extends Component {
@@ -97,7 +97,7 @@ class TokenLayout extends Component {
 
             {showSearch ? (
               <Toggle
-                className='toggle-small'
+                className='toggle-small toggle-small-low'
                 label='Show filtering'
                 labelPosition='right'
                 onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
