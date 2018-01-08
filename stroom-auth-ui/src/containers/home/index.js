@@ -28,8 +28,6 @@ import {amber900 as secondaryColor} from 'material-ui/styles/colors'
 import './Home.css'
 import '../Layout.css'
 import icon from '../../icon.png'
-import { goToStroom } from '../../modules/sidebar'
-import { relativePath } from '../../relativePush'
 
 class Home extends Component {
   constructor (props) {
@@ -44,9 +42,9 @@ class Home extends Component {
   render () {
     return (
       <div className='content-floating-with-appbar vertical'>
-        <NavLink to={relativePath('/')}>
+        <NavLink to={'/'}>
           <Card className='Home-card'
-            onClick={() => this.props.goToStroom(this.props.idToken)}
+            onClick={() => window.location.href = `${this.props.stroomUiUrl}/?token=${this.props.idToken}`}
             onMouseOver={() => this.setState({stroomLinkShadow: 3})}
             onMouseOut={() => this.setState({stroomLinkShadow: 1})}
             zDepth={this.state.stroomLinkShadow}>
@@ -64,7 +62,7 @@ class Home extends Component {
         </NavLink>
         <br />
         {this.props.canManageUsers ? (
-          <NavLink to={relativePath('/userSearch')}>
+          <NavLink to={'/userSearch'}>
             <Card className='Home-card'
               onMouseOver={() => this.setState({usersLinkShadow: 3})}
               onMouseOut={() => this.setState({usersLinkShadow: 1})}
@@ -85,7 +83,7 @@ class Home extends Component {
         ) : (undefined)}
         <br />
         {this.props.canManageUsers ? (
-          <NavLink to={relativePath('/tokens')}>
+          <NavLink to={'/tokens'}>
             <Card className='Home-card'
               onMouseOver={() => this.setState({tokensLinkShadow: 3})}
               onMouseOut={() => this.setState({tokensLinkShadow: 1})}
@@ -115,11 +113,11 @@ Home.contextTypes = {
 
 const mapStateToProps = state => ({
   idToken: state.authentication.idToken,
-  canManageUsers: state.authorisation.canManageUsers
+  canManageUsers: state.authorisation.canManageUsers,
+  stroomUiUrl: state.config.stroomUiUrl
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  goToStroom
 }, dispatch)
 
 export default connect(

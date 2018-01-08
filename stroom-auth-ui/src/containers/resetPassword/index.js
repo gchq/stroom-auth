@@ -23,7 +23,6 @@ import queryString from 'query-string'
 import jwtDecode from 'jwt-decode'
 
 import { changeToken } from '../../modules/login'
-import { relativePush } from '../../relativePush'
 
 class ResetPassword extends Component {
   constructor () {
@@ -57,7 +56,7 @@ class ResetPassword extends Component {
       this.setState({noToken: true})
     } else {
       this.context.store.dispatch(changeToken(token))
-      this.context.store.dispatch(relativePush('/changepassword'))
+      this.context.store.dispatch('/changepassword')
     }
   }
 

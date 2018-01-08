@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { userServiceUrl } from '../environmentVariables'
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getJsonBody } from './fetchFunctions'
 
@@ -78,7 +77,7 @@ export const performUserSearch = (jwsToken) => {
     }
     dispatch(showSearchLoader(true))
 
-    fetch(`${userServiceUrl()}/?fromEmail=&usersPerPage=100&orderBy=id`, {
+    fetch(`${getState().config.userServiceUrl}/?fromEmail=&usersPerPage=100&orderBy=id`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

@@ -39,7 +39,6 @@ import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
 import UserEdit from '../editUser'
 import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
-import { relativePath } from '../../relativePush'
 
 import '../../styles/index.css'
 import '../../styles/toolbar-small.css'
@@ -81,12 +80,8 @@ class UserLayout extends Component {
       <Paper className='Layout-main' zDepth={0}>
         <Toolbar className='toolbar-small'>
           <ToolbarGroup>
-            { /* <NavLink to={relativePath('/')}>
-              <Home />
-            </NavLink>
-            <KeyboardArrowRight /> */ }
 
-            <NavLink to={relativePath('/userSearch')}>
+            <NavLink to={'/userSearch'}>
               <ToolbarTitle text='Users' className='toolbar-title-small' />
             </NavLink>
 
@@ -105,7 +100,7 @@ class UserLayout extends Component {
             ) : (undefined)}
 
             {showCreateButton ? (
-              <NavLink to={relativePath('/newUser')} >
+              <NavLink to={'/newUser'} >
                 <RaisedButton label='Create' primary className='toolbar-button-small'
                   icon={<Add color={fullWhite} />} />
               </NavLink>
@@ -118,7 +113,7 @@ class UserLayout extends Component {
                     icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
                 </div>
               ) : (
-                <NavLink to={relativePath(`/user/${selectedUserRowId}`)} >
+                <NavLink to={`/user/${selectedUserRowId}`} >
                   <RaisedButton label='View/Edit' primary className='toolbar-button-small'
                     icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
                 </NavLink>

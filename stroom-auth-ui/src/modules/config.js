@@ -30,7 +30,6 @@ export default (state = initialState, action) => {
         authorisationServiceUrl: action.config.authorisationServiceUrl,
         stroomUiUrl: action.config.stroomUiUrl,
         advertisedUrl: action.config.advertisedUrl,
-        rootPath: action.config.rootPath,
         appClientId: action.config.appClientId
       }
     default:
@@ -38,9 +37,17 @@ export default (state = initialState, action) => {
   }
 }
 
-export function updateConfig (config) {
+function updateConfig (config) {
   return {
     type: UPDATE_CONFIG,
     config
+  }
+}
+
+export const fetchConfig = () => {
+  return (dispatch) => {
+    fetch('/config.json', {method: 'get'})
+    .then(response => response.json())
+    .then(config => dispatch(updateConfig(config)))
   }
 }

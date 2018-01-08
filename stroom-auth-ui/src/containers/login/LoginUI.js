@@ -31,7 +31,6 @@ import '../Layout.css'
 import icon from '../../icon.png'
 import { required, email } from '../../validations'
 import { login as onSubmit } from '../../modules/login'
-import { relativePath } from '../../relativePush'
 
 const LoginForm = props => {
   const { handleSubmit, pristine, submitting } = props
@@ -73,7 +72,7 @@ const LoginForm = props => {
               fullWidth
               label='Sign in' />
             <br />
-            <NavLink to={relativePath('/resetPasswordRequest')}><p className='LoginForm-resetPasswordText'>Reset password?</p></NavLink>
+            <NavLink to={'/resetPasswordRequest'}><p className='LoginForm-resetPasswordText'>Reset password?</p></NavLink>
           </div>
         </form>
       </Card>

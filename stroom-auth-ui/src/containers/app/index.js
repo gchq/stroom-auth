@@ -39,9 +39,7 @@ import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
 import { AuthenticationRequest, HandleAuthenticationResponse } from 'stroom-js'
 import { handleSessionTimeout } from '../../modules/login'
-import { goToStroom } from '../../modules/sidebar'
-import { relativePath } from '../../relativePush'
-import { updateConfig } from '../../modules/config'
+import { fetchConfig } from '../../modules/config'
 
 class App extends Component {
   isLoggedIn () {
@@ -49,63 +47,58 @@ class App extends Component {
   }
 
   render () {
-    var configuration = fetch('/config.json', {method: 'get'})
-      .then(response => response.json())
-      .then(config => config)
+    this.context.store.dispatch(fetchConfig())
 
-    this.context.store.dispatch(updateConfig(configuration))
-
-    let rootPath = this.props.rootPath
     return (
       <div className='App'>
         <main className='main'>
           <div >
-            <BrowserRouter basename={rootPath} />
+            <BrowserRouter basename={'/'} />
             <Switch>
               {/* Authentication routes */}
-              <Route exact path={relativePath('/handleAuthentication')} component={HandleAuthenticationResponse} />
-              <Route exact path={relativePath('/handleAuthenticationResponse')} component={HandleAuthenticationResponse} />
+              <Route exact path={'/handleAuthentication'} component={HandleAuthenticationResponse} />
+              <Route exact path={'/handleAuthenticationResponse'} component={HandleAuthenticationResponse} />
 
               {/* Routes not requiring authentication */}
-              <Route exact path={relativePath('/login')} component={Login} />
-              <Route exact path={relativePath('/logout')} component={Logout} />
-              <Route exact path={relativePath('/loggedOut')} component={LoggedOut} />
-              <Route exact path={relativePath('/newUser')} component={NewUser} />
-              <Route exact path={relativePath('/resetPassword')} component={ResetPassword} />
-              <Route exact path={relativePath('/confirmPasswordResetEmail')} component={ConfirmPasswordResetEmail} />
-              <Route exact path={relativePath('/resetPasswordRequest')} component={ResetPasswordRequest} />
-              <Route exact path={relativePath('/Unauthorised')} component={Unauthorised} />
+              <Route exact path={'/login'} component={Login} />
+              <Route exact path={'/logout'} component={Logout} />
+              <Route exact path={'/loggedOut'} component={LoggedOut} />
+              <Route exact path={'/newUser'} component={NewUser} />
+              <Route exact path={'/resetPassword'} component={ResetPassword} />
+              <Route exact path={'/confirmPasswordResetEmail'} component={ConfirmPasswordResetEmail} />
+              <Route exact path={'/resetPasswordRequest'} component={ResetPasswordRequest} />
+              <Route exact path={'/Unauthorised'} component={Unauthorised} />
 
               {/* Routes requiring authentication */}
-              <Route exact path={relativePath('/')} render={() => (
+              <Route exact path={'/'} render={() => (
                 this.isLoggedIn() ? <Home /> : <AuthenticationRequest referrer='/' />
               )} />
 
-              <Route exact path={relativePath('/userSearch')} render={() => (
+              <Route exact path={'/userSearch'} render={() => (
                 this.isLoggedIn() ? <UserSearch /> : <AuthenticationRequest referrer='/userSearch' />
               )} />
 
-              <Route exact path={relativePath('/changepassword')} render={(route) => (
+              <Route exact path={'/changepassword'} render={(route) => (
                 this.isLoggedIn() ? <ChangePassword /> : <AuthenticationRequest referrer={route.location.pathname} />
               )} />
 
-              <Route exact path={relativePath('/user')} render={() => (
+              <Route exact path={'/user'} render={() => (
                 this.isLoggedIn() ? <UserCreate /> : <AuthenticationRequest referrer='/user' />
               )} />
 
-              <Route exact path={relativePath('/user/:userId')} render={(route) => (
+              <Route exact path={'/user/:userId'} render={(route) => (
                 this.isLoggedIn() ? <UserEdit /> : <AuthenticationRequest referrer={route.location.pathname} />
               )} />
 
-              <Route exact path={relativePath('/tokens')} render={() => (
+              <Route exact path={'/tokens'} render={() => (
                   this.isLoggedIn() ? <TokenSearch /> : <AuthenticationRequest referrer='/tokens' />
               )} />
 
-              <Route exact path={relativePath('/token/newApiToken')} render={() => (
+              <Route exact path={'/token/newApiToken'} render={() => (
                   this.isLoggedIn() ? <TokenCreate /> : <AuthenticationRequest referrer='/token/newApiToken' />
               )} />
 
-              <Route exact path={relativePath('/token/:tokenId')} render={(route) => (
+              <Route exact path={'/token/:tokenId'} render={(route) => (
                 this.isLoggedIn() ? <TokenEdit /> : <AuthenticationRequest referrer={route.location.pathname} />
               )} />
 
@@ -153,7 +146,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  goToStroom,
   handleSessionTimeout
 }, dispatch)
 

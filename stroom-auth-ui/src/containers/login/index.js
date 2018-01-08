@@ -24,7 +24,6 @@ import queryString from 'query-string'
 
 import LoginUI from './LoginUI'
 import { changeRedirectUrl, changeClientIdUrl, changeSessionId } from '../../modules/login'
-import { relativePath } from '../../relativePush'
 
 class Login extends Component {
   componentWillMount () {
@@ -39,11 +38,10 @@ class Login extends Component {
 
   render () {
     const { idToken } = this.props
-    let referrer = relativePath('/')
     return (
       <div>
         {idToken ? (
-          <Redirect to={referrer + '/login'} />
+          <Redirect to={'/login'} />
         ) : (
           <LoginUI />
         )}

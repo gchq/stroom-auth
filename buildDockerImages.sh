@@ -21,5 +21,5 @@
 # Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
 ./gradlew clean build shadowJar -x test -x integrationTest
 
-docker build --tag gchq/stroom-auth-service:dev-SNAPSHOT stroom-auth-svc/.
-docker build --tag gchq/stroom-auth-ui:dev-SNAPSHOT stroom-auth-ui/.
+docker build --tag gchq/stroom-auth-service:v0.1-alpha.7 stroom-auth-svc/.
+docker build --tag gchq/stroom-auth-ui:v0.1-alpha.7 stroom-auth-ui/.

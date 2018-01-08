@@ -19,11 +19,10 @@ import { Redirect } from 'react-router'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { relativePath } from '../../relativePush'
 
 class NewUser extends Component {
   render () {
-    return (<Redirect to={relativePath('/user')} />)
+    return (<Redirect to={'/user'} />)
   }
 }
 

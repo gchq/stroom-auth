@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { tokenServiceUrl } from '../environmentVariables'
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getJsonBody } from './fetchFunctions'
 import { toggleAlertVisibility } from './token'
@@ -171,7 +170,7 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
           orderDirection
         })
 
-    fetch(`${tokenServiceUrl()}/search`, {
+    fetch(`${getState().config.tokenServiceUrl}/search`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -213,7 +212,7 @@ export const changeSelectedRow = (tokenId) => {
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
     const securityToken = getState().authentication.idToken
-    fetch(`${tokenServiceUrl()}/${tokenId}/state/?enabled=${isEnabled}`, {
+    fetch(`${getState().config.tokenServiceUrl}/${tokenId}/state/?enabled=${isEnabled}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

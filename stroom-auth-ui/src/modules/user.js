@@ -17,8 +17,6 @@
 import { initialize } from 'redux-form'
 import dateFormat from 'dateformat'
 
-import { authenticationServiceUrl, userServiceUrl } from '../environmentVariables'
-import { relativePush } from '../relativePush'
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
 import { performUserSearch, changeSelectedRow } from './userSearch'
@@ -150,7 +148,7 @@ export const saveChanges = (editedUser) => {
     const jwsToken = getState().authentication.idToken
     const { id, email, password, first_name, last_name, comments, state } = editedUser
 
-    fetch(`${userServiceUrl()}/${id}`, {
+    fetch(`${getState().config.userServiceUrl}/${id}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -169,7 +167,7 @@ export const saveChanges = (editedUser) => {
     })
     .then(handleStatus)
     .then(() => {
-      dispatch(relativePush(`/user/${id}`))
+      dispatch(`/user/${id}`)
       dispatch(toggleAlertVisibility('User has been updated'))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
@@ -183,7 +181,7 @@ export const createUser = (newUser) => {
 
     dispatch(showCreateLoader(true))
 
-    fetch(userServiceUrl(), {
+    fetch(getState().config.userServiceUrl, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -204,7 +202,7 @@ export const createUser = (newUser) => {
       .then(getBody)
       .then(newUserId => {
         dispatch(showCreateLoader(false))
-        dispatch(relativePush(`/user/${newUserId}`))
+        dispatch(`/user/${newUserId}`)
         dispatch(toggleAlertVisibility('User has been created'))
       })
       .catch(error => handleErrors(error, dispatch, jwsToken))
@@ -216,7 +214,7 @@ export const fetchUser = (userId) => {
     const jwsToken = getState().authentication.idToken
     // TODO: remove any errors
     // TODO: show loading spinner
-    fetch(`${userServiceUrl()}/${userId}`, {
+    fetch(`${getState().config.userServiceUrl}/${userId}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -242,7 +240,7 @@ export const deleteSelectedUser = (userId) => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken
     const userIdToDelete = getState().userSearch.selectedUserRowId
-    fetch(`${userServiceUrl()}/${userIdToDelete}`, {
+    fetch(`${getState().config.userServiceUrl}/${userIdToDelete}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -265,7 +263,7 @@ export const deleteSelectedUser = (userId) => {
 export const changePasswordForCurrentUser = () => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken
-    fetch(`${userServiceUrl()}/me`, {
+    fetch(`${getState().config.userServiceUrl}/me`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -297,7 +295,7 @@ export const changePassword = (email) => {
       dispatch(showChangePasswordErrorMessage('The new passwords do not match!'))
     }
     else {
-      fetch(`${authenticationServiceUrl()}/changePassword/`, {
+      fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -322,7 +320,7 @@ export const changePassword = (email) => {
 
 export const submitPasswordChangeRequest = (formData) => {
   return (dispatch, getState) => {
-    const userServiceUrl = `${authenticationServiceUrl()}/reset/${formData.emailAddress}`
+    const userServiceUrl = `${getState().config.authenticationServiceUrl}/reset/${formData.emailAddress}`
     const jwsToken = getState().authentication.idToken
     fetch(userServiceUrl, {
       headers: {
@@ -335,7 +333,7 @@ export const submitPasswordChangeRequest = (formData) => {
     })
     .then(handleStatus)
     .then(() => {
-      dispatch(relativePush('/confirmPasswordResetEmail'))
+      dispatch('/confirmPasswordResetEmail')
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
   }

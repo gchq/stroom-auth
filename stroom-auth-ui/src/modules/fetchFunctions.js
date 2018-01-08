@@ -17,8 +17,6 @@
 import { requestWasUnauthorized } from './login'
 import jwtDecode from 'jwt-decode'
 
-import { relativePush } from '../relativePush'
-
 export function handleErrors (error, dispatch, token) {
   if (error.status === 401) {
     const decodedToken = jwtDecode(token)
@@ -29,7 +27,7 @@ export function handleErrors (error, dispatch, token) {
       dispatch(requestWasUnauthorized(true))
     } else {
       // If it's not expired then that means this user is genuinely unauthorised
-      dispatch(relativePush('/unauthorised'))
+      dispatch('/unauthorised')
     }
   } else {
     // dispatch(errorAdd(error.status, error.message))

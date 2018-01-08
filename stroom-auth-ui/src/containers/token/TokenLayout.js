@@ -39,7 +39,6 @@ import TokenSearch from '../tokenSearch'
 import TokenCreate from '../tokenCreate'
 import TokenEdit from '../tokenEdit'
 import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
-import { relativePath } from '../../relativePush'
 
 import '../../styles/index.css'
 import '../../styles/toolbar-small.css'
@@ -83,11 +82,7 @@ class TokenLayout extends Component {
       <Paper className='Layout-main' zDepth={0}>
         <Toolbar className='toolbar-small'>
           <ToolbarGroup>
-            { /* <NavLink to={relativePath('/')}>
-              <Home />
-            </NavLink>
-    <KeyboardArrowRight /> */ }
-            <NavLink to={relativePath('/tokens')}>
+            <NavLink to={'/tokens'}>
               <ToolbarTitle text='API keys' className='toolbar-title-small' />
             </NavLink>
             {showCreate ? (<KeyboardArrowRight />) : (undefined)}
@@ -104,7 +99,7 @@ class TokenLayout extends Component {
             ) : (undefined)}
 
             {showCreateButton ? (
-              <NavLink to={relativePath('/token/newApiToken')}>
+              <NavLink to={'/token/newApiToken'}>
                 <RaisedButton label='Create' primary className='toolbar-button-small'
                   icon={<Add color={fullWhite} />} />
               </NavLink>
@@ -118,7 +113,7 @@ class TokenLayout extends Component {
                     icon={<Edit color={fullWhite} />} />
                 </div>
               ) : (
-                <NavLink to={relativePath(`/token/${selectedTokenRowId}`)}>
+                <NavLink to={`/token/${selectedTokenRowId}`}>
                   <RaisedButton label='View/Edit' primary className='toolbar-button-small'
                     disabled={editButtonDisabled}
                     icon={<Edit color={fullWhite} />} />
