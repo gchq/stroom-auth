@@ -3,6 +3,12 @@
 #exit script on any error
 set -e
 
+AUTH_SERVICE_REPO="gchq/stroom-auth-service"
+AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/."
+
+AUTH_UI_REPO="gchq/stroom-auth-ui"
+AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/."
+
 GITHUB_REPO="gchq/stroom-auth"
 GITHUB_API_URL="https://api.github.com/repos/gchq/stroom-auth/releases"
 DOCKER_CONTEXT_ROOT="stroom-auth-svc/."
@@ -189,7 +195,8 @@ else
         allDockerTags="${VERSION_FIXED_TAG} ${SNAPSHOT_FLOATING_TAG} ${MAJOR_VER_FLOATING_TAG} ${MINOR_VER_FLOATING_TAG}"
 
         #build and release the stroom-stats image to dockerhub
-        releaseToDockerHub "${DOCKER_REPO}" "${DOCKER_CONTEXT_ROOT}" ${allDockerTags}
+        releaseToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
+        releaseToDockerHub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${allDockerTags}
     fi
 
     #TODO deploy swagger UI
