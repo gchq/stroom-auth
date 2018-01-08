@@ -20,6 +20,7 @@ MINOR_VER_FLOATING_TAG=""
 BRANCH_WHITELIST_REGEX='(^dev$|^master$|^v[0-9].*$)'
 RELEASE_VERSION_REGEX='^v[0-9]+\.[0-9]+\.[0-9].*$'
 CRON_TAG_SUFFIX="DAILY"
+LATEST_SUFFIX="-LATEST"
 doDockerBuild=false
 
 #Shell Colour constants for use in 'echo -e'
