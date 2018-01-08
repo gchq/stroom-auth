@@ -121,6 +121,7 @@ dependencies {
 
     testCompile testDeps.junit
     testCompile testDeps.assertj
+    testCompile testDeps.wiremock
 
     integrationTestCompile testDeps.dropwizard_testing
     integrationTestCompile testDeps.moshi

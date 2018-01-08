@@ -16,13 +16,17 @@
 
 package stroom.auth.service.resources.support;
 
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Rule;
 import stroom.auth.service.App;
 
 import java.sql.Connection;
@@ -31,6 +35,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static stroom.db.auth.Tables.TOKENS;
 import static stroom.db.auth.Tables.TOKEN_TYPES;
 import static stroom.db.auth.Tables.USERS;
@@ -39,6 +47,13 @@ public abstract class Base_IT {
 
     @ClassRule
     public static final DropwizardAppRule appRule = new DropwizardAppRule(App.class, "config.yml");
+
+    @ClassRule
+    public static WireMockClassRule wireMockRule = new WireMockClassRule(
+            WireMockConfiguration.options().port(8080));
+
+    @Rule
+    public WireMockClassRule instanceRule = wireMockRule;
 
     protected static String BASE_TASKS_URL;
     protected static String HEALTH_CHECKS_URL;
@@ -90,5 +105,14 @@ public abstract class Base_IT {
         BASE_TASKS_URL = "http://localhost:" + adminPort + "/tasks/";
         HEALTH_CHECKS_URL = "http://localhost:" + adminPort + "/healthcheck?pretty=true";
         Thread.sleep(2000);
+    }
+
+    @Before
+    public void before(){
+        stubFor(post(urlEqualTo("/api/authorisation/v1/canManageUsers"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "text/plain")
+                        .withBody("Mock approval for authorisation")
+                        .withStatus(200)));
     }
 }

@@ -27,6 +27,10 @@ import stroom.auth.service.resources.support.Base_IT;
 import java.util.List;
 import java.util.UUID;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
 
@@ -90,6 +94,12 @@ public final class UserResource_read_IT extends Base_IT {
         ApiResponse<Integer> responseB = adminUserApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
                 .email(userEmailB)
                 .password("password"));
+
+        stubFor(post(urlEqualTo("/api/authorisation/v1/canManageUsers"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "text/plain")
+                        .withBody("Mock rejection for authorisation")
+                        .withStatus(401)));
 
         UserApi userApiA = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAs(userEmailA, "password"));
         try {

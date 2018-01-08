@@ -16,8 +16,6 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.jose4j.lang.JoseException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
