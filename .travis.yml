@@ -23,7 +23,6 @@ before_script: ./travis.before_script.sh
 
 install: echo "skip 'gradle assemble' step to speed up build"
 
-# Use wait-for-it.sh, waiting on Stroom to come up. We need the authorisation service before we can run the ITs.
 script:
   - STROOM_RESOURCES_ADVERTISED_HOST=`ip route get 1 | awk '{print $NF;exit}'`
 
