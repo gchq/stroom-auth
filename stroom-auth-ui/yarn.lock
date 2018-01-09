@@ -4023,6 +4023,10 @@ jest@20.0.4:
   dependencies:
     jest-cli "^20.0.4"
 
+jquery@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+
 js-base64@^2.1.9:
   version "2.1.9"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.1.9.tgz#f0e80ae039a4bd654b5f281fc93f04a914a7fcce"
@@ -6631,7 +6635,7 @@ strip-json-comments@~2.0.1:
 
 "stroom-js@https://github.com/gchq/stroom-js.git#dist":
   version "1.0.0"
-  resolved "https://github.com/gchq/stroom-js.git#a6a53eba692174911abf3dffc639e6e8800d4ef0"
+  resolved "https://github.com/gchq/stroom-js.git#f029467463f53a199c9d6234bf1ebb74c97e313a"
   dependencies:
     jwt-decode "^2.2.0"
     react-redux-router "^0.0.12"
