@@ -19,12 +19,21 @@ import { routerMiddleware } from 'react-router-redux'
 import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
 import logger from 'redux-logger'
+import $ from 'jquery'
 
 import rootReducer from './modules'
 
 export const history = createHistory()
 
-const initialState = {}
+var result = $.ajax({
+  url: 'config.json',
+  method: 'GET',
+  async: false
+})
+
+const initialState = {
+  config: result.responseJSON
+}
 const enhancers = []
 const middleware = [
   thunk,
