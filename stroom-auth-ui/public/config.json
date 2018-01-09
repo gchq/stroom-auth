@@ -4,6 +4,6 @@
   "tokenServiceUrl": "http://stroom-auth-service:8099/token/v1",
   "authorisationServiceUrl": "http://localhost:8080/api/authorisation/v1",
   "stroomUiUrl": "http://localhost:8080/stroom",
-  "advertisedUrl": "http://localhost:5000",
+  "advertisedUrl": "http://stroom-auth-ui:5000",
   "appClientId": "stroom-accounts"
 }
