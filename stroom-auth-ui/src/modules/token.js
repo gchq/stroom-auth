@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { initialize } from 'redux-form'
+import { push } from 'react-router-redux'
 
 import { HttpError } from '../ErrorTypes'
 import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
@@ -156,7 +157,7 @@ export const createToken = (newToken) => {
         .then(handleStatus)
         .then(getJsonBody)
         .then((newToken) => {
-          dispatch(`/token/${newToken.id}`)
+          dispatch(push(`/token/${newToken.id}`))
         })
         .catch(error => {
           handleErrors(error, dispatch, jwsToken)

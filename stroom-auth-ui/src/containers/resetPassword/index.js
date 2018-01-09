@@ -18,6 +18,7 @@ import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 
 import queryString from 'query-string'
 import jwtDecode from 'jwt-decode'
@@ -56,7 +57,7 @@ class ResetPassword extends Component {
       this.setState({noToken: true})
     } else {
       this.context.store.dispatch(changeToken(token))
-      this.context.store.dispatch('/changepassword')
+      this.context.store.dispatch(push('/changepassword'))
     }
   }
 

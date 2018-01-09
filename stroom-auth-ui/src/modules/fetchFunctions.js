@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { requestWasUnauthorized } from './login'
+import { push } from 'react-router-redux'
 import jwtDecode from 'jwt-decode'
+
+import { requestWasUnauthorized } from './login'
 
 export function handleErrors (error, dispatch, token) {
   if (error.status === 401) {
@@ -27,7 +29,7 @@ export function handleErrors (error, dispatch, token) {
       dispatch(requestWasUnauthorized(true))
     } else {
       // If it's not expired then that means this user is genuinely unauthorised
-      dispatch('/unauthorised')
+      dispatch(push('/unauthorised'))
     }
   } else {
     // dispatch(errorAdd(error.status, error.message))
