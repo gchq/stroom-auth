@@ -293,8 +293,7 @@ export const changePassword = (email) => {
 
     if (newPassword !== newPasswordConfirmation) {
       dispatch(showChangePasswordErrorMessage('The new passwords do not match!'))
-    }
-    else {
+    } else {
       fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
         headers: {
           'Accept': 'application/json',
@@ -320,7 +319,7 @@ export const changePassword = (email) => {
 
 export const submitPasswordChangeRequest = (formData) => {
   return (dispatch, getState) => {
-    const userServiceUrl = `${getState().config.authenticationServiceUrl}/reset/${formData.emailAddress}`
+    const userServiceUrl = `${getState().config.userServiceUrl}/reset/${formData.emailAddress}`
     const jwsToken = getState().authentication.idToken
     fetch(userServiceUrl, {
       headers: {

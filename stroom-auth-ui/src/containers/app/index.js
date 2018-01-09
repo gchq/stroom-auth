@@ -39,7 +39,6 @@ import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
 import { AuthenticationRequest, HandleAuthenticationResponse } from 'stroom-js'
 import { handleSessionTimeout } from '../../modules/login'
-import { fetchConfig } from '../../modules/config'
 
 class App extends Component {
   isLoggedIn () {
@@ -47,8 +46,6 @@ class App extends Component {
   }
 
   render () {
-    this.context.store.dispatch(fetchConfig())
-
     return (
       <div className='App'>
         <main className='main'>
@@ -56,8 +53,14 @@ class App extends Component {
             <BrowserRouter basename={'/'} />
             <Switch>
               {/* Authentication routes */}
-              <Route exact path={'/handleAuthentication'} component={HandleAuthenticationResponse} />
-              <Route exact path={'/handleAuthenticationResponse'} component={HandleAuthenticationResponse} />
+              <Route exact path={'/handleAuthentication'} render={() => (<HandleAuthenticationResponse
+                authenticationServiceUrl={this.props.authenticationServiceUrl}
+                authorisationServiceUrl={this.props.authorisationServiceUrl} />
+              )} />
+              <Route exact path={'/handleAuthenticationResponse'} render={() => (<HandleAuthenticationResponse
+                authenticationServiceUrl={this.props.authenticationServiceUrl}
+                authorisationServiceUrl={this.props.authorisationServiceUrl} />
+              )} />
 
               {/* Routes not requiring authentication */}
               <Route exact path={'/login'} component={Login} />
@@ -71,35 +74,67 @@ class App extends Component {
 
               {/* Routes requiring authentication */}
               <Route exact path={'/'} render={() => (
-                this.isLoggedIn() ? <Home /> : <AuthenticationRequest referrer='/' />
+                this.isLoggedIn() ? <Home /> : <AuthenticationRequest
+                  referrer='/'
+                  uiUrl={this.props.advertisedUrl}
+                  appClientId={this.props.appClientId}
+                  authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
               <Route exact path={'/userSearch'} render={() => (
-                this.isLoggedIn() ? <UserSearch /> : <AuthenticationRequest referrer='/userSearch' />
+                this.isLoggedIn() ? <UserSearch /> : <AuthenticationRequest
+                  referrer='/userSearch'
+                  uiUrl={this.props.advertisedUrl}
+                  appClientId={this.props.appClientId}
+                  authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
               <Route exact path={'/changepassword'} render={(route) => (
-                this.isLoggedIn() ? <ChangePassword /> : <AuthenticationRequest referrer={route.location.pathname} />
+                this.isLoggedIn() ? <ChangePassword /> : <AuthenticationRequest
+                  referrer={route.location.pathname}
+                  uiUrl={this.props.advertisedUrl}
+                  appClientId={this.props.appClientId}
+                  authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
               <Route exact path={'/user'} render={() => (
-                this.isLoggedIn() ? <UserCreate /> : <AuthenticationRequest referrer='/user' />
+                this.isLoggedIn() ? <UserCreate /> : <AuthenticationRequest
+                  referrer='/user'
+                  uiUrl={this.props.advertisedUrl}
+                  appClientId={this.props.appClientId}
+                  authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
               <Route exact path={'/user/:userId'} render={(route) => (
-                this.isLoggedIn() ? <UserEdit /> : <AuthenticationRequest referrer={route.location.pathname} />
+                this.isLoggedIn() ? <UserEdit /> : <AuthenticationRequest
+                  referrer={route.location.pathname}
+                  uiUrl={this.props.advertisedUrl}
+                  appClientId={this.props.appClientId}
+                  authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
               <Route exact path={'/tokens'} render={() => (
-                  this.isLoggedIn() ? <TokenSearch /> : <AuthenticationRequest referrer='/tokens' />
+                  this.isLoggedIn() ? <TokenSearch /> : <AuthenticationRequest
+                    referrer='/tokens'
+                    uiUrl={this.props.advertisedUrl}
+                    appClientId={this.props.appClientId}
+                    authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
               <Route exact path={'/token/newApiToken'} render={() => (
-                  this.isLoggedIn() ? <TokenCreate /> : <AuthenticationRequest referrer='/token/newApiToken' />
+                  this.isLoggedIn() ? <TokenCreate /> : <AuthenticationRequest
+                    referrer='/token/newApiToken'
+                    uiUrl={this.props.advertisedUrl}
+                    appClientId={this.props.appClientId}
+                    authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
               <Route exact path={'/token/:tokenId'} render={(route) => (
-                this.isLoggedIn() ? <TokenEdit /> : <AuthenticationRequest referrer={route.location.pathname} />
+                this.isLoggedIn() ? <TokenEdit /> : <AuthenticationRequest
+                  referrer={route.location.pathname}
+                  uiUrl={this.props.advertisedUrl}
+                  appClientId={this.props.appClientId}
+                  authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
               {/* Fall through to 404 */}
@@ -142,7 +177,10 @@ App.propTypes = {
 const mapStateToProps = state => ({
   idToken: state.authentication.idToken,
   showUnauthorizedDialog: state.login.showUnauthorizedDialog,
-  rootPath: state.config.rootPath
+  advertisedUrl: state.config.advertisedUrl,
+  appClientId: state.config.appClientId,
+  authenticationServiceUrl: state.config.authenticationServiceUrl,
+  authorisationServiceUrl: state.config.authorisationServiceUrl
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
