@@ -14,7 +14,7 @@
 # limitations under the License.
 #**********************************************************************
 
-FROM openjdk:8-alpine
+FROM openjdk:8u151-jre-alpine
 
 WORKDIR /usr/stroom-auth-service
 
