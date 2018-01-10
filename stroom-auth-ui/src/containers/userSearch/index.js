@@ -145,6 +145,13 @@ class UserSearch extends Component {
               filterable={this.props.isFilteringEnabled}
               showPagination
               loading={this.props.showSearchLoader}
+              defaultPageSize={50}
+              style={{
+                // We use 'calc' because we want full height but need
+                // to account for the header. Obviously if the header height
+                // changes this offset will need to change too.
+                height: 'calc(100vh - 40px)'
+              }}
               getTheadTrProps={() => {
                 return {
                   className: 'table-header-small'
