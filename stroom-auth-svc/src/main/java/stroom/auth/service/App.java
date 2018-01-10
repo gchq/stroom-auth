@@ -39,6 +39,7 @@ import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.Configuration;
 import org.jose4j.jwt.consumer.JwtConsumer;
+import stroom.auth.PasswordIntegrityCheckTask;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
@@ -55,6 +56,7 @@ import stroom.auth.service.security.UserAuthenticator;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 import java.util.EnumSet;
+import java.util.Timer;
 
 public final class App extends Application<Config> {
     public static final String SESSION_COOKIE_NAME = "authSessionId";
@@ -103,6 +105,7 @@ public final class App extends Application<Config> {
         registerExceptionMappers(environment);
         configureSessionHandling(environment);
         configureCors(environment);
+        schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
     }
 
     private static void configureSessionHandling(Environment environment) {
@@ -162,6 +165,11 @@ public final class App extends Application<Config> {
         ManagedDataSource dataSource = config.getDataSourceFactory().build(environment.metrics(), "flywayDataSource");
         Flyway flyway = config.getFlywayFactory().build(dataSource);
         flyway.migrate();
+    }
+
+    private void schedulePasswordChecks(Config config, PasswordIntegrityCheckTask passwordIntegrityCheckTask) {
+        Timer time = new Timer();
+        time.schedule(passwordIntegrityCheckTask, 0, config.getPasswordIntegrityChecksConfig().getSecondsBetweenChecks()*1000);
     }
 }
 

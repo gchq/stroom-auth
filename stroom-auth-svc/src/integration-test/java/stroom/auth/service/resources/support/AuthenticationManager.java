@@ -26,7 +26,7 @@ import stroom.auth.resources.user.v1.User;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuthenticationManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Base_IT.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationManager.class);
     private String loginUrl;
 
     public final String loginAsAdmin() throws UnirestException {

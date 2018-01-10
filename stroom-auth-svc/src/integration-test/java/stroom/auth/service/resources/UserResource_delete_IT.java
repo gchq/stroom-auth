@@ -16,21 +16,18 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.jose4j.lang.JoseException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.UserApi;
-import stroom.auth.service.resources.support.Base_IT;
+import stroom.auth.service.resources.support.Dropwizard_IT;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class UserResource_delete_IT extends Base_IT {
+public final class UserResource_delete_IT extends Dropwizard_IT {
     @Test
     public final void delete_user() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();

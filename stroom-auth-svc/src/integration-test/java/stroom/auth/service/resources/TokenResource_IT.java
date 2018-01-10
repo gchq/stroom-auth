@@ -16,14 +16,11 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import stroom.auth.resources.token.v1.Token;
 import stroom.auth.resources.user.v1.User;
-import stroom.auth.service.resources.support.Base_IT;
+import stroom.auth.service.resources.support.Dropwizard_IT;
 
-import java.io.IOException;
-
-public abstract class TokenResource_IT extends Base_IT {
+public abstract class TokenResource_IT extends Dropwizard_IT {
     protected final String url = tokenManager.getRootUrl();
     protected final String searchUrl = tokenManager.getRootUrl() + "/search";
 

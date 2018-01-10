@@ -22,7 +22,7 @@ import stroom.auth.resources.user.v1.User;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.UserApi;
-import stroom.auth.service.resources.support.Base_IT;
+import stroom.auth.service.resources.support.Dropwizard_IT;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +34,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
 
-public final class UserResource_read_IT extends Base_IT {
+public final class UserResource_read_IT extends Dropwizard_IT {
 
     @Test
     public final void search_users() throws Exception {

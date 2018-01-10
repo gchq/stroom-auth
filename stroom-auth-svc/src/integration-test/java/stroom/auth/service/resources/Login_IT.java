@@ -16,16 +16,15 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
-import stroom.auth.service.resources.support.Base_IT;
+import stroom.auth.service.resources.support.Dropwizard_IT;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
 
-public class Login_IT extends Base_IT {
+public class Login_IT extends Dropwizard_IT {
 
     @Test
     public void incorrect_credentials_1() throws Exception {

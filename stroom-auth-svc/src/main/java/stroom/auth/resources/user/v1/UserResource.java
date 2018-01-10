@@ -28,7 +28,6 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Field;
 import org.jooq.JSONFormat;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -37,6 +36,7 @@ import org.jooq.TableField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.AuthorisationServiceClient;
+import stroom.auth.daos.UserDao;
 import stroom.auth.daos.UserMapper;
 import stroom.auth.service.security.ServiceUser;
 import stroom.db.auth.tables.records.UsersRecord;
@@ -53,8 +53,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import static stroom.db.auth.Tables.USERS;
@@ -67,11 +65,13 @@ public final class UserResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
     private AuthorisationServiceClient authorisationServiceClient;
+    private UserDao userDao;
 
     @Inject
-    public UserResource(@NotNull AuthorisationServiceClient authorisationServiceClient) {
+    public UserResource(@NotNull AuthorisationServiceClient authorisationServiceClient, UserDao userDao) {
         super();
         this.authorisationServiceClient = authorisationServiceClient;
+        this.userDao = userDao;
     }
 
     @ApiOperation(
@@ -137,20 +137,8 @@ public final class UserResource {
             user.setState(User.UserState.ENABLED.getStateText());
         }
 
-
-        // Create the user
-        UsersRecord usersRecord = (UsersRecord) database
-                .insertInto((Table) USERS)
-                .set(USERS.EMAIL, user.getEmail())
-                .set(USERS.PASSWORD_HASH, user.generatePasswordHash())
-                .set(USERS.FIRST_NAME, user.getFirst_name())
-                .set(USERS.LAST_NAME, user.getLast_name())
-                .set(USERS.COMMENTS, user.getComments())
-                .set(USERS.STATE, user.getState())
-                .set(USERS.CREATED_ON, Timestamp.from(Instant.now()))
-                .set(USERS.CREATED_BY_USER, authenticatedServiceUser.getName())
-                .returning(new Field[]{USERS.ID}).fetchOne();
-        return Response.status(Response.Status.OK).entity(usersRecord.getId()).build();
+        int newUserId = userDao.create(user, authenticatedServiceUser.getName());
+        return Response.status(Response.Status.OK).entity(newUserId).build();
     }
 
     @ApiOperation(

@@ -99,6 +99,10 @@ public final class Config extends Configuration {
     @JsonProperty("authorisationService")
     private AuthorisationServiceConfig authorisationServiceConfig;
 
+    @NotNull
+    @JsonProperty("passwordIntegrityChecks")
+    private PasswordIntegrityChecksConfig passwordIntegrityChecksConfig;
+
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
     }
@@ -155,6 +159,15 @@ public final class Config extends Configuration {
         return tokenConfig;
     }
 
+    @Nullable
+    public int getSessionIdCookieMaxAge() {
+        return sessionIdCookieMaxAge;
+    }
+
+    public PasswordIntegrityChecksConfig getPasswordIntegrityChecksConfig() {
+        return passwordIntegrityChecksConfig;
+    }
+
     private Integer getPort() {
         DefaultServerFactory serverFactory = (DefaultServerFactory) this.getServerFactory();
         Integer port = serverFactory.getApplicationConnectors().stream()
@@ -164,10 +177,5 @@ public final class Config extends Configuration {
                 .findFirst()
                 .get();
         return port;
-    }
-
-    @Nullable
-    public int getSessionIdCookieMaxAge() {
-        return sessionIdCookieMaxAge;
     }
 }

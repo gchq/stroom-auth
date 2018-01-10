@@ -22,6 +22,7 @@ import com.google.common.base.Strings;
 import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.Table;
 import org.jooq.impl.DSL;
 import org.mindrot.jbcrypt.BCrypt;
@@ -32,10 +33,15 @@ import stroom.auth.exceptions.BadRequestException;
 import stroom.auth.exceptions.NoSuchUserException;
 import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.resources.user.v1.User;
+import stroom.db.auth.Tables;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.sql.Timestamp;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.Period;
 import java.time.ZonedDateTime;
 
 import static stroom.db.auth.Tables.USERS;
@@ -49,16 +55,45 @@ public class UserDao {
 
     private DSLContext database = null;
     private Config config;
+    private Clock clock;
 
     @Inject
     public UserDao(Config config) {
         this.config = config;
+        this.clock = Clock.systemDefaultZone();
     }
 
     @Inject
     private void init() {
-        database = DSL.using(this.jooqConfig);
+        if(this.jooqConfig != null){
+            database = DSL.using(this.jooqConfig);
+        }
     }
+
+    public void setDatabase(DSLContext database){
+        this.database = database;
+    }
+
+    public void setClock(Clock clock){
+        this.clock = clock;
+    }
+
+    public int create(User newUser, String creatingUsername){
+        UsersRecord usersRecord = (UsersRecord) database
+                .insertInto((Table) USERS)
+                .set(USERS.EMAIL, newUser.getEmail())
+                .set(USERS.PASSWORD_HASH, newUser.generatePasswordHash())
+                .set(USERS.FIRST_NAME, newUser.getFirst_name())
+                .set(USERS.LAST_NAME, newUser.getLast_name())
+                .set(USERS.COMMENTS, newUser.getComments())
+                .set(USERS.STATE, newUser.getState())
+                .set(USERS.CREATED_ON, Timestamp.from(Instant.now(clock)))
+                .set(USERS.CREATED_BY_USER, creatingUsername)
+                .returning(new Field[]{USERS.ID}).fetchOne();
+        return usersRecord.getId();
+    }
+
+
 
     public void recordSuccessfulLogin(String email) {
         UsersRecord user = (UsersRecord) database
@@ -69,7 +104,7 @@ public class UserDao {
         // We reset the failed login count if we have a successful login
         user.setLoginFailures(0);
         user.setLoginCount(user.getLoginCount() + 1);
-        user.setLastLogin(UserMapper.convertISO8601ToTimestamp(ZonedDateTime.now().toString()));
+        user.setLastLogin(UserMapper.convertISO8601ToTimestamp(ZonedDateTime.now(clock).toString()));
         database
                 .update((Table) USERS)
                 .set(user)
@@ -156,4 +191,40 @@ public class UserDao {
                 .where(new Condition[]{USERS.EMAIL.eq(email)})
                 .execute();
     }
+
+    public int disableNewInactiveUsers(int inactivityThresholdInDays){
+        Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInDays);
+
+        int numberOfDisabledAccounts = database
+                .update(Tables.USERS)
+                .set(Tables.USERS.STATE, "disabled")
+                .where(Tables.USERS.CREATED_ON.lessOrEqual(activityThreshold))
+                .and(Tables.USERS.LAST_LOGIN.isNull())
+                // We don't want to disable admin because that could lock the users out of the system
+                .and(Tables.USERS.EMAIL.ne("admin"))
+                .execute();
+
+        return numberOfDisabledAccounts;
+    }
+
+    public int disableInactiveUsers(int inactivityThresholdInDays){
+        Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInDays);
+
+        int numberOfDisabledAccounts = database
+                .update(Tables.USERS)
+                .set(Tables.USERS.STATE, "disabled")
+                .where(Tables.USERS.CREATED_ON.lessOrEqual(activityThreshold))
+                // We don't want to disable admin because that could lock the users out of the system
+                .and(Tables.USERS.EMAIL.ne("admin"))
+                .execute();
+
+        return numberOfDisabledAccounts;
+    }
+
+    private Timestamp convertThresholdToTimestamp(int days){
+        Instant now = Instant.now(clock);
+        Instant thresholdInstant = now.minus(Period.ofDays(days));
+        return Timestamp.from(thresholdInstant);
+    }
+
 }

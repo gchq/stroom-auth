@@ -22,6 +22,7 @@ import org.jooq.Configuration;
 import stroom.auth.AuthorisationServiceClient;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
+import stroom.auth.PasswordIntegrityCheckTask;
 import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
@@ -80,5 +81,10 @@ public final class Module extends AbstractModule {
     @Provides
     public Configuration getJooqConfig() {
         return jooqConfig;
+    }
+
+    @Provides
+    public PasswordIntegrityCheckTask getPasswordIntegrityCheckTask(Config config, UserDao userDao){
+        return new PasswordIntegrityCheckTask(config.getPasswordIntegrityChecksConfig(), userDao);
     }
 }

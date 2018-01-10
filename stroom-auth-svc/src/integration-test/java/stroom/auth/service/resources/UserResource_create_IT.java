@@ -21,14 +21,14 @@ import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.UserApi;
-import stroom.auth.service.resources.support.Base_IT;
+import stroom.auth.service.resources.support.Dropwizard_IT;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
 
-public final class UserResource_create_IT extends Base_IT {
+public final class UserResource_create_IT extends Dropwizard_IT {
     @Test
     public final void create_user() throws Exception {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();

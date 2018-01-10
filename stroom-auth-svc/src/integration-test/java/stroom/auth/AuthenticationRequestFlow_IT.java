@@ -18,15 +18,12 @@
 
 package stroom.auth;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.jose4j.lang.JoseException;
 import org.junit.Test;
-import stroom.auth.service.ApiException;
-import stroom.auth.service.resources.support.Base_IT;
+import stroom.auth.service.resources.support.Dropwizard_IT;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AuthenticationRequestFlow_IT extends Base_IT {
+public class AuthenticationRequestFlow_IT extends Dropwizard_IT {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AuthenticationRequestFlow_IT.class);
 
     /**
