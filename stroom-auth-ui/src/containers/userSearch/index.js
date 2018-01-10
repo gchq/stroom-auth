@@ -99,33 +99,31 @@ class UserSearch extends Component {
       Header: '',
       accessor: 'id',
       Cell: row => (<div>{this.props.selectedUserRowId === row.value ? 'selected' : 'unselected'}</div>),
-      width: 30,
       filterable: false,
       show: false
     }, {
       Header: 'Email',
       accessor: 'email',
-      width: 200
+      maxWidth: 190
     }, {
       Header: 'State',
       accessor: 'state',
-      width: 100,
+      maxWidth: 80,
       Cell: row => this.renderStateCell(row.value),
       Filter: ({filter, onChange}) => this.getStateCellFilter(filter, onChange)
     }, {
       Header: 'Last login',
       accessor: 'last_login',
       Cell: row => this.formatDate(row.value),
-      width: 225,
+      maxWidth: 165,
       filterable: false
     }, {
       Header: 'Login failures',
       accessor: 'login_failures',
-      width: 120
+      maxWidth: 100
     }, {
       Header: 'Comments',
-      accessor: 'comments',
-      width: 600
+      accessor: 'comments'
     }]
   }
 
