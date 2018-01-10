@@ -85,4 +85,4 @@ passwordIntegrityChecks:
   disableInactiveNewAccountAfterXDays: ${DISABLE_INACTIVE_NEW_ACCOUNT_AFTER_X_DAYS:- 30}
   disableInactiveAccountAfterXDays: ${DISABLE_INACTIVE_ACCOUNT_AFTER_X_DAYS:- 90}
   requirePasswordChangeAfterXDays: ${REQUIRE_PASSWORD_CHANGE_AFTER_X_DAYS:- 30}
-  secondsBetweenChecks: ${SECONDS_BETWEEN_PASSWORD_INTEGRITY_CHECKS:- 10}
+  secondsBetweenChecks: ${SECONDS_BETWEEN_PASSWORD_INTEGRITY_CHECKS:- 120}
