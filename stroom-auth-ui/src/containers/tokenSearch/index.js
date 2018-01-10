@@ -79,17 +79,16 @@ class TokenSearch extends Component {
       Header: '',
       accessor: 'id',
       Cell: row => (<div>{this.props.selectedTokenRowId === row.value ? 'selected' : 'unselected'}</div>),
-      width: 30,
       filterable: false,
       show: false
     }, {
       Header: 'User',
       accessor: 'user_email',
-      width: 300
+      maxWidth: 190
     }, {
       Header: 'Enabled',
       accessor: 'enabled',
-      width: 130,
+      maxWidth: 80,
       Cell: row => this.getEnabledCellRenderer(row),
       Filter: ({filter, onChange}) => this.getEnabledCellFilter(filter, onChange)
     }, {
@@ -97,13 +96,13 @@ class TokenSearch extends Component {
       accessor: 'expires_on',
       Cell: row => this.formatDate(row.value),
       Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
-      width: 300
+      maxWidth: 165
     }, {
       Header: 'Issued on',
       accessor: 'issued_on',
       Cell: row => this.formatDate(row.value),
       Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
-      width: 300
+      maxWidth: 165
     }]
   }
 
