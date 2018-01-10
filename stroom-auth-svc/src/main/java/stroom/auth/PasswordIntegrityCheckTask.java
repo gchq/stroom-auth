@@ -30,5 +30,7 @@ public class PasswordIntegrityCheckTask extends TimerTask {
         int numberOfDisabledAccounts = userDao.disableInactiveUsers(passwordIntegrityChecksConfig.getDisableInactiveAccountAfterXDays());
         LOGGER.info("Disabled {} user account(s) that have been inactive for {} days or more.",
                 numberOfDisabledAccounts, passwordIntegrityChecksConfig.getDisableInactiveNewAccountAfterXDays());
+
+        // TODO password change checks
     }
 }

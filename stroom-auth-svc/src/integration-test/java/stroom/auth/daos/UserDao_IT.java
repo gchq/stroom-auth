@@ -27,17 +27,18 @@ public class UserDao_IT extends Database_IT {
             UserDao userDao = getUserDao(conn);
 
             // Create a test user who should be disabled
-            createInactiveNewUser(userDao, "user01");
+            createUserAccount(userDao, "user01");
 
             // Create a user who would be disabled if they hadn't logged in already
-            createInactiveUser(userDao, "user02");
+            createUserAccount(userDao, "user02");
+            userDao.recordSuccessfulLogin("user02");
 
             // Advance the clock and create a test user who shouldn't be disabled
-            advanceClockFromTestStart(userDao, 10);
-            createInactiveNewUser(userDao, "user03");
+            setClockToDaysFromNow(userDao, 10);
+            createUserAccount(userDao, "user03");
 
             // WHEN...
-            advanceClockFromTestStart(userDao, 30);
+            setClockToDaysFromNow(userDao, 30);
             int numberOfDisabledUsers = userDao.disableNewInactiveUsers(30);
 
             // THEN...
@@ -58,14 +59,16 @@ public class UserDao_IT extends Database_IT {
             UserDao userDao = getUserDao(conn);
 
             // Create a test user who should be disabled
-            createInactiveUser(userDao, "user01");
+            createUserAccount(userDao, "user01");
+            userDao.recordSuccessfulLogin("user01");
 
             // Advance the clock and create a test user who shouldn't be disabled
-            advanceClockFromTestStart(userDao, 10);
-            createInactiveUser(userDao, "user02");
+            setClockToDaysFromNow(userDao, 10);
+            createUserAccount(userDao, "user02");
+            userDao.recordSuccessfulLogin("user02");
 
             // WHEN...
-            advanceClockFromTestStart(userDao, 90);
+            setClockToDaysFromNow(userDao, 90);
             int numberOfDisabledUsers = userDao.disableInactiveUsers(90);
 
             // THEN...
@@ -73,26 +76,25 @@ public class UserDao_IT extends Database_IT {
             assertThat(userDao.get("user01").getState()).isEqualTo("disabled");
             assertThat(userDao.get("user02").getState()).isEqualTo("enabled");
 
+            // ALSO WHEN...
+            setClockToDaysFromNow(userDao, 200);
+            numberOfDisabledUsers = userDao.disableInactiveUsers(90);
+
+            //ALSO THEN...
+            assertThat(numberOfDisabledUsers).isEqualTo(2);
+            assertThat(userDao.get("user01").getState()).isEqualTo("disabled");
+            assertThat(userDao.get("user02").getState()).isEqualTo("disabled");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private static void createInactiveNewUser(UserDao userDao, String email){
+    private static void createUserAccount(UserDao userDao, String email){
         User user = new User();
         user.setEmail(email);
         user.setState("enabled");
         userDao.create(user, "UserDao_IT");
-        User newUser = userDao.get(email);
-        assertThat(newUser.getState()).isEqualTo("enabled");
-    }
-
-    private static void createInactiveUser(UserDao userDao, String email){
-        User user = new User();
-        user.setEmail(email);
-        user.setState("enabled");
-        userDao.create(user, "UserDao_IT");
-        userDao.recordSuccessfulLogin(email);
         User newUser = userDao.get(email);
         assertThat(newUser.getState()).isEqualTo("enabled");
     }
@@ -110,8 +112,8 @@ public class UserDao_IT extends Database_IT {
         return userDao;
     }
 
-    private static void advanceClockFromTestStart(UserDao userDao, int days){
-        Instant thirtyDaysTime = Instant.now().plus(Period.ofDays(days));
-        userDao.setClock(Clock.fixed(thirtyDaysTime, ZoneId.systemDefault()));
+    private static void setClockToDaysFromNow(UserDao userDao, int days){
+        Instant futureInstant = Instant.now().plus(Period.ofDays(days));
+        userDao.setClock(Clock.fixed(futureInstant, ZoneId.systemDefault()));
     }
 }

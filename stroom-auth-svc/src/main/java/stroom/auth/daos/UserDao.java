@@ -213,7 +213,7 @@ public class UserDao {
         int numberOfDisabledAccounts = database
                 .update(Tables.USERS)
                 .set(Tables.USERS.STATE, "disabled")
-                .where(Tables.USERS.CREATED_ON.lessOrEqual(activityThreshold))
+                .where(Tables.USERS.LAST_LOGIN.lessOrEqual(activityThreshold))
                 // We don't want to disable admin because that could lock the users out of the system
                 .and(Tables.USERS.EMAIL.ne("admin"))
                 .execute();
