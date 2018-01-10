@@ -26,7 +26,7 @@ import rootReducer from './modules'
 export const history = createHistory()
 
 var result = $.ajax({
-  url: 'config.json',
+  url: '/config.json',
   method: 'GET',
   async: false
 })

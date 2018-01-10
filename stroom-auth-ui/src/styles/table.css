@@ -22,3 +22,17 @@
   /* This is amber100, a lighter version of the accent colour, amber900 */
   background-color: #FFECB3 !important;
  }
+
+.table-small-container .pagination-bottom span {
+  font-size: 13px;
+}
+
+.table-small-container .pagination-bottom .-pagination {
+  height: 30px !important;
+}
+
+ 
+.table-small-container .pagination-bottom .-pagination button {
+  padding: 3px;
+  font-size: 13px;
+}
