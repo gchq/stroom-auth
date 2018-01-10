@@ -3,6 +3,10 @@
   font-size: 12px !important;
 }
 
+.table-small-container .rt-tbody {
+  display: flex;
+}
+
 .table-header-small {
   height:25px;
   font-size: 14px;
