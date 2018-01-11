@@ -109,7 +109,7 @@ class TokenSearch extends Component {
   render () {
     return (
       <Paper className='UserSearch-main' zDepth={0}>
-        <div className='UserSearch-content' >
+        <div className='UserSearch-content'>
           <div className='table-small-container'>
             <ReactTable
               data={this.props.results}
@@ -119,8 +119,10 @@ class TokenSearch extends Component {
               columns={this.getColumnFormat()}
               filterable={this.props.isFilteringEnabled}
               showPagination
+              showPageSizeOptions={false}
               loading={this.props.showSearchLoader}
-              defaultPageSize={50}
+              defaultPageSize={this.props.pageSize}
+              pageSize={this.props.pageSize}
               style={{
                 // We use 'calc' because we want full height but need
                 // to account for the header. Obviously if the header height
@@ -167,7 +169,8 @@ const mapStateToProps = state => ({
   pages: state.tokenSearch.totalPages,
   errorStatus: state.token.errorStatus,
   errorText: state.token.errorText,
-  selectedTokenRowId: state.tokenSearch.selectedTokenRowId
+  selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
+  pageSize: state.tokenSearch.lastUsedPageSize
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

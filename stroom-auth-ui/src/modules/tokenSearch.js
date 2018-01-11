@@ -100,14 +100,20 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
   return (dispatch, getState) => {
     dispatch(showSearchLoader(true))
 
-    if (pageSize === undefined) {
-      pageSize = getState().tokenSearch.lastUsedPageSize
-    } else {
-      dispatch({
-        type: CHANGE_LAST_USED_PAGE_SIZE,
-        lastUsedPageSize: pageSize
-      })
-    }
+    // if (pageSize === undefined) {
+    //   pageSize = getState().tokenSearch.lastUsedPageSize
+    // } else {
+    //   dispatch({
+    //     type: CHANGE_LAST_USED_PAGE_SIZE,
+    //     lastUsedPageSize: pageSize
+    //   })
+    // }
+
+    pageSize = getRowsPerPage()
+    dispatch({
+      type: CHANGE_LAST_USED_PAGE_SIZE,
+      lastUsedPageSize: pageSize
+    })
 
     if (page === undefined) {
       page = getState().tokenSearch.lastUsedPage
@@ -227,4 +233,15 @@ export const setEnabledStateOnToken = (tokenId, isEnabled) => {
       // TODO Display snackbar with an error message
     })
   }
+}
+
+export const getRowsPerPage = () => {
+  const viewport = document.getElementById('User-content')
+  let rowsInViewport = 20
+  if(viewport){
+    const viewportHeight = viewport.offsetHeight
+    const rowsHeight = viewportHeight - 60
+    rowsInViewport = Math.floor(rowsHeight / 26)
+  }
+  return rowsInViewport
 }
