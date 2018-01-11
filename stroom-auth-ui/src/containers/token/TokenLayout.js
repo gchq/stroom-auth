@@ -134,7 +134,7 @@ class TokenLayout extends Component {
             </IconButton>
           </ToolbarGroup>
         </Toolbar>
-        <div className='User-content'>
+        <div className='User-content' id='User-content'>
           {showSearch ? (<TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
           {showCreate ? (<TokenCreate />) : (undefined)}
           {showEdit ? (<TokenEdit />) : (undefined)}
