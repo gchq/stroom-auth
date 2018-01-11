@@ -9,7 +9,9 @@
 
 .table-header-small {
   height:25px;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4d4d4d;
 }
 
 .table-row-small {
