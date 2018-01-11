@@ -56,10 +56,10 @@ token:
   algorithm: ${JWS_ALGORITHM:- RS256}
 
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?}
-loginUrl: ${AUTH_UI:- http://localhost:5000/login}
+loginUrl: ${AUTH_UI:- http://stroom-auth-ui:5000/login}
 stroomUrl: ${STROOM_UI:- http://stroom-auth-service:8099}
 resetPasswordUrl: ${RESET_PASSWORD_URL:- 'http://localhost/resetPassword/?token=%s'}
-advertisedHost: ${ADVERTISED_HTTP_HOST:- http://localhost}
+advertisedHost: ${ADVERTISED_HTTP_HOST:- http://stroom-auth-ui:5000}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 month
 

@@ -94,6 +94,11 @@ class UserSearch extends Component {
     return dateString ? dateFormat(dateString, dateFormatString) : ''
   }
 
+  filterRow(row, filter){
+    var index = row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase())
+    return index >= 0
+  }
+
   getColumnFormat () {
     return [{
       Header: '',
@@ -104,7 +109,8 @@ class UserSearch extends Component {
     }, {
       Header: 'Email',
       accessor: 'email',
-      maxWidth: 190
+      maxWidth: 190,
+      filterMethod: (filter, row) => this.filterRow(row, filter)
     }, {
       Header: 'State',
       accessor: 'state',
@@ -123,7 +129,8 @@ class UserSearch extends Component {
       maxWidth: 100
     }, {
       Header: 'Comments',
-      accessor: 'comments'
+      accessor: 'comments',
+      filterMethod: (filter, row) => this.filterRow(row, filter)
     }]
   }
 

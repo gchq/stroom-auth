@@ -439,7 +439,6 @@ public class TokenDao {
         if (filters != null) {
             for (String key : filters.keySet()) {
                 Condition condition = null;
-                //TODO make this consts to avoid String creation costs
                 switch (key) {
                     case "enabled":
                         condition = TOKENS.ENABLED.eq(Boolean.valueOf(filters.get(key)));
