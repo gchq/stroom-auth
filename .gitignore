@@ -3,7 +3,7 @@
 */out/
 *.iml
 /**/.idea/*
-!/.idea/runConfigurations
+!/**/.idea/runConfigurations
 # END OF IntelliJ
 
 ### Gradle
