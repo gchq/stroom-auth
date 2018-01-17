@@ -20,15 +20,17 @@ import { toggleAlertVisibility } from './token'
 export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER'
 export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS'
 export const SELECT_ROW = 'tokenSearch/SELECT_ROW'
-export const CHANGE_LAST_USED_PAGE_SIZE = 'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE'
+export const SET_PAGE_SIZE = 'tokenSearch/SET_PAGE_SIZE'
 export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE'
 export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED'
 export const CHANGE_LAST_USED_FILTERED = 'tokenSearch/CHANGE_LAST_USED_FILTERED'
+export const SET_SHOW_PAGINATION_CONTROLS = 'tokenSearch/SET_SHOW_PAGINATION_CONTROLS'
 
 const initialState = {
   tokens: [],
   showSearchLoader: false,
-  selectedTokenRowId: undefined
+  selectedTokenRowId: undefined,
+  scrollingPageSize: 500
 }
 
 export default (state = initialState, action) => {
@@ -56,10 +58,10 @@ export default (state = initialState, action) => {
           selectedTokenRowId: action.selectedTokenRowId
         }
       }
-    case CHANGE_LAST_USED_PAGE_SIZE:
+    case SET_PAGE_SIZE:
       return {
         ...state,
-        lastUsedPageSize: action.lastUsedPageSize
+        pageSize: action.pageSize
       }
     case CHANGE_LAST_USED_PAGE:
       return {
@@ -75,6 +77,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         lastUsedFiltered: action.lastUsedFiltered
+      }
+    case SET_SHOW_PAGINATION_CONTROLS:
+      return {
+        ...state,
+        showPaginationControls: action.showPaginationControls
       }
     default:
       return state
@@ -96,24 +103,23 @@ export function showSearchLoader (showSearchLoader) {
   }
 }
 
-export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) => {
+export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered, fitRowsToViewport) => {
   return (dispatch, getState) => {
     dispatch(showSearchLoader(true))
 
-    // if (pageSize === undefined) {
-    //   pageSize = getState().tokenSearch.lastUsedPageSize
-    // } else {
-    //   dispatch({
-    //     type: CHANGE_LAST_USED_PAGE_SIZE,
-    //     lastUsedPageSize: pageSize
-    //   })
-    // }
-
-    pageSize = getRowsPerPage()
-    dispatch({
-      type: CHANGE_LAST_USED_PAGE_SIZE,
-      lastUsedPageSize: pageSize
-    })
+    if (fitRowsToViewport) {
+      pageSize = getRowsPerPage()
+      dispatch({
+        type: SET_PAGE_SIZE,
+        pageSize
+      })
+    } else {
+      pageSize = getState().tokenSearch.scrollingPageSize
+      dispatch({
+        type: SET_PAGE_SIZE,
+        pageSize
+      })
+    }
 
     if (page === undefined) {
       page = getState().tokenSearch.lastUsedPage
@@ -191,6 +197,14 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     .then(data => {
       dispatch(showSearchLoader(false))
       dispatch(updateResults(data))
+      dispatch({
+        type: SET_PAGE_SIZE,
+        pageSize: data.totalResults
+      })
+      dispatch({
+        type: SET_SHOW_PAGINATION_CONTROLS,
+        showPaginationControls: getState().tokenSearch.scrollingPageSize < data.totalResults
+      })
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
   }
@@ -235,10 +249,10 @@ export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   }
 }
 
-export const getRowsPerPage = () => {
+const getRowsPerPage = () => {
   const viewport = document.getElementById('User-content')
   let rowsInViewport = 20
-  if(viewport){
+  if (viewport) {
     const viewportHeight = viewport.offsetHeight
     const rowsHeight = viewportHeight - 60
     rowsInViewport = Math.floor(rowsHeight / 26)

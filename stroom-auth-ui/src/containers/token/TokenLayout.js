@@ -36,6 +36,7 @@ import Help from 'material-ui-icons/Help'
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import TokenSearch from '../tokenSearch'
+import { ScrollingTokenTable } from '../tokens/scrollingTokenTable'
 import TokenCreate from '../tokenCreate'
 import TokenEdit from '../tokenEdit'
 import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
@@ -135,7 +136,7 @@ class TokenLayout extends Component {
           </ToolbarGroup>
         </Toolbar>
         <div className='User-content' id='User-content'>
-          {showSearch ? (<TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
+          {showSearch ? (<ScrollingTokenTable isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
           {showCreate ? (<TokenCreate />) : (undefined)}
           {showEdit ? (<TokenEdit />) : (undefined)}
         </div>

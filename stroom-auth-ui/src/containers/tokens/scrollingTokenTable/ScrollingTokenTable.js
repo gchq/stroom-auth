@@ -27,20 +27,20 @@ import 'react-table/react-table.css'
 
 import dateFormat from 'dateformat'
 
-import './TokenSearch.css'
-import '../../styles/table-small.css'
-import '../../styles/toggle-small.css'
-import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from '../../modules/tokenSearch'
+import '../TokenSearch.css'
+import '../../../styles/table-small.css'
+import '../../../styles/toggle-small.css'
+import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from '../../../modules/tokenSearch'
 
 // TODO change the CSS references from 'User' - maybe make the CSS common?
-class TokenSearch extends Component {
+class ScrollingTokenTable extends Component {
   toggleRow (id) {
     // Tell the redux store so the control buttons get displayed correctly
     this.props.changeSelectedRow(id)
   }
 
   fetchTokens (securityToken, state) {
-    this.props.performTokenSearch(securityToken, state.pageSize, state.page, state.sorted, state.filtered, true)
+    this.props.performTokenSearch(securityToken, state.pageSize, state.page, state.sorted, state.filtered, false)
   }
 
   getEnabledCellRenderer (row) {
@@ -108,7 +108,7 @@ class TokenSearch extends Component {
 
   render () {
     return (
-      <Paper className='UserSearch-main' zDepth={0}>
+      <Paper className='scrollingTable' zDepth={0}>
         <div className='UserSearch-content'>
           <div className='table-small-container'>
             <ReactTable
@@ -118,11 +118,13 @@ class TokenSearch extends Component {
               className='-striped -highlight UserSearch-table'
               columns={this.getColumnFormat()}
               filterable={this.props.isFilteringEnabled}
-              showPagination
+              showPagination={this.props.showPaginationControls}
+              showPaginationTop={true}
+              showPaginationBottom={false}
               showPageSizeOptions={false}
               loading={this.props.showSearchLoader}
-              defaultPageSize={this.props.pageSize}
-              pageSize={this.props.pageSize}
+              defaultPageSize={this.props.scrollingPageSize}
+              pageSize={this.props.scrollingPageSize}
               style={{
                 // We use 'calc' because we want full height but need
                 // to account for the header. Obviously if the header height
@@ -157,7 +159,7 @@ class TokenSearch extends Component {
   }
 }
 
-TokenSearch.propTypes = {
+ScrollingTokenTable.propTypes = {
   isFilteringEnabled: PropTypes.bool.isRequired
 }
 
@@ -170,7 +172,9 @@ const mapStateToProps = state => ({
   errorStatus: state.token.errorStatus,
   errorText: state.token.errorText,
   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
-  pageSize: state.tokenSearch.pageSize
+  pageSize: state.tokenSearch.pageSize,
+  scrollingPageSize: state.tokenSearch.scrollingPageSize,
+  showPaginationControls: state.tokenSearch.showPaginationControls
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -182,4 +186,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TokenSearch)
+)(ScrollingTokenTable)
