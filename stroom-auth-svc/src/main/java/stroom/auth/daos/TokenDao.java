@@ -143,6 +143,7 @@ public class TokenDao {
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setTokens(tokens);
         searchResponse.setTotalPages(pages);
+        searchResponse.setTotalResults(count);
         return searchResponse;
     }
 

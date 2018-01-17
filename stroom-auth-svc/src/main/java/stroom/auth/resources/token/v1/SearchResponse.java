@@ -32,6 +32,9 @@ public class SearchResponse {
     @ApiModelProperty(value = "The total number of pages.", required = true)
     private int totalPages;
 
+    @ApiModelProperty(value = "The total number of results.", required = true)
+    private int totalResults;
+
     public int getTotalPages() {
         return totalPages;
     }
@@ -46,5 +49,13 @@ public class SearchResponse {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public void setTotalResults(int totalResults) {
+        this.totalResults = totalResults;
+    }
+
+    public int getTotalResults() {
+        return totalResults;
     }
 }

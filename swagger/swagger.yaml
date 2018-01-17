@@ -49,11 +49,11 @@ paths:
       parameters:
       - name: "scope"
         in: "query"
-        required: false
+        required: true
         type: "string"
       - name: "response_type"
         in: "query"
-        required: false
+        required: true
         type: "string"
       - name: "client_id"
         in: "query"
@@ -65,7 +65,7 @@ paths:
         type: "string"
       - name: "nonce"
         in: "query"
-        required: true
+        required: false
         type: "string"
       - name: "state"
         in: "query"
@@ -154,7 +154,11 @@ paths:
       - "application/json"
       produces:
       - "application/json"
-      parameters: []
+      parameters:
+      - name: "redirect_url"
+        in: "query"
+        required: false
+        type: "string"
       responses:
         default:
           description: "successful operation"

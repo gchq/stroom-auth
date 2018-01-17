@@ -108,7 +108,7 @@ No authorization required
 
 <a name="handleAuthenticationRequest"></a>
 # **handleAuthenticationRequest**
-> String handleAuthenticationRequest(clientId, redirectUrl, nonce, scope, responseType, state)
+> String handleAuthenticationRequest(scope, responseType, clientId, redirectUrl, nonce, state)
 
 Submit an OpenId AuthenticationRequest.
 
@@ -122,14 +122,14 @@ Submit an OpenId AuthenticationRequest.
 
 
 AuthenticationApi apiInstance = new AuthenticationApi();
+String scope = "scope_example"; // String | 
+String responseType = "responseType_example"; // String | 
 String clientId = "clientId_example"; // String | 
 String redirectUrl = "redirectUrl_example"; // String | 
 String nonce = "nonce_example"; // String | 
-String scope = "scope_example"; // String | 
-String responseType = "responseType_example"; // String | 
 String state = "state_example"; // String | 
 try {
-    String result = apiInstance.handleAuthenticationRequest(clientId, redirectUrl, nonce, scope, responseType, state);
+    String result = apiInstance.handleAuthenticationRequest(scope, responseType, clientId, redirectUrl, nonce, state);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling AuthenticationApi#handleAuthenticationRequest");
@@ -141,11 +141,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **scope** | **String**|  |
+ **responseType** | **String**|  |
  **clientId** | **String**|  |
  **redirectUrl** | **String**|  |
- **nonce** | **String**|  |
- **scope** | **String**|  | [optional]
- **responseType** | **String**|  | [optional]
+ **nonce** | **String**|  | [optional]
  **state** | **String**|  | [optional]
 
 ### Return type
@@ -208,7 +208,7 @@ No authorization required
 
 <a name="logout"></a>
 # **logout**
-> logout()
+> logout(redirectUrl)
 
 Log a user out of their session
 
@@ -222,8 +222,9 @@ Log a user out of their session
 
 
 AuthenticationApi apiInstance = new AuthenticationApi();
+String redirectUrl = "redirectUrl_example"; // String | 
 try {
-    apiInstance.logout();
+    apiInstance.logout(redirectUrl);
 } catch (ApiException e) {
     System.err.println("Exception when calling AuthenticationApi#logout");
     e.printStackTrace();
@@ -231,7 +232,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **redirectUrl** | **String**|  | [optional]
 
 ### Return type
 

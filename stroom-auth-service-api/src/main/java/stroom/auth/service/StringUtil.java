@@ -13,7 +13,7 @@
 
 package stroom.auth.service;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-12-08T08:24:32.610Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-01-16T07:58:13.204Z")
 public class StringUtil {
   /**
    * Check if the given array contains the given value (with case-insensitive comparison).
