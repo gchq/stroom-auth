@@ -17,6 +17,7 @@
 import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
 import {Route, withRouter, Switch, BrowserRouter} from 'react-router-dom'
+import { Redirect } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -46,50 +47,57 @@ class App extends Component {
   }
 
   render () {
+    const { basePath } = this.props
     return (
       <div className='App'>
         <main className='main'>
           <div >
-            <BrowserRouter basename={'/'} />
+            <BrowserRouter basename={`/${basePath}`} />
             <Switch>
               {/* Authentication routes */}
-              <Route exact path={'/handleAuthentication'} render={() => (<HandleAuthenticationResponse
+              <Route exact path={`/${basePath}/handleAuthentication`} render={() => (<HandleAuthenticationResponse
                 authenticationServiceUrl={this.props.authenticationServiceUrl}
                 authorisationServiceUrl={this.props.authorisationServiceUrl} />
               )} />
-              <Route exact path={'/handleAuthenticationResponse'} render={() => (<HandleAuthenticationResponse
+              <Route exact path={`/${basePath}/handleAuthenticationResponse`} render={() => (<HandleAuthenticationResponse
                 authenticationServiceUrl={this.props.authenticationServiceUrl}
                 authorisationServiceUrl={this.props.authorisationServiceUrl} />
               )} />
 
               {/* Routes not requiring authentication */}
-              <Route exact path={'/login'} component={Login} />
-              <Route exact path={'/logout'} component={Logout} />
-              <Route exact path={'/loggedOut'} component={LoggedOut} />
-              <Route exact path={'/newUser'} component={NewUser} />
-              <Route exact path={'/resetPassword'} component={ResetPassword} />
-              <Route exact path={'/confirmPasswordResetEmail'} component={ConfirmPasswordResetEmail} />
-              <Route exact path={'/resetPasswordRequest'} component={ResetPasswordRequest} />
-              <Route exact path={'/Unauthorised'} component={Unauthorised} />
+              <Route exact path={`/${basePath}/login`} component={Login} />
+              <Route exact path={`/${basePath}/logout`} component={Logout} />
+              <Route exact path={`/${basePath}/loggedOut`} component={LoggedOut} />
+              <Route exact path={`/${basePath}/newUser`} component={NewUser} />
+              <Route exact path={`/${basePath}/resetPassword`} component={ResetPassword} />
+              <Route exact path={`/${basePath}/confirmPasswordResetEmail`} component={ConfirmPasswordResetEmail} />
+              <Route exact path={`/${basePath}/resetPasswordRequest`} component={ResetPasswordRequest} />
+              <Route exact path={`/${basePath}/Unauthorised`} component={Unauthorised} />
 
               {/* Routes requiring authentication */}
               <Route exact path={'/'} render={() => (
+                <Redirect to={`/${basePath}`} />
+              )} />
+              <Route exact path={`/${basePath}`} render={() => (
+                <Redirect to={`/${basePath}/home`} />
+              )} />
+              <Route exact path={`/${basePath}/home`} render={() => (
                 this.isLoggedIn() ? <Home /> : <AuthenticationRequest
-                  referrer='/'
+                  referrer={`/${basePath}`}
                   uiUrl={this.props.advertisedUrl}
                   appClientId={this.props.appClientId}
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/userSearch'} render={() => (
+              <Route exact path={`/${basePath}/userSearch`} render={() => (
                 this.isLoggedIn() ? <UserSearch /> : <AuthenticationRequest
-                  referrer='/userSearch'
+                  referrer={`/${basePath}/userSearch`}
                   uiUrl={this.props.advertisedUrl}
                   appClientId={this.props.appClientId}
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/changepassword'} render={(route) => (
+              <Route exact path={`/${basePath}/changepassword`} render={(route) => (
                 this.isLoggedIn() ? <ChangePassword /> : <AuthenticationRequest
                   referrer={route.location.pathname}
                   uiUrl={this.props.advertisedUrl}
@@ -97,15 +105,15 @@ class App extends Component {
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/user'} render={() => (
+              <Route exact path={`/${basePath}/user`} render={() => (
                 this.isLoggedIn() ? <UserCreate /> : <AuthenticationRequest
-                  referrer='/user'
+                  referrer={`/${basePath}/user`}
                   uiUrl={this.props.advertisedUrl}
                   appClientId={this.props.appClientId}
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/user/:userId'} render={(route) => (
+              <Route exact path={`/${basePath}/user/:userId`} render={(route) => (
                 this.isLoggedIn() ? <UserEdit /> : <AuthenticationRequest
                   referrer={route.location.pathname}
                   uiUrl={this.props.advertisedUrl}
@@ -113,23 +121,23 @@ class App extends Component {
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/tokens'} render={() => (
+              <Route exact path={`/${basePath}/tokens`} render={() => (
                   this.isLoggedIn() ? <TokenSearch /> : <AuthenticationRequest
-                    referrer='/tokens'
+                    referrer={`/${basePath}/tokens`}
                     uiUrl={this.props.advertisedUrl}
                     appClientId={this.props.appClientId}
                     authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/token/newApiToken'} render={() => (
+              <Route exact path={`/${basePath}/token/newApiToken`} render={() => (
                   this.isLoggedIn() ? <TokenCreate /> : <AuthenticationRequest
-                    referrer='/token/newApiToken'
+                    referrer={`/${basePath}/token/newApiToken`}
                     uiUrl={this.props.advertisedUrl}
                     appClientId={this.props.appClientId}
                     authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/token/:tokenId'} render={(route) => (
+              <Route exact path={`/${basePath}/token/:tokenId`} render={(route) => (
                 this.isLoggedIn() ? <TokenEdit /> : <AuthenticationRequest
                   referrer={route.location.pathname}
                   uiUrl={this.props.advertisedUrl}
@@ -138,7 +146,12 @@ class App extends Component {
               )} />
 
               {/* Fall through to 404 */}
-              <Route component={PathNotFound} />
+              <Route render={(route) => {
+                console.log(route)
+                return (
+                  <PathNotFound />
+                )
+              }} />
 
             </Switch>
           </div>
@@ -180,7 +193,8 @@ const mapStateToProps = state => ({
   advertisedUrl: state.config.advertisedUrl,
   appClientId: state.config.appClientId,
   authenticationServiceUrl: state.config.authenticationServiceUrl,
-  authorisationServiceUrl: state.config.authorisationServiceUrl
+  authorisationServiceUrl: state.config.authorisationServiceUrl,
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -70,7 +70,7 @@ class TokenLayout extends Component {
   }
 
   render () {
-    const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props
+    const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility, basePath } = this.props
     const showSearch = show === 'search'
     const showCreate = show === 'create'
     const showEdit = show === 'edit'
@@ -82,7 +82,7 @@ class TokenLayout extends Component {
       <Paper className='Layout-main' zDepth={0}>
         <Toolbar className='toolbar-small'>
           <ToolbarGroup>
-            <NavLink to={'/tokens'}>
+            <NavLink to={`/${basePath}/tokens`}>
               <ToolbarTitle text='API keys' className='toolbar-title-small' />
             </NavLink>
             {showCreate ? (<KeyboardArrowRight />) : (undefined)}
@@ -99,7 +99,7 @@ class TokenLayout extends Component {
             ) : (undefined)}
 
             {showCreateButton ? (
-              <NavLink to={'/token/newApiToken'}>
+              <NavLink to={`/${basePath}/token/newApiToken`}>
                 <RaisedButton label='Create' primary className='toolbar-button-small'
                   icon={<Add color={fullWhite} />} />
               </NavLink>
@@ -113,7 +113,7 @@ class TokenLayout extends Component {
                     icon={<Edit color={fullWhite} />} />
                 </div>
               ) : (
-                <NavLink to={`/token/${selectedTokenRowId}`}>
+                <NavLink to={`/${basePath}/token/${selectedTokenRowId}`}>
                   <RaisedButton label='View/Edit' primary className='toolbar-button-small'
                     disabled={editButtonDisabled}
                     icon={<Edit color={fullWhite} />} />
@@ -172,7 +172,8 @@ const mapStateToProps = state => ({
   show: state.token.show,
   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
   showAlert: state.token.showAlert,
-  alertText: state.token.alertText
+  alertText: state.token.alertText,
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

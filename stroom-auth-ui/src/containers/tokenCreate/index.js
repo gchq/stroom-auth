@@ -30,7 +30,7 @@ import { createToken as onSubmit, userAutoCompleteChange } from '../../modules/t
 
 export class TokenCreateForm extends Component {
   render () {
-    const { handleSubmit, pristine, submitting } = this.props
+    const { handleSubmit, pristine, submitting, basePath } = this.props
     return (
       <div className=''>
         <Card className='CreateTokenForm-card'>
@@ -62,7 +62,7 @@ export class TokenCreateForm extends Component {
                   type='submit'
                   label='Create API key' />
                 &nbsp;&nbsp;
-                <NavLink to='/tokens'>
+                <NavLink to={`/${basePath}/tokens`}>
                   <RaisedButton
                     primary
                     label='Cancel' />
@@ -83,7 +83,8 @@ const ReduxTokenCreateForm = reduxForm({
 const mapStateToProps = state => ({
   idToken: state.authentication.idToken,
   matchingAutoCompleteResults: state.token.matchingAutoCompleteResults,
-  errorMessage: state.token.errorMessage
+  errorMessage: state.token.errorMessage,
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -70,7 +70,7 @@ class UserLayout extends Component {
   };
 
   render () {
-    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props
+    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility, basePath } = this.props
     const showSearch = show === 'search'
     const showCreate = show === 'create'
     const showEdit = show === 'edit'
@@ -81,7 +81,7 @@ class UserLayout extends Component {
         <Toolbar className='toolbar-small'>
           <ToolbarGroup>
 
-            <NavLink to={'/userSearch'}>
+            <NavLink to={`/${basePath}/userSearch`}>
               <ToolbarTitle text='Users' className='toolbar-title-small' />
             </NavLink>
 
@@ -100,7 +100,7 @@ class UserLayout extends Component {
             ) : (undefined)}
 
             {showCreateButton ? (
-              <NavLink to={'/newUser'} >
+              <NavLink to={`/${basePath}/newUser`} >
                 <RaisedButton label='Create' primary className='toolbar-button-small'
                   icon={<Add color={fullWhite} />} />
               </NavLink>
@@ -113,7 +113,7 @@ class UserLayout extends Component {
                     icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
                 </div>
               ) : (
-                <NavLink to={`/user/${selectedUserRowId}`} >
+                <NavLink to={`/${basePath}/user/${selectedUserRowId}`} >
                   <RaisedButton label='View/Edit' primary className='toolbar-button-small'
                     icon={<Edit color={fullWhite} />} disabled={deleteButtonDisabled} />
                 </NavLink>
@@ -171,7 +171,8 @@ const mapStateToProps = state => ({
   show: state.user.show,
   selectedUserRowId: state.userSearch.selectedUserRowId,
   showAlert: state.user.showAlert,
-  alertText: state.user.alertText
+  alertText: state.user.alertText,
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

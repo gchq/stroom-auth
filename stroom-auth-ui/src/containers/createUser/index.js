@@ -29,7 +29,7 @@ import UserFields from '../userFields'
 import { createUser as onSubmit } from '../../modules/user'
 
 const UserCreateForm = props => {
-  const { handleSubmit, pristine, submitting } = props
+  const { handleSubmit, pristine, submitting, basePath } = props
   return (
     <div className=''>
       <Card className='CreateUserForm-card'>
@@ -43,7 +43,7 @@ const UserCreateForm = props => {
                 type='submit'
                 label='Create the user' />
               &nbsp; &nbsp;
-              <NavLink to='/userSearch'>
+              <NavLink to={`/${basePath}/userSearch`}>
                 <RaisedButton
                   primary
                   label='Cancel' />
@@ -63,7 +63,8 @@ const ReduxUserCreateForm = reduxForm({
 const mapStateToProps = state => ({
   showCreateLoader: state.user.showCreateLoader,
   errorStatus: state.user.errorStatus,
-  errorText: state.user.errorText
+  errorText: state.user.errorText,
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

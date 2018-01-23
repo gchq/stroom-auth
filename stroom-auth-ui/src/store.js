@@ -25,8 +25,10 @@ import rootReducer from './modules'
 
 export const history = createHistory()
 
+// TODO what can we do about this hard-coded path? It's pre-config retrieval. Mayeb we should take it out of config and put it into the state first. 
+// TODO We'll need a rebuild anyway.
 var result = $.ajax({
-  url: '/config.json',
+  url: '/config/config.json',
   method: 'GET',
   async: false
 })

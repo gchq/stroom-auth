@@ -29,7 +29,7 @@ import UserFields from '../userFields'
 import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
 
 const UserEditForm = props => {
-  const { handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility } = props
+  const { handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility, basePath } = props
   return (
     <Card className='EditUserForm-card'>
       <form onSubmit={handleSubmit}>
@@ -40,7 +40,7 @@ const UserEditForm = props => {
           type='submit'
           label='Update the user' />
           &nbsp; &nbsp;
-        <NavLink to='/userSearch'>
+        <NavLink to={`/${basePath}/userSearch`}>
           <RaisedButton
             primary
             label='Cancel' />
@@ -63,7 +63,8 @@ const ReduxUserEditForm = reduxForm({
 const mapStateToProps = state => ({
   initialValues: state.user.userBeingEdited,
   showAlert: state.user.showAlert,
-  alertText: state.user.alertText
+  alertText: state.user.alertText,
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

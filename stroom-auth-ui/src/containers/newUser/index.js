@@ -22,11 +22,12 @@ import { connect } from 'react-redux'
 
 class NewUser extends Component {
   render () {
-    return (<Redirect to={'/user'} />)
+    return (<Redirect to={`/${this.props.basePath}/user`} />)
   }
 }
 
 const mapStateToProps = state => ({
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

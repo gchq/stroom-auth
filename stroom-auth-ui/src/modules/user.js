@@ -168,7 +168,7 @@ export const saveChanges = (editedUser) => {
     })
     .then(handleStatus)
     .then(() => {
-      dispatch(push(`/user/${id}`))
+      dispatch(push(`/${getState().config.basePath}/user/${id}`))
       dispatch(toggleAlertVisibility('User has been updated'))
     })
     .catch(error => handleErrors(error, dispatch, jwsToken))
@@ -203,7 +203,7 @@ export const createUser = (newUser) => {
       .then(getBody)
       .then(newUserId => {
         dispatch(showCreateLoader(false))
-        dispatch(push(`/user/${newUserId}`))
+        dispatch(push(`/${getState().config.basePath}/user/${newUserId}`))
         dispatch(toggleAlertVisibility('User has been created'))
       })
       .catch(error => handleErrors(error, dispatch, jwsToken))

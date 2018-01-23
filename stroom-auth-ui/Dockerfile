@@ -40,7 +40,10 @@ FROM dependencies AS build
 COPY --from=dependencies /root/app/node_modules /root/app/node_modules
 COPY src src
 COPY public public
+COPY ./config.template.* ./
+RUN ./config.template.sh prod 
 RUN yarn build
+RUN mv build/static build/auth/static
 
 # ---- Build ----
 FROM base
@@ -55,4 +58,4 @@ EXPOSE 5000
 #   ...turn them into json...
 #   ...save to a file.
 #   Serve the statics.
-CMD env | grep AUTH_UI | sed 's/AUTH_UI_//g' | awk '{print tolower($0)}' | sed -r 's/_([a-z])/\U\1/g' | jo > config.json && serve --single --cors .
+CMD env | grep AUTH_UI | sed 's/AUTH_UI_//g' | awk '{print tolower($0)}' | sed -r 's/_([a-z])/\U\1/g' | jo > auth/config.json && serve --single --cors .

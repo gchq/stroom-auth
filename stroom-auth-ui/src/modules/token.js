@@ -157,7 +157,7 @@ export const createToken = (newToken) => {
         .then(handleStatus)
         .then(getJsonBody)
         .then((newToken) => {
-          dispatch(push(`/token/${newToken.id}`))
+          dispatch(push(`/${getState().config.basePath}/token/${newToken.id}`))
         })
         .catch(error => {
           handleErrors(error, dispatch, jwsToken)

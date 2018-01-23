@@ -40,6 +40,7 @@ class Home extends Component {
   }
 
   render () {
+    const { basePath } = this.props
     return (
       <div className='content-floating-with-appbar vertical'>
         <NavLink to={'/'}>
@@ -62,7 +63,7 @@ class Home extends Component {
         </NavLink>
         <br />
         {this.props.canManageUsers ? (
-          <NavLink to={'/userSearch'}>
+          <NavLink to={`/${basePath}/userSearch`}>
             <Card className='Home-card'
               onMouseOver={() => this.setState({usersLinkShadow: 3})}
               onMouseOut={() => this.setState({usersLinkShadow: 1})}
@@ -83,7 +84,7 @@ class Home extends Component {
         ) : (undefined)}
         <br />
         {this.props.canManageUsers ? (
-          <NavLink to={'/tokens'}>
+          <NavLink to={`/${basePath}/tokens`}>
             <Card className='Home-card'
               onMouseOver={() => this.setState({tokensLinkShadow: 3})}
               onMouseOut={() => this.setState({tokensLinkShadow: 1})}
@@ -114,7 +115,8 @@ Home.contextTypes = {
 const mapStateToProps = state => ({
   idToken: state.authentication.idToken,
   canManageUsers: state.authorisation.canManageUsers,
-  stroomUiUrl: state.config.stroomUiUrl
+  stroomUiUrl: state.config.stroomUiUrl,
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

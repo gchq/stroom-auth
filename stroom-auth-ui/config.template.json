@@ -4,6 +4,7 @@
   "tokenServiceUrl": "http://IP_ADDRESS:8099/token/v1",
   "authorisationServiceUrl": "http://IP_ADDRESS:8080/api/authorisation/v1",
   "stroomUiUrl": "http://IP_ADDRESS:8080/stroom",
-  "advertisedUrl": "http://IP_ADDRESS:5000",
-  "appClientId": "stroom-accounts"
+  "advertisedUrl": "http://ADVERTISED_URL/auth",
+  "appClientId": "stroom-accounts",
+  "basePath": "auth"
 }

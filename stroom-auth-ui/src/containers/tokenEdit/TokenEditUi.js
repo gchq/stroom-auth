@@ -36,7 +36,7 @@ import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user
 export class TokenEditUi extends Component {
 
   render () {
-    const { handleSubmit, alertText, showAlert, toggleAlertVisibility, form, token, toggleEnabledState } = this.props
+    const { handleSubmit, alertText, showAlert, toggleAlertVisibility, form, token, toggleEnabledState, basePath } = this.props
 
     const jws = token !== undefined ? token.token : ''
 
@@ -140,7 +140,7 @@ export class TokenEditUi extends Component {
               icon={<ContentCopy color={amber900} />} />
           </CopyToClipboard >
           &nbsp;&nbsp;
-          <NavLink to='/tokens'>
+          <NavLink to={`/${basePath}/tokens`}>
             <RaisedButton
               primary
               label='OK' />
@@ -164,7 +164,8 @@ const ReduxTokenEditUi = reduxForm({
 const mapStateToProps = state => ({
   token: state.token.lastReadToken,
   showAlert: state.user.showAlert,
-  alertText: state.user.alertText
+  alertText: state.user.alertText,
+  basePath: state.config.basePath
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
