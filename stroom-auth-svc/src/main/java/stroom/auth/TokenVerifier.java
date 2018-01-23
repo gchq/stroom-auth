@@ -94,7 +94,7 @@ public class TokenVerifier {
             LOGGER.warn("Someone tried to verify a token that is disabled.");
             return Optional.empty();
         }
-        LOGGER.info("Looks like this token is fine.");
+        LOGGER.debug("Looks like this token is fine.");
         return Optional.of(tokenRecord.get().getUser_email());
     }
 
