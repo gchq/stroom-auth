@@ -55,4 +55,4 @@ EXPOSE 5000
 #   ...turn them into json...
 #   ...save to a file.
 #   Serve the statics.
-CMD env | grep AUTH_UI | sed 's/AUTH_UI_//g' | awk '{print tolower($0)}' | sed -r 's/_([a-z])/\U\1/g' | jo > config.json && serve --single --cors .
+CMD env | grep AUTH_UI | sed 's/AUTH_UI_//g' | sed -e 's/\(.*=\)/\L&/' | sed -r 's/_([a-z])/\U\1/g' | jo > config.json && serve --single --cors .
