@@ -3,7 +3,7 @@
   "userServiceUrl": "http://192.168.1.10:8099/user/v1",
   "tokenServiceUrl": "http://192.168.1.10:8099/token/v1",
   "authorisationServiceUrl": "http://192.168.1.10:8080/api/authorisation/v1",
-  "stroomUiUrl": "http://192.168.1.10:8080/stroom",
-  "advertisedUrl": "http://192.168.1.10:5000",
+  "stroomUiUrl": "http://192.168.1.10/stroom",
+  "advertisedUrl": "http://192.168.1.10",
   "appClientId": "stroom-accounts"
 }

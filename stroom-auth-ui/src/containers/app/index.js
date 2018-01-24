@@ -50,20 +50,20 @@ class App extends Component {
       <div className='App'>
         <main className='main'>
           <div >
-            <BrowserRouter basename={'/'} />
+            <BrowserRouter basename={'/auth'} />
             <Switch>
               {/* Authentication routes */}
-              <Route exact path={'/handleAuthentication'} render={() => (<HandleAuthenticationResponse
+              <Route exact path={'/auth/handleAuthentication'} render={() => (<HandleAuthenticationResponse
                 authenticationServiceUrl={this.props.authenticationServiceUrl}
                 authorisationServiceUrl={this.props.authorisationServiceUrl} />
               )} />
-              <Route exact path={'/handleAuthenticationResponse'} render={() => (<HandleAuthenticationResponse
+              <Route exact path={'/auth/handleAuthenticationResponse'} render={() => (<HandleAuthenticationResponse
                 authenticationServiceUrl={this.props.authenticationServiceUrl}
                 authorisationServiceUrl={this.props.authorisationServiceUrl} />
               )} />
 
               {/* Routes not requiring authentication */}
-              <Route exact path={'/login'} component={Login} />
+              <Route exact path={'/auth/login'} component={Login} />
               <Route exact path={'/logout'} component={Logout} />
               <Route exact path={'/loggedOut'} component={LoggedOut} />
               <Route exact path={'/newUser'} component={NewUser} />
@@ -81,9 +81,9 @@ class App extends Component {
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/userSearch'} render={() => (
+              <Route exact path={'/auth/userSearch'} render={() => (
                 this.isLoggedIn() ? <UserSearch /> : <AuthenticationRequest
-                  referrer='/userSearch'
+                  referrer='/auth/userSearch'
                   uiUrl={this.props.advertisedUrl}
                   appClientId={this.props.appClientId}
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
@@ -138,7 +138,10 @@ class App extends Component {
               )} />
 
               {/* Fall through to 404 */}
-              <Route component={PathNotFound} />
+              <Route render={(route) => {
+                console.log(route)
+                return (<PathNotFound />)
+              }} />
 
             </Switch>
           </div>
