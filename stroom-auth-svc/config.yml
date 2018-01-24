@@ -64,7 +64,7 @@ failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 month
 
 authorisationService:
-  url: ${$AUTHORISATION_SERVICE_URL:- http://<IP_ADDRESS>:8080/api/authorisation/v1}
+  url: ${AUTHORISATION_SERVICE_URL:- http://<IP_ADDRESS>:8080/api/authorisation/v1}
   canManageUsersPath: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PATH:- /canManageUsers}
   canManageUsersPermission: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
 
