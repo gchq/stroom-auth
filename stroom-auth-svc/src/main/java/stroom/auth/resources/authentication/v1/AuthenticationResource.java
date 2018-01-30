@@ -174,10 +174,12 @@ public final class AuthenticationResource {
         }
         // Check for a certificate
         else if (optionalCn.isPresent()) {
+            String subject = optionalCn.get();
+            LOGGER.info("Logging user in using DN with subject {}", subject);
+            // TODO: We need to check that a user for this DN exists, because if it doesn't we need to create one.
             optionalSession.get().setAuthenticated(true);
             String accessCode = SessionManager.createAccessCode();
             relyingParty.setAccessCode(accessCode);
-            String subject = optionalCn.get(); //
             String idToken = createIdToken(subject, nonce, state, sessionId);
             relyingParty.setIdToken(idToken);
             responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
