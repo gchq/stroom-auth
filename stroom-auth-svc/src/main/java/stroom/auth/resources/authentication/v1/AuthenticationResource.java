@@ -249,6 +249,11 @@ public final class AuthenticationResource {
             @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
         LOGGER.info("Received a login request for session " + credentials.getSessionId());
         String sessionId = httpSession.getId();
+        if(!Strings.isNullOrEmpty(credentials.getSessionId())) {
+            LOGGER.debug("There is a session ID in the request body so we'll use that instead of the one in the httpSession.");
+            sessionId = credentials.getSessionId();
+        }
+
         Response noSessionResponse = status(422)
                 .entity("You have no session. Please make an AuthenticationRequest to the Authentication Service.")
                 .build();

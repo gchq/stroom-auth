@@ -113,7 +113,7 @@ public class TokenResource {
 
         SearchResponse results = tokenDao.searchTokens(searchRequest);
 
-        LOGGER.info("Returning tokens: found " + results.getTokens().size());
+        LOGGER.debug("Returning tokens: found " + results.getTokens().size());
         return Response.status(Response.Status.OK).entity(results).build();
     }
 

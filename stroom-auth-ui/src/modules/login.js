@@ -180,7 +180,11 @@ export const login = (credentials) => {
 
     // We need to post the sessionId in the credentials, otherwise the
     // authenticationService will have no way of marking the session as valid.
-    const sessionId = Cookies.get('sessionId')
+    const fullSessionId = Cookies.get('authSessionId')
+    let sessionId = fullSessionId
+    if (fullSessionId.indexOf('.') > -1) {
+      sessionId = fullSessionId.slice(0, fullSessionId.indexOf('.'))
+    }
 
     try {
       // Call the authentication service to get a token.
@@ -191,7 +195,6 @@ export const login = (credentials) => {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        credentials: 'include', // This should include the cookies
         method: 'post',
         mode: 'cors',
         body: JSON.stringify({
