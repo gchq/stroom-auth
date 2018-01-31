@@ -55,6 +55,11 @@ public final class Config extends Configuration {
     @Valid
     @NotNull
     @JsonProperty
+    private int certificateDnCaptureGroupIndex = 1;
+
+    @Valid
+    @NotNull
+    @JsonProperty
     private String loginUrl = "";
 
     @Valid
@@ -166,6 +171,10 @@ public final class Config extends Configuration {
 
     public PasswordIntegrityChecksConfig getPasswordIntegrityChecksConfig() {
         return passwordIntegrityChecksConfig;
+    }
+
+    public int getCertificateDnCaptureGroupIndex() {
+        return certificateDnCaptureGroupIndex;
     }
 
     private Integer getPort() {

@@ -64,8 +64,11 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static javax.ws.rs.core.Response.ResponseBuilder;
@@ -174,15 +177,43 @@ public final class AuthenticationResource {
         }
         // Check for a certificate
         else if (optionalCn.isPresent()) {
-            String subject = optionalCn.get();
-            LOGGER.info("Logging user in using DN with subject {}", subject);
-            // TODO: We need to check that a user for this DN exists, because if it doesn't we need to create one.
-            optionalSession.get().setAuthenticated(true);
-            String accessCode = SessionManager.createAccessCode();
-            relyingParty.setAccessCode(accessCode);
-            String idToken = createIdToken(subject, nonce, state, sessionId);
-            relyingParty.setIdToken(idToken);
-            responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
+            String cn = optionalCn.get();
+            Optional<String> optionalSubject = getIdFromCertificate(cn);
+
+            if(!optionalSubject.isPresent()){
+                String errorMessage = "User is presenting a certificate but this certificate cannot be processed!";
+                LOGGER.error(errorMessage);
+                responseBuilder = status(Status.FORBIDDEN).entity(errorMessage);
+            } else {
+                String subject = optionalSubject.get();
+                if(!userDao.exists(subject)){
+                    User newUser = new User();
+                    newUser.setEmail(subject);
+                    newUser.setState("enabled");
+                    newUser.setComments("Automatically created because the user has a valid certificate.");
+
+                    // TODO: Password is currently mandatory so we need to set something. However this user might
+                    // not be logging in because they have a certificate. Should we give them a password and let them
+                    // log in, or should we add a field to make impossible for this user to log in at all? Or we could
+                    // set the password as a UUID and forget it. It'd be hashed and then gone forever.
+                    byte[] bytes = new byte[20];
+                    new SecureRandom().nextBytes(bytes);
+                    String secureRandomPassword = Base64.getUrlEncoder().encodeToString(bytes);
+                    newUser.setPassword(secureRandomPassword);
+
+                    userDao.create(newUser, "admin");
+                    LOGGER.info("I've not see this certificate user ID before so I've created a new user account for them.");
+                }
+
+                LOGGER.info("Logging user in using DN with subject {}", subject);
+                optionalSession.get().setAuthenticated(true);
+                optionalSession.get().setUserEmail(subject);
+                String accessCode = SessionManager.createAccessCode();
+                relyingParty.setAccessCode(accessCode);
+                String idToken = createIdToken(subject, nonce, state, sessionId);
+                relyingParty.setIdToken(idToken);
+                responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
+            }
         }
         // There's no session and there's no certificate so we'll send them to the login page
         else {
@@ -371,4 +402,25 @@ public final class AuthenticationResource {
                 .build();
         return fullRedirectionUrl;
     }
+
+
+    private Optional<String> getIdFromCertificate(String cn) {
+        Pattern idExtractionPattern = Pattern.compile(this.config.getCertificateDnPattern());
+        Matcher idExtractionMatcher = idExtractionPattern.matcher(cn);
+        idExtractionMatcher.find();
+        int captureGroupIndex = this.config.getCertificateDnCaptureGroupIndex();
+        try {
+            if (idExtractionMatcher.groupCount() >= captureGroupIndex) {
+                String id = idExtractionMatcher.group(captureGroupIndex);
+                return Optional.of(id);
+            } else {
+                return Optional.empty();
+            }
+        } catch(IllegalStateException ex) {
+            LOGGER.error("Unable to extract user ID from CN. CN was {} and pattern was {}", cn,
+                    this.config.getCertificateDnPattern());
+            return Optional.empty();
+        }
+    }
+
 }
