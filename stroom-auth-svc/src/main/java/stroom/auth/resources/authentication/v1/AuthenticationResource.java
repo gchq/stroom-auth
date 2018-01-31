@@ -138,7 +138,8 @@ public final class AuthenticationResource {
             @QueryParam("client_id") @NotNull String clientId,
             @QueryParam("redirect_url") @NotNull String redirectUrl,
             @QueryParam("nonce") @Nullable String nonce,
-            @QueryParam("state") @Nullable String state) throws URISyntaxException {
+            @QueryParam("state") @Nullable String state,
+            @QueryParam("prompt") @Nullable String prompt) throws URISyntaxException {
         boolean isAuthenticated = false;
         String sessionId = httpSession.getId();
 
@@ -166,6 +167,14 @@ public final class AuthenticationResource {
         // Now we can check if we're logged in somehow (session or certs) and build the response accordingly
         ResponseBuilder responseBuilder;
         Optional<String> optionalCn = certificateManager.getCertificate(httpServletRequest);
+
+        // If the prompt is 'login' then we always want to prompt the user to login in with username and password.
+        boolean requireLoginPrompt = !Strings.isNullOrEmpty(prompt) && prompt.equalsIgnoreCase("login");
+        boolean loginUsingCertificate = optionalCn.isPresent() && !requireLoginPrompt;
+        if(requireLoginPrompt){
+            LOGGER.info("Relying party requested a user login page by using 'prompt=login'");
+        }
+
         // Check for an authenticated session
         if (isAuthenticated) {
             String accessCode = SessionManager.createAccessCode();
@@ -176,7 +185,7 @@ public final class AuthenticationResource {
             responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
         }
         // Check for a certificate
-        else if (optionalCn.isPresent()) {
+        else if (loginUsingCertificate) {
             String cn = optionalCn.get();
             Optional<String> optionalSubject = getIdFromCertificate(cn);
 
