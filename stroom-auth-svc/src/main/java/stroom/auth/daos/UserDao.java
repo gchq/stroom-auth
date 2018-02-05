@@ -221,6 +221,11 @@ public class UserDao {
         return numberOfDisabledAccounts;
     }
 
+    public boolean exists(String id) {
+        UsersRecord result = database.selectFrom(Tables.USERS).where(Tables.USERS.EMAIL.eq(id)).fetchOne();
+        return result != null;
+    }
+
     private Timestamp convertThresholdToTimestamp(int days){
         Instant now = Instant.now(clock);
         Instant thresholdInstant = now.minus(Period.ofDays(days));

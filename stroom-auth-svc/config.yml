@@ -55,8 +55,8 @@ token:
   requireExpirationTime: ${JWS_REQUIRE_EXPIRATION_TIME:- false}
   algorithm: ${JWS_ALGORITHM:- RS256}
 
-certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- CN=[^ ]+ [^ ]+ \(?([a-zA-Z0-9]+)\)?}
-loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5000/login}
+certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- .*\((.*)\)} # This is the Java regex pattern used to capture the ID from the CN.
+certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The pattern above must identify the group with the sid.loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5000/login}
 stroomUrl: ${STROOM_UI:- http://<IP_ADDRESS>:8099}
 resetPasswordUrl: ${RESET_PASSWORD_URL:- 'http://<IP_ADDRESS>/resetPassword/?token=%s'}
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://<IP_ADDRESS>:5000}

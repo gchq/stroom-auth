@@ -41,7 +41,6 @@ public class CertificateManager {
 
     public String getCn(String dn) {
         if (dn == null) {
-            LOGGER.debug("No DN in request. Redirecting to login.");
             throw new NoCertificateException();
         }
 
