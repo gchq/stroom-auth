@@ -19,7 +19,7 @@
 # This script is all you need to build an image of stroom-auth-service and stroom-auth-ui.
 
 # Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
-./gradlew clean build shadowJar -x test -x integrationTest
+./gradlew clean build shadowJar -x test -x integrationTest shadowJar
 
 docker build --tag gchq/stroom-auth-service:v0.1-LATEST stroom-auth-svc/.
 docker build --tag gchq/stroom-auth-ui:v0.1-LATEST stroom-auth-ui/.
