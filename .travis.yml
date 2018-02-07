@@ -25,9 +25,10 @@ install: echo "skip 'gradle assemble' step to speed up build"
 
 script:
   - STROOM_RESOURCES_ADVERTISED_HOST=`ip route get 1 | awk '{print $NF;exit}'`
+  - ./travis.script.sh
 
 # Conditionally tag git and build docker image.
-after_success:  "./travis.after_success.sh"
+#after_success:  "./travis.after_success.sh"
 
 after_failure:
   - cd ~/build/gchq/git_work/stroom-resources/dev-resources/compose
