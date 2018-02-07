@@ -27,6 +27,8 @@ export const history = createHistory()
 
 var result = $.ajax({
   url: '/config.json',
+  contentType: 'application/json',
+  dataType: 'json',
   method: 'GET',
   async: false
 })
