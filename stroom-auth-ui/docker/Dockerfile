@@ -56,5 +56,15 @@ VOLUME [ "/etc/nginx/certs" ]
 #   ...camelCase them...
 #   ...turn them into json...
 #   ...save to a file.
+#   Do environment variable substitution for nginx.conf
 #   Serve the statics.
-CMD env | grep AUTH_UI | sed 's/AUTH_UI_//g' | sed -e 's/\(.*=\)/\L&/' | sed -r 's/_([a-z])/\U\1/g' | jo > config.json && nginx -g 'daemon off;'
+CMD env | grep AUTH_UI | \
+    sed 's/AUTH_UI_//g' | sed -e 's/\(.*=\)/\L&/' | sed -r 's/_([a-z])/\U\1/g' | jo > config.json \
+    && envsubst '${NGINX_HOST} \
+                ${NGINX_HTTP_PORT} \
+                ${NGINX_HTTPS_PORT} \
+                ${NGINX_SSL_CERTIFICATE} \
+                ${NGINX_SSL_CERTIFICATE_KEY} \
+                ${NGINX_SSL_CLIENT_CERTIFICATE}' \
+            < /etc/nginx/template/nginx.conf.template > /etc/nginx/nginx.conf \
+    && nginx -g 'daemon off;'
