@@ -59,7 +59,8 @@ VOLUME [ "/etc/nginx/certs" ]
 #   Do environment variable substitution for nginx.conf
 #   Serve the statics.
 CMD env | grep AUTH_UI | \
-    sed 's/AUTH_UI_//g' | sed -e 's/\(.*=\)/\L&/' | sed -r 's/_([a-z])/\U\1/g' | jo > config.json \
+    sed 's/AUTH_UI_//g' | sed -e 's/\(.*=\)/\L&/' | sed -r 's/_([a-z])/\U\1/g' | \
+    jo > /usr/share/nginx/html/config.json \
     && envsubst '${NGINX_HOST} \
                 ${NGINX_HTTP_PORT} \
                 ${NGINX_HTTPS_PORT} \
