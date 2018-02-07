@@ -33,7 +33,6 @@ else
     echo "Start all the services we need to run the integration tests in stroom"
     ./bounceIt.sh 'up -d --build' -e -y -x stroom-auth-service-db
     popd
-    popd
 fi
 
 exit 0
