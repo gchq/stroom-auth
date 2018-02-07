@@ -70,7 +70,7 @@ public class AuthorisationServiceClient {
                 break;
             default:
                 isUserAuthorisedToManageUsers = false;
-                LOGGER.error("Tried to check authorisation for a user but got an unknown response!",
+                LOGGER.error("Tried to check authorisation for a user but got an unknown response! Response code was {}",
                         response.getStatus());
         }
 

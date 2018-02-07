@@ -19,10 +19,9 @@
 package stroom.auth.exceptions;
 
 public class NoCertificateException extends RuntimeException {
-    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(NoCertificateException.class);
 
     public NoCertificateException() {
-        super("There is no certificate on this request");
+        super("There is no certificate in this request.");
     }
 
     public NoCertificateException(String message) {
