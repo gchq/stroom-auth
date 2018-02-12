@@ -114,6 +114,38 @@ releaseToDockerHub() {
     docker push ${dockerRepo} >/dev/null 2>&1
 }
 
+releaseAuthUiToDockerHub() {
+    #echo "releaseToDockerHub called with args [$@]"
+
+    if [ $# -lt 3 ]; then
+        echo "Incorrect args, expecting at least 3"
+        exit 1
+    fi
+    dockerRepo="${AUTH_UI_REPO}"
+    contextRoot="${AUTH_UI_CONTEXT_ROOT}"
+    #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
+    shift 2
+
+    allTagArgs=""
+
+    for tagVersionPart in "$@"; do
+        if [ "x${tagVersionPart}" != "x" ]; then
+            #echo -e "Adding docker tag [${GREEN}${tagVersionPart}${NC}]"
+            allTagArgs="${allTagArgs} --tag=${dockerRepo}:${tagVersionPart}"
+        fi
+    done
+
+    echo -e "Building and releasing a docker image to ${GREEN}${dockerRepo}${NC} with tags: ${GREEN}${allTagArgs}${NC}"
+    echo -e "dockerRepo:  [${GREEN}${dockerRepo}${NC}]"
+    echo -e "contextRoot: [${GREEN}${contextRoot}${NC}]"
+
+    #The username and password are configured in the travis gui
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
+
+    ./stroom-auth-ui/docker/build.sh ${tagVersionPart}
+    docker push ${dockerRepo} >/dev/null 2>&1
+}
+
 #establish what version of stroom we are building
 if [ -n "$TRAVIS_TAG" ]; then
     #Tagged commit so use that as our stroom version, e.g. v6.0.0
@@ -197,7 +229,7 @@ else
 
         #build and release the stroom-stats image to dockerhub
         releaseToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
-        releaseToDockerHub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${allDockerTags}
+        releaseAuthUiToDockerHub ${allDockerTags}
     fi
 
     #TODO deploy swagger UI
