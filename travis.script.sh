@@ -115,12 +115,7 @@ releaseToDockerHub() {
 }
 
 releaseAuthUiToDockerHub() {
-    #echo "releaseToDockerHub called with args [$@]"
 
-    if [ $# -lt 3 ]; then
-        echo "Incorrect args, expecting at least 3"
-        exit 1
-    fi
     dockerRepo="${AUTH_UI_REPO}"
     contextRoot="${AUTH_UI_CONTEXT_ROOT}"
     #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
