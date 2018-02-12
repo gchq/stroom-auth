@@ -37,8 +37,10 @@ import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,11 +52,11 @@ public class AuthenticationFlowHelper {
 
     private static final String CLIENT_ID = "integrationTestClient";
 
-    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException {
+    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException, MalformedURLException {
         return authenticateAs("admin", "admin");
     }
 
-    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException {
+    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException, MalformedURLException {
         // We need to use a real-ish sort of nonce otherwise the OpenId tokens might end up being identical.
         String nonce = UUID.randomUUID().toString();
         String sessionId = sendInitialAuthenticationRequest(nonce);
@@ -73,7 +75,7 @@ public class AuthenticationFlowHelper {
     /**
      * The standard authentication request, for when the client doesn't care about checking their nonce.
      */
-    public static String sendInitialAuthenticationRequest() {
+    public static String sendInitialAuthenticationRequest() throws MalformedURLException {
         return sendInitialAuthenticationRequest(UUID.randomUUID().toString());
     }
 
@@ -82,7 +84,7 @@ public class AuthenticationFlowHelper {
      * <p>
      * This flow would redirect the user to login, but we're faking that too so we ignore the redirection.
      */
-    public static String sendInitialAuthenticationRequest(String nonce) {
+    public static String sendInitialAuthenticationRequest(String nonce) throws MalformedURLException {
         LOGGER.info("Sending initial authentication request.");
         // The authentication flow includes a redirect to login. We don't want
         // anything interactive in testing so we need to take some steps to prevent the redirect:
@@ -116,12 +118,13 @@ public class AuthenticationFlowHelper {
         }
 
         assertThat(authenticationRequestResponse.getStatus()).isEqualTo(303);// 303 = See Other
-        StringBuilder redirectionUrlBuilder = new StringBuilder();
-        redirectionUrlBuilder.append("http://localhost:5000/login?error=login_required&state=&clientId=");
-        redirectionUrlBuilder.append(CLIENT_ID);
-        redirectionUrlBuilder.append("&redirectUrl=http://fakedomain.com");
-        assertThat(authenticationRequestResponse.getHeaders().get("Location").get(0))
-                .isEqualTo(redirectionUrlBuilder.toString());
+        StringBuilder redirectionPathBuilder = new StringBuilder();
+        redirectionPathBuilder.append("/login?error=login_required&state=&clientId=");
+        redirectionPathBuilder.append(CLIENT_ID);
+        redirectionPathBuilder.append("&redirectUrl=http://fakedomain.com");
+        String redirectionPath = redirectionPathBuilder.toString();
+        URL location = new URL(authenticationRequestResponse.getHeaders().get("Location").get(0));
+        assertThat(location).isEqualTo(redirectionPath);
 
         String sessionCookie = authenticationRequestResponse.getHeaders().get("Set-Cookie").get(0);
         // We need to do a bit of splitting and getting to pull out the sessionId. The cookie looks like this:
