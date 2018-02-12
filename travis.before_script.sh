@@ -38,6 +38,5 @@ fi
 # Make sure we generate the yaml
 cd stroom-auth-svc
 ./config.yml.sh
-popd
 
 exit 0
