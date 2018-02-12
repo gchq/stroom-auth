@@ -229,7 +229,7 @@ else
 
         #build and release the stroom-stats image to dockerhub
         releaseToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
-        releaseAuthUiToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
+        releaseAuthUiToDockerHub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${allDockerTags}
     fi
 
     #TODO deploy swagger UI
