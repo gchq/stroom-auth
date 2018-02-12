@@ -29,7 +29,7 @@ import { TextField } from 'redux-form-material-ui'
 import './Login.css'
 import '../Layout.css'
 import icon from '../../icon.png'
-import { required, email } from '../../validations'
+import { required } from '../../validations'
 import { login as onSubmit } from '../../modules/login'
 
 const LoginForm = props => {
@@ -52,7 +52,6 @@ const LoginForm = props => {
                 component={TextField}
                 hintText='Email'
                 validate={[required]}
-                warn={email}
                 className='LoginForm-input'
               />
             </div>
