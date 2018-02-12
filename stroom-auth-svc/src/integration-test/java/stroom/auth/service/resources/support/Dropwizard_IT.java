@@ -33,7 +33,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 public abstract class Dropwizard_IT extends Database_IT {
 
     @ClassRule
-    public static final DropwizardAppRule appRule = new DropwizardAppRule(App.class, "config.yml");
+    public static final DropwizardAppRule appRule = new DropwizardAppRule(App.class, "config.generated.yml");
 
     @ClassRule
     public static WireMockClassRule wireMockRule = new WireMockClassRule(
