@@ -115,9 +115,14 @@ releaseToDockerHub() {
 }
 
 releaseAuthUiToDockerHub() {
+    #echo "releaseToDockerHub called with args [$@]"
 
-    dockerRepo="${AUTH_UI_REPO}"
-    contextRoot="${AUTH_UI_CONTEXT_ROOT}"
+    if [ $# -lt 3 ]; then
+        echo "Incorrect args, expecting at least 3"
+        exit 1
+    fi
+    dockerRepo="$1"
+    contextRoot="$2"
     #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
     shift 2
 
@@ -224,7 +229,7 @@ else
 
         #build and release the stroom-stats image to dockerhub
         releaseToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
-        releaseAuthUiToDockerHub ${allDockerTags}
+        releaseAuthUiToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
     fi
 
     #TODO deploy swagger UI
