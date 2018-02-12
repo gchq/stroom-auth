@@ -36,6 +36,7 @@ import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.FlywayException;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.Configuration;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -59,6 +60,8 @@ import java.util.EnumSet;
 import java.util.Timer;
 
 public final class App extends Application<Config> {
+    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(App.class);
+
     public static final String SESSION_COOKIE_NAME = "authSessionId";
     private Injector injector;
 
@@ -164,13 +167,35 @@ public final class App extends Application<Config> {
     private static void migrate(Config config, Environment environment) {
         ManagedDataSource dataSource = config.getDataSourceFactory().build(environment.metrics(), "flywayDataSource");
         Flyway flyway = config.getFlywayFactory().build(dataSource);
-        flyway.migrate();
+        // We want to be resilient against the database not being available, so we'll keep trying to migrate if there's
+        // an exception. This approach blocks the startup of the service until the database is available. The downside
+        // of this is that the admin pages won't be available - any future dashboarding that wants to emit information
+        // about the missing database won't be able to do so. The upside of this approach is that it's very simple
+        // to implement from where we are now, i.e. we don't need to add service-wide code to handle a missing database
+        // e.g. in JwkDao.init().
+        boolean migrationComplete = false;
+        int databaseRetryDelayMs = 5000;
+        while(!migrationComplete){
+            try {
+                flyway.migrate();
+                migrationComplete = true;
+            } catch(FlywayException flywayException){
+                LOGGER.error("Unable to migrate database! Will retry in {}ms.", databaseRetryDelayMs);
+                try {
+                    Thread.sleep(databaseRetryDelayMs);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
     private void schedulePasswordChecks(Config config, PasswordIntegrityCheckTask passwordIntegrityCheckTask) {
         Timer time = new Timer();
         time.schedule(passwordIntegrityCheckTask, 0, config.getPasswordIntegrityChecksConfig().getSecondsBetweenChecks()*1000);
     }
+
 }
 
 
