@@ -124,7 +124,8 @@ public class AuthenticationFlowHelper {
         redirectionPathBuilder.append("&redirectUrl=http://fakedomain.com");
         String redirectionPath = redirectionPathBuilder.toString();
         URL location = new URL(authenticationRequestResponse.getHeaders().get("Location").get(0));
-        assertThat(location).isEqualTo(redirectionPath);
+        String locationPath = location.getPath() + "?" + location.getQuery();
+        assertThat(locationPath).isEqualTo(redirectionPath);
 
         String sessionCookie = authenticationRequestResponse.getHeaders().get("Set-Cookie").get(0);
         // We need to do a bit of splitting and getting to pull out the sessionId. The cookie looks like this:
