@@ -175,7 +175,9 @@ export const login = (credentials) => {
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))
 
-    const loginServiceUrl = `${getState().config.authenticationServiceUrl}/authenticate`
+    const authenticationServiceUrl = getState().config.authenticationServiceUrl
+    const loginServiceUrl = `${authenticationServiceUrl}/authenticate`
+    const passwordChangeRequiredUrl = `${authenticationServiceUrl}/needsPasswordChange?email=${email}`
     const clientId = getState().login.clientId
 
     // We need to post the sessionId in the credentials, otherwise the
@@ -209,7 +211,7 @@ export const login = (credentials) => {
         if (response.status === 401) {
           throw new SubmissionError({password: 'Invalid login'})
         }
-        // We'll also helpfully check for a 422, which we know might indicate there's not session
+        // We'll also helpfully check for a 422, which we know might indicate there's no session
         else if (response.status === 422) {
           throw new SubmissionError({password: 'There is no session on the authentication service! This might be caused ' +
           'by incorrectly configured service URLs.'})
@@ -219,7 +221,23 @@ export const login = (credentials) => {
         }
       })
       .then(redirectUrl => {
-        window.location.href = redirectUrl
+        fetch(passwordChangeRequiredUrl, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: 'get',
+          mode: 'cors'
+        })
+        .then(response => {
+          const requiresChange = response.text()
+          if (requiresChange === 'false') {
+            console.log('TODO: needs password change')
+            // TODO: redirect to change password page. Include the redirect URL.
+          } else {
+            window.location.href = redirectUrl
+          }
+        })
       })
     } catch (err) {
       console.log("TODO: Couldn't get a session ID - handle it somehow. Probably redirect to Stroom?")
