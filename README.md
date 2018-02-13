@@ -40,9 +40,16 @@ Obviously you'll lose test data if you do this.
 
 ### Dropping all tables
 ```sql
-drop table json_web_key;
-drop table tokens;
-drop table users;
-drop table token_types;
-drop table schema_version;
+DROP TABLE json_web_key;
+DROP TABLE tokens;
+DROP TABLE users;
+DROP TABLE token_types;
+DROP TABLE schema_version;
+```
+
+### Getting a summary of tokens
+```sql
+SELECT t.id, tt.token_type, u.email, t.expires_on, t.comments 
+FROM token_types AS tt, users AS u, tokens AS t 
+WHERE tt.id=t.token_type_id AND u.id=t.user_id; 
 ```
