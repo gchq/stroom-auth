@@ -394,6 +394,17 @@ public final class AuthenticationResource {
         return Response.status(Status.OK).entity("The password has been changed.").build();
     }
 
+    @GET
+    @Path("needsPasswordChange")
+    @Timed
+    @NotNull
+    @ApiOperation(value = "Check if a user's password needs changing.",
+            response = Boolean.class, tags = {"Authentication"})
+    public final Response needsPasswordChange(@QueryParam("email") String email) {
+        boolean userNeedsToChangePassword = userDao.needsPasswordChange(email);
+        return Response.status(Status.OK).entity(userNeedsToChangePassword).build();
+    }
+
     private String createIdToken(String subject, String nonce, String state, String authSessionId){
         TokenBuilder tokenBuilder = tokenBuilderFactory
                 .newBuilder(Token.TokenType.USER)

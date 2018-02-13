@@ -49,6 +49,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_PRIMARY = UniqueKeys0.KEY_JSON_WEB_KEY_PRIMARY;
+    public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_KEYID = UniqueKeys0.KEY_JSON_WEB_KEY_KEYID;
     public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_JSON = UniqueKeys0.KEY_JSON_WEB_KEY_JSON;
     public static final UniqueKey<TokensRecord> KEY_TOKENS_PRIMARY = UniqueKeys0.KEY_TOKENS_PRIMARY;
     public static final UniqueKey<TokensRecord> KEY_TOKENS_ID = UniqueKeys0.KEY_TOKENS_ID;
@@ -79,6 +80,7 @@ public class Keys {
 
     private static class UniqueKeys0 extends AbstractKeys {
         public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_PRIMARY = createUniqueKey(JsonWebKey.JSON_WEB_KEY, "KEY_json_web_key_PRIMARY", JsonWebKey.JSON_WEB_KEY.ID);
+        public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_KEYID = createUniqueKey(JsonWebKey.JSON_WEB_KEY, "KEY_json_web_key_keyId", JsonWebKey.JSON_WEB_KEY.KEYID);
         public static final UniqueKey<JsonWebKeyRecord> KEY_JSON_WEB_KEY_JSON = createUniqueKey(JsonWebKey.JSON_WEB_KEY, "KEY_json_web_key_json", JsonWebKey.JSON_WEB_KEY.JSON);
         public static final UniqueKey<TokensRecord> KEY_TOKENS_PRIMARY = createUniqueKey(Tokens.TOKENS, "KEY_tokens_PRIMARY", Tokens.TOKENS.ID);
         public static final UniqueKey<TokensRecord> KEY_TOKENS_ID = createUniqueKey(Tokens.TOKENS, "KEY_tokens_id", Tokens.TOKENS.ID);

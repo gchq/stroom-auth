@@ -36,7 +36,7 @@ import stroom.db.auth.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = 197801977;
+    private static final long serialVersionUID = -1234263302;
 
     /**
      * The reference instance of <code>auth.users</code>
@@ -65,6 +65,11 @@ public class Users extends TableImpl<UsersRecord> {
      * The column <code>auth.users.password_hash</code>.
      */
     public final TableField<UsersRecord, String> PASSWORD_HASH = createField("password_hash", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+
+    /**
+     * The column <code>auth.users.password_last_changed</code>.
+     */
+    public final TableField<UsersRecord, Timestamp> PASSWORD_LAST_CHANGED = createField("password_last_changed", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * The column <code>auth.users.state</code>.

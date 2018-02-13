@@ -37,7 +37,7 @@ import stroom.db.auth.tables.records.TokensRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tokens extends TableImpl<TokensRecord> {
 
-    private static final long serialVersionUID = 1557486147;
+    private static final long serialVersionUID = 1212939289;
 
     /**
      * The reference instance of <code>auth.tokens</code>
@@ -78,6 +78,11 @@ public class Tokens extends TableImpl<TokensRecord> {
     public final TableField<TokensRecord, Timestamp> EXPIRES_ON = createField("expires_on", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
+     * The column <code>auth.tokens.comments</code>.
+     */
+    public final TableField<TokensRecord, String> COMMENTS = createField("comments", org.jooq.impl.SQLDataType.VARCHAR.length(500), this, "");
+
+    /**
      * The column <code>auth.tokens.issued_on</code>.
      */
     public final TableField<TokensRecord, Timestamp> ISSUED_ON = createField("issued_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("0000-00-00 00:00:00", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
@@ -101,11 +106,6 @@ public class Tokens extends TableImpl<TokensRecord> {
      * The column <code>auth.tokens.updated_by_user</code>.
      */
     public final TableField<TokensRecord, Integer> UPDATED_BY_USER = createField("updated_by_user", org.jooq.impl.SQLDataType.INTEGER, this, "");
-
-    /**
-     * The column <code>auth.tokens.comments</code>.
-     */
-    public final TableField<TokensRecord, String> COMMENTS = createField("comments", org.jooq.impl.SQLDataType.VARCHAR.length(500), this, "");
 
     /**
      * Create a <code>auth.tokens</code> table reference

@@ -41,8 +41,11 @@ import javax.inject.Singleton;
 import java.sql.Timestamp;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static stroom.db.auth.Tables.USERS;
 
@@ -180,7 +183,7 @@ public class UserDao {
                 .fetchOne();
 
         if(user == null){
-            throw new NoSuchUserException("Cannot change this password because I cannot find this user!");
+            throw new NoSuchUserException("Cannot change this password because this user does not exist!");
         }
 
         String newPasswordHash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
@@ -190,6 +193,31 @@ public class UserDao {
                 .set(user)
                 .where(new Condition[]{USERS.EMAIL.eq(email)})
                 .execute();
+    }
+
+    public Boolean needsPasswordChange(String email) {
+        UsersRecord user = (UsersRecord) database
+                .selectFrom((Table) USERS)
+                .where(new Condition[]{USERS.EMAIL.eq(email)})
+                .fetchOne();
+
+        if(user == null){
+            throw new NoSuchUserException("Cannot check if this user needs a password change because this user does not exist!");
+        }
+
+        LocalDateTime passwordLastChanged = user.getPasswordLastChanged() == null ?
+                user.getCreatedOn().toLocalDateTime() :
+                user.getPasswordLastChanged().toLocalDateTime();
+        LocalDateTime now = LocalDateTime.ofInstant(Instant.now(clock), ZoneId.systemDefault());
+
+        long daysSinceLastPasswordChange = passwordLastChanged.until(now, ChronoUnit.DAYS);
+        int passwordChangeThreshold = config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays();
+
+        if(daysSinceLastPasswordChange >= passwordChangeThreshold){
+            LOGGER.debug("User {} needs a password change.", email);
+            return true;
+        }
+        return false;
     }
 
     public int disableNewInactiveUsers(int inactivityThresholdInDays){

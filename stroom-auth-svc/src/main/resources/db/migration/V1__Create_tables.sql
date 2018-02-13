@@ -24,6 +24,7 @@ CREATE TABLE users (
     id 				      MEDIUMINT NOT NULL AUTO_INCREMENT,
     email                 VARCHAR(255) NOT NULL,
     password_hash         VARCHAR(255) NOT NULL,
+    password_last_changed TIMESTAMP NULL,
     state                 VARCHAR(10) DEFAULT 'enabled', -- enabled, disabled, locked
     first_name            VARCHAR(255),
     last_name             VARCHAR(255),

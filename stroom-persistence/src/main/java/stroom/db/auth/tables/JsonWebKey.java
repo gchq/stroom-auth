@@ -35,7 +35,7 @@ import stroom.db.auth.tables.records.JsonWebKeyRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class JsonWebKey extends TableImpl<JsonWebKeyRecord> {
 
-    private static final long serialVersionUID = 1114260727;
+    private static final long serialVersionUID = 1039774987;
 
     /**
      * The reference instance of <code>auth.json_web_key</code>
@@ -116,7 +116,7 @@ public class JsonWebKey extends TableImpl<JsonWebKeyRecord> {
      */
     @Override
     public List<UniqueKey<JsonWebKeyRecord>> getKeys() {
-        return Arrays.<UniqueKey<JsonWebKeyRecord>>asList(Keys.KEY_JSON_WEB_KEY_PRIMARY, Keys.KEY_JSON_WEB_KEY_JSON);
+        return Arrays.<UniqueKey<JsonWebKeyRecord>>asList(Keys.KEY_JSON_WEB_KEY_PRIMARY, Keys.KEY_JSON_WEB_KEY_KEYID, Keys.KEY_JSON_WEB_KEY_JSON);
     }
 
     /**
