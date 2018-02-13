@@ -22,6 +22,7 @@ buildscript {
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath('io.swagger:swagger-codegen:2.2.2') // Generates client from YAML/JSON
+        classpath 'org.mariadb.jdbc:mariadb-java-client:2.2.1'
     }
 }
 
@@ -29,6 +30,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '1.2.4' apply false
     id 'com.benjaminsproule.swagger' version "0.1.4" apply false // Generates YAML/JSON from model
     id 'nu.studer.jooq' version '2.0.6' apply false
+    id 'org.flywaydb.flyway' version '4.2.0'
 }
 
 task wrapper(type: Wrapper) {
@@ -50,12 +52,8 @@ ext.getPropertyOrDefault = { propName, defaultValue ->
 }
 
 ext.versions = [
-    //----------Stroom-Auth------------
     stroomAuth: getPropertyOrDefault('version', 'SNAPSHOT'),
 
-    //----------Stroom-repos-----------
-
-    //------------3rd-party------------
     dropwizard: '1.2.0',
     jooq: '3.9.3',
     dropwizard_jooq:'1.1.0-0',
@@ -77,10 +75,10 @@ ext.deps = [
     dropwizard_auth: "io.dropwizard:dropwizard-auth:$versions.dropwizard",
     dropwizard_auth_jwt: "com.github.toastshaman:dropwizard-auth-jwt:1.0.2-0",
     dropwizard_core: "io.dropwizard:dropwizard-core:$versions.dropwizard",
-    dropwizard_flyway: 'io.dropwizard.modules:dropwizard-flyway:1.0.0-1',
+    dropwizard_flyway: 'io.dropwizard.modules:dropwizard-flyway:1.2.0-1',
     dropwizard_jersey: "io.dropwizard:dropwizard-jersey:$versions.dropwizard",
     dropwizard_jooq: "com.bendb.dropwizard:dropwizard-jooq:$versions.dropwizard_jooq",
-    flyway_core: "org.flywaydb:flyway-core:4.0.3",
+    flyway_core: "org.flywaydb:flyway-core:4.2.0",
     guice: "com.google.inject:guice:4.0",
     jooq: "org.jooq:jooq:$versions.jooq",
     jooq_codegen: "org.jooq:jooq-codegen:$versions.jooq",
@@ -324,4 +322,3 @@ configure(projectsToBePublished) {
         }
     }
 }
-

@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
-//buildscript {
-    //repositories {
-        //mavenCentral()
-    //}
-    //dependencies {
-        //classpath('io.swagger:swagger-codegen:2.2.2') // Generates client from YAML/JSON
-    //}
-//}
-
-//plugins {
-    //id 'com.github.johnrengelman.shadow' version '1.2.4'
-    //id "com.benjaminsproule.swagger" version "0.1.4" // Generates YAML/JSON from model
-//}
-
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow' 
-apply plugin: 'com.benjaminsproule.swagger' 
+apply plugin: 'com.benjaminsproule.swagger'
+apply plugin: 'org.flywaydb.flyway'
 
 mainClassName = 'stroom.auth.service.App'
 
