@@ -18,8 +18,19 @@
 
 # This script is all you need to build an image of stroom-auth-service and stroom-auth-ui.
 
-# Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
-./gradlew clean build shadowJar -x test -x integrationTest shadowJar
+#Stop script on first error
+set -e
 
-docker build --tag gchq/stroom-auth-service:v0.1-LATEST stroom-auth-svc/.
-docker build --tag gchq/stroom-auth-ui:v0.1-LATEST stroom-auth-ui/.
+if [ $# -ne 1 ]; then
+    echo "Must supply the version as the first argument, e.g. $0 v1.0.0"
+    exit 1
+fi
+
+# This script is all you need to build an image of stroom-stats.
+ver="$1"
+
+# Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
+./gradlew clean build shadowJar -x test -x integrationTest
+
+docker build --tag gchq/stroom-auth-service:$ver stroom-auth-svc/.
+docker build --tag gchq/stroom-auth-ui:$ver stroom-auth-ui/docker/.
