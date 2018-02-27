@@ -65,6 +65,11 @@ public final class Config extends Configuration {
     @Valid
     @NotNull
     @JsonProperty
+    private String changePasswordUrl = "";
+
+    @Valid
+    @NotNull
+    @JsonProperty
     private String stroomUrl = "";
 
     @Valid
@@ -126,6 +131,10 @@ public final class Config extends Configuration {
 
     public final String getLoginUrl() {
         return this.loginUrl;
+    }
+
+    public String getChangePasswordUrl() {
+        return changePasswordUrl;
     }
 
     public final String getStroomUrl() {
