@@ -195,7 +195,7 @@ public class UserDao {
                 .execute();
     }
 
-    public Boolean needsPasswordChange(String email) {
+    public Boolean needsPasswordChange(String email, int passwordChangeThreshold) {
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
                 .where(new Condition[]{USERS.EMAIL.eq(email)})
@@ -211,7 +211,6 @@ public class UserDao {
         LocalDateTime now = LocalDateTime.ofInstant(Instant.now(clock), ZoneId.systemDefault());
 
         long daysSinceLastPasswordChange = passwordLastChanged.until(now, ChronoUnit.DAYS);
-        int passwordChangeThreshold = config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays();
 
         if(daysSinceLastPasswordChange >= passwordChangeThreshold){
             LOGGER.debug("User {} needs a password change.", email);

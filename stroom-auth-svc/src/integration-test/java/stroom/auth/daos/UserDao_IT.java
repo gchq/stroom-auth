@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.time.Period;
 import java.time.ZoneId;
 
+import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserDao_IT extends Database_IT {
@@ -49,6 +50,7 @@ public class UserDao_IT extends Database_IT {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            fail();
         }
     }
 
@@ -87,6 +89,40 @@ public class UserDao_IT extends Database_IT {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testNeedsPasswordChange() {
+        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3309/auth", "stroomuser", "stroompassword1")) {
+            // GIVEN...
+            UserDao userDao = getUserDao(conn);
+
+            // Create a test user who should be disabled
+            createUserAccount(userDao, "user01");
+            userDao.recordSuccessfulLogin("user01");
+
+            // WHEN...
+            setClockToDaysFromNow(userDao, 90);
+
+            // THEN...
+            // Simple
+            Boolean shouldNotNeedChange = userDao.needsPasswordChange("user01", 1);
+            assertThat(shouldNotNeedChange).isTrue();
+
+            Boolean shouldNeedChange = userDao.needsPasswordChange("user01", 200);
+            assertThat(shouldNeedChange).isFalse();
+
+            // Boundary cases
+            Boolean shouldNotNeedChangeBoundaryCase = userDao.needsPasswordChange("user01", 90);
+            assertThat(shouldNotNeedChangeBoundaryCase).isTrue();
+
+            Boolean shouldNeedChangeBoundaryCase = userDao.needsPasswordChange("user01", 91);
+            assertThat(shouldNeedChangeBoundaryCase).isFalse();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            fail();
         }
     }
 

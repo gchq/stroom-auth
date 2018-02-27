@@ -177,7 +177,6 @@ export const login = (credentials) => {
 
     const authenticationServiceUrl = getState().config.authenticationServiceUrl
     const loginServiceUrl = `${authenticationServiceUrl}/authenticate`
-    const passwordChangeRequiredUrl = `${authenticationServiceUrl}/needsPasswordChange?email=${email}`
     const clientId = getState().login.clientId
 
     // We need to post the sessionId in the credentials, otherwise the
@@ -221,23 +220,7 @@ export const login = (credentials) => {
         }
       })
       .then(redirectUrl => {
-        fetch(passwordChangeRequiredUrl, {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          method: 'get',
-          mode: 'cors'
-        })
-        .then(response => {
-          const requiresChange = response.text()
-          if (requiresChange === 'false') {
-            console.log('TODO: needs password change')
-            // TODO: redirect to change password page. Include the redirect URL.
-          } else {
-            window.location.href = redirectUrl
-          }
-        })
+        window.location.href = redirectUrl
       })
     } catch (err) {
       console.log("TODO: Couldn't get a session ID - handle it somehow. Probably redirect to Stroom?")

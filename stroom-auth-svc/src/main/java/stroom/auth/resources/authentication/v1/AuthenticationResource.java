@@ -62,8 +62,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.Base64;
@@ -255,7 +258,7 @@ public final class AuthenticationResource {
     public final Response handleLogin(
             @Session HttpSession httpSession,
             @Context @NotNull HttpServletRequest httpServletRequest,
-            @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException {
+            @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException, UnsupportedEncodingException {
         LOGGER.info("Received a login request for session " + credentials.getSessionId());
         String sessionId = httpSession.getId();
         if(!Strings.isNullOrEmpty(credentials.getSessionId())) {
@@ -298,10 +301,16 @@ public final class AuthenticationResource {
         // Reset last access, login failures, etc...
         userDao.recordSuccessfulLogin(credentials.getEmail());
 
+        String redirectionUrl = buildRedirectionUrl(relyingParty.getRedirectUrl(), accessCode, relyingParty.getState())
+                .toASCIIString();
+
+        Boolean needsPasswordChange = userDao.needsPasswordChange(credentials.getEmail(), config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
+        if(needsPasswordChange){
+            redirectionUrl = this.config.getChangePasswordUrl() + "?redirectUrl=" + URLEncoder.encode(redirectionUrl, Charset.defaultCharset().toString());
+        }
+
         return status(Status.OK)
-                .entity(
-                        buildRedirectionUrl(relyingParty.getRedirectUrl(), accessCode, relyingParty.getState())
-                                .toASCIIString())
+                .entity(redirectionUrl)
                 .build();
     }
 
@@ -401,7 +410,7 @@ public final class AuthenticationResource {
     @ApiOperation(value = "Check if a user's password needs changing.",
             response = Boolean.class, tags = {"Authentication"})
     public final Response needsPasswordChange(@QueryParam("email") String email) {
-        boolean userNeedsToChangePassword = userDao.needsPasswordChange(email);
+        boolean userNeedsToChangePassword = userDao.needsPasswordChange(email, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
         return Response.status(Status.OK).entity(userNeedsToChangePassword).build();
     }
 

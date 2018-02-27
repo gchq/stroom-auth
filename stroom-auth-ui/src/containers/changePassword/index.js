@@ -14,96 +14,135 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes, { object } from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
+import Countdown from 'react-countdown-now'
 
 import { Card, CardTitle } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
+
+import queryString from 'query-string'
 
 import './ChangePassword.css'
 import '../Layout.css'
 import { required } from '../../validations'
 import { changePasswordForCurrentUser as onSubmit } from '../../modules/user'
 
-const ChangePassword = props => {
-  const { handleSubmit, pristine, submitting, showAlert, changePasswordErrorMessage } = props
-  return (
-    <div className='content-floating-with-appbar'>
-      <Card className='ChangePassword-main'>
-        <CardTitle className='ChangePassword-title' title='Change your password' />
-        <div className='ChangePassword-contents'>
-          {!showAlert ? (
-            <form onSubmit={handleSubmit}>
-              <div className='left-container'>
-                <div className='ChangePassword-field-container'>
-                  <div className='ChangePassword-label-container'>
-                    <label className='ChangePassword-label'>Old password</label>
-                  </div>
-                  <div className='input-container'>
-                    <Field
-                      className='ChangePassword-field'
-                      name='oldPassword'
-                      type='password'
-                      component={TextField}
-                      validate={[required]} />
+class ChangePassword extends Component {
+  componentDidMount () {
+    const query = queryString.parse(this.context.router.route.location.search)
+    if (query.redirectUrl) {
+      this.redirectUrl = decodeURIComponent(query.redirectUrl)
+    }
+  }
+
+  render () {
+    const { handleSubmit, pristine, submitting, showAlert, changePasswordErrorMessage } = this.props
+
+    let title = 'Change your password'
+    if (showAlert && this.redirectUrl) {
+      title = 'Your password has been changed'
+    }
+
+    return (
+      <div className='content-floating-with-appbar'>
+        <Card className='ChangePassword-main'>
+          <CardTitle className='ChangePassword-title' title={title} />
+          <div className='ChangePassword-contents'>
+            {!showAlert ? (
+              <form onSubmit={handleSubmit}>
+                <div className='left-container'>
+                  <div className='ChangePassword-field-container'>
+                    <div className='ChangePassword-label-container'>
+                      <label className='ChangePassword-label'>Old password</label>
+                    </div>
+                    <div className='input-container'>
+                      <Field
+                        className='ChangePassword-field'
+                        name='oldPassword'
+                        type='password'
+                        component={TextField}
+                        validate={[required]} />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className='left-container'>
-                <div className='ChangePassword-field-container'>
-                  <div className='ChangePassword-label-container'>
-                    <label className='ChangePassword-label'>New password</label>
-                  </div>
-                  <div className='input-container'>
-                    <Field
-                      className='ChangePassword-field'
-                      name='newPassword'
-                      type='password'
-                      component={TextField}
-                      validate={[required]} />
-                  </div>
-                </div>
-              </div>
-              <div className='left-container'>
-                <div className='ChangePassword-field-container'>
-                  <div className='ChangePassword-label-container'>
-                    <label className='ChangePassword-label'>New password again</label>
-                  </div>
-                  <div className='input-container'>
-                    <Field
-                      className='ChangePassword-field'
-                      name='newPasswordConfirmation'
-                      type='password'
-                      component={TextField}
-                      validate={[required]} />
+                <div className='left-container'>
+                  <div className='ChangePassword-field-container'>
+                    <div className='ChangePassword-label-container'>
+                      <label className='ChangePassword-label'>New password</label>
+                    </div>
+                    <div className='input-container'>
+                      <Field
+                        className='ChangePassword-field'
+                        name='newPassword'
+                        type='password'
+                        component={TextField}
+                        validate={[required]} />
+                    </div>
                   </div>
                 </div>
+                <div className='left-container'>
+                  <div className='ChangePassword-field-container'>
+                    <div className='ChangePassword-label-container'>
+                      <label className='ChangePassword-label'>New password again</label>
+                    </div>
+                    <div className='input-container'>
+                      <Field
+                        className='ChangePassword-field'
+                        name='newPasswordConfirmation'
+                        type='password'
+                        component={TextField}
+                        validate={[required]} />
+                    </div>
+                  </div>
+                </div>
+
+                <p className='ChangePassword-errorMessage'>{changePasswordErrorMessage}</p>
+
+                <br />
+
+                <div className='ChangePassword-actions'>
+                  <RaisedButton
+                    className='ChangePassword-button'
+                    primary
+                    disabled={pristine || submitting}
+                    type='submit'
+                    label='Change password' />
+                </div>
+
+              </form>
+            ) : undefined }
+
+            {showAlert && !this.redirectUrl ? (
+              <p>Your password has been changed.</p>
+            ) : undefined }
+
+            {showAlert && this.redirectUrl ? (
+              <div>
+                <br />
+                <p>We're going to send you back to your original destination in&nbsp;
+                  <Countdown
+                    date={Date.now() + 5000}
+                    renderer={({ hours, minutes, seconds, completed }) => <span className='ChangePassword-countdown'>{seconds}</span>}
+                    onComplete={() => { window.location.href = this.redirectUrl }} />
+                  &nbsp;seconds, or you can <a href={this.redirectUrl}>go there now.</a></p>
               </div>
+            ) : undefined }
+          </div>
+        </Card>
+      </div>
+    )
+  }
+}
 
-              <p className='ChangePassword-errorMessage'>{changePasswordErrorMessage}</p>
-
-              <br />
-
-              <div className='ChangePassword-actions'>
-                <RaisedButton
-                  className='ChangePassword-button'
-                  primary
-                  disabled={pristine || submitting}
-                  type='submit'
-                  label='Change password' />
-              </div>
-
-            </form>
-          ) : (
-            <p>Your password has been changed.</p>
-          )}
-        </div>
-      </Card>
-    </div>
-  )
+ChangePassword.contextTypes = {
+  router: PropTypes.shape({
+    history: object.isRequired
+  })
 }
 
 const ReduxChangePassword = reduxForm({
