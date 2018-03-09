@@ -31,6 +31,4 @@ RUN echo "http_proxy: $http_proxy" && \
     apk add --no-cache bash && \
     rm -rf /var/cache/apk/*
 
-EXPOSE 8081
-
 CMD java -jar stroom-auth-service-all.jar server config.yml
