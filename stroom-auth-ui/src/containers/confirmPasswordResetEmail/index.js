@@ -29,7 +29,7 @@ class ConfirmPasswordResetEmail extends Component {
       <div className='content-floating-without-appbar'>
         <Card className='ConfirmPasswordResetEmail-card'>
           <h3>Password reset email has been sent.</h3>
-          <p>Please check your email. You should receive a message with a link that will let you change your password. This link will be valid for five minutes.</p>
+          <p>Please check your email. You should receive a message with a link that will let you change your password. This link will be valid for 60 minutes.</p>
         </Card>
       </div>
     )
