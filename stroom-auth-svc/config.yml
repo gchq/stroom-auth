@@ -5,11 +5,11 @@ server:
   adminContextPath: ${ADMIN_CONTEXT_PATH:- /}
   applicationContextPath: ${APPLICATION_CONTEXT_PATH:- /}
   applicationConnectors:
-    - type: ${APPLICATION_CONNEXTOR_TYPE:- http}
-      port: ${APPLICATION_CONNEXTOR_PORT:- 8099}
+    - type: http
+      port: ${STROOM_AUTH_SERVICE_PORT:- 8099}
   adminConnectors:
-    - type: ${ADMIN_CONNEXTOR_TYPE:- http}
-      port: ${ADMIN_CONNEXTOR_PORT:- 8100}
+    - type: http
+      port: ${STROOM_AUTH_SERVICE_ADMIN_PORT:- 8100}
 
 database:
   driverClass: org.mariadb.jdbc.Driver
