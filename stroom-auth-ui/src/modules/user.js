@@ -320,9 +320,9 @@ export const changePassword = (email) => {
 
 export const submitPasswordChangeRequest = (formData) => {
   return (dispatch, getState) => {
-    const userServiceUrl = `${getState().config.userServiceUrl}/reset/${formData.emailAddress}`
+    const authenticationServiceUrl = `${getState().config.authenticationServiceUrl}/reset/${formData.emailAddress}`
     const jwsToken = getState().authentication.idToken
-    fetch(userServiceUrl, {
+    fetch(authenticationServiceUrl, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
