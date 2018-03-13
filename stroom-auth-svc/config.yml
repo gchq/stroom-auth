@@ -75,7 +75,7 @@ email:
   fromName: ${EMAIL_FROM_NAME:- Stroom User Accounts}
   passwordResetSubject: ${EMAIL_RESET_SUBJECT:- Password reset for Stroom}
   passwordResetText: ${EMAIL_RESET_TEXT:- 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'}
-  passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 5}
+  passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 60}
   smtp:
     host: ${EMAIL_SMTP_HOST:- localhost}
     port: ${EMAIL_SMTP_PORT:- 2525}
