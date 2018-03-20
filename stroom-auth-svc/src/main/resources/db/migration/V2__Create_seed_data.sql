@@ -103,4 +103,19 @@ VALUES (
 
 
 
-
+-- For the AuthenticationResource
+INSERT INTO users (
+    email,
+    password_hash,
+    state,
+    comments,
+    created_on,
+    created_by_user)
+VALUES (
+    "authenticationResourceUser",
+    "Fake hash: this is a service user and doesn't have a password",
+    "locked",
+    "This is a service account and used for associating with an API token not logging in: it's locked and must remain so.",
+    CURRENT_TIMESTAMP,
+    "Flyway migration"
+);

@@ -148,7 +148,7 @@ public class TokenDao {
 
     public String createEmailResetToken(String emailAddress) throws NoSuchUserException {
         return createToken(
-                Token.TokenType.EMAIL_RESET, "authenticationResource",
+                Token.TokenType.EMAIL_RESET, "authenticationResourceUser",
                 emailAddress,
                 true, "Created for password reset")
                 .getToken();
@@ -248,7 +248,7 @@ public class TokenDao {
                 .set(TOKENS.ISSUED_BY_USER, issuingUserId)
                 .set(TOKENS.ENABLED, isEnabled)
                 .set(TOKENS.COMMENTS, comment)
-                .returning(new Field[]{TOKENS.ID})
+                .returning()
                 .fetchOne()
                 .into(Token.class);
 
