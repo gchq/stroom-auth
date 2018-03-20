@@ -33,5 +33,5 @@ ver="$1"
 ./gradlew clean build shadowJar -x test -x integrationTest
 
 docker build --tag gchq/stroom-auth-service:$ver stroom-auth-svc/.
-cd stroom-auth-ui/docker
-./build.sh $ver
+#cd stroom-auth-ui/docker
+#./build.sh $ver
