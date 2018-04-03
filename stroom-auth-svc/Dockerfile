@@ -20,7 +20,6 @@ WORKDIR /usr/stroom-auth-service
 
 ADD ./build/libs/stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
 ADD ./config.yml /usr/stroom-auth-service/config.yml
-ADD ./wait-for-it/wait-for-it_busybox.sh wait-for-it_busybox.sh
 
 # update alpine and install Bash as it is not in alpine by default
 # then run setup to configure the tomcat instance
