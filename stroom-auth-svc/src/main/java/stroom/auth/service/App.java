@@ -106,6 +106,7 @@ public final class App extends Application<Config> {
         // Now we can configure everything else
         registerResources(environment);
         registerExceptionMappers(environment);
+        registerHealthChecks(environment);
         configureSessionHandling(environment);
         configureCors(environment);
         schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
@@ -141,6 +142,10 @@ public final class App extends Application<Config> {
         environment.jersey().register(injector.getInstance(TokenCreationExceptionMapper.class));
         environment.jersey().register(injector.getInstance(UnsupportedFilterExceptionMapper.class));
         environment.jersey().register(injector.getInstance(NoSuchUserExceptionMapper.class));
+    }
+
+    private void registerHealthChecks(Environment environment) {
+        environment.healthChecks().register(LogLevelInspector.class.getName(), new LogLevelInspector());
     }
 
     private static void configureAuthentication(JwtConsumer jwtConsumer, Environment environment) {
