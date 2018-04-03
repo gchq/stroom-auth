@@ -180,7 +180,8 @@ public final class App extends Application<Config> {
                 flyway.migrate();
                 migrationComplete = true;
             } catch(FlywayException flywayException){
-                LOGGER.error("Unable to migrate database! Will retry in {}ms.", databaseRetryDelayMs);
+                LOGGER.error("Unable to migrate database! Will retry in {}ms. Error was {}",
+                    databaseRetryDelayMs, flywayException.getMessage());
                 try {
                     Thread.sleep(databaseRetryDelayMs);
                 } catch (InterruptedException e) {
