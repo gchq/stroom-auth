@@ -17,6 +17,7 @@
 import { SubmissionError } from 'redux-form'
 
 import Cookies from 'cookies-js'
+import { getStatusAndText } from './fetchFunctions'
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE'
 export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE'
@@ -205,18 +206,19 @@ export const login = (credentials) => {
           requestingClientId: clientId
         })
       })
-      .then(response => {
+      .then(getStatusAndText)
+      .then((statusAndText) => {
         // First we'll handle bad credentials
-        if (response.status === 401) {
-          throw new SubmissionError({password: 'Invalid login'})
+        if (statusAndText.status === 401) {
+          throw new SubmissionError({password: statusAndText.text})
         }
         // We'll also helpfully check for a 422, which we know might indicate there's no session
-        else if (response.status === 422) {
+        else if (statusAndText.status === 422) {
           throw new SubmissionError({password: 'There is no session on the authentication service! This might be caused ' +
           'by incorrectly configured service URLs.'})
         } else {
           // Otherwise we'll extract what we expect to be the successful login redirect URL
-          return response.text()
+          return statusAndText.text
         }
       })
       .then(redirectUrl => {

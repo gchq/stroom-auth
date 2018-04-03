@@ -40,6 +40,12 @@ export function getBody (response) {
   return response.text()
 }
 
+export function getStatusAndText (response) {
+  return response.text().then(text => {
+    return {status: response.status, text}
+  })
+}
+
 export function getJsonBody (response) {
   return response.json()
 }
