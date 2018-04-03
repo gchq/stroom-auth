@@ -24,6 +24,7 @@ import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.curator.shaded.com.google.common.base.Strings;
 import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
@@ -277,41 +278,40 @@ public final class AuthenticationResource {
         stroom.auth.Session session = optionalSession.get();
 
         // Check the credentials
-        boolean areCredentialsValid = userDao.areCredentialsValid(credentials.getEmail(), credentials.getPassword());
-        if (!areCredentialsValid) {
-            LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
-            userDao.incrementLoginFailures(credentials.getEmail());
-            throw new UnauthorisedException("Invalid credentials");
+        UserDao.LoginResult loginResult = userDao.areCredentialsValid(credentials.getEmail(), credentials.getPassword());
+        switch (loginResult){
+            case BAD_CREDENTIALS:
+                LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
+                userDao.incrementLoginFailures(credentials.getEmail());
+                throw new UnauthorisedException("Invalid credentials");
+            case GOOD_CREDENTIALS:
+                String redirectionUrl = processSuccessfulLogin(session, credentials, sessionId);
+                return status(Status.OK)
+                    .entity(redirectionUrl)
+                    .build();
+            case USER_DOES_NOT_EXIST:
+                // We don't want to let the user know the account they tried to log in with doesn't exist.
+                // If we did we'd be revealing the presence or absence of an account or email address and
+                // we don't want to do this.
+                throw new UnauthorisedException("Invalid credentials");
+            case LOCKED_BAD_CREDENTIALS:
+                // If the credentials are bad we don't want to reveal the status of the account to the user.
+                throw new UnauthorisedException("Invalid credentials");
+            case LOCKED_GOOD_CREDENTIALS:
+                // If the credentials are bad we don't want to reveal the status of the account to the user.
+                throw new UnauthorisedException("This account is locked. Please contact your administrator.");
+            case DISABLED_BAD_CREDENTIALS:
+                // If the credentials are bad we don't want to reveal the status of the account to the user.
+                throw new UnauthorisedException("Invalid credentials");
+            case DISABLED_GOOD_CREDENTIALS:
+                // If the credentials are bad we don't want to reveal the status of the account to the user.
+                throw new UnauthorisedException("This account is disabled. Please contact your administrator.");
+            default:
+                String errorMessage = String.format("%s does not support a LoginResult of %s",
+                    this.getClass().getSimpleName(), loginResult.toString());
+                throw new NotImplementedException(errorMessage);
         }
 
-        // Make sure the session is authenticated and ready for use
-        session.setAuthenticated(true);
-        session.setUserEmail(credentials.getEmail());
-
-        //The relying party is the client making this request - now that we've authenticated for them we
-        // can create the access code and id token.
-        String accessCode = SessionManager.createAccessCode();
-        RelyingParty relyingParty = session.getRelyingParty(credentials.getRequestingClientId());
-        relyingParty.setAccessCode(accessCode);
-        String idToken = createIdToken(credentials.getEmail(), relyingParty.getNonce(), relyingParty.getState(), sessionId);
-        relyingParty.setIdToken(idToken);
-
-        LOGGER.debug("Login for {} succeeded", credentials.getEmail());
-
-        // Reset last access, login failures, etc...
-        userDao.recordSuccessfulLogin(credentials.getEmail());
-
-        String redirectionUrl = buildRedirectionUrl(relyingParty.getRedirectUrl(), accessCode, relyingParty.getState())
-                .toASCIIString();
-
-        Boolean needsPasswordChange = userDao.needsPasswordChange(credentials.getEmail(), config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
-        if(needsPasswordChange){
-            redirectionUrl = this.config.getChangePasswordUrl() + "?redirectUrl=" + URLEncoder.encode(redirectionUrl, Charset.defaultCharset().toString());
-        }
-
-        return status(Status.OK)
-                .entity(redirectionUrl)
-                .build();
     }
 
     @GET
@@ -394,13 +394,16 @@ public final class AuthenticationResource {
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @ApiParam("changePasswordRequest") @NotNull ChangePasswordRequest changePasswordRequest,
             @PathParam("id") int userId) {
-        boolean areCredentialsValid = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
-        if(!areCredentialsValid){
+        UserDao.LoginResult loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
+        if(loginResult == UserDao.LoginResult.BAD_CREDENTIALS
+            || loginResult == UserDao.LoginResult.DISABLED_BAD_CREDENTIALS
+            || loginResult == UserDao.LoginResult.LOCKED_BAD_CREDENTIALS){
             return Response.status(Status.UNAUTHORIZED).entity("The old and new passwords do not match!").build();
         }
-
-        userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
-        return Response.status(Status.OK).entity("The password has been changed.").build();
+        else {
+            userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
+            return Response.status(Status.OK).entity("The password has been changed.").build();
+        }
     }
 
     @GET
@@ -455,6 +458,35 @@ public final class AuthenticationResource {
                     this.config.getCertificateDnPattern());
             return Optional.empty();
         }
+    }
+
+    private String processSuccessfulLogin(stroom.auth.Session session, Credentials credentials, String sessionId) throws UnsupportedEncodingException {
+        // Make sure the session is authenticated and ready for use
+        session.setAuthenticated(true);
+        session.setUserEmail(credentials.getEmail());
+
+        //The relying party is the client making this request - now that we've authenticated for them we
+        // can create the access code and id token.
+        String accessCode = SessionManager.createAccessCode();
+        RelyingParty relyingParty = session.getRelyingParty(credentials.getRequestingClientId());
+        relyingParty.setAccessCode(accessCode);
+        String idToken = createIdToken(credentials.getEmail(), relyingParty.getNonce(), relyingParty.getState(), sessionId);
+        relyingParty.setIdToken(idToken);
+
+        LOGGER.debug("Login for {} succeeded", credentials.getEmail());
+
+        // Reset last access, login failures, etc...
+        userDao.recordSuccessfulLogin(credentials.getEmail());
+
+        String redirectionUrl = buildRedirectionUrl(relyingParty.getRedirectUrl(), accessCode, relyingParty.getState())
+            .toASCIIString();
+
+        Boolean needsPasswordChange = userDao.needsPasswordChange(credentials.getEmail(), config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
+        if(needsPasswordChange){
+            redirectionUrl = this.config.getChangePasswordUrl() + "?redirectUrl=" + URLEncoder.encode(redirectionUrl, Charset.defaultCharset().toString());
+        }
+
+        return redirectionUrl;
     }
 
 }

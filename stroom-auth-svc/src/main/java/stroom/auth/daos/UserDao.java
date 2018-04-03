@@ -114,7 +114,7 @@ public class UserDao {
                 .where(new Condition[]{USERS.EMAIL.eq(user.getEmail())}).execute();
     }
 
-    public boolean areCredentialsValid(String email, String password) {
+    public LoginResult areCredentialsValid(String email, String password) {
         if (Strings.isNullOrEmpty(email)
                 || Strings.isNullOrEmpty(password)) {
             throw new BadRequestException("Please provide both email and password");
@@ -126,21 +126,26 @@ public class UserDao {
                 .fetchOne();
 
         if (user == null) {
-            LOGGER.debug("Request to log in with invalid email: " + email);
-            // We're returning a different message because we don't want to reveal that the email doesn't exist.
-            throw new UnauthorisedException("Invalid credentials");
+            LOGGER.debug("Request to log in with invalid username: " + email);
+            return LoginResult.USER_DOES_NOT_EXIST;
         }
+        else {
+            boolean isPasswordCorrect = BCrypt.checkpw(password, user.getPasswordHash());
+            boolean isDisabled = user.getState().equals(User.UserState.DISABLED.getStateText());
+            boolean isLocked = user.getState().equals(User.UserState.LOCKED.getStateText());
 
-        // Don't let them in if the account is locked or disabled.
-        if (user.getState().equals(User.UserState.DISABLED.getStateText())
-                || user.getState().equals(User.UserState.LOCKED.getStateText())) {
-            LOGGER.debug("Account {} tried to log in but it is disabled or locked.", email);
-            throw new UnauthorisedException("This account is locked or disabled");
+            if (isLocked) {
+                LOGGER.debug("Account {} tried to log in but it is disabled.", email);
+                return isPasswordCorrect ? LoginResult.LOCKED_GOOD_CREDENTIALS : LoginResult.LOCKED_BAD_CREDENTIALS;
+            }
+            else if (isDisabled) {
+                LOGGER.debug("Account {} tried to log in but it is locked.", email);
+                return isPasswordCorrect ? LoginResult.DISABLED_GOOD_CREDENTIALS : LoginResult.DISABLED_BAD_CREDENTIALS;
+            }
+            else {
+                return isPasswordCorrect ? LoginResult.GOOD_CREDENTIALS : LoginResult.BAD_CREDENTIALS;
+            }
         }
-
-        boolean isPasswordCorrect = BCrypt.checkpw(password, user.getPasswordHash());
-
-        return isPasswordCorrect;
     }
 
     public void incrementLoginFailures(String email) {
@@ -257,6 +262,16 @@ public class UserDao {
         Instant now = Instant.now(clock);
         Instant thresholdInstant = now.minus(Period.ofDays(days));
         return Timestamp.from(thresholdInstant);
+    }
+
+    public enum LoginResult {
+        GOOD_CREDENTIALS,
+        BAD_CREDENTIALS,
+        LOCKED_BAD_CREDENTIALS,
+        LOCKED_GOOD_CREDENTIALS,
+        DISABLED_BAD_CREDENTIALS,
+        DISABLED_GOOD_CREDENTIALS,
+        USER_DOES_NOT_EXIST
     }
 
 }
