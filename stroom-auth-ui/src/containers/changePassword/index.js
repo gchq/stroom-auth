@@ -25,6 +25,8 @@ import Countdown from 'react-countdown-now'
 import { Card, CardTitle } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 
+import Cookies from 'cookies-js'
+
 import queryString from 'query-string'
 
 import './ChangePassword.css'
@@ -41,7 +43,8 @@ class ChangePassword extends Component {
       this.props.change('redirectUrl', redirectUrl)
     }
 
-    this.props.change('email', query.email)
+      const username = Cookies.get('username')
+      this.props.change('email', username)
   }
 
   render () {

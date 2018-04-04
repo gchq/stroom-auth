@@ -218,6 +218,7 @@ export const login = (credentials) => {
           'by incorrectly configured service URLs.'})
         } else {
           // Otherwise we'll extract what we expect to be the successful login redirect URL
+          Cookies.set('username', email)
           return statusAndText.text
         }
       })

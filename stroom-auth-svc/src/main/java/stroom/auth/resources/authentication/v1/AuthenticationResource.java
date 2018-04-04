@@ -438,8 +438,8 @@ public final class AuthenticationResource {
         if(userNeedsToChangePassword){
             String redirectUrl = getPostAuthenticationCheckUrl(clientId);
             String encodedRedirectUrl = URLEncoder.encode(redirectUrl, Charset.defaultCharset().name());
-            String changePasswordLocation = String.format("%s?email=%s&redirect_url=%s",
-                this.config.getChangePasswordUrl(), username, encodedRedirectUrl);
+            String changePasswordLocation = String.format("%s?&redirect_url=%s",
+                this.config.getChangePasswordUrl(), encodedRedirectUrl);
             URI changePasswordUri = UriBuilder.fromUri(changePasswordLocation).build();
             return seeOther(changePasswordUri).build();
         }
