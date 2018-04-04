@@ -58,10 +58,10 @@ token:
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- .*\((.*)\)} # This is the Java regex pattern used to capture the ID from the CN.
 certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The pattern above must identify the group with the sid.loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5000/login}
 loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5000/login}
-changePasswordUrl: ${CHANGE_PASSWORD_URL:-http://<IP_ADDRESS>:5000/changePassword}
+changePasswordUrl: ${CHANGE_PASSWORD_URL:-http://<IP_ADDRESS>:5000/changepassword}
 stroomUrl: ${STROOM_UI:- http://<IP_ADDRESS>:8099}
 resetPasswordUrl: ${RESET_PASSWORD_URL:- 'http://<IP_ADDRESS>/resetPassword/?token=%s'}
-advertisedHost: ${ADVERTISED_HTTP_HOST:- http://<IP_ADDRESS>:5000}
+advertisedHost: ${ADVERTISED_HTTP_HOST:- http://<IP_ADDRESS>/authService}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 month
 

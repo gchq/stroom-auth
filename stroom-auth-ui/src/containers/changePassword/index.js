@@ -30,14 +30,18 @@ import queryString from 'query-string'
 import './ChangePassword.css'
 import '../Layout.css'
 import { required } from '../../validations'
-import { changePasswordForCurrentUser as onSubmit } from '../../modules/user'
+import { changePassword as onSubmit } from '../../modules/user'
 
 class ChangePassword extends Component {
   componentDidMount () {
     const query = queryString.parse(this.context.router.route.location.search)
-    if (query.redirectUrl) {
-      this.redirectUrl = decodeURIComponent(query.redirectUrl)
+
+    if (query.redirect_url) {
+      const redirectUrl = decodeURIComponent(query.redirect_url)
+      this.props.change('redirectUrl', redirectUrl)
     }
+
+    this.props.change('email', query.email)
   }
 
   render () {
@@ -55,6 +59,36 @@ class ChangePassword extends Component {
           <div className='ChangePassword-contents'>
             {!showAlert ? (
               <form onSubmit={handleSubmit}>
+                <div style={{display: 'none'}}>
+                  <div className='left-container'>
+                    <div className='redirectUrl-field-container'>
+                      <div className='redirectUrl-label-container'>
+                        <label className='redirectUrl-label'>Redirect URL</label>
+                      </div>
+                      <div className='input-container'>
+                        <Field
+                          className='redirectUrl-field'
+                          name='redirectUrl'
+                          type='hidden'
+                          component={TextField} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className='left-container'>
+                    <div className='email-field-container'>
+                      <div className='email-label-container'>
+                        <label className='email-label'>Email</label>
+                      </div>
+                      <div className='input-container'>
+                        <Field
+                          className='email-field'
+                          name='email'
+                          type='hidden'
+                          component={TextField} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div className='left-container'>
                   <div className='ChangePassword-field-container'>
                     <div className='ChangePassword-label-container'>

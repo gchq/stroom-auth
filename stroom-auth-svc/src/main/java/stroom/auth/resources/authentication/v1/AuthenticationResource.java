@@ -311,7 +311,6 @@ public final class AuthenticationResource {
                     this.getClass().getSimpleName(), loginResult.toString());
                 throw new NotImplementedException(errorMessage);
         }
-
     }
 
     @GET
@@ -391,18 +390,19 @@ public final class AuthenticationResource {
     @ApiOperation(value = "Change a user's password.",
             response = String.class, tags = {"Authentication"})
     public final Response changePassword(
-            @Auth @NotNull ServiceUser authenticatedServiceUser,
             @ApiParam("changePasswordRequest") @NotNull ChangePasswordRequest changePasswordRequest,
             @PathParam("id") int userId) {
         UserDao.LoginResult loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
         if(loginResult == UserDao.LoginResult.BAD_CREDENTIALS
             || loginResult == UserDao.LoginResult.DISABLED_BAD_CREDENTIALS
             || loginResult == UserDao.LoginResult.LOCKED_BAD_CREDENTIALS){
-            return Response.status(Status.UNAUTHORIZED).entity("The old and new passwords do not match!").build();
+            String message = "The old password is not correct! " +
+                "To change your password you need to enter your old password correctly.";
+            return Response.status(Status.UNAUTHORIZED).entity(message).build();
         }
         else {
             userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
-            return Response.status(Status.OK).entity("The password has been changed.").build();
+            return Response.status(Status.OK).entity("Your password has been changed.").build();
         }
     }
 
@@ -413,8 +413,41 @@ public final class AuthenticationResource {
     @ApiOperation(value = "Check if a user's password needs changing.",
             response = Boolean.class, tags = {"Authentication"})
     public final Response needsPasswordChange(@QueryParam("email") String email) {
-        boolean userNeedsToChangePassword = userDao.needsPasswordChange(email, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
+        boolean userNeedsToChangePassword = userDao.needsPasswordChange(
+                email, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
         return Response.status(Status.OK).entity(userNeedsToChangePassword).build();
+    }
+
+    @GET
+    @Path("postAuthenticationRedirect")
+    @Produces({"application/json"})
+    @Timed
+    @NotNull
+    public final Response postAuthenticationRedirect(
+        @Session HttpSession httpSession,
+        @QueryParam("clientId") @NotNull String clientId) throws UnsupportedEncodingException {
+
+        stroom.auth.Session session = this.sessionManager.get(httpSession.getId()).get();
+        RelyingParty relyingParty = session.getRelyingParty(clientId);
+
+        String username = session.getUserEmail();
+
+        boolean userNeedsToChangePassword = userDao.needsPasswordChange(
+            username, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
+
+        if(userNeedsToChangePassword){
+            String redirectUrl = getPostAuthenticationCheckUrl(clientId);
+            String encodedRedirectUrl = URLEncoder.encode(redirectUrl, Charset.defaultCharset().name());
+            String changePasswordLocation = String.format("%s?email=%s&redirect_url=%s",
+                this.config.getChangePasswordUrl(), username, encodedRedirectUrl);
+            URI changePasswordUri = UriBuilder.fromUri(changePasswordLocation).build();
+            return seeOther(changePasswordUri).build();
+        }
+        else {
+            //TODO this method needs to take just a relying party
+            URI redirectionUrl = buildRedirectionUrl(relyingParty.getRedirectUrl(), relyingParty.getAccessCode(), relyingParty.getState());
+            return seeOther(redirectionUrl).build();
+        }
     }
 
     private String createIdToken(String subject, String nonce, String state, String authSessionId){
@@ -462,7 +495,7 @@ public final class AuthenticationResource {
 
     private String processSuccessfulLogin(stroom.auth.Session session, Credentials credentials, String sessionId) throws UnsupportedEncodingException {
         // Make sure the session is authenticated and ready for use
-        session.setAuthenticated(true);
+        session.setAuthenticated(false);
         session.setUserEmail(credentials.getEmail());
 
         //The relying party is the client making this request - now that we've authenticated for them we
@@ -478,15 +511,14 @@ public final class AuthenticationResource {
         // Reset last access, login failures, etc...
         userDao.recordSuccessfulLogin(credentials.getEmail());
 
-        String redirectionUrl = buildRedirectionUrl(relyingParty.getRedirectUrl(), accessCode, relyingParty.getState())
-            .toASCIIString();
-
-        Boolean needsPasswordChange = userDao.needsPasswordChange(credentials.getEmail(), config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
-        if(needsPasswordChange){
-            redirectionUrl = this.config.getChangePasswordUrl() + "?redirectUrl=" + URLEncoder.encode(redirectionUrl, Charset.defaultCharset().toString());
-        }
-
+        String redirectionUrl = getPostAuthenticationCheckUrl(credentials.getRequestingClientId());
         return redirectionUrl;
+    }
+
+    private String getPostAuthenticationCheckUrl(String clientId){
+        String postAuthenticationCheckUrl = String.format("%s/authentication/v1/postAuthenticationRedirect?clientId=%s",
+            this.config.getAdvertisedHost(), clientId);
+        return postAuthenticationCheckUrl;
     }
 
 }
