@@ -430,8 +430,8 @@ public final class AuthenticationResource {
     public final Response postAuthenticationRedirect(
         @Session HttpSession httpSession,
         @QueryParam("clientId") @NotNull String clientId) throws UnsupportedEncodingException {
-
-        stroom.auth.Session session = this.sessionManager.get(httpSession.getId()).get();
+        String httpSessionId = httpSession.getId();
+        stroom.auth.Session session = this.sessionManager.get(httpSessionId).get();
         RelyingParty relyingParty = session.getRelyingParty(clientId);
 
         String username = session.getUserEmail();

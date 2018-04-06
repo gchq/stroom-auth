@@ -21,7 +21,9 @@ import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.user.v1.User;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.ApiResponse;
+import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.UserApi;
+import stroom.auth.service.api.model.ChangePasswordRequest;
 import stroom.auth.service.resources.support.Dropwizard_IT;
 
 import java.util.List;
@@ -86,9 +88,19 @@ public final class UserResource_read_IT extends Dropwizard_IT {
         UserApi adminUserApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
 
         String userEmailA = "userEmailA_" + UUID.randomUUID().toString();
-        ApiResponse<Integer> responseA = adminUserApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
+        int userEmailAId = adminUserApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
                 .email(userEmailA)
-                .password("password"));
+                .password("password"))
+                .getData();
+
+        // If we don't change the password the AuthenticationResource will think this is the first login and
+        // try to force us to change the password. This means we won't get an access code and complete the
+        // authentication flow. So we'll change the password so the flow completes as normal.
+        AuthenticationApi authApi = SwaggerHelper.newAuthApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
+        authApi.changePassword(userEmailAId, new ChangePasswordRequest()
+                .email(userEmailA)
+                .oldPassword("password")
+                .newPassword("password"));
 
         String userEmailB = "userEmailB_" + UUID.randomUUID().toString();
         ApiResponse<Integer> responseB = adminUserApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()

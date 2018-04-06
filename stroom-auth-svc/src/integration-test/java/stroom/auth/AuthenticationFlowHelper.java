@@ -165,8 +165,20 @@ public class AuthenticationFlowHelper {
             throw new ApiException((String)loginResponse.getBody(), loginResponse.getStatus(), null, null);
         }
 
-        String redirectUrl = (String)loginResponse.getBody();
-        List<NameValuePair> params = URLEncodedUtils.parse(new URI(redirectUrl), "UTF-8");
+        String postAuthenticationRedirectUri = (String)loginResponse.getBody();
+        HttpResponse postAuthenticationRedirectResponse = null;
+        try {
+            postAuthenticationRedirectResponse = Unirest
+                    .get(postAuthenticationRedirectUri)
+                    .header("Content-Type", "application/json")
+                    .header("Cookie", cookies)
+                    .asString();
+        } catch (UnirestException e) {
+            fail("Unable to follow postAuthenticationRedirect!");
+        }
+        String redirectUri = postAuthenticationRedirectResponse.getHeaders().get("Location").get(0);
+
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(redirectUri), "UTF-8");
         String accessCode = params.stream()
                 .filter(pair -> pair.getName().equals("accessCode"))
                 .findFirst().orElseThrow(() -> new RuntimeException("No access code is present!"))
