@@ -391,6 +391,7 @@ public final class AuthenticationResource {
             response = String.class, tags = {"Authentication"})
     public final Response changePassword(
             @ApiParam("changePasswordRequest") @NotNull ChangePasswordRequest changePasswordRequest,
+            //TODO: Delete this parameter
             @PathParam("id") int userId) {
         UserDao.LoginResult loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
         if(loginResult == UserDao.LoginResult.BAD_CREDENTIALS
