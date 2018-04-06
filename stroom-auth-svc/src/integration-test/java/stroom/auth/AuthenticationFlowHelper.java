@@ -141,7 +141,7 @@ public class AuthenticationFlowHelper {
      * <p>
      * The sessionId would be stored in a cookie and a normal relying party would not have to do this.
      */
-    public static String performLogin(String sessionId, String username, String password) throws ApiException, URISyntaxException {
+    public static String performLogin(String sessionId, String username, String password) throws ApiException, URISyntaxException, MalformedURLException {
         // We need to use UniRest again because we're not a browser and we need to manually add in the cookies.
         Credentials credentials = new Credentials();
         credentials.setEmail(username);
@@ -165,11 +165,19 @@ public class AuthenticationFlowHelper {
             throw new ApiException((String)loginResponse.getBody(), loginResponse.getStatus(), null, null);
         }
 
-        String postAuthenticationRedirectUri = (String)loginResponse.getBody();
+        URL postAuthenticationRedirectUrl = new URL((String)loginResponse.getBody());
+
+        // The normally supplied advertised host doesn't work on Travis, so we need to hack the URL so it uses localhost.
+        String modifiedPostAuthenticationRedirectUrl = String.format(
+                "http://localhost:8099%s?%s",
+                postAuthenticationRedirectUrl.getPath(),
+                postAuthenticationRedirectUrl.getQuery());
+
         HttpResponse postAuthenticationRedirectResponse = null;
+        LOGGER.info("postAuthenticationRedirectUri is {}", modifiedPostAuthenticationRedirectUrl);
         try {
             postAuthenticationRedirectResponse = Unirest
-                    .get(postAuthenticationRedirectUri)
+                    .get(modifiedPostAuthenticationRedirectUrl)
                     .header("Content-Type", "application/json")
                     .header("Cookie", cookies)
                     .asString();
