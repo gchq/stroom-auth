@@ -418,6 +418,10 @@ public final class AuthenticationResource {
         return Response.status(Status.OK).entity(userNeedsToChangePassword).build();
     }
 
+    /**
+     * Checks to see if the user needs to change their password, and re-directs them accordingly if they do.
+     * If they don't it will create the redirection URL with access code as normal.
+     */
     @GET
     @Path("postAuthenticationRedirect")
     @Produces({"application/json"})
