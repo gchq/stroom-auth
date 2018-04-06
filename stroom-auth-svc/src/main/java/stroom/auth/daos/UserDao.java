@@ -19,6 +19,7 @@
 package stroom.auth.daos;
 
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.Validate;
 import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
@@ -193,6 +194,7 @@ public class UserDao {
 
         String newPasswordHash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         user.setPasswordHash(newPasswordHash);
+        user.setPasswordLastChanged(Timestamp.from(clock.instant()));
 
         database.update((Table) USERS)
                 .set(user)
@@ -201,6 +203,9 @@ public class UserDao {
     }
 
     public Boolean needsPasswordChange(String email, int passwordChangeThreshold) {
+        Validate.notNull(email, "email must not be null");
+        Validate.inclusiveBetween(0, Integer.MAX_VALUE, passwordChangeThreshold);
+
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
                 .where(new Condition[]{USERS.EMAIL.eq(email)})
@@ -214,14 +219,15 @@ public class UserDao {
                 user.getCreatedOn().toLocalDateTime() :
                 user.getPasswordLastChanged().toLocalDateTime();
         LocalDateTime now = LocalDateTime.ofInstant(Instant.now(clock), ZoneId.systemDefault());
-
         long daysSinceLastPasswordChange = passwordLastChanged.until(now, ChronoUnit.DAYS);
 
-        if(daysSinceLastPasswordChange >= passwordChangeThreshold){
+        boolean thresholdBreached = daysSinceLastPasswordChange >= passwordChangeThreshold;
+        boolean firstLogin = user.getPasswordLastChanged()  == null;
+
+        if(thresholdBreached || firstLogin){
             LOGGER.debug("User {} needs a password change.", email);
             return true;
-        }
-        return false;
+        } else return false;
     }
 
     public int disableNewInactiveUsers(int inactivityThresholdInDays){
