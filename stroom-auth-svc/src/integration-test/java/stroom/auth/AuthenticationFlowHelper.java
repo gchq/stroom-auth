@@ -52,11 +52,17 @@ public class AuthenticationFlowHelper {
 
     private static final String CLIENT_ID = "integrationTestClient";
 
-    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException, MalformedURLException {
+    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException, MalformedURLException, UnirestException {
         return authenticateAs("admin", "admin");
     }
 
-    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException, MalformedURLException {
+    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException, MalformedURLException, UnirestException {
+        // We have to change the password for admin because otherwise the flow might demand a changepassword --
+        // it certainly would in TravisCI.
+        Unirest.post("http://localhost:8099/authentication/v1/changePassword")
+                .header("Content-Type", "application/json")
+                .body("{\"email\":\"admin\", \"oldPassword\":\"admin\", \"newPassword\":\"admin\"}");
+
         // We need to use a real-ish sort of nonce otherwise the OpenId tokens might end up being identical.
         String nonce = UUID.randomUUID().toString();
         String sessionId = sendInitialAuthenticationRequest(nonce);
