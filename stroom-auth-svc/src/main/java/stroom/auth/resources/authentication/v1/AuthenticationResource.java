@@ -449,6 +449,7 @@ public final class AuthenticationResource {
         }
         else {
             //TODO this method needs to take just a relying party
+            session.setAuthenticated(true);
             URI redirectionUrl = buildRedirectionUrl(relyingParty.getRedirectUrl(), relyingParty.getAccessCode(), relyingParty.getState());
             return seeOther(redirectionUrl).build();
         }
