@@ -174,7 +174,7 @@ public class AuthenticationFlowHelper {
                     .header("Cookie", cookies)
                     .asString();
         } catch (UnirestException e) {
-            fail("Unable to follow postAuthenticationRedirect!");
+            fail("Unable to follow postAuthenticationRedirect! " + e.toString());
         }
         String redirectUri = postAuthenticationRedirectResponse.getHeaders().get("Location").get(0);
 
