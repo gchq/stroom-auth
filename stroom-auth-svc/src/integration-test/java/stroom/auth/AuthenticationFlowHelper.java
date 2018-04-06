@@ -185,6 +185,7 @@ public class AuthenticationFlowHelper {
             fail("Unable to follow postAuthenticationRedirect! " + e.toString());
         }
         String redirectUri = postAuthenticationRedirectResponse.getHeaders().get("Location").get(0);
+        LOGGER.info("redirectUrl:{}", redirectUri);
 
         List<NameValuePair> params = URLEncodedUtils.parse(new URI(redirectUri), "UTF-8");
         String accessCode = params.stream()
