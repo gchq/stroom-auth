@@ -175,10 +175,10 @@ export const login = (credentials) => {
 
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true))
-
-    const authenticationServiceUrl = getState().config.authenticationServiceUrl
+    const state = getState()
+    const authenticationServiceUrl = state.config.authenticationServiceUrl
     const loginServiceUrl = `${authenticationServiceUrl}/authenticate`
-    const clientId = getState().login.clientId
+    const clientId = state.login.clientId
 
     // We need to post the sessionId in the credentials, otherwise the
     // authenticationService will have no way of marking the session as valid.
@@ -218,6 +218,7 @@ export const login = (credentials) => {
           'by incorrectly configured service URLs.'})
         } else {
           // Otherwise we'll extract what we expect to be the successful login redirect URL
+          Cookies.set('username', email)
           return statusAndText.text
         }
       })

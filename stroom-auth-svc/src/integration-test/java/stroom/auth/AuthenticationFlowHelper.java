@@ -37,6 +37,7 @@ import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
 
+import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -52,11 +53,22 @@ public class AuthenticationFlowHelper {
 
     private static final String CLIENT_ID = "integrationTestClient";
 
-    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException, MalformedURLException {
+    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException, MalformedURLException, UnirestException {
         return authenticateAs("admin", "admin");
     }
 
-    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException, MalformedURLException {
+    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException, MalformedURLException, UnirestException {
+        // We have to change the password for admin because otherwise the flow might demand a changepassword --
+        // it certainly would in TravisCI.
+        HttpResponse changePasswordResponse = Unirest.post("http://localhost:8099/authentication/v1/changePassword")
+                .header("Content-Type", "application/json")
+                .body("{\"email\":\"admin\", \"oldPassword\":\"admin\", \"newPassword\":\"admin\"}")
+                .asString();
+
+        if(changePasswordResponse.getStatus() != Response.Status.OK.getStatusCode()){
+            fail("Unable to change password! " + changePasswordResponse.getStatusText());
+        }
+
         // We need to use a real-ish sort of nonce otherwise the OpenId tokens might end up being identical.
         String nonce = UUID.randomUUID().toString();
         String sessionId = sendInitialAuthenticationRequest(nonce);
@@ -141,7 +153,7 @@ public class AuthenticationFlowHelper {
      * <p>
      * The sessionId would be stored in a cookie and a normal relying party would not have to do this.
      */
-    public static String performLogin(String sessionId, String username, String password) throws ApiException, URISyntaxException {
+    public static String performLogin(String sessionId, String username, String password) throws ApiException, URISyntaxException, MalformedURLException {
         // We need to use UniRest again because we're not a browser and we need to manually add in the cookies.
         Credentials credentials = new Credentials();
         credentials.setEmail(username);
@@ -165,8 +177,29 @@ public class AuthenticationFlowHelper {
             throw new ApiException((String)loginResponse.getBody(), loginResponse.getStatus(), null, null);
         }
 
-        String redirectUrl = (String)loginResponse.getBody();
-        List<NameValuePair> params = URLEncodedUtils.parse(new URI(redirectUrl), "UTF-8");
+        URL postAuthenticationRedirectUrl = new URL((String)loginResponse.getBody());
+
+        // The normally supplied advertised host doesn't work on Travis, so we need to hack the URL so it uses localhost.
+        String modifiedPostAuthenticationRedirectUrl = String.format(
+                "http://localhost:8099%s?%s",
+                postAuthenticationRedirectUrl.getPath(),
+                postAuthenticationRedirectUrl.getQuery());
+
+        HttpResponse postAuthenticationRedirectResponse = null;
+        LOGGER.info("postAuthenticationRedirectUri is {}", modifiedPostAuthenticationRedirectUrl);
+        try {
+            postAuthenticationRedirectResponse = Unirest
+                    .get(modifiedPostAuthenticationRedirectUrl)
+                    .header("Content-Type", "application/json")
+                    .header("Cookie", cookies)
+                    .asString();
+        } catch (UnirestException e) {
+            fail("Unable to follow postAuthenticationRedirect! " + e.toString());
+        }
+        String redirectUri = postAuthenticationRedirectResponse.getHeaders().get("Location").get(0);
+        LOGGER.info("redirectUrl:{}", redirectUri);
+
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(redirectUri), "UTF-8");
         String accessCode = params.stream()
                 .filter(pair -> pair.getName().equals("accessCode"))
                 .findFirst().orElseThrow(() -> new RuntimeException("No access code is present!"))

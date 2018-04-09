@@ -263,12 +263,10 @@ export const deleteSelectedUser = (userId) => {
 
 export const changePasswordForCurrentUser = () => {
   return (dispatch, getState) => {
-    const jwsToken = getState().authentication.idToken
     fetch(`${getState().config.userServiceUrl}/me`, {
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwsToken
+        'Content-Type': 'application/json'
       },
       method: 'get',
       mode: 'cors'
@@ -279,18 +277,19 @@ export const changePasswordForCurrentUser = () => {
     .then(user => {
       dispatch(changePassword(user.email))
     })
-    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 
-export const changePassword = (email) => {
+export const changePassword = () => {
   return (dispatch, getState) => {
     dispatch(hideChangePasswordErrorMessage())
 
-    const jwsToken = getState().authentication.idToken
-    const oldPassword = getState().form.ChangePasswordForm.values.oldPassword
-    const newPassword = getState().form.ChangePasswordForm.values.newPassword
-    const newPasswordConfirmation = getState().form.ChangePasswordForm.values.newPasswordConfirmation
+    const form = getState().form.ChangePasswordForm
+    const email = form.values.email
+    const oldPassword = form.values.oldPassword
+    const newPassword = form.values.newPassword
+    const newPasswordConfirmation = form.values.newPasswordConfirmation
+    const redirectUrl = form.values.redirectUrl
 
     if (newPassword !== newPasswordConfirmation) {
       dispatch(showChangePasswordErrorMessage('The new passwords do not match!'))
@@ -298,8 +297,7 @@ export const changePassword = (email) => {
       fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + jwsToken
+          'Content-Type': 'application/json'
         },
         method: 'post',
         mode: 'cors',
@@ -307,7 +305,13 @@ export const changePassword = (email) => {
       })
       .then(handleStatus)
       .then(() => {
-        dispatch(toggleAlertVisibility('Your password has been changed'))
+        // We'll redirect if we have a redirect URL. Otherwise we'll show a message confirming the password has been changed
+        if (redirectUrl) {
+          // TODO: Maybe show a message with a delay.
+          window.location.href = redirectUrl
+        } else {
+          dispatch(toggleAlertVisibility('Your password has been changed'))
+        }
       })
       .catch(error => {
         if (error.status === 401) {

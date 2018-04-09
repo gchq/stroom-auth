@@ -89,13 +89,7 @@ class App extends Component {
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
 
-              <Route exact path={'/changepassword'} render={(route) => (
-                this.isLoggedIn() ? <ChangePassword /> : <AuthenticationRequest
-                  referrer={route.location.pathname + route.location.search}
-                  uiUrl={this.props.advertisedUrl}
-                  appClientId={this.props.appClientId}
-                  authenticationServiceUrl={this.props.authenticationServiceUrl} />
-              )} />
+              <Route exact path={'/changepassword'} component={ChangePassword} />
 
               <Route exact path={'/user'} render={() => (
                 this.isLoggedIn() ? <UserCreate /> : <AuthenticationRequest
