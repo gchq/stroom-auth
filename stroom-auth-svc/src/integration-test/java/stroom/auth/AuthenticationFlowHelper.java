@@ -37,6 +37,7 @@ import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
 
+import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,9 +60,14 @@ public class AuthenticationFlowHelper {
     public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException, MalformedURLException, UnirestException {
         // We have to change the password for admin because otherwise the flow might demand a changepassword --
         // it certainly would in TravisCI.
-        Unirest.post("http://localhost:8099/authentication/v1/changePassword")
+        HttpResponse changePasswordResponse = Unirest.post("http://localhost:8099/authentication/v1/changePassword")
                 .header("Content-Type", "application/json")
-                .body("{\"email\":\"admin\", \"oldPassword\":\"admin\", \"newPassword\":\"admin\"}");
+                .body("{\"email\":\"admin\", \"oldPassword\":\"admin\", \"newPassword\":\"admin\"}")
+                .asString();
+
+        if(changePasswordResponse.getStatus() != Response.Status.OK.getStatusCode()){
+            fail("Unable to change password! " + changePasswordResponse.getStatusText());
+        }
 
         // We need to use a real-ish sort of nonce otherwise the OpenId tokens might end up being identical.
         String nonce = UUID.randomUUID().toString();
