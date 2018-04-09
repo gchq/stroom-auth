@@ -66,7 +66,8 @@ class ChangePassword extends Component {
                         name='oldPassword'
                         type='password'
                         component={TextField}
-                        validate={[required]} />
+                        validate={[required]} 
+                        autoFocus/>
                     </div>
                   </div>
                 </div>

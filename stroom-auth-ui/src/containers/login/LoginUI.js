@@ -32,51 +32,55 @@ import icon from '../../icon.png'
 import { required } from '../../validations'
 import { login as onSubmit } from '../../modules/login'
 
-const LoginForm = props => {
-  const { handleSubmit, pristine, submitting } = props
-  return (
-    <div className='content-floating-without-appbar'>
-      <Card className='Login-card'>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <div className='LoginForm-iconContainer'>
-              <Avatar
-                className='LoginForm-icon'
-                src={icon}
-                size={100}
-                />
-            </div>
+class LoginForm extends React.Component {
+
+  render() {
+    const { handleSubmit, pristine, submitting } = this.props
+    return (
+      <div className='content-floating-without-appbar'>
+        <Card className='Login-card'>
+          <form onSubmit={handleSubmit}>
             <div>
+              <div className='LoginForm-iconContainer'>
+                <Avatar
+                  className='LoginForm-icon'
+                  src={icon}
+                  size={100}
+                  />
+              </div>
+              <div>
+                <Field
+                  name='email'
+                  component={TextField}
+                  hintText='Email'
+                  validate={[required]}
+                  className='LoginForm-input'
+                  autoFocus
+                />
+              </div>
               <Field
-                name='email'
+                name='password'
                 component={TextField}
-                hintText='Email'
+                hintText='Password'
                 validate={[required]}
                 className='LoginForm-input'
-              />
+                type='password'
+                />
+              <br />
+              <RaisedButton
+                primary
+                disabled={pristine || submitting}
+                type='submit'
+                fullWidth
+                label='Sign in' />
+              <br />
+              <NavLink to={'/resetPasswordRequest'}><p className='LoginForm-resetPasswordText'>Reset password?</p></NavLink>
             </div>
-            <Field
-              name='password'
-              component={TextField}
-              hintText='Password'
-              validate={[required]}
-              className='LoginForm-input'
-              type='password'
-              />
-            <br />
-            <RaisedButton
-              primary
-              disabled={pristine || submitting}
-              type='submit'
-              fullWidth
-              label='Sign in' />
-            <br />
-            <NavLink to={'/resetPasswordRequest'}><p className='LoginForm-resetPasswordText'>Reset password?</p></NavLink>
-          </div>
-        </form>
-      </Card>
-    </div>
-  )
+          </form>
+        </Card>
+      </div>
+    )
+  }
 }
 
 const ReduxLoginForm = reduxForm({
