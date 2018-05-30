@@ -65,6 +65,10 @@ advertisedHost: ${ADVERTISED_HTTP_HOST:- http://<IP_ADDRESS>}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 month
 
+# This is the path at which the authentication service may be found, i.e. when it's being reverse proxied
+# e.g. https://123.123.123.123/authenticationService/v1/postAuthenticationRedirect
+ownPath: ${OWN_PATH:-authenticationService}
+
 authorisationService:
   url: ${AUTHORISATION_SERVICE_URL:- http://<IP_ADDRESS>:8080/api/authorisation/v1}
   canManageUsersPath: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PATH:- /canManageUsers}

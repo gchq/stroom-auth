@@ -522,8 +522,8 @@ public final class AuthenticationResource {
     }
 
     private String getPostAuthenticationCheckUrl(String clientId){
-        String postAuthenticationCheckUrl = String.format("%s/authentication/v1/postAuthenticationRedirect?clientId=%s",
-            this.config.getAdvertisedHost(), clientId);
+        String postAuthenticationCheckUrl = String.format("%s/%s/v1/postAuthenticationRedirect?clientId=%s",
+            this.config.getAdvertisedHost(), config.getOwnPath(), clientId);
         return postAuthenticationCheckUrl;
     }
 

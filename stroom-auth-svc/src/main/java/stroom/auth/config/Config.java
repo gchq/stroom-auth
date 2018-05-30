@@ -113,6 +113,10 @@ public final class Config extends Configuration {
     @JsonProperty("passwordIntegrityChecks")
     private PasswordIntegrityChecksConfig passwordIntegrityChecksConfig;
 
+    @NotNull
+    @JsonProperty("ownPath")
+    private String ownPath;
+
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
     }
@@ -184,6 +188,10 @@ public final class Config extends Configuration {
 
     public int getCertificateDnCaptureGroupIndex() {
         return certificateDnCaptureGroupIndex;
+    }
+
+    public String getOwnPath() {
+        return ownPath;
     }
 
     private Integer getPort() {
