@@ -52,6 +52,11 @@ sourceSets {
     }
 }
 
+// Configure the run task to start the Dropwizard service
+run {
+    args 'server', './config.generated.yml'
+}
+
 //configurations {
     //testArtifacts
     //sourceArtifacts
