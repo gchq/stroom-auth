@@ -93,6 +93,5 @@ CREATE TABLE json_web_key (
     json                  VARCHAR(2000) NOT NULL,
     PRIMARY KEY           (id),
     UNIQUE                (keyId),
-    UNIQUE 			      (json),
     CHECK                 (JSON_VALID(json))
 ) ENGINE=InnoDB DEFAULT CHARSET latin1;
