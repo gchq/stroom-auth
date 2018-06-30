@@ -18,11 +18,14 @@
 
 package stroom.auth;
 
+import com.google.common.base.Strings;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.config.ServerConfig;
 import org.simplejavamail.mailer.config.TransportStrategy;
 import stroom.auth.config.Config;
+import stroom.auth.config.EmailConfig;
+import stroom.auth.config.SmtpConfig;
 import stroom.auth.resources.user.v1.User;
 
 import javax.inject.Inject;
@@ -33,33 +36,43 @@ import javax.mail.Message;
 public class EmailSender {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EmailSender.class);
     private Config config;
+    private final ServerConfig serverConfig;
+    private final TransportStrategy transportStrategy;
 
     @Inject
     public EmailSender(Config config) {
         this.config = config;
+        SmtpConfig smtpConfig = config.getEmailConfig().getSmtpConfig();
+
+        if (!Strings.isNullOrEmpty(smtpConfig.getUsername()) && !Strings.isNullOrEmpty(smtpConfig.getPassword())) {
+            LOGGER.info("Sending reset email using username and password");
+            serverConfig = new ServerConfig(
+                    config.getEmailConfig().getSmtpConfig().getHost(),
+                    config.getEmailConfig().getSmtpConfig().getPort(),
+                    config.getEmailConfig().getSmtpConfig().getUsername(),
+                    config.getEmailConfig().getSmtpConfig().getPassword());
+        } else {
+            serverConfig = new ServerConfig(
+                    config.getEmailConfig().getSmtpConfig().getHost(),
+                    config.getEmailConfig().getSmtpConfig().getPort());
+        }
+
+        transportStrategy = config.getEmailConfig().getSmtpConfig().getTransportStrategy();
     }
 
     public void send(User user, String resetToken) {
+        EmailConfig emailConfig = config.getEmailConfig();
         String resetName = user.getFirst_name() + "" + user.getLast_name();
         String resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
-        String passwordResetEmailText = String.format(config.getEmailConfig().getPasswordResetText(), resetUrl);
+        String passwordResetEmailText = String.format(emailConfig.getPasswordResetText(), resetUrl);
 
         Email email = new Email();
-        email.setFromAddress(config.getEmailConfig().getFromName(), config.getEmailConfig().getFromAddress());
-        email.setReplyToAddress(config.getEmailConfig().getFromName(), config.getEmailConfig().getFromAddress());
+        email.setFromAddress(emailConfig.getFromName(), emailConfig.getFromAddress());
+        email.setReplyToAddress(emailConfig.getFromName(), emailConfig.getFromAddress());
         email.addRecipient(resetName, user.getEmail(), Message.RecipientType.TO);
-        email.setSubject(config.getEmailConfig().getPasswordResetSubject());
+        email.setSubject(emailConfig.getPasswordResetSubject());
         email.setText(passwordResetEmailText);
-
-        TransportStrategy transportStrategy = config.getEmailConfig().getSmtpConfig().getTransportStrategy();
-
-        new Mailer(
-                new ServerConfig(
-                        config.getEmailConfig().getSmtpConfig().getHost(),
-                        config.getEmailConfig().getSmtpConfig().getPort(),
-                        config.getEmailConfig().getSmtpConfig().getUsername(),
-                        config.getEmailConfig().getSmtpConfig().getPassword()),
-                transportStrategy
-        ).sendMail(email);
+        
+        new Mailer(serverConfig, transportStrategy).sendMail(email);
     }
 }
