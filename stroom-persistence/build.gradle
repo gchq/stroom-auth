@@ -20,6 +20,8 @@ apply plugin: 'nu.studer.jooq'
 
 dependencies {
     compile deps.jooq
+    compile deps.javax_annotations
+    compile deps.jaxws_api
 
     jooqRuntime deps.mariadb_connector
 }
