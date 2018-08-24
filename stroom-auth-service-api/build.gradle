@@ -87,10 +87,12 @@ task execute(type:JavaExec) {
 
 dependencies {
     //TODO use deps variable instead of hard coding
-    compile 'io.swagger:swagger-annotations:1.5.8'
-    compile 'com.squareup.okhttp:okhttp:2.7.5'
-    compile 'com.squareup.okhttp:logging-interceptor:2.7.5'
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'joda-time:joda-time:2.9.3'
-    testCompile 'junit:junit:4.12'
+    compile deps.javax_annotations
+    compile deps.swagger_annotations
+    compile deps.okhttp
+    compile deps.okhttp_logginer_interceptor
+    compile deps.gson
+    compile deps.joda_time
+
+    testCompile testDeps.junit
 }
