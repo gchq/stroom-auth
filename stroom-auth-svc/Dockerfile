@@ -14,20 +14,11 @@
 # limitations under the License.
 #**********************************************************************
 
-FROM openjdk:8u151-jre-alpine
+FROM openjdk:10.0.2-13-jre
 
 WORKDIR /usr/stroom-auth-service
 
 ADD ./build/libs/stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
 ADD ./config.yml /usr/stroom-auth-service/config.yml
-
-# update alpine and install Bash as it is not in alpine by default
-# then run setup to configure the tomcat instance
-RUN echo "http_proxy: $http_proxy" && \
-    echo "https_proxy: $https_proxy" && \
-    apk update && \
-    apk upgrade && \
-    apk add --no-cache bash && \
-    rm -rf /var/cache/apk/*
 
 CMD java -jar stroom-auth-service-all.jar server config.yml
