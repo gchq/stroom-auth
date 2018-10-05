@@ -14,9 +14,14 @@ server:
     appenders:
     - type: file
       currentLogFilename: ./logs/access.log
+      queueSize: 256
+      discardingThreshold: 0
       threshold: ALL
       archive: true
-      archivedLogFilenamePattern: ./logs/access-%d{yyyy-MM-dd'T'HH:mm}.log
+      maxFileSize: 50MB
+      archivedLogFilenamePattern: ./logs/access-%d{yyyy-MM-dd'T'HH:mm}_%i.log
+      # archivedFileCount being set means we'll start losing data if the access logs
+      # aren't being sent somewhere, or if that mechanism fails.
       archivedFileCount: 100
       timeZone: UTC
 
