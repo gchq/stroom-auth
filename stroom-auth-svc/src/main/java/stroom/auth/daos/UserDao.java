@@ -222,9 +222,10 @@ public class UserDao {
         long daysSinceLastPasswordChange = passwordLastChanged.until(now, ChronoUnit.DAYS);
 
         boolean thresholdBreached = daysSinceLastPasswordChange >= passwordChangeThreshold;
-        boolean firstLogin = user.getPasswordLastChanged()  == null;
+        boolean isFirstLogin = user.getPasswordLastChanged() == null;
+        boolean forcePasswordChangeOnFirstLogin = config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin();
 
-        if(thresholdBreached || firstLogin){
+        if(thresholdBreached || (forcePasswordChangeOnFirstLogin && isFirstLogin)){
             LOGGER.debug("User {} needs a password change.", email);
             return true;
         } else return false;

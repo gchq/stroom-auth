@@ -21,6 +21,10 @@ public class PasswordIntegrityChecksConfig {
     @JsonProperty
     private int secondsBetweenChecks = 120;
 
+    @NotNull
+    @JsonProperty
+    private boolean forcePasswordChangeOnFirstLogin = true;
+
     public int getDisableInactiveNewAccountAfterXDays() {
         return disableInactiveNewAccountAfterXDays;
     }
@@ -35,5 +39,9 @@ public class PasswordIntegrityChecksConfig {
 
     public int getSecondsBetweenChecks() {
         return secondsBetweenChecks;
+    }
+
+    public boolean isForcePasswordChangeOnFirstLogin() {
+        return forcePasswordChangeOnFirstLogin;
     }
 }
