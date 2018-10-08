@@ -18,6 +18,7 @@ apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow' 
 apply plugin: 'com.benjaminsproule.swagger'
 apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'com.jfrog.bintray'
 
 mainClassName = 'stroom.auth.service.App'
 
@@ -108,6 +109,7 @@ dependencies {
     compile deps.curator_service_discovery
     compile deps.simple_java_mail
     compile deps.swagger_annotations
+    compile deps.eventLogging
 
     runtime deps.mariadb_connector
 

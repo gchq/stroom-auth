@@ -19,7 +19,6 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
-import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +42,7 @@ import stroom.auth.exceptions.NoSuchUserException;
 import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.resources.token.v1.Token;
 import stroom.auth.resources.user.v1.User;
-import stroom.auth.service.security.ServiceUser;
+import stroom.auth.service.eventlogging.StroomEventLoggingService;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -95,6 +94,7 @@ public final class AuthenticationResource {
     private EmailSender emailSender;
     private CertificateManager certificateManager;
     private TokenBuilderFactory tokenBuilderFactory;
+    private StroomEventLoggingService stroomEventLoggingService;
 
     @Inject
     public AuthenticationResource(
@@ -105,7 +105,8 @@ public final class AuthenticationResource {
             SessionManager sessionManager,
             EmailSender emailSender,
             CertificateManager certificateManager,
-            TokenBuilderFactory tokenBuilderFactory) {
+            TokenBuilderFactory tokenBuilderFactory,
+            StroomEventLoggingService stroomEventLoggingService) {
         this.config = config;
         this.dnPattern = Pattern.compile(config.getCertificateDnPattern());
         this.tokenDao = tokenDao;
@@ -115,6 +116,7 @@ public final class AuthenticationResource {
         this.emailSender = emailSender;
         this.certificateManager = certificateManager;
         this.tokenBuilderFactory = tokenBuilderFactory;
+        this.stroomEventLoggingService = stroomEventLoggingService;
     }
 
 
@@ -283,9 +285,11 @@ public final class AuthenticationResource {
             case BAD_CREDENTIALS:
                 LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
                 userDao.incrementLoginFailures(credentials.getEmail());
+                stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
                 throw new UnauthorisedException("Invalid credentials");
             case GOOD_CREDENTIALS:
                 String redirectionUrl = processSuccessfulLogin(session, credentials, sessionId);
+                stroomEventLoggingService.successfulLogin(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
                     .entity(redirectionUrl)
                     .build();
@@ -293,18 +297,23 @@ public final class AuthenticationResource {
                 // We don't want to let the user know the account they tried to log in with doesn't exist.
                 // If we did we'd be revealing the presence or absence of an account or email address and
                 // we don't want to do this.
+                stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
                 throw new UnauthorisedException("Invalid credentials");
             case LOCKED_BAD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
+                stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
                 throw new UnauthorisedException("Invalid credentials");
             case LOCKED_GOOD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
+                stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
                 throw new UnauthorisedException("This account is locked. Please contact your administrator.");
             case DISABLED_BAD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
+                stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
                 throw new UnauthorisedException("Invalid credentials");
             case DISABLED_GOOD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
+                stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
                 throw new UnauthorisedException("This account is disabled. Please contact your administrator.");
             default:
                 String errorMessage = String.format("%s does not support a LoginResult of %s",
@@ -325,6 +334,11 @@ public final class AuthenticationResource {
             @Context @NotNull HttpServletRequest httpServletRequest,
             @QueryParam("redirect_url") @Nullable String redirectUrl) throws URISyntaxException {
         String sessionId = httpSession.getId();
+
+        sessionManager.get(sessionId).ifPresent(session -> {
+            stroomEventLoggingService.logout(httpServletRequest, session.getUserEmail());
+        });
+
         sessionManager.logout(sessionId);
 
         // If we have a redirect URL then we'll use that, otherwise we'll go to the advertised host.
@@ -361,7 +375,10 @@ public final class AuthenticationResource {
     @NotNull
     @ApiOperation(value = "Reset a user account using an email address.",
             response = String.class, tags = {"Authentication"})
-    public final Response resetEmail(@PathParam("email") String emailAddress) throws NoSuchUserException {
+    public final Response resetEmail(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @PathParam("email") String emailAddress) throws NoSuchUserException {
+        stroomEventLoggingService.resetPassword(httpServletRequest, emailAddress);
         User user = userDao.get(emailAddress);
         String resetToken = tokenDao.createEmailResetToken(emailAddress);
         emailSender.send(user, resetToken);
@@ -390,6 +407,7 @@ public final class AuthenticationResource {
     @ApiOperation(value = "Change a user's password.",
             response = String.class, tags = {"Authentication"})
     public final Response changePassword(
+            @Context @NotNull HttpServletRequest httpServletRequest,
             @ApiParam("changePasswordRequest") @NotNull ChangePasswordRequest changePasswordRequest,
             //TODO: Delete this parameter
             @PathParam("id") int userId) {
@@ -402,6 +420,7 @@ public final class AuthenticationResource {
             return Response.status(Status.UNAUTHORIZED).entity(message).build();
         }
         else {
+            stroomEventLoggingService.changePassword(httpServletRequest, changePasswordRequest.getEmail());
             userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
             return Response.status(Status.OK).entity("Your password has been changed.").build();
         }

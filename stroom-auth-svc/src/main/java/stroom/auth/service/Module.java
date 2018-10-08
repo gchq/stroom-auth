@@ -38,6 +38,7 @@ import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
 import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
+import stroom.auth.service.eventlogging.StroomEventLoggingService;
 
 public final class Module extends AbstractModule {
     private Config config;
@@ -60,6 +61,7 @@ public final class Module extends AbstractModule {
         bind(EmailSender.class);
         bind(CertificateManager.class);
         bind(TokenBuilderFactory.class);
+        bind(StroomEventLoggingService.class);
 
         bind(UnauthorisedExceptionMapper.class);
         bind(BadRequestExceptionMapper.class);

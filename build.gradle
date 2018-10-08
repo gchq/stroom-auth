@@ -18,6 +18,8 @@ buildscript {
     repositories {
         mavenLocal()
         jcenter()
+        maven { url "https://dl.bintray.com/stroom/event-logging" }
+        maven { url "https://dl.bintray.com/stroom/stroom" }
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
@@ -32,6 +34,8 @@ plugins {
     id 'nu.studer.jooq' version '2.0.6' apply false
     id 'org.flywaydb.flyway' version '5.1.4'
 }
+
+apply plugin: 'com.jfrog.bintray'
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
@@ -59,7 +63,8 @@ ext.versions = [
     dropwizard_jooq:'1.1.0-0',
     shiro: '1.3.2',
     curator: '2.12.0',
-    swagger: '1.5.16'
+    swagger: '1.5.16',
+    eventLogging: 'v3.1.2_schema-v3.1.2',
 ]
 
 ext.testVersions = [
@@ -78,6 +83,7 @@ ext.deps = [
     dropwizard_flyway: 'io.dropwizard.modules:dropwizard-flyway:1.2.0-1',
     dropwizard_jersey: "io.dropwizard:dropwizard-jersey:$versions.dropwizard",
     dropwizard_jooq: "com.bendb.dropwizard:dropwizard-jooq:$versions.dropwizard_jooq",
+    eventLogging: "event-logging:event-logging:$versions.eventLogging",
     flyway_core: "org.flywaydb:flyway-core:4.2.0",
     guice: "com.google.inject:guice:4.0",
     javax_annotations: "javax.annotation:javax.annotation-api:1.3.2",
@@ -146,6 +152,8 @@ configure(javaProjects) {
     repositories {
         mavenLocal()
         jcenter()
+        maven { url "https://dl.bintray.com/stroom/event-logging" }
+        maven { url "https://dl.bintray.com/stroom/stroom" }
     }
 
     sourceSets {
@@ -188,6 +196,8 @@ configure(javaProjects) {
     repositories {
         mavenLocal()
         jcenter()
+        maven { url "https://dl.bintray.com/stroom/event-logging" }
+        maven { url "https://dl.bintray.com/stroom/stroom" }
     }
 
     // This means the reports from our integration tests won't over-write the reports from our unit tests.
