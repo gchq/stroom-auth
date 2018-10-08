@@ -19,12 +19,16 @@
 package stroom.auth.resources.token.v1;
 
 import com.codahale.metrics.annotation.Timed;
+import event.logging.Data;
+import event.logging.Event;
+import event.logging.MultiObject;
+import event.logging.ObjectOutcome;
+import event.logging.Search;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.jose4j.jwk.JsonWebKey;
-import org.jose4j.jwk.RsaJsonWebKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.AuthorisationServiceClient;
@@ -32,10 +36,12 @@ import stroom.auth.TokenVerifier;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
 import stroom.auth.resources.user.v1.User;
+import stroom.auth.service.eventlogging.StroomEventLoggingService;
 import stroom.auth.service.security.ServiceUser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -46,9 +52,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 import java.util.Optional;
 
@@ -63,17 +69,20 @@ public class TokenResource {
     private final TokenDao tokenDao;
     private final UserDao userDao;
     private TokenVerifier tokenVerifier;
+    private StroomEventLoggingService stroomEventLoggingService;
     private final AuthorisationServiceClient authorisationServiceClient;
 
     @Inject
     public TokenResource(final AuthorisationServiceClient authorisationServiceClient,
                          final TokenDao tokenDao,
                          final UserDao userDao,
-                         final TokenVerifier tokenVerifier) {
+                         final TokenVerifier tokenVerifier,
+                         final StroomEventLoggingService stroomEventLoggingService) {
         this.authorisationServiceClient = authorisationServiceClient;
         this.tokenDao = tokenDao;
         this.userDao = userDao;
         this.tokenVerifier = tokenVerifier;
+        this.stroomEventLoggingService = stroomEventLoggingService;
     }
 
     /**
@@ -90,9 +99,18 @@ public class TokenResource {
             response = SearchResponse.class,
             tags = {"ApiKey"})
     public final Response search(
+            @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @ApiParam("SearchRequest") @NotNull @Valid SearchRequest searchRequest) {
         Map<String, String> filters = searchRequest.getFilters();
+
+        Search search = new Search();
+        search.setType("token");
+        stroomEventLoggingService.search(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                search,
+                "The user searched for an API token.");
 
         // Check the user is authorised to call this
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
@@ -125,6 +143,7 @@ public class TokenResource {
             response = Token.class,
             tags = {"ApiKey"})
     public final Response create(
+            @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @ApiParam("CreateTokenRequest") @NotNull CreateTokenRequest createTokenRequest) {
 
@@ -139,12 +158,24 @@ public class TokenResource {
                     .entity("Unknown token type:" + createTokenRequest.getTokenType()).build();
         }
 
+
         Token token = tokenDao.createToken(
                 tokenTypeToCreate.get(),
                 authenticatedServiceUser.getName(),
                 createTokenRequest.getUserEmail(),
                 createTokenRequest.isEnabled(),
                 createTokenRequest.getComments());
+
+        Data tokenData = new Data();
+        tokenData.setName(token.getToken_type());
+        tokenData.setValue(token.getToken());
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(tokenData);
+        stroomEventLoggingService.create(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Create a token");
 
         return Response.status(Response.Status.OK).entity(token).build();
     }
@@ -156,12 +187,22 @@ public class TokenResource {
     @DELETE
     @Path("/")
     @Timed
-    public final Response deleteAll(@Auth @NotNull ServiceUser authenticatedServiceUser) {
+    public final Response deleteAll(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser) {
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         tokenDao.deleteAllTokensExceptAdmins();
+
+
+        stroomEventLoggingService.delete(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                null,
+                "Delete all tokens");
+
         return Response.status(Response.Status.OK).entity("All tokens deleted").build();
     }
 
@@ -172,12 +213,26 @@ public class TokenResource {
     @DELETE
     @Path("/{id}")
     @Timed
-    public final Response delete(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
+    public final Response delete(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         tokenDao.deleteTokenById(tokenId);
+
+        Data tokenData = new Data();
+        tokenData.setName("deleteTokenById");
+        tokenData.setValue(Integer.valueOf(tokenId).toString());
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(tokenData);
+        stroomEventLoggingService.delete(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Delete a token by ID");
+
         return Response.status(Response.Status.OK).entity("Deleted token").build();
     }
 
@@ -188,12 +243,26 @@ public class TokenResource {
     @DELETE
     @Path("/byToken/{token}")
     @Timed
-    public final Response delete(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
+    public final Response delete(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         tokenDao.deleteTokenByTokenString(token);
+
+        Data tokenData = new Data();
+        tokenData.setName("deleteTokenByIdTokenString");
+        tokenData.setValue(token);
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(tokenData);
+        stroomEventLoggingService.delete(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Delete a token by the value of the actual token.");
+
         return Response.status(Response.Status.OK).entity("Deleted token").build();
     }
 
@@ -204,10 +273,23 @@ public class TokenResource {
     @GET
     @Path("/byToken/{token}")
     @Timed
-    public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
+    public final Response read(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
+
+        Data tokenData = new Data();
+        tokenData.setName("readByToken");
+        tokenData.setValue(token);
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(tokenData);
+        stroomEventLoggingService.view(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Read a token by the string value of the token.");
 
         return tokenDao.readByToken(token)
                 .map(tokenResult -> Response.status(Response.Status.OK).entity(tokenResult).build())
@@ -221,10 +303,24 @@ public class TokenResource {
     @GET
     @Path("/{id}")
     @Timed
-    public final Response read(@Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
+    public final Response read(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
+
+        Data tokenData = new Data();
+        tokenData.setName("readByTokenId");
+        tokenData.setValue(Integer.valueOf(tokenId).toString());
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(tokenData);
+        stroomEventLoggingService.view(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Read a token by the token ID.");
+
 
         return tokenDao.readById(tokenId)
                 .map(token -> Response.status(Response.Status.OK).entity(token).build())
@@ -238,12 +334,31 @@ public class TokenResource {
     @GET
     @Path("/{id}/state")
     @Timed
-    public final Response toggleEnabled(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                                        @NotNull @PathParam("id") int tokenId,
-                                        @NotNull @QueryParam("enabled") boolean enabled) {
+    public final Response toggleEnabled(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @NotNull @PathParam("id") int tokenId,
+            @NotNull @QueryParam("enabled") boolean enabled) {
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
+
+        final event.logging.Object afterObject = new event.logging.Object();
+        Data afterData = new Data();
+        afterData.setName("enabled");
+        afterData.setValue(Boolean.toString(enabled));
+        afterObject.setName("enabled");
+        MultiObject afterMultiObject = new MultiObject();
+        afterMultiObject.getObjects().add(afterObject);
+
+        Event.EventDetail.Update update = new Event.EventDetail.Update();
+        update.setAfter(afterMultiObject);
+
+        stroomEventLoggingService.update(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                update,
+                "Toggle whether a token is enabled or not.");
 
         User updatingUser = userDao.get(authenticatedServiceUser.getName());
 
@@ -259,8 +374,21 @@ public class TokenResource {
     @GET
     @Path("/publickey")
     @Timed
-    public final Response getPublicKey() {
+    public final Response getPublicKey(
+            @Context @NotNull HttpServletRequest httpServletRequest ) {
         String jwkAsJson = tokenVerifier.getJwk().toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
+
+        Data data = new Data();
+        data.setName("Read public key");
+        data.setValue(Integer.valueOf(jwkAsJson).toString());
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(data);
+        stroomEventLoggingService.view(
+                httpServletRequest,
+                "anonymous",
+                objectOutcome,
+                "Read a token by the token ID.");
+
         return Response
                 .status(Response.Status.OK)
                 .entity(jwkAsJson)

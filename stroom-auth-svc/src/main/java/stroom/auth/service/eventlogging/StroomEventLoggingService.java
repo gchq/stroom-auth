@@ -19,6 +19,8 @@ package stroom.auth.service.eventlogging;
 import event.logging.AuthenticateAction;
 import event.logging.AuthenticateOutcome;
 import event.logging.Event;
+import event.logging.ObjectOutcome;
+import event.logging.Search;
 import event.logging.impl.DefaultEventSerializer;
 import event.logging.impl.EventSerializer;
 import org.slf4j.Logger;
@@ -50,14 +52,14 @@ public class StroomEventLoggingService {
     }
 
     public void successfulLogin(final HttpServletRequest request, String usersEmail) {
-        Event event = stroomEventFactory.createAuthenticateEvent(
+        Event event = createAuthenticateEvent(
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User logged in successfully.");
         create(event);
     }
 
     public void failedLogin(final HttpServletRequest request, String usersEmail) {
-        Event event = stroomEventFactory.createAuthenticateEvent(
+        Event event = createAuthenticateEvent(
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User attempted to log in but failed.");
         AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
@@ -67,7 +69,7 @@ public class StroomEventLoggingService {
     }
 
     public void failedLoginBecauseLocked(final HttpServletRequest request, String usersEmail) {
-        Event event = stroomEventFactory.createAuthenticateEvent(
+        Event event = createAuthenticateEvent(
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User attempted to log in but failed because the account is locked.");
         AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
@@ -77,25 +79,107 @@ public class StroomEventLoggingService {
     }
 
     public void logout(final HttpServletRequest request, String usersEmail) {
-        Event event = stroomEventFactory.createAuthenticateEvent(
+        Event event = createAuthenticateEvent(
                 request, usersEmail, AuthenticateAction.LOGOFF,
                 "User logged off.");
         create(event);
     }
 
     public void resetPassword(final HttpServletRequest request, String usersEmail) {
-        Event event = stroomEventFactory.createAuthenticateEvent(
+        Event event = createAuthenticateEvent(
                 request, usersEmail, AuthenticateAction.RESET_PASSWORD,
                 "User reset their password");
         create(event);
     }
 
     public void changePassword(final HttpServletRequest request, String usersEmail) {
-        Event event = stroomEventFactory.createAuthenticateEvent(
+        Event event = createAuthenticateEvent(
                 request, usersEmail, AuthenticateAction.CHANGE_PASSWORD,
                 "User changed their password.");
         create(event);
     }
+
+
+    public Event search(
+            HttpServletRequest request,
+            String usersEmail,
+            Search search,
+            String description){
+        Event.EventDetail eventDetail = new Event.EventDetail();
+        eventDetail.setSearch(search);
+        eventDetail.setDescription(description);
+        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        event.setEventDetail(eventDetail);
+        return event;
+    }
+
+    public Event create(
+            HttpServletRequest request,
+            String usersEmail,
+            ObjectOutcome objectOutcome,
+            String description){
+        Event.EventDetail eventDetail = new Event.EventDetail();
+        eventDetail.setCreate(objectOutcome);
+        eventDetail.setDescription(description);
+        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        event.setEventDetail(eventDetail);
+        return event;
+    }
+
+    public Event view(
+            HttpServletRequest request,
+            String usersEmail,
+            ObjectOutcome objectOutcome,
+            String description){
+        Event.EventDetail eventDetail = new Event.EventDetail();
+        eventDetail.setView(objectOutcome);
+        eventDetail.setDescription(description);
+        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        event.setEventDetail(eventDetail);
+        return event;
+    }
+
+    public Event update(
+            HttpServletRequest request,
+            String usersEmail,
+            Event.EventDetail.Update update,
+            String description){
+        Event.EventDetail eventDetail = new Event.EventDetail();
+        eventDetail.setUpdate(update);
+        eventDetail.setDescription(description);
+        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        event.setEventDetail(eventDetail);
+        return event;
+    }
+
+    public Event delete(
+            HttpServletRequest request,
+            String usersEmail,
+            ObjectOutcome objectOutcome,
+            String description){
+        Event.EventDetail eventDetail = new Event.EventDetail();
+        eventDetail.setDelete(objectOutcome);
+        eventDetail.setDescription(description);
+        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        event.setEventDetail(eventDetail);
+        return event;
+    }
+
+    public Event createAuthenticateEvent(
+            HttpServletRequest request,
+            String usersEmail,
+            AuthenticateAction authenticateAction,
+            String description){
+        Event.EventDetail.Authenticate authenticate = new Event.EventDetail.Authenticate();
+        authenticate.setAction(authenticateAction);
+        Event.EventDetail eventDetail = new Event.EventDetail();
+        eventDetail.setAuthenticate(authenticate);
+        eventDetail.setDescription(description);
+        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        event.setEventDetail(eventDetail);
+        return event;
+    }
+
 
 
     private void create(Event event) {

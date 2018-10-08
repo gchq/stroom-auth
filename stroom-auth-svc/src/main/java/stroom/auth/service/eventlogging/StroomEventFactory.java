@@ -1,6 +1,5 @@
 package stroom.auth.service.eventlogging;
 
-import event.logging.AuthenticateAction;
 import event.logging.Device;
 import event.logging.Event;
 import event.logging.EventLoggingService;
@@ -32,22 +31,7 @@ class StroomEventFactory extends DefaultEventLoggingService implements EventLogg
         this.config = config;
     }
 
-    Event createAuthenticateEvent(
-            HttpServletRequest request,
-            String usersEmail,
-            AuthenticateAction authenticateAction,
-            String description){
-        Event.EventDetail.Authenticate authenticate = new Event.EventDetail.Authenticate();
-        authenticate.setAction(authenticateAction);
-        Event.EventDetail eventDetail = new Event.EventDetail();
-        eventDetail.setAuthenticate(authenticate);
-        eventDetail.setDescription(description);
-        Event event = createEvent(request, usersEmail);
-        event.setEventDetail(eventDetail);
-        return event;
-    }
-
-    private Event createEvent(final HttpServletRequest request, String usersEmail) {
+    Event createEvent(final HttpServletRequest request, String usersEmail) {
         // Create event time.
         final Event.EventTime eventTime = new Event.EventTime();
         eventTime.setTimeCreated(new Date());
