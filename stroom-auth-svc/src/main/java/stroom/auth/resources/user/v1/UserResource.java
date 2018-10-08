@@ -23,6 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import event.logging.Data;
 import event.logging.Event;
+import event.logging.MultiObject;
 import event.logging.ObjectOutcome;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
@@ -353,7 +354,12 @@ public final class UserResource {
                 .set(updatedUsersRecord)
                 .where(new Condition[]{USERS.ID.eq(userId)}).execute();
 
+        event.logging.User eventUser = new event.logging.User();
+        eventUser.setId(Integer.valueOf(userId).toString());
+        MultiObject afterMultiObject = new MultiObject();
+        afterMultiObject.getObjects().add(eventUser);
         Event.EventDetail.Update update = new Event.EventDetail.Update();
+        update.setAfter(afterMultiObject);
         stroomEventLoggingService.update(
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
@@ -389,10 +395,10 @@ public final class UserResource {
                 .deleteFrom((Table) USERS)
                 .where(new Condition[]{USERS.ID.eq(userId)}).execute();
 
-        Data tokenData = new Data();
-        tokenData.setName(Integer.valueOf(userId).toString());
+        event.logging.User user = new event.logging.User();
+        user.setId(Integer.valueOf(userId).toString());
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(tokenData);
+        objectOutcome.getObjects().add(user);
         stroomEventLoggingService.delete(
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
