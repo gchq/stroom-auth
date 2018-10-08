@@ -35,11 +35,13 @@ class StroomEventFactory extends DefaultEventLoggingService implements EventLogg
     Event createAuthenticateEvent(
             HttpServletRequest request,
             String usersEmail,
-            AuthenticateAction authenticateAction){
+            AuthenticateAction authenticateAction,
+            String description){
         Event.EventDetail.Authenticate authenticate = new Event.EventDetail.Authenticate();
         authenticate.setAction(authenticateAction);
         Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setAuthenticate(authenticate);
+        eventDetail.setDescription(description);
         Event event = createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
         return event;

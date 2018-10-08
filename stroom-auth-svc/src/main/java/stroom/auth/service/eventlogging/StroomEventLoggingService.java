@@ -51,13 +51,15 @@ public class StroomEventLoggingService {
 
     public void successfulLogin(final HttpServletRequest request, String usersEmail) {
         Event event = stroomEventFactory.createAuthenticateEvent(
-                request, usersEmail, AuthenticateAction.LOGON);
+                request, usersEmail, AuthenticateAction.LOGON,
+                "User logged in successfully.");
         create(event);
     }
 
     public void failedLogin(final HttpServletRequest request, String usersEmail) {
         Event event = stroomEventFactory.createAuthenticateEvent(
-                request, usersEmail, AuthenticateAction.LOGON);
+                request, usersEmail, AuthenticateAction.LOGON,
+                "User attempted to log in but failed.");
         AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
         authenticateOutcome.setReason(INCORRECT_USERNAME_OR_PASSWORD);
         event.getEventDetail().getAuthenticate().setOutcome(authenticateOutcome);
@@ -66,7 +68,8 @@ public class StroomEventLoggingService {
 
     public void failedLoginBecauseLocked(final HttpServletRequest request, String usersEmail) {
         Event event = stroomEventFactory.createAuthenticateEvent(
-                request, usersEmail, AuthenticateAction.LOGON);
+                request, usersEmail, AuthenticateAction.LOGON,
+                "User attempted to log in but failed because the account is locked.");
         AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
         authenticateOutcome.setReason(ACCOUNT_LOCKED);
         event.getEventDetail().getAuthenticate().setOutcome(authenticateOutcome);
@@ -75,19 +78,22 @@ public class StroomEventLoggingService {
 
     public void logout(final HttpServletRequest request, String usersEmail) {
         Event event = stroomEventFactory.createAuthenticateEvent(
-                request, usersEmail, AuthenticateAction.LOGOFF);
+                request, usersEmail, AuthenticateAction.LOGOFF,
+                "User logged off.");
         create(event);
     }
 
     public void resetPassword(final HttpServletRequest request, String usersEmail) {
         Event event = stroomEventFactory.createAuthenticateEvent(
-                request, usersEmail, AuthenticateAction.RESET_PASSWORD);
+                request, usersEmail, AuthenticateAction.RESET_PASSWORD,
+                "User reset their password");
         create(event);
     }
 
     public void changePassword(final HttpServletRequest request, String usersEmail) {
         Event event = stroomEventFactory.createAuthenticateEvent(
-                request, usersEmail, AuthenticateAction.CHANGE_PASSWORD);
+                request, usersEmail, AuthenticateAction.CHANGE_PASSWORD,
+                "User changed their password.");
         create(event);
     }
 
