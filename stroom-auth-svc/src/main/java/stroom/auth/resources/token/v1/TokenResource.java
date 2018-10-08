@@ -342,10 +342,7 @@ public class TokenResource {
         }
 
         final event.logging.Object afterObject = new event.logging.Object();
-        Data afterData = new Data();
-        afterData.setName("enabled");
-        afterData.setValue(Boolean.toString(enabled));
-        afterObject.setName("enabled");
+        afterObject.setId(Integer.valueOf(tokenId).toString());
         MultiObject afterMultiObject = new MultiObject();
         afterMultiObject.getObjects().add(afterObject);
 

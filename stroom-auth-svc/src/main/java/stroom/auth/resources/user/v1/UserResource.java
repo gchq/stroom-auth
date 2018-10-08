@@ -113,7 +113,6 @@ public final class UserResource {
                         .recordFormat(JSONFormat.RecordFormat.OBJECT));
 
         Data data = new Data();
-        data.setName("All users as JSON");
         data.setValue(usersAsJson);
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(data);
@@ -163,16 +162,15 @@ public final class UserResource {
 
         int newUserId = userDao.create(user, authenticatedServiceUser.getName());
 
-        Data data = new Data();
-        data.setName(user.getEmail());
+        event.logging.User loggingUser = new event.logging.User();
+        loggingUser.setId(user.getEmail());
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(data);
+        objectOutcome.getObjects().add(loggingUser);
         stroomEventLoggingService.create(
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
                 "Create a user");
-
 
         return Response.status(Response.Status.OK).entity(newUserId).build();
     }
@@ -220,11 +218,10 @@ public final class UserResource {
         foundUserResult.add(foundUserRecord);
         String foundUserJson = foundUserResult.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
 
-
-        Data data = new Data();
-        data.setName(foundUserRecord.get(USERS.EMAIL));
+        event.logging.User user = new event.logging.User();
+        user.setId(foundUserRecord.get(USERS.EMAIL));
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(data);
+        objectOutcome.getObjects().add(user);
         stroomEventLoggingService.view(
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
@@ -305,10 +302,10 @@ public final class UserResource {
                             .header(false)
                             .recordFormat(JSONFormat.RecordFormat.OBJECT));
 
-            Data data = new Data();
-            data.setName(foundUserRecord.get(USERS.EMAIL));
+            event.logging.User user = new event.logging.User();
+            user.setId(foundUserRecord.get(USERS.EMAIL));
             ObjectOutcome objectOutcome = new ObjectOutcome();
-            objectOutcome.getData().add(data);
+            objectOutcome.getObjects().add(user);
             stroomEventLoggingService.view(
                     httpServletRequest,
                     authenticatedServiceUser.getName(),
