@@ -100,7 +100,7 @@ public class StroomEventLoggingService {
     }
 
 
-    public Event search(
+    public void search(
             HttpServletRequest request,
             String usersEmail,
             Search search,
@@ -110,10 +110,11 @@ public class StroomEventLoggingService {
         eventDetail.setDescription(description);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
-        return event;
+
+        create(event);
     }
 
-    public Event create(
+    public void create(
             HttpServletRequest request,
             String usersEmail,
             ObjectOutcome objectOutcome,
@@ -123,10 +124,11 @@ public class StroomEventLoggingService {
         eventDetail.setDescription(description);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
-        return event;
+
+        create(event);
     }
 
-    public Event view(
+    public void view(
             HttpServletRequest request,
             String usersEmail,
             ObjectOutcome objectOutcome,
@@ -136,10 +138,11 @@ public class StroomEventLoggingService {
         eventDetail.setDescription(description);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
-        return event;
+
+        create(event);
     }
 
-    public Event update(
+    public void update(
             HttpServletRequest request,
             String usersEmail,
             Event.EventDetail.Update update,
@@ -149,10 +152,11 @@ public class StroomEventLoggingService {
         eventDetail.setDescription(description);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
-        return event;
+
+        create(event);
     }
 
-    public Event delete(
+    public void delete(
             HttpServletRequest request,
             String usersEmail,
             ObjectOutcome objectOutcome,
@@ -162,7 +166,8 @@ public class StroomEventLoggingService {
         eventDetail.setDescription(description);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
-        return event;
+
+        create(event);
     }
 
     public Event createAuthenticateEvent(
@@ -177,6 +182,7 @@ public class StroomEventLoggingService {
         eventDetail.setDescription(description);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
+
         return event;
     }
 

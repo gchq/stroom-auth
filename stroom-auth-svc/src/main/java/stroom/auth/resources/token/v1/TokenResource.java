@@ -106,6 +106,7 @@ public class TokenResource {
 
         Search search = new Search();
         search.setType("token");
+        // search.setQuery(); // TODO: More complete description of the search.
         stroomEventLoggingService.search(
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
@@ -166,11 +167,11 @@ public class TokenResource {
                 createTokenRequest.isEnabled(),
                 createTokenRequest.getComments());
 
-        Data tokenData = new Data();
-        tokenData.setName(token.getToken_type());
-        tokenData.setValue(token.getToken());
+        Data data = new Data();
+        data.setName(token.getToken_type());
+        data.setValue(token.getToken());
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(tokenData);
+        objectOutcome.getData().add(data);
         stroomEventLoggingService.create(
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
@@ -215,18 +216,18 @@ public class TokenResource {
     @Timed
     public final Response delete(
             @Context @NotNull HttpServletRequest httpServletRequest,
-            @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @PathParam("id") int tokenId) {
         if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         tokenDao.deleteTokenById(tokenId);
 
-        Data tokenData = new Data();
-        tokenData.setName("deleteTokenById");
-        tokenData.setValue(Integer.valueOf(tokenId).toString());
+        Data data = new Data();
+        data.setValue(Integer.valueOf(tokenId).toString());
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(tokenData);
+        objectOutcome.getData().add(data);
         stroomEventLoggingService.delete(
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
@@ -253,7 +254,6 @@ public class TokenResource {
         tokenDao.deleteTokenByTokenString(token);
 
         Data tokenData = new Data();
-        tokenData.setName("deleteTokenByIdTokenString");
         tokenData.setValue(token);
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(tokenData);
@@ -280,11 +280,10 @@ public class TokenResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
-        Data tokenData = new Data();
-        tokenData.setName("readByToken");
-        tokenData.setValue(token);
+        Data data = new Data();
+        data.setValue(token);
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(tokenData);
+        objectOutcome.getData().add(data);
         stroomEventLoggingService.view(
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
@@ -311,7 +310,6 @@ public class TokenResource {
         }
 
         Data tokenData = new Data();
-        tokenData.setName("readByTokenId");
         tokenData.setValue(Integer.valueOf(tokenId).toString());
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(tokenData);
@@ -379,8 +377,7 @@ public class TokenResource {
         String jwkAsJson = tokenVerifier.getJwk().toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
 
         Data data = new Data();
-        data.setName("Read public key");
-        data.setValue(Integer.valueOf(jwkAsJson).toString());
+        data.setValue(jwkAsJson);
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(data);
         stroomEventLoggingService.view(

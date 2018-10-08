@@ -21,6 +21,9 @@ package stroom.auth.resources.user.v1;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import event.logging.Data;
+import event.logging.Event;
+import event.logging.ObjectOutcome;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,11 +41,13 @@ import org.slf4j.LoggerFactory;
 import stroom.auth.AuthorisationServiceClient;
 import stroom.auth.daos.UserDao;
 import stroom.auth.daos.UserMapper;
+import stroom.auth.service.eventlogging.StroomEventLoggingService;
 import stroom.auth.service.security.ServiceUser;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -66,12 +71,17 @@ public final class UserResource {
 
     private AuthorisationServiceClient authorisationServiceClient;
     private UserDao userDao;
+    private StroomEventLoggingService stroomEventLoggingService;
 
     @Inject
-    public UserResource(@NotNull AuthorisationServiceClient authorisationServiceClient, UserDao userDao) {
+    public UserResource(
+            @NotNull AuthorisationServiceClient authorisationServiceClient,
+            UserDao userDao,
+            final StroomEventLoggingService stroomEventLoggingService) {
         super();
         this.authorisationServiceClient = authorisationServiceClient;
         this.userDao = userDao;
+        this.stroomEventLoggingService = stroomEventLoggingService;
     }
 
     @ApiOperation(
@@ -83,6 +93,7 @@ public final class UserResource {
     @Timed
     @NotNull
     public final Response getAll(
+            @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @Context @NotNull DSLContext database) {
         Preconditions.checkNotNull(authenticatedServiceUser);
@@ -100,6 +111,18 @@ public final class UserResource {
                 .formatJSON((new JSONFormat())
                         .header(false)
                         .recordFormat(JSONFormat.RecordFormat.OBJECT));
+
+        Data data = new Data();
+        data.setName("All users as JSON");
+        data.setValue(usersAsJson);
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(data);
+        stroomEventLoggingService.view(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Read all users.");
+
         return Response.status(Response.Status.OK).entity(usersAsJson).build();
     }
 
@@ -112,6 +135,7 @@ public final class UserResource {
     @Timed
     @NotNull
     public final Response createUser(
+            @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @Context @NotNull DSLContext database,
             @ApiParam("user") @NotNull User user) {
@@ -138,6 +162,18 @@ public final class UserResource {
         }
 
         int newUserId = userDao.create(user, authenticatedServiceUser.getName());
+
+        Data data = new Data();
+        data.setName(user.getEmail());
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(data);
+        stroomEventLoggingService.create(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Create a user");
+
+
         return Response.status(Response.Status.OK).entity(newUserId).build();
     }
 
@@ -149,7 +185,10 @@ public final class UserResource {
     @Path("/me")
     @Timed
     @NotNull
-    public final Response readCurrentUser(@Auth @NotNull ServiceUser authenticatedServiceUser, @Context @NotNull DSLContext database) {
+    public final Response readCurrentUser(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @Context @NotNull DSLContext database) {
         // Validate
         Preconditions.checkNotNull(authenticatedServiceUser);
         Preconditions.checkNotNull(database);
@@ -180,6 +219,18 @@ public final class UserResource {
                         USERS.CREATED_BY_USER);
         foundUserResult.add(foundUserRecord);
         String foundUserJson = foundUserResult.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
+
+
+        Data data = new Data();
+        data.setName(foundUserRecord.get(USERS.EMAIL));
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(data);
+        stroomEventLoggingService.view(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Read the current user.");
+
         Response response = Response.status(Response.Status.OK).entity(foundUserJson).build();
         return response;
     }
@@ -192,9 +243,11 @@ public final class UserResource {
     @Path("{id}")
     @Timed
     @NotNull
-    public final Response getUser(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                                  @Context @NotNull DSLContext database,
-                                  @PathParam("id") int userId) {
+    public final Response getUser(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @Context @NotNull DSLContext database,
+            @PathParam("id") int userId) {
         // Validate
         Preconditions.checkNotNull(authenticatedServiceUser);
         Preconditions.checkNotNull(database);
@@ -251,6 +304,17 @@ public final class UserResource {
                     .formatJSON((new JSONFormat())
                             .header(false)
                             .recordFormat(JSONFormat.RecordFormat.OBJECT));
+
+            Data data = new Data();
+            data.setName(foundUserRecord.get(USERS.EMAIL));
+            ObjectOutcome objectOutcome = new ObjectOutcome();
+            objectOutcome.getData().add(data);
+            stroomEventLoggingService.view(
+                    httpServletRequest,
+                    authenticatedServiceUser.getName(),
+                    objectOutcome,
+                    "Read a specific user.");
+
             response = Response.status(Response.Status.OK).entity(foundUserJson).build();
             return response;
         }
@@ -265,6 +329,7 @@ public final class UserResource {
     @Timed
     @NotNull
     public final Response updateUser(
+            @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @Context @NotNull DSLContext database,
             @ApiParam("user") @NotNull User user,
@@ -290,6 +355,14 @@ public final class UserResource {
                 .update((Table) USERS)
                 .set(updatedUsersRecord)
                 .where(new Condition[]{USERS.ID.eq(userId)}).execute();
+
+        Event.EventDetail.Update update = new Event.EventDetail.Update();
+        stroomEventLoggingService.update(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                update,
+                "Toggle whether a token is enabled or not.");
+
         Response response = Response.status(Response.Status.OK).build();
         return response;
     }
@@ -302,7 +375,11 @@ public final class UserResource {
     @Path("{id}")
     @Timed
     @NotNull
-    public final Response deleteUser(@Auth @NotNull ServiceUser authenticatedServiceUser, @Context @NotNull DSLContext database, @PathParam("id") int userId) {
+    public final Response deleteUser(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @Context @NotNull DSLContext database,
+            @PathParam("id") int userId) {
         // Validate
         Preconditions.checkNotNull(authenticatedServiceUser);
         Preconditions.checkNotNull(database);
@@ -314,6 +391,17 @@ public final class UserResource {
         database
                 .deleteFrom((Table) USERS)
                 .where(new Condition[]{USERS.ID.eq(userId)}).execute();
+
+        Data tokenData = new Data();
+        tokenData.setName(Integer.valueOf(userId).toString());
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getData().add(tokenData);
+        stroomEventLoggingService.delete(
+                httpServletRequest,
+                authenticatedServiceUser.getName(),
+                objectOutcome,
+                "Delete a user by ID");
+
         Response response = Response.status(Response.Status.OK).build();
         return response;
     }
