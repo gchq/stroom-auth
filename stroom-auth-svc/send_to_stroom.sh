@@ -46,19 +46,19 @@ configure_curl() {
 
 get_lock() {
     if [ -f "${LOCK_FILE}" ]; then
-        MYPID=`head -n 1 "${LOCK_FILE}"`
-        TEST_RUNNING=`ps -p ${MYPID} | grep ${MYPID}`
-
-        if [ -z "${TEST_RUNNING}" ]; then
-            echo -e "${GREEN}Info:${NC} Obtained locked for ${THIS_PID}, processing directory ${LOG_DIR}"
-            echo "${THIS_PID}" > "${LOCK_FILE}"
-        else
-            echo -e "${GREEN}Info:${NC} Sorry $(basename "$0") is already running[${MYPID}]"
+        LOCK_FILE_PID=$(head -n 1 "${LOCK_FILE}")
+        if ps -p $LOCK_FILE_PID > /dev/null
+        then
+            echo -e "${RED}Error:${NC} This script is already running is already running as ${LOCK_FILE_PID}! Exiting."
             exit 0
+        else 
+            echo -e "${YELLOW}Warn:${NC} Found old lock file! Did a previous run of this script fail? I will delete it and create a new one."
+            echo -e "${GREEN}Info:${NC} Creating a lock file for ${THIS_PID}"
+            echo "$$" > "${LOCK_FILE}"
         fi
     else
-        echo -e "${GREEN}Info:${NC} Obtained locked for ${THIS_PID}, processing directory ${LOG_DIR}"
-        echo "${THIS_PID}" > "${LOCK_FILE}"
+        echo -e "${GREEN}Info:${NC} Creating a lock file for ${THIS_PID}"
+        echo "$$" > "${LOCK_FILE}"
     fi
 }
 
