@@ -47,7 +47,7 @@ logging:
       additive: false
       appenders:
       - type: file
-        currentLogFilename: ./logs/event.log
+        currentLogFilename: ./logs/events/event.log
         threshold: ALL
         queueSize: 256
         discardingThreshold: 0

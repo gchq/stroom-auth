@@ -2,7 +2,7 @@
 
 # Created by argbash-init v2.6.1
 # ARG_OPTIONAL_BOOLEAN([secure],[s],[Check for valid certificates if running over HTTPS],[false])
-# ARG_OPTIONAL_BOOLEAN([delete_after_sending],[d],[Delete log files after sending them],[true])
+# ARG_OPTIONAL_BOOLEAN([delete_after_sending],[d],[Delete log files after sending them],[false])
 # ARG_OPTIONAL_SINGLE([max_sleep],[m],[Max time allowed to sleep (e.g. to avoid all cron's in the estate sending log files at the same time)],[0])
 # ARG_POSITIONAL_SINGLE([log_dir],[Directory to look for log files],[])
 # ARG_POSITIONAL_SINGLE([feed],[ Your feed name given to you],[])
@@ -47,7 +47,7 @@ _arg_environment=
 _arg_stroom_url=
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_secure="false"
-_arg_delete_after_sending="true"
+_arg_delete_after_sending="false"
 _arg_max_sleep="0"
 
 print_help ()
@@ -60,7 +60,7 @@ print_help ()
   printf '\t%s\n' "<environment>: Your environment name. Usually SITE_DEPLOYMENT"
   printf '\t%s\n' "<stroom_url>: The URL you are sending data to (N.B. This should be the HTTPS URL)"
   printf '\t%s\n' "-s,--secure,--no-secure: Check for valid certificates if running over HTTPS (false by default)"
-  printf '\t%s\n' "-d,--delete_after_sending,--no-delete_after_sending: Delete log files after sending them (true by default)"
+  printf '\t%s\n' "-d,--delete_after_sending,--no-delete_after_sending: Delete log files after sending them (false by default)"
   printf '\t%s\n' "-m,--max_sleep: Max time allowed to sleep (e.g. to avoid all cron's in the estate sending log files at the same time) (default: '0')"
   printf '\t%s\n' "-h,--help: Prints help"
   printf '\t%s\n' "-v,--version: Prints version"

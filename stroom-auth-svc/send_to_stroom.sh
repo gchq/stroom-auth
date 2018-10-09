@@ -15,7 +15,6 @@ readonly SECURE=$_arg_secure
 readonly MAX_SLEEP=$_arg_max_sleep
 readonly DELETE_AFTER_SENDING=$_arg_delete_after_sending
 
-
 readonly LCK_FILE=${LOG_DIR}/`basename $0`.lck
 readonly RANDOM=`echo $RANDOM`
 readonly MOD=`expr $MAX_SLEEP + 1`
@@ -69,7 +68,7 @@ send_files() {
 
     for FILE in `find ${LOG_DIR} -name '*.log'`
     do
-            echo -e "${GREEN}Info:${NC} Processing ${FILE}"
+            echo -e "\n${GREEN}Info:${NC} Processing ${FILE}"
             RESPONSE_HTTP=`curl ${CURL_OPTS} --write-out "RESPONSE_CODE=%{http_code}" --data-binary @${FILE} "${STROOM_URL}" -H "Feed:${FEED}" -H "System:${SYSTEM}" -H "Environment:${ENVIRONMENT}" 2>&1`
             RESPONSE_LINE=`echo ${RESPONSE_HTTP} | head -1`
             RESPONSE_MSG=`echo ${RESPONSE_HTTP} | grep -o -e RESPONSE_CODE=.*$`
@@ -78,8 +77,9 @@ send_files() {
             then
                     echo -e "${RED}Error:${NC} Unable to send file ${FILE}, error was ${RESPONSE_LINE}"
             else
-                    echo -e "${GREEN}Info:${NC} Sent File ${FILE}, response code was ${RESPONSE_CODE}"
-                    if [ -z ${DELETE_AFTER_SENDING} ]; then
+                    echo -e "${GREEN}Info:${NC} Sent file ${FILE}, response code was ${RESPONSE_CODE}"
+
+                    if [ "${DELETE_AFTER_SENDING}" = "on" ]; then
                         echo -e "${YELLOW}Warn:${NC} Deleting successfully sent file ${FILE}"
                         rm ${FILE}
                     fi
