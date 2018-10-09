@@ -7,21 +7,19 @@
 source send_to_stroom_args.sh
 
 # Create references to the args
-readonly LOG_DIR=$_arg_log_dir
-readonly FEED=$_arg_feed
-readonly SYSTEM=$_arg_system
-readonly ENVIRONMENT=$_arg_environment
-readonly STROOM_URL=$_arg_stroom_url
-readonly SECURE=$_arg_secure
-readonly MAX_SLEEP=$_arg_max_sleep
-readonly DELETE_AFTER_SENDING=$_arg_delete_after_sending
+readonly LOG_DIR=${_arg_log_dir}
+readonly FEED=${_arg_feed}
+readonly SYSTEM=${_arg_system}
+readonly ENVIRONMENT=${_arg_environment}
+readonly STROOM_URL=${_arg_stroom_url}
+readonly SECURE=${_arg_secure}
+readonly MAX_SLEEP=${_arg_max_sleep}
+readonly DELETE_AFTER_SENDING=${_arg_delete_after_sending}
 
 ## Configure other constants
-readonly LCK_FILE=${LOG_DIR}/`basename $0`.lck
-readonly RANDOM=`echo $RANDOM`
-readonly MOD=`expr $MAX_SLEEP + 1`
-readonly SLEEP=`expr $RANDOM % $MOD`
-readonly THIS_PID=`echo $$`
+readonly LOCK_FILE=${LOG_DIR}/$(basename "$0").lck
+readonly SLEEP=$((RANDOM % (MAX_SLEEP+1)))
+readonly THIS_PID=$$
 
 setup_echo_colours() {
     # Exit the script on any error
@@ -47,20 +45,20 @@ configure_curl() {
 }
 
 get_lock() {
-    if [ -f "${LCK_FILE}" ]; then
-            MYPID=`head -n 1 "${LCK_FILE}"`
+    if [ -f "${LOCK_FILE}" ]; then
+            MYPID=`head -n 1 "${LOCK_FILE}"`
             TEST_RUNNING=`ps -p ${MYPID} | grep ${MYPID}`
 
             if [ -z "${TEST_RUNNING}" ]; then
                     echo -e "${GREEN}Info:${NC} Obtained locked for ${THIS_PID}, processing directory ${LOG_DIR}"
-                    echo "${THIS_PID}" > "${LCK_FILE}"
+                    echo "${THIS_PID}" > "${LOCK_FILE}"
             else
-                    echo -e "${GREEN}Info:${NC} Sorry `basename $0` is already running[${MYPID}]"
+                    echo -e "${GREEN}Info:${NC} Sorry $(basename "$0") is already running[${MYPID}]"
                     exit 0
             fi
     else
             echo -e "${GREEN}Info:${NC} Obtained locked for ${THIS_PID}, processing directory ${LOG_DIR}"
-            echo "${THIS_PID}" > "${LCK_FILE}"
+            echo "${THIS_PID}" > "${LOCK_FILE}"
     fi
 }
 
@@ -73,7 +71,7 @@ send_files() {
         send_file
     done
 
-    rm ${LCK_FILE}
+    rm ${LOCK_FILE}
 }
 
 send_file() {
@@ -97,8 +95,8 @@ send_file() {
 
 main() {
     setup_echo_colours
-    echo -e "${GREEN}Welcome to the send_to_stroom.sh script${NC}"
-    echo -e "This script to send log files to Stroom."
+    echo -e "\n${GREEN}Welcome to the send_to_stroom.sh script${NC}"
+    echo -e "This script sends log files to Stroom.\n"
 
     configure_curl
     get_lock
