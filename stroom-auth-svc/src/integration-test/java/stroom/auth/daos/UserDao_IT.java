@@ -19,11 +19,17 @@ import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserDao_IT extends Database_IT {
+
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3307/auth?useUnicode=yes&characterEncoding=UTF-8";
+    private static final String JDBC_USER = "authuser";
+    private static final String JDBC_PASSWORD = "stroompassword1";
+
+
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UserDao_IT.class);
 
     @Test
     public void testNewButInactiveUserIsDisabled(){
-        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3309/auth", "stroomuser", "stroompassword1")) {
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
@@ -56,7 +62,7 @@ public class UserDao_IT extends Database_IT {
 
     @Test
     public void testInactiveUserIsDisabled(){
-        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3309/auth", "stroomuser", "stroompassword1")) {
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
@@ -95,7 +101,7 @@ public class UserDao_IT extends Database_IT {
 
     @Test
     public void testNeedsPasswordChange() {
-        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3309/auth", "stroomuser", "stroompassword1")) {
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
@@ -141,7 +147,7 @@ public class UserDao_IT extends Database_IT {
     }
 
     private static UserDao getUserDao(Connection conn){
-        DSLContext database = DSL.using(conn, SQLDialect.MARIADB);
+        DSLContext database = DSL.using(conn, SQLDialect.MYSQL);
 
         // We don't care about most config for this test, so we'll pass in null
         UserDao userDao = new UserDao(null);

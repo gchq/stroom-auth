@@ -26,10 +26,10 @@ server:
       timeZone: UTC
 
 database:
-  driverClass: org.mariadb.jdbc.Driver
-  user: ${DB_USER:- stroomuser}
+  driverClass: com.mysql.jdbc.Driver
+  user: ${DB_USER:- authuser}
   password: ${DB_PASSWORD:- stroompassword1}
-  url: ${DB_URL:- jdbc:mariadb://<IP_ADDRESS>:3309/auth}
+  url: ${DB_URL:- jdbc:mysql://<IP_ADDRESS>:3307/auth?useUnicode=yes&characterEncoding=UTF-8}
   properties:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.MySQLInnoDBDialect
@@ -38,7 +38,7 @@ database:
 logging:
   level: ${LOGGING_LEVEL:- ERROR}
   loggers:
-    stroom: DEBUG
+    stroom: INFO
     io.dropwizard: INFO
     org.eclipse.jetty: INFO
     org.flywaydb: INFO

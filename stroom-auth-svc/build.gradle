@@ -111,7 +111,7 @@ dependencies {
     compile deps.swagger_annotations
     compile deps.eventLogging
 
-    runtime deps.mariadb_connector
+    runtime deps.mysql_connector_java
 
     testCompile testDeps.junit
     testCompile testDeps.assertj
