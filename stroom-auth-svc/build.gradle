@@ -110,6 +110,10 @@ dependencies {
     compile deps.simple_java_mail
     compile deps.swagger_annotations
     compile deps.eventLogging
+    compile deps.jaxb_api
+    compile deps.jaxb_core
+    compile deps.jaxb_impl
+    compile deps.javax_activation
 
     runtime deps.mariadb_connector
 

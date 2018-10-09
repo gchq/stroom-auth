@@ -36,7 +36,9 @@ build_ui(){
 build_service() {
     # Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
     ./gradlew clean build shadowJar -x test -x integrationTest
-    docker build --tag gchq/stroom-auth-service:$TAG stroom-auth-svc/.
+    cp stroom-auth-svc/config.yml stroom-auth-svc/docker/config.yml
+    cp stroom-auth-svc/build/libs/stroom-auth-service-all.jar stroom-auth-svc/docker/stroom-auth-service-all.jar
+    docker build --tag gchq/stroom-auth-service:$TAG stroom-auth-svc/docker/.
 }
 
 push_ui() {

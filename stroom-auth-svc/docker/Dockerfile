@@ -18,7 +18,9 @@ FROM openjdk:10.0.2-13-jre
 
 WORKDIR /usr/stroom-auth-service
 
-ADD ./build/libs/stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
+ADD ./stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
 ADD ./config.yml /usr/stroom-auth-service/config.yml
+
+VOLUME [ "/usr/stroom-auth-service/logs" ]
 
 CMD java -jar stroom-auth-service-all.jar server config.yml

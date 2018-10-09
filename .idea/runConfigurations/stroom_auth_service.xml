@@ -5,7 +5,6 @@
     <option name="MAIN_CLASS_NAME" value="stroom.auth.service.App" />
     <module name="stroom-auth-svc_main" />
     <option name="PROGRAM_PARAMETERS" value="server config.generated.yml" />
-    <option name="VM_PARAMETERS" value="--add-modules java.xml.bind " />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/stroom-auth-svc" />
     <method v="2">
       <option name="Make" enabled="true" />

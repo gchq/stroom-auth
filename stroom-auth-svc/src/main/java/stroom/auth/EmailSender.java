@@ -42,7 +42,7 @@ public class EmailSender {
     @Inject
     public EmailSender(Config config) {
         this.config = config;
-        SmtpConfig smtpConfig = config.getEmailConfig().getSmtpConfig();
+        var smtpConfig = config.getEmailConfig().getSmtpConfig();
 
         if (!Strings.isNullOrEmpty(smtpConfig.getUsername()) && !Strings.isNullOrEmpty(smtpConfig.getPassword())) {
             LOGGER.info("Sending reset email using username and password");
@@ -61,12 +61,12 @@ public class EmailSender {
     }
 
     public void send(User user, String resetToken) {
-        EmailConfig emailConfig = config.getEmailConfig();
-        String resetName = user.getFirst_name() + "" + user.getLast_name();
-        String resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
-        String passwordResetEmailText = String.format(emailConfig.getPasswordResetText(), resetUrl);
+        var emailConfig = config.getEmailConfig();
+        var resetName = user.getFirst_name() + "" + user.getLast_name();
+        var resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
+        var passwordResetEmailText = String.format(emailConfig.getPasswordResetText(), resetUrl);
 
-        Email email = new Email();
+        var email = new Email();
         email.setFromAddress(emailConfig.getFromName(), emailConfig.getFromAddress());
         email.setReplyToAddress(emailConfig.getFromName(), emailConfig.getFromAddress());
         email.addRecipient(resetName, user.getEmail(), Message.RecipientType.TO);
