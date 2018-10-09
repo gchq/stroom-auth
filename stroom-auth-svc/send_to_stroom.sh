@@ -77,10 +77,10 @@ send_files() {
 send_file() {
     local -r file=$1
     echo -e "\n${GREEN}Info:${NC} Processing ${file}"
-    RESPONSE_HTTP=`curl ${CURL_OPTS} --write-out "RESPONSE_CODE=%{http_code}" --data-binary @${file} "${STROOM_URL}" -H "Feed:${FEED}" -H "System:${SYSTEM}" -H "Environment:${ENVIRONMENT}" 2>&1`
-    RESPONSE_LINE=`echo ${RESPONSE_HTTP} | head -1`
-    RESPONSE_MSG=`echo ${RESPONSE_HTTP} | grep -o -e RESPONSE_CODE=.*$`
-    RESPONSE_CODE=`echo ${RESPONSE_MSG} | cut -f2 -d '='`
+    RESPONSE_HTTP=$(curl ${CURL_OPTS} --write-out "RESPONSE_CODE=%{http_code}" --data-binary @${file} "${STROOM_URL}" -H "Feed:${FEED}" -H "System:${SYSTEM}" -H "Environment:${ENVIRONMENT}" 2>&1)
+    RESPONSE_LINE=$(echo "${RESPONSE_HTTP}" | head -1)
+    RESPONSE_MSG=$(echo "${RESPONSE_HTTP}" | grep -o -e "RESPONSE_CODE=.*$")
+    RESPONSE_CODE=$(echo "${RESPONSE_MSG}" | cut -f2 -d '=')
     if [ "${RESPONSE_CODE}" != "200" ]
     then
         echo -e "${RED}Error:${NC} Unable to send file ${file}, error was ${RESPONSE_LINE}"
