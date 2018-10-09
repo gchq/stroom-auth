@@ -37,28 +37,28 @@ setup_echo_colours() {
 
 configure_curl() {
     if [ "${SECURE}" = "false" ]; then
-            CURL_OPTS="-k "
-            echo -e "${YELLOW}Warn:${NC} Running in insecure mode where we do not check SSL certificates. CURL_OPTS=${CURL_OPTS}"
+        CURL_OPTS="-k "
+        echo -e "${YELLOW}Warn:${NC} Running in insecure mode where we do not check SSL certificates. CURL_OPTS=${CURL_OPTS}"
     else
-            CURL_OPTS=""
+        CURL_OPTS=""
     fi
 }
 
 get_lock() {
     if [ -f "${LOCK_FILE}" ]; then
-            MYPID=`head -n 1 "${LOCK_FILE}"`
-            TEST_RUNNING=`ps -p ${MYPID} | grep ${MYPID}`
+        MYPID=`head -n 1 "${LOCK_FILE}"`
+        TEST_RUNNING=`ps -p ${MYPID} | grep ${MYPID}`
 
-            if [ -z "${TEST_RUNNING}" ]; then
-                    echo -e "${GREEN}Info:${NC} Obtained locked for ${THIS_PID}, processing directory ${LOG_DIR}"
-                    echo "${THIS_PID}" > "${LOCK_FILE}"
-            else
-                    echo -e "${GREEN}Info:${NC} Sorry $(basename "$0") is already running[${MYPID}]"
-                    exit 0
-            fi
-    else
+        if [ -z "${TEST_RUNNING}" ]; then
             echo -e "${GREEN}Info:${NC} Obtained locked for ${THIS_PID}, processing directory ${LOG_DIR}"
             echo "${THIS_PID}" > "${LOCK_FILE}"
+        else
+            echo -e "${GREEN}Info:${NC} Sorry $(basename "$0") is already running[${MYPID}]"
+            exit 0
+        fi
+    else
+        echo -e "${GREEN}Info:${NC} Obtained locked for ${THIS_PID}, processing directory ${LOG_DIR}"
+        echo "${THIS_PID}" > "${LOCK_FILE}"
     fi
 }
 
@@ -82,14 +82,14 @@ send_file() {
     RESPONSE_CODE=`echo ${RESPONSE_MSG} | cut -f2 -d '='`
     if [ "${RESPONSE_CODE}" != "200" ]
     then
-            echo -e "${RED}Error:${NC} Unable to send file ${FILE}, error was ${RESPONSE_LINE}"
+        echo -e "${RED}Error:${NC} Unable to send file ${FILE}, error was ${RESPONSE_LINE}"
     else
-            echo -e "${GREEN}Info:${NC} Sent file ${FILE}, response code was ${RESPONSE_CODE}"
+        echo -e "${GREEN}Info:${NC} Sent file ${FILE}, response code was ${RESPONSE_CODE}"
 
-            if [ "${DELETE_AFTER_SENDING}" = "on" ]; then
-                echo -e "${YELLOW}Warn:${NC} Deleting successfully sent file ${FILE}"
-                rm ${FILE}
-            fi
+        if [ "${DELETE_AFTER_SENDING}" = "on" ]; then
+            echo -e "${YELLOW}Warn:${NC} Deleting successfully sent file ${FILE}"
+            rm ${FILE}
+        fi
     fi
 }
 
