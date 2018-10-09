@@ -47,7 +47,7 @@ configure_curl() {
 get_lock() {
     if [ -f "${LOCK_FILE}" ]; then
         LOCK_FILE_PID=$(head -n 1 "${LOCK_FILE}")
-        if ps -p $LOCK_FILE_PID > /dev/null
+        if ps -p "$LOCK_FILE_PID" > /dev/null
         then
             echo -e "${RED}Error:${NC} This script is already running is already running as ${LOCK_FILE_PID}! Exiting."
             exit 0
@@ -66,29 +66,30 @@ send_files() {
     echo -e "${GREEN}Info:${NC} Will sleep for ${SLEEP}s to help balance network traffic"
     sleep ${SLEEP}
 
-    for FILE in `find ${LOG_DIR} -name '*.log'`
+    while IFS= read -r -d '' file
     do
-        send_file
-    done
+        send_file "$file"
+    done <   <(find "${LOG_DIR}" -name '*.log' -print0)
 
-    rm ${LOCK_FILE}
+    rm "${LOCK_FILE}"
 }
 
 send_file() {
-    echo -e "\n${GREEN}Info:${NC} Processing ${FILE}"
-    RESPONSE_HTTP=`curl ${CURL_OPTS} --write-out "RESPONSE_CODE=%{http_code}" --data-binary @${FILE} "${STROOM_URL}" -H "Feed:${FEED}" -H "System:${SYSTEM}" -H "Environment:${ENVIRONMENT}" 2>&1`
+    local -r file=$1
+    echo -e "\n${GREEN}Info:${NC} Processing ${file}"
+    RESPONSE_HTTP=`curl ${CURL_OPTS} --write-out "RESPONSE_CODE=%{http_code}" --data-binary @${file} "${STROOM_URL}" -H "Feed:${FEED}" -H "System:${SYSTEM}" -H "Environment:${ENVIRONMENT}" 2>&1`
     RESPONSE_LINE=`echo ${RESPONSE_HTTP} | head -1`
     RESPONSE_MSG=`echo ${RESPONSE_HTTP} | grep -o -e RESPONSE_CODE=.*$`
     RESPONSE_CODE=`echo ${RESPONSE_MSG} | cut -f2 -d '='`
     if [ "${RESPONSE_CODE}" != "200" ]
     then
-        echo -e "${RED}Error:${NC} Unable to send file ${FILE}, error was ${RESPONSE_LINE}"
+        echo -e "${RED}Error:${NC} Unable to send file ${file}, error was ${RESPONSE_LINE}"
     else
-        echo -e "${GREEN}Info:${NC} Sent file ${FILE}, response code was ${RESPONSE_CODE}"
+        echo -e "${GREEN}Info:${NC} Sent file ${file}, response code was ${RESPONSE_CODE}"
 
         if [ "${DELETE_AFTER_SENDING}" = "on" ]; then
-            echo -e "${YELLOW}Warn:${NC} Deleting successfully sent file ${FILE}"
-            rm ${FILE}
+            echo -e "${YELLOW}Warn:${NC} Deleting successfully sent file ${file}"
+            rm "${file}"
         fi
     fi
 }
