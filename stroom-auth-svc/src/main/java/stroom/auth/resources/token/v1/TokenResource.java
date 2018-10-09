@@ -168,11 +168,11 @@ public class TokenResource {
                 createTokenRequest.isEnabled(),
                 createTokenRequest.getComments());
 
-        Data data = new Data();
-        data.setName(token.getToken_type());
-        data.setValue(token.getToken());
+        event.logging.Object object = new event.logging.Object();
+        object.setId("NewToken");
+        object.setName(token.getToken_type());
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(data);
+        objectOutcome.getObjects().add(object);
         stroomEventLoggingService.create(
                 "CreateApiToken",
                 httpServletRequest,
@@ -199,12 +199,15 @@ public class TokenResource {
 
         tokenDao.deleteAllTokensExceptAdmins();
 
-
+        event.logging.Object object = new event.logging.Object();
+        object.setName("DeleteAllApiTokens");
+        ObjectOutcome objectOutcome = new ObjectOutcome();
+        objectOutcome.getObjects().add(object);
         stroomEventLoggingService.delete(
                 "DeleteAllApiTokens",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
-                null,
+                objectOutcome,
                 "Delete all tokens");
 
         return Response.status(Response.Status.OK).entity("All tokens deleted").build();
@@ -227,10 +230,10 @@ public class TokenResource {
 
         tokenDao.deleteTokenById(tokenId);
 
-        Data data = new Data();
-        data.setValue(Integer.valueOf(tokenId).toString());
+        event.logging.Object object = new event.logging.Object();
+        object.setId(Integer.valueOf(tokenId).toString());
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(data);
+        objectOutcome.getObjects().add(object);
         stroomEventLoggingService.delete(
                 "DeleteApiToken",
                 httpServletRequest,
@@ -257,10 +260,10 @@ public class TokenResource {
 
         tokenDao.deleteTokenByTokenString(token);
 
-        Data tokenData = new Data();
-        tokenData.setValue(token);
+        event.logging.Object object = new event.logging.Object();
+        object.setId(token);
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(tokenData);
+        objectOutcome.getObjects().add(object);
         stroomEventLoggingService.delete(
                 "DeleteApiToken",
                 httpServletRequest,
@@ -285,10 +288,10 @@ public class TokenResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
-        Data data = new Data();
-        data.setValue(token);
+        event.logging.Object object = new event.logging.Object();
+        object.setId(token);
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(data);
+        objectOutcome.getObjects().add(object);
         stroomEventLoggingService.view(
                 "ReadApiToken",
                 httpServletRequest,
@@ -315,10 +318,10 @@ public class TokenResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
-        Data tokenData = new Data();
-        tokenData.setValue(Integer.valueOf(tokenId).toString());
+        event.logging.Object object = new event.logging.Object();
+        object.setId(Integer.valueOf(tokenId).toString());
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(tokenData);
+        objectOutcome.getObjects().add(object);
         stroomEventLoggingService.view(
                 "ReadApiToken",
                 httpServletRequest,
@@ -381,10 +384,10 @@ public class TokenResource {
             @Context @NotNull HttpServletRequest httpServletRequest ) {
         String jwkAsJson = tokenVerifier.getJwk().toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
 
-        Data data = new Data();
-        data.setValue(jwkAsJson);
+        event.logging.Object object = new event.logging.Object();
+        object.setName("PublicKey");
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(data);
+        objectOutcome.getObjects().add(object);
         stroomEventLoggingService.view(
                 "GetPublicApiKey",
                 httpServletRequest,

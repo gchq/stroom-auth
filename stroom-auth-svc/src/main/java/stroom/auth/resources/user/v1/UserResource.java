@@ -21,7 +21,6 @@ package stroom.auth.resources.user.v1;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import event.logging.Data;
 import event.logging.Event;
 import event.logging.MultiObject;
 import event.logging.ObjectOutcome;
@@ -113,10 +112,10 @@ public final class UserResource {
                         .header(false)
                         .recordFormat(JSONFormat.RecordFormat.OBJECT));
 
-        Data data = new Data();
-        data.setValue(usersAsJson);
         ObjectOutcome objectOutcome = new ObjectOutcome();
-        objectOutcome.getData().add(data);
+        event.logging.Object object = new event.logging.Object();
+        object.setName("GetAllUsers");
+        objectOutcome.getObjects().add(object);
         stroomEventLoggingService.view(
                 "GetAllUsers",
                 httpServletRequest,
