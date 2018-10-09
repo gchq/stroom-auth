@@ -118,6 +118,7 @@ public final class UserResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(data);
         stroomEventLoggingService.view(
+                "GetAllUsers",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
@@ -168,6 +169,7 @@ public final class UserResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getObjects().add(loggingUser);
         stroomEventLoggingService.create(
+                "CreateUser",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
@@ -224,6 +226,7 @@ public final class UserResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getObjects().add(user);
         stroomEventLoggingService.view(
+                "ReadCurrentUser",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
@@ -308,6 +311,7 @@ public final class UserResource {
             ObjectOutcome objectOutcome = new ObjectOutcome();
             objectOutcome.getObjects().add(user);
             stroomEventLoggingService.view(
+                    "GetUser",
                     httpServletRequest,
                     authenticatedServiceUser.getName(),
                     objectOutcome,
@@ -361,6 +365,7 @@ public final class UserResource {
         Event.EventDetail.Update update = new Event.EventDetail.Update();
         update.setAfter(afterMultiObject);
         stroomEventLoggingService.update(
+                "UpdateUser",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 update,
@@ -400,6 +405,7 @@ public final class UserResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getObjects().add(user);
         stroomEventLoggingService.delete(
+                "DeleteUser",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,

@@ -108,6 +108,7 @@ public class TokenResource {
         search.setType("token");
         // search.setQuery(); // TODO: More complete description of the search.
         stroomEventLoggingService.search(
+                "SearchApiToken",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 search,
@@ -173,6 +174,7 @@ public class TokenResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(data);
         stroomEventLoggingService.create(
+                "CreateApiToken",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
@@ -199,6 +201,7 @@ public class TokenResource {
 
 
         stroomEventLoggingService.delete(
+                "DeleteAllApiTokens",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 null,
@@ -229,6 +232,7 @@ public class TokenResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(data);
         stroomEventLoggingService.delete(
+                "DeleteApiToken",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
@@ -258,6 +262,7 @@ public class TokenResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(tokenData);
         stroomEventLoggingService.delete(
+                "DeleteApiToken",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
@@ -285,6 +290,7 @@ public class TokenResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(data);
         stroomEventLoggingService.view(
+                "ReadApiToken",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
@@ -314,6 +320,7 @@ public class TokenResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(tokenData);
         stroomEventLoggingService.view(
+                "ReadApiToken",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 objectOutcome,
@@ -350,6 +357,7 @@ public class TokenResource {
         update.setAfter(afterMultiObject);
 
         stroomEventLoggingService.update(
+                "ToggleApiTokenEnabled",
                 httpServletRequest,
                 authenticatedServiceUser.getName(),
                 update,
@@ -378,6 +386,7 @@ public class TokenResource {
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getData().add(data);
         stroomEventLoggingService.view(
+                "GetPublicApiKey",
                 httpServletRequest,
                 "anonymous",
                 objectOutcome,

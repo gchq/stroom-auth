@@ -17,10 +17,12 @@
 package stroom.auth.service.eventlogging;
 
 import event.logging.AuthenticateAction;
+import event.logging.AuthenticateLogonType;
 import event.logging.AuthenticateOutcome;
 import event.logging.Event;
 import event.logging.ObjectOutcome;
 import event.logging.Search;
+import event.logging.User;
 import event.logging.impl.DefaultEventSerializer;
 import event.logging.impl.EventSerializer;
 import org.slf4j.Logger;
@@ -52,14 +54,14 @@ public class StroomEventLoggingService {
     }
 
     public void successfulLogin(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent(
+        Event event = createAuthenticateEvent("Logon",
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User logged in successfully.");
         stroomEventFactory.log(event);
     }
 
     public void failedLogin(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent(
+        Event event = createAuthenticateEvent("Logon",
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User attempted to log in but failed.");
         AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
@@ -69,7 +71,7 @@ public class StroomEventLoggingService {
     }
 
     public void failedLoginBecauseLocked(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent(
+        Event event = createAuthenticateEvent("Logon",
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User attempted to log in but failed because the account is locked.");
         AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
@@ -79,21 +81,21 @@ public class StroomEventLoggingService {
     }
 
     public void logout(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent(
+        Event event = createAuthenticateEvent("Logoff",
                 request, usersEmail, AuthenticateAction.LOGOFF,
                 "User logged off.");
         stroomEventFactory.log(event);
     }
 
     public void resetPassword(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent(
+        Event event = createAuthenticateEvent("ResetPassword",
                 request, usersEmail, AuthenticateAction.RESET_PASSWORD,
                 "User reset their password");
         stroomEventFactory.log(event);
     }
 
     public void changePassword(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent(
+        Event event = createAuthenticateEvent("ChangePassword",
                 request, usersEmail, AuthenticateAction.CHANGE_PASSWORD,
                 "User changed their password.");
         stroomEventFactory.log(event);
@@ -101,12 +103,14 @@ public class StroomEventLoggingService {
 
 
     public void search(
+            String typeId,
             HttpServletRequest request,
             String usersEmail,
             Search search,
             String description){
         Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setSearch(search);
+        eventDetail.setTypeId(typeId);
         eventDetail.setDescription(description);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
@@ -115,6 +119,7 @@ public class StroomEventLoggingService {
     }
 
     public void create(
+            String typeId,
             HttpServletRequest request,
             String usersEmail,
             ObjectOutcome objectOutcome,
@@ -122,6 +127,7 @@ public class StroomEventLoggingService {
         Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setCreate(objectOutcome);
         eventDetail.setDescription(description);
+        eventDetail.setTypeId(typeId);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
@@ -129,6 +135,7 @@ public class StroomEventLoggingService {
     }
 
     public void view(
+            String typeId,
             HttpServletRequest request,
             String usersEmail,
             ObjectOutcome objectOutcome,
@@ -136,6 +143,7 @@ public class StroomEventLoggingService {
         Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setView(objectOutcome);
         eventDetail.setDescription(description);
+        eventDetail.setTypeId(typeId);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
@@ -143,6 +151,7 @@ public class StroomEventLoggingService {
     }
 
     public void update(
+            String typeId,
             HttpServletRequest request,
             String usersEmail,
             Event.EventDetail.Update update,
@@ -150,6 +159,7 @@ public class StroomEventLoggingService {
         Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setUpdate(update);
         eventDetail.setDescription(description);
+        eventDetail.setTypeId(typeId);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
@@ -157,6 +167,7 @@ public class StroomEventLoggingService {
     }
 
     public void delete(
+            String typeId,
             HttpServletRequest request,
             String usersEmail,
             ObjectOutcome objectOutcome,
@@ -164,6 +175,7 @@ public class StroomEventLoggingService {
         Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setDelete(objectOutcome);
         eventDetail.setDescription(description);
+        eventDetail.setTypeId(typeId);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
@@ -171,15 +183,21 @@ public class StroomEventLoggingService {
     }
 
     public Event createAuthenticateEvent(
+            String typeId,
             HttpServletRequest request,
             String usersEmail,
             AuthenticateAction authenticateAction,
             String description){
+        User user = new User();
+        user.setId(usersEmail);
         Event.EventDetail.Authenticate authenticate = new Event.EventDetail.Authenticate();
         authenticate.setAction(authenticateAction);
+        authenticate.setLogonType(AuthenticateLogonType.INTERACTIVE);
+        authenticate.setUser(user);
         Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setAuthenticate(authenticate);
         eventDetail.setDescription(description);
+        eventDetail.setTypeId(typeId);
         Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
