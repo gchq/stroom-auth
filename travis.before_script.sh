@@ -31,7 +31,7 @@ else
     git checkout $STROOM_RESOURCES_BRANCH
 
     echo "Start all the services we need to run the integration tests in stroom"
-    ./bounceIt.sh 'up -d --build' -e -y -x stroom-auth-service-db
+    ./bounceIt.sh 'up -d --build' -e -y -x stroom-all-dbs
     popd
 fi
 
