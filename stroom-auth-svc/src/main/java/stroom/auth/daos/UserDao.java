@@ -202,7 +202,7 @@ public class UserDao {
                 .execute();
     }
 
-    public Boolean needsPasswordChange(String email, int passwordChangeThreshold) {
+    public Boolean needsPasswordChange(String email, int passwordChangeThreshold, boolean forcePasswordChangeOnFirstLogin) {
         Validate.notNull(email, "email must not be null");
         Validate.inclusiveBetween(0, Integer.MAX_VALUE, passwordChangeThreshold);
 
@@ -223,7 +223,6 @@ public class UserDao {
 
         boolean thresholdBreached = daysSinceLastPasswordChange >= passwordChangeThreshold;
         boolean isFirstLogin = user.getPasswordLastChanged() == null;
-        boolean forcePasswordChangeOnFirstLogin = config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin();
 
         if(thresholdBreached || (forcePasswordChangeOnFirstLogin && isFirstLogin)){
             LOGGER.debug("User {} needs a password change.", email);

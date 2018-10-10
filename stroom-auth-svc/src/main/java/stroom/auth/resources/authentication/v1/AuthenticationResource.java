@@ -434,7 +434,8 @@ public final class AuthenticationResource {
             response = Boolean.class, tags = {"Authentication"})
     public final Response needsPasswordChange(@QueryParam("email") String email) {
         boolean userNeedsToChangePassword = userDao.needsPasswordChange(
-                email, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
+                email, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays(),
+                config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin());
         return Response.status(Status.OK).entity(userNeedsToChangePassword).build();
     }
 
@@ -457,7 +458,8 @@ public final class AuthenticationResource {
         String username = session.getUserEmail();
 
         boolean userNeedsToChangePassword = userDao.needsPasswordChange(
-            username, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays());
+            username, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays(),
+                config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin());
 
         if(userNeedsToChangePassword){
             String redirectUrl = getPostAuthenticationCheckUrl(clientId);

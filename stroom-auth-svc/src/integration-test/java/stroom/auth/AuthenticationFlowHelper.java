@@ -182,7 +182,9 @@ public class AuthenticationFlowHelper {
         // The normally supplied advertised host doesn't work on Travis, so we need to hack the URL so it uses localhost.
         String modifiedPostAuthenticationRedirectUrl = String.format(
                 "http://localhost:8099%s?%s",
-                postAuthenticationRedirectUrl.getPath(),
+                // 'authenticationService' refers to the public path in nginx -- the advertised host. But tests
+                // have no nginx so we need to refer to the configured path, which is 'authentication'.
+                postAuthenticationRedirectUrl.getPath().replaceAll("authenticationService", "authentication"),
                 postAuthenticationRedirectUrl.getQuery());
 
         HttpResponse postAuthenticationRedirectResponse = null;

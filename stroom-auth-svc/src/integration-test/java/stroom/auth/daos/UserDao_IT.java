@@ -114,22 +114,22 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             // Simple
-            Boolean shouldNotNeedChange = userDao.needsPasswordChange("user01", 1);
+            Boolean shouldNotNeedChange = userDao.needsPasswordChange("user01", 1, true);
             assertThat(shouldNotNeedChange).isTrue();
 
-            Boolean shouldNeedChange = userDao.needsPasswordChange("user01", 200);
+            Boolean shouldNeedChange = userDao.needsPasswordChange("user01", 200, true);
             // True because they've not had a password change.
             assertThat(shouldNeedChange).isTrue();
 
             // Boundary cases
-            Boolean shouldNotNeedChangeBoundaryCase = userDao.needsPasswordChange("user01", 90);
+            Boolean shouldNotNeedChangeBoundaryCase = userDao.needsPasswordChange("user01", 90, true);
             assertThat(shouldNotNeedChangeBoundaryCase).isTrue();
 
             userDao.changePassword("user01", "new password");
-            shouldNeedChange = userDao.needsPasswordChange("user01", 200);
+            shouldNeedChange = userDao.needsPasswordChange("user01", 200, true);
             assertThat(shouldNeedChange).isFalse();
 
-            Boolean shouldNeedChangeBoundaryCase = userDao.needsPasswordChange("user01", 91);
+            Boolean shouldNeedChangeBoundaryCase = userDao.needsPasswordChange("user01", 91, true);
             assertThat(shouldNeedChangeBoundaryCase).isFalse();
         } catch (SQLException e) {
             e.printStackTrace();
