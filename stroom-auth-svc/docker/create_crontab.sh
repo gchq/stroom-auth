@@ -4,20 +4,38 @@
 
 # Construct the send command
 readonly SEND_SCRIPT="/usr/stroom-auth-service/send_to_stroom.sh"
-readonly LOG_DIR="/usr/stroom-auth-service/logs/events"
-readonly SEND_COMMAND="${SEND_SCRIPT} ${LOG_DIR} ${SEND_LOGS_FEED_NAME} ${SEND_LOGS_SYSTEM} ${SEND_LOGS_ENV} ${SEND_LOGS_STROOM_URL} -m ${SEND_LOGS_MAX_SLEEP} --no_pretty --delete_after_sending --secure"
-echo "send_to_stroom.sh command will be ${SEND_COMMAND}"
 
-# Construct the crontab line
-readonly PIPE=">> /usr/stroom-auth-service/logs/cron.log 2>&1"
-readonly CRONTAB="${SEND_LOGS_CRONTAB} ${SEND_COMMAND} ${PIPE}"
-echo "crontab for sending logs will be ${CRONTAB}"
+readonly ACCESS_LOG_DIR="/usr/stroom-auth-service/logs/access"
+readonly APP_LOGS="/usr/stroom-auth-service/logs/events"
+readonly EVENT_LOG_DIR="/usr/stroom-auth-service/logs/app"
 
-# Create the crontab file -- always over-write so we have the latest from the env vars
 readonly CRONTAB_FILE="/etc/cron.d/send-logs-cron"
-mkdir -p /etc/cron.d
-touch ${CRONTAB_FILE}
-chmod +x "${CRONTAB_FILE}"
-echo "${CRONTAB}" > "${CRONTAB_FILE}"
 
-echo "Successfully written out crontab."
+create_crontab_file() {
+    # Create the crontab file -- always over-write so we have the latest from the env vars
+    mkdir -p /etc/cron.d
+    truncate -s 0 ${CRONTAB_FILE}
+    chmod +x "${CRONTAB_FILE}"
+    echo "Created crontab file."
+}
+
+add_crontab_line(){
+    local feed_name=$1
+    local file_dir=$2
+    local send_command="${SEND_SCRIPT} ${file_dir} ${feed_name} ${LOGS_SYSTEM} ${LOGS_ENV} ${LOGS_STROOM_URL} -m ${LOGS_MAX_SLEEP} --no_pretty --delete_after_sending --secure"
+
+    # Construct the crontab line
+    local pipe=">> /usr/stroom-auth-service/logs/cron.log 2>&1"
+    local crontab="${LOGS_CRONTAB} ${send_command} ${pipe}"
+    echo "Created crontab entry for ${feed_name}: ${crontab}"
+    echo "${crontab}" >> "${CRONTAB_FILE}"
+}
+
+main() {
+    create_crontab_file
+    add_crontab_line ${LOGS_EVENT_FEED_NAME} ${EVENT_LOG_DIR}
+    add_crontab_line ${LOGS_APP_FEED_NAME} ${APP_LOGS}
+    add_crontab_line ${LOGS_ACCESS_FEED_NAME} ${ACCESS_LOG_DIR}
+}
+
+main "$@"

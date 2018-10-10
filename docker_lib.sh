@@ -17,7 +17,6 @@ build_service() {
     cp -f ${SOURCE_DIR}/config.yml ${BUILD_DIR}/config.yml
     cp -f ${SOURCE_DIR}/build/libs/stroom-auth-service-all.jar ${BUILD_DIR}/stroom-auth-service-all.jar
     cp -f ${SOURCE_DIR}/send_to_stroom* ${BUILD_DIR}
-    cp -f ${DOCKER_DIR}/create_crontab.sh ${BUILD_DIR}/create_crontab.sh
     docker build --tag gchq/stroom-auth-service:$TAG ${DOCKER_DIR}/.
 }
 
