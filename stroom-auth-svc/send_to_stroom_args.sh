@@ -3,6 +3,7 @@
 # Created by argbash-init v2.6.1
 # ARG_OPTIONAL_BOOLEAN([secure],[s],[Check for valid certificates if running over HTTPS],[false])
 # ARG_OPTIONAL_BOOLEAN([delete_after_sending],[d],[Delete log files after sending them],[false])
+# ARG_OPTIONAL_BOOLEAN([no_pretty],[p],[Disable colours in the output, which is useful when sending the results to a log file],[false])
 # ARG_OPTIONAL_SINGLE([max_sleep],[m],[Max time allowed to sleep (e.g. to avoid all cron's in the estate sending log files at the same time)],[0])
 # ARG_POSITIONAL_SINGLE([log_dir],[Directory to look for log files],[])
 # ARG_POSITIONAL_SINGLE([feed],[ Your feed name given to you],[])
@@ -31,7 +32,7 @@ die()
 begins_with_short_option()
 {
   local first_option all_short_options
-  all_short_options='sdmhv'
+  all_short_options='sdpmhv'
   first_option="${1:0:1}"
   test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -48,12 +49,13 @@ _arg_stroom_url=
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_secure="false"
 _arg_delete_after_sending="false"
+_arg_no_pretty="false"
 _arg_max_sleep="0"
 
 print_help ()
 {
   printf '%s\n' "This script will send log files to Stroom."
-  printf 'Usage: %s [-s|--(no-)secure] [-d|--(no-)delete_after_sending] [-m|--max_sleep <arg>] [-h|--help] [-v|--version] <log_dir> <feed> <system> <environment> <stroom_url>\n' "$0"
+  printf 'Usage: %s [-s|--(no-)secure] [-d|--(no-)delete_after_sending] [-p|--(no-)no_pretty] [-m|--max_sleep <arg>] [-h|--help] [-v|--version] <log_dir> <feed> <system> <environment> <stroom_url>\n' "$0"
   printf '\t%s\n' "<log_dir>: Directory to look for log files"
   printf '\t%s\n' "<feed>:  Your feed name given to you"
   printf '\t%s\n' "<system>: Your system name, i.e. what your project/service or capability is known as"
@@ -61,6 +63,7 @@ print_help ()
   printf '\t%s\n' "<stroom_url>: The URL you are sending data to (N.B. This should be the HTTPS URL)"
   printf '\t%s\n' "-s,--secure,--no-secure: Check for valid certificates if running over HTTPS (false by default)"
   printf '\t%s\n' "-d,--delete_after_sending,--no-delete_after_sending: Delete log files after sending them (false by default)"
+  printf '\t%s\n' "-p,--no_pretty,--no-no_pretty: Disable colours in the output, which is useful when sending the results to a log file (false by default)"
   printf '\t%s\n' "-m,--max_sleep: Max time allowed to sleep (e.g. to avoid all cron's in the estate sending log files at the same time) (default: '0')"
   printf '\t%s\n' "-h,--help: Prints help"
   printf '\t%s\n' "-v,--version: Prints version"
@@ -94,6 +97,18 @@ parse_commandline ()
         if test -n "$_next" -a "$_next" != "$_key"
         then
           begins_with_short_option "$_next" && shift && set -- "-d" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
+        fi
+        ;;
+      -p|--no-no_pretty|--no_pretty)
+        _arg_no_pretty="on"
+        test "${1:0:5}" = "--no-" && _arg_no_pretty="off"
+        ;;
+      -p*)
+        _arg_no_pretty="on"
+        _next="${_key##-p}"
+        if test -n "$_next" -a "$_next" != "$_key"
+        then
+          begins_with_short_option "$_next" && shift && set -- "-p" "-${_next}" "$@" || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
         fi
         ;;
       -m|--max_sleep)

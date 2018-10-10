@@ -4,7 +4,8 @@
 
 # Arguments managed using argbash. To re-generate install argbash and run:
 # 'argbash send_to_stroom_args.m4 -o send_to_stroom_args.sh'
-source send_to_stroom_args.sh
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+source ${DIR}/send_to_stroom_args.sh
 
 # Create references to the args
 readonly LOG_DIR=${_arg_log_dir}
@@ -15,24 +16,34 @@ readonly STROOM_URL=${_arg_stroom_url}
 readonly SECURE=${_arg_secure}
 readonly MAX_SLEEP=${_arg_max_sleep}
 readonly DELETE_AFTER_SENDING=${_arg_delete_after_sending}
+readonly NO_PRETTY=${_arg_no_pretty}
 
 ## Configure other constants
 readonly LOCK_FILE=${LOG_DIR}/$(basename "$0").lck
 readonly SLEEP=$((RANDOM % (MAX_SLEEP+1)))
 readonly THIS_PID=$$
 
+# Shell colour constants for use in 'echo -e'
 setup_echo_colours() {
     # Exit the script on any error
     set -e
-
-    #Shell Colour constants for use in 'echo -e'
-    RED='\033[1;31m'
-    GREEN='\033[1;32m'
-    YELLOW='\033[1;33m'
-    BLUE='\033[1;34m'
-    LGREY='\e[37m'
-    DGREY='\e[90m'
-    NC='\033[0m' # No Color
+    if [ "${NO_PRETTY}" = "on" ]; then
+        RED=''
+        GREEN=''
+        YELLOW=''
+        BLUE=''
+        LGREY=''
+        DGREY=''
+        NC='' # No Color
+    else
+        RED='\033[1;31m'
+        GREEN='\033[1;32m'
+        YELLOW='\033[1;33m'
+        BLUE='\033[1;34m'
+        LGREY='\e[37m'
+        DGREY='\e[90m'
+        NC='\033[0m' # No Color
+    fi
 }
 
 configure_curl() {
@@ -77,13 +88,13 @@ send_files() {
 send_file() {
     local -r file=$1
     echo -e "\n${GREEN}Info:${NC} Processing ${file}"
-    RESPONSE_HTTP=$(curl ${CURL_OPTS} --write-out "RESPONSE_CODE=%{http_code}" --data-binary @${file} "${STROOM_URL}" -H "Feed:${FEED}" -H "System:${SYSTEM}" -H "Environment:${ENVIRONMENT}" 2>&1)
+    RESPONSE_HTTP=$(curl ${CURL_OPTS} --write-out "RESPONSE_CODE=%{http_code}" --data-binary @${file} ${STROOM_URL} -H "Feed:${FEED}" -H "System:${SYSTEM}" -H "Environment:${ENVIRONMENT}" 2>&1)
     RESPONSE_LINE=$(echo "${RESPONSE_HTTP}" | head -1)
     RESPONSE_MSG=$(echo "${RESPONSE_HTTP}" | grep -o -e "RESPONSE_CODE=.*$")
     RESPONSE_CODE=$(echo "${RESPONSE_MSG}" | cut -f2 -d '=')
     if [ "${RESPONSE_CODE}" != "200" ]
     then
-        echo -e "${RED}Error:${NC} Unable to send file ${file}, error was ${RESPONSE_LINE}"
+        echo -e "${RED}Error:${NC} Unable to send file ${file}, error was: \n${RESPONSE_HTTP}"
     else
         echo -e "${GREEN}Info:${NC} Sent file ${file}, response code was ${RESPONSE_CODE}"
 

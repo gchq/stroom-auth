@@ -17,10 +17,15 @@
 FROM openjdk:10.0.2-13-jre
 
 WORKDIR /usr/stroom-auth-service
+RUN apt-get update && apt-get install -y cron
 
-ADD ./stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
-ADD ./config.yml /usr/stroom-auth-service/config.yml
+ADD ./build/stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
+ADD ./build/config.yml /usr/stroom-auth-service/config.yml
+ADD ./build/send_to_stroom_args.sh /usr/stroom-auth-service/send_to_stroom_args.sh
+ADD ./build/send_to_stroom.sh /usr/stroom-auth-service/send_to_stroom.sh
+ADD ./create_crontab.sh /usr/stroom-auth-service/create_crontab.sh
+ADD ./run.sh /usr/stroom-auth-service/run.sh
 
 VOLUME [ "/usr/stroom-auth-service/logs" ]
 
-CMD java -jar stroom-auth-service-all.jar server config.yml
+CMD run.sh
