@@ -3,6 +3,8 @@
 #exit script on any error
 set -e
 
+source docker_lib.sh
+
 AUTH_SERVICE_REPO="gchq/stroom-auth-service"
 AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/."
 
@@ -82,7 +84,7 @@ isCronBuildRequired() {
 }
 
 #args: dockerRepo contextRoot tag1VersionPart tag2VersionPart ... tagNVersionPart
-releaseToDockerHub() {
+releaseServiceToDockerHub() {
     #echo "releaseToDockerHub called with args [$@]"
 
     if [ $# -lt 3 ]; then
@@ -106,6 +108,8 @@ releaseToDockerHub() {
     echo -e "Building and releasing a docker image to ${GREEN}${dockerRepo}${NC} with tags: ${GREEN}${allTagArgs}${NC}"
     echo -e "dockerRepo:  [${GREEN}${dockerRepo}${NC}]"
     echo -e "contextRoot: [${GREEN}${contextRoot}${NC}]"
+
+    build_service
 
     #The username and password are configured in the travis gui
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
@@ -228,7 +232,7 @@ else
         allDockerTags="${VERSION_FIXED_TAG} ${SNAPSHOT_FLOATING_TAG} ${MAJOR_VER_FLOATING_TAG} ${MINOR_VER_FLOATING_TAG}"
 
         #build and release the stroom-stats image to dockerhub
-        releaseToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
+        releaseServiceToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
         releaseAuthUiToDockerHub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${allDockerTags}
     fi
 
