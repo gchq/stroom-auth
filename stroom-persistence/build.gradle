@@ -23,7 +23,7 @@ dependencies {
     compile deps.javax_annotations
     compile deps.jaxws_api
 
-    jooqRuntime deps.mariadb_connector
+    jooqRuntime deps.mysql_connector_java
 }
 
 def propNameJooqGeneration = 'jooqGeneration'
@@ -38,15 +38,15 @@ if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
             edition = 'OSS'
             authdb(sourceSets.main) {
                 jdbc {
-                    driver = 'org.mariadb.jdbc.Driver'
-                    url = 'jdbc:mariadb://localhost:3309/auth'
-                    user = 'stroomuser'
+                    driver = 'com.mysql.jdbc.Driver'
+                    url = 'jdbc:mysql://localhost:3307/auth'
+                    user = 'authuser'
                     password = 'stroompassword1'
                 }
                 generator {
                     name = 'org.jooq.util.DefaultGenerator'
                     database {
-                        name = 'org.jooq.util.mariadb.MariaDBDatabase'
+                        name = 'org.jooq.meta.mysql.MySQLDatabase'
                         // Add anything you want included in generation below
                         includes = 'users|tokens|token_types|json_web_key'
                         // We don't want to include flyway versioning

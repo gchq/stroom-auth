@@ -23,6 +23,10 @@ import static stroom.db.auth.Tables.USERS;
 public abstract class Database_IT {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Database_IT.class);
 
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3307/auth?useUnicode=yes&characterEncoding=UTF-8";
+    private static final String JDBC_USER = "authuser";
+    private static final String JDBC_PASSWORD = "stroompassword1";
+
     @After
     public void after(){
         cleanDatabase();
@@ -34,20 +38,31 @@ public abstract class Database_IT {
     }
 
     private void cleanDatabase(){
-        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3309/auth", "stroomuser", "stroompassword1")) {
-            DSLContext database = DSL.using(conn, SQLDialect.MARIADB);
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            DSLContext database = DSL.using(conn, SQLDialect.MYSQL);
 
             // Delete non-admin users
             database.deleteFrom(USERS).where(USERS.EMAIL.ne("admin")).execute();
-            Integer adminUserId = database.select(USERS.ID).from(USERS).where(USERS.EMAIL.eq("admin")).fetchOne()
+            Integer adminUserId = database
+                    .select(USERS.ID)
+                    .from(USERS)
+                    .where(USERS.EMAIL.eq("admin"))
+                    .fetchOne()
                     .into(Integer.class);
-            Integer apiTokenTypeID = database.select(TOKEN_TYPES.ID).from(TOKEN_TYPES)
-                    .where(TOKEN_TYPES.TOKEN_TYPE.eq("api")).fetchOne().into(Integer.class);
+
+            Integer apiTokenTypeID = database
+                    .select(TOKEN_TYPES.ID)
+                    .from(TOKEN_TYPES)
+                    .where(TOKEN_TYPES.TOKEN_TYPE.eq("api"))
+                    .fetchOne()
+                    .into(Integer.class);
+
             database.deleteFrom(TOKENS).execute();
 
             database.insertInto(TOKENS)
                     // This is the long-lived token from Flyway
-                    .set(TOKENS.TOKEN, "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6InN0cm9vbSJ9.NLTH0YNedtKsco0E6jWTcPYV3AW2mLlgLf5TVxXVa-I")
+                    .set(TOKENS.TOKEN,
+                            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6InN0cm9vbSJ9.NLTH0YNedtKsco0E6jWTcPYV3AW2mLlgLf5TVxXVa-I")
                     .set(TOKENS.TOKEN_TYPE_ID, apiTokenTypeID)
                     .set(TOKENS.USER_ID, adminUserId)
                     .set(TOKENS.ISSUED_ON, Timestamp.from(Instant.now()))

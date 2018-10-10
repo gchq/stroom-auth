@@ -36,7 +36,6 @@ import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
-import org.flywaydb.core.api.FlywayException;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.Configuration;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -53,6 +52,7 @@ import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
 import stroom.auth.service.security.ServiceUser;
 import stroom.auth.service.security.UserAuthenticator;
+import stroom.auth.util.db.DbUtil;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
@@ -93,6 +93,15 @@ public final class App extends Application<Config> {
 
     @Override
     public void run(Config config, Environment environment) throws Exception {
+
+        // We want to be resilient against the database not being available, so we'll keep trying to migrate if there's
+        // an exception. This approach blocks the startup of the service until the database is available. The downside
+        // of this is that the admin pages won't be available - any future dashboarding that wants to emit information
+        // about the missing database won't be able to do so. The upside of this approach is that it's very simple
+        // to implement from where we are now, i.e. we don't need to add service-wide code to handle a missing database
+        // e.g. in JwkDao.init().
+        waitForDatabaseConnection(config);
+
         // The first thing to do is set up Guice
         Configuration jooqConfig = this.jooqBundle.getConfiguration();
         injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
@@ -110,6 +119,22 @@ public final class App extends Application<Config> {
         configureSessionHandling(environment);
         configureCors(environment);
         schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
+    }
+
+    private void waitForDatabaseConnection(final Config config) {
+        DataSourceFactory dataSourceFactory = config.getDataSourceFactory();
+
+        final String driverClassname = dataSourceFactory.getDriverClass();
+        final String driverUrl = dataSourceFactory.getUrl();
+        final String driverUsername = dataSourceFactory.getUser();
+        final String driverPassword = dataSourceFactory.getPassword();
+
+        boolean didConnect = DbUtil.waitForConnection(driverClassname, driverUrl, driverUsername, driverPassword);
+
+        if (!didConnect) {
+            LOGGER.error("Can't connect to the databases, shutting down");
+            System.exit(1);
+        }
     }
 
     private static void configureSessionHandling(Environment environment) {
@@ -173,29 +198,8 @@ public final class App extends Application<Config> {
         ManagedDataSource dataSource = config.getDataSourceFactory().build(
                 environment.metrics(), "flywayDataSource");
         Flyway flyway = config.getFlywayFactory().build(dataSource);
-        // We want to be resilient against the database not being available, so we'll keep trying to migrate if there's
-        // an exception. This approach blocks the startup of the service until the database is available. The downside
-        // of this is that the admin pages won't be available - any future dashboarding that wants to emit information
-        // about the missing database won't be able to do so. The upside of this approach is that it's very simple
-        // to implement from where we are now, i.e. we don't need to add service-wide code to handle a missing database
-        // e.g. in JwkDao.init().
-        boolean migrationComplete = false;
-        int databaseRetryDelayMs = 5000;
-        while(!migrationComplete){
-            try {
-                flyway.migrate();
-                migrationComplete = true;
-            } catch(FlywayException flywayException){
-                LOGGER.error("Unable to migrate database! Will retry in {}ms. Error was {}",
-                    databaseRetryDelayMs, flywayException.getMessage());
-                try {
-                    Thread.sleep(databaseRetryDelayMs);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
+        // If migration fails an un-checked exception will be throw which will stop the app
+        flyway.migrate();
     }
 
     private void schedulePasswordChecks(Config config, PasswordIntegrityCheckTask passwordIntegrityCheckTask) {

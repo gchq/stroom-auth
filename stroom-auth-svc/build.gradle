@@ -115,7 +115,7 @@ dependencies {
     compile deps.jaxb_impl
     compile deps.javax_activation
 
-    runtime deps.mariadb_connector
+    runtime deps.mysql_connector_java
 
     testCompile testDeps.junit
     testCompile testDeps.assertj
