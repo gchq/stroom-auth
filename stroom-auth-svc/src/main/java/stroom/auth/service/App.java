@@ -170,7 +170,8 @@ public final class App extends Application<Config> {
     }
 
     private static void migrate(Config config, Environment environment) {
-        ManagedDataSource dataSource = config.getDataSourceFactory().build(environment.metrics(), "flywayDataSource");
+        ManagedDataSource dataSource = config.getDataSourceFactory().build(
+                environment.metrics(), "flywayDataSource");
         Flyway flyway = config.getFlywayFactory().build(dataSource);
         // We want to be resilient against the database not being available, so we'll keep trying to migrate if there's
         // an exception. This approach blocks the startup of the service until the database is available. The downside
@@ -199,7 +200,10 @@ public final class App extends Application<Config> {
 
     private void schedulePasswordChecks(Config config, PasswordIntegrityCheckTask passwordIntegrityCheckTask) {
         Timer time = new Timer();
-        time.schedule(passwordIntegrityCheckTask, 0, config.getPasswordIntegrityChecksConfig().getSecondsBetweenChecks()*1000);
+        time.schedule(
+                passwordIntegrityCheckTask,
+                0,
+                config.getPasswordIntegrityChecksConfig().getSecondsBetweenChecks() * 1000);
     }
 
 }
