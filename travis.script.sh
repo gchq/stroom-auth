@@ -109,7 +109,7 @@ releaseServiceToDockerHub() {
     echo -e "dockerRepo:  [${GREEN}${dockerRepo}${NC}]"
     echo -e "contextRoot: [${GREEN}${contextRoot}${NC}]"
 
-    build_service
+    prep_service_build
 
     #The username and password are configured in the travis gui
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1

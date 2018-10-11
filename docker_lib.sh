@@ -8,7 +8,7 @@ build_ui(){
     cd ../..
 }
 
-build_service() {
+prep_service_build() {
     local -r SOURCE_DIR="stroom-auth-svc"
     local -r DOCKER_DIR="${SOURCE_DIR}/docker"
     local -r BUILD_DIR="${DOCKER_DIR}/build"
@@ -21,6 +21,10 @@ build_service() {
     cp -f ${SOURCE_DIR}/config.yml ${BUILD_DIR}/config.yml
     cp -f ${SOURCE_DIR}/build/libs/stroom-auth-service-all.jar ${BUILD_DIR}/stroom-auth-service-all.jar
     cp -f ${SOURCE_DIR}/send_to_stroom* ${BUILD_DIR}
+}
+
+build_service() {
+    prep_service_build
     docker build --tag gchq/stroom-auth-service:$TAG ${DOCKER_DIR}/.
 }
 
