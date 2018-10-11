@@ -14,6 +14,10 @@ build_service() {
     local -r BUILD_DIR="${DOCKER_DIR}/build"
     # Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
     ./gradlew clean build shadowJar -x test -x integrationTest
+    pushd stroom-auth-svc
+    ./config.yml.sh
+    popd
+    mkdir -p ${BUILD_DIR}
     cp -f ${SOURCE_DIR}/config.yml ${BUILD_DIR}/config.yml
     cp -f ${SOURCE_DIR}/build/libs/stroom-auth-service-all.jar ${BUILD_DIR}/stroom-auth-service-all.jar
     cp -f ${SOURCE_DIR}/send_to_stroom* ${BUILD_DIR}
