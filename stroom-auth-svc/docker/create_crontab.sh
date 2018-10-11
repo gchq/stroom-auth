@@ -25,7 +25,7 @@ add_crontab_line(){
     local send_command="${SEND_SCRIPT} ${file_dir} ${feed_name} ${LOGS_SYSTEM} ${LOGS_ENV} ${LOGS_STROOM_URL} -m ${LOGS_MAX_SLEEP} --no_pretty --delete_after_sending --secure"
 
     # Construct the crontab line
-    local pipe=">> /usr/stroom-auth-service/logs/cron.log 2>&1"
+    local pipe=">> /usr/stroom-auth-service/logs/cron_${feed_name}.log 2>&1"
     local crontab="${LOGS_CRONTAB} ${send_command} ${pipe}"
     echo "Created crontab entry for ${feed_name}: ${crontab}"
     echo "${crontab}" >> "${CRONTAB_FILE}"
