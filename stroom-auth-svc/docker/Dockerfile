@@ -23,6 +23,7 @@ ADD ./build/stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-ser
 ADD ./build/config.yml /usr/stroom-auth-service/config.yml
 ADD ./build/send_to_stroom_args.sh /usr/stroom-auth-service/send_to_stroom_args.sh
 ADD ./build/send_to_stroom.sh /usr/stroom-auth-service/send_to_stroom.sh
+
 ADD ./create_crontab.sh /usr/stroom-auth-service/create_crontab.sh
 ADD ./run.sh /usr/stroom-auth-service/run.sh
 

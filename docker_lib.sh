@@ -12,6 +12,18 @@ build_ui(){
     cd ../..
 }
 
+get_send_to_stroom_scripts() {
+    pushd stroom-auth-svc/docker/build
+
+    wget https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom.sh
+    wget https://github.com/gchq/stroom-clients/blob/master/bash/send_to_stroom_args.sh
+
+    chmod +x send_to_stroom.sh
+    chmod +x send_to_stroom_args.sh
+
+    popd
+}
+
 prep_service_build() {
 
     # Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
@@ -22,7 +34,7 @@ prep_service_build() {
     mkdir -p ${SERVICE_BUILD_DIR}
     cp -f ${SERVICE_SOURCE_DIR}/config.yml ${SERVICE_BUILD_DIR}/config.yml
     cp -f ${SERVICE_SOURCE_DIR}/build/libs/stroom-auth-service-all.jar ${SERVICE_BUILD_DIR}/stroom-auth-service-all.jar
-    cp -f ${SERVICE_SOURCE_DIR}/send_to_stroom* ${SERVICE_BUILD_DIR}
+    get_send_to_stroom_scripts
 }
 
 build_service() {
