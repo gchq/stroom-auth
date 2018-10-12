@@ -15,8 +15,8 @@ build_ui(){
 get_send_to_stroom_scripts() {
     pushd stroom-auth-svc/docker/build
 
-    wget https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom.sh
-    wget https://github.com/gchq/stroom-clients/blob/master/bash/send_to_stroom_args.sh
+    curl https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom.sh >> send_to_stroom.sh
+    curl https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom_args.sh >> send_to_stroom_args.sh
 
     chmod +x send_to_stroom.sh
     chmod +x send_to_stroom_args.sh
@@ -31,6 +31,7 @@ prep_service_build() {
     pushd stroom-auth-svc
     ./config.yml.sh
     popd
+    rm -rf ${SERVICE_BUILD_DIR}
     mkdir -p ${SERVICE_BUILD_DIR}
     cp -f ${SERVICE_SOURCE_DIR}/config.yml ${SERVICE_BUILD_DIR}/config.yml
     cp -f ${SERVICE_SOURCE_DIR}/build/libs/stroom-auth-service-all.jar ${SERVICE_BUILD_DIR}/stroom-auth-service-all.jar

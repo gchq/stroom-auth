@@ -2,11 +2,10 @@
 #
 # Creates the crontab for sending log files to Stroom.
 
-# Construct the send command
 readonly SEND_SCRIPT="/usr/stroom-auth-service/send_to_stroom.sh"
 
 readonly ACCESS_LOG_DIR="/usr/stroom-auth-service/logs/access"
-readonly APP_LOGS="/usr/stroom-auth-service/logs/events"
+readonly APP_LOGS_DIR="/usr/stroom-auth-service/logs/events"
 readonly EVENT_LOG_DIR="/usr/stroom-auth-service/logs/app"
 
 readonly CRONTAB_FILE="/etc/cron.d/send-logs-cron"
@@ -34,7 +33,7 @@ add_crontab_line(){
 main() {
     create_crontab_file
     add_crontab_line ${LOGS_EVENT_FEED_NAME} ${EVENT_LOG_DIR}
-    add_crontab_line ${LOGS_APP_FEED_NAME} ${APP_LOGS}
+    add_crontab_line ${LOGS_APP_FEED_NAME} ${APP_LOGS_DIR}
     add_crontab_line ${LOGS_ACCESS_FEED_NAME} ${ACCESS_LOG_DIR}
 }
 
