@@ -1,5 +1,5 @@
 #**********************************************************************
-# Copyright 2016 Crown Copyright
+# Copyright 2018 Crown Copyright
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,18 +14,22 @@
 # limitations under the License.
 #**********************************************************************
 
-FROM openjdk:10.0.2-13-jre
+FROM openjdk:10.0.2-jre-slim
 
+# TODO consider consistency with stroom/stroom-proxy, i.e. /stroom-auth-svc/
 WORKDIR /usr/stroom-auth-service
-RUN apt-get update && apt-get install -y cron
-
-ADD ./build/stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
-ADD ./build/config.yml /usr/stroom-auth-service/config.yml
-ADD ./build/send_to_stroom_args.sh /usr/stroom-auth-service/send_to_stroom_args.sh
-ADD ./build/send_to_stroom.sh /usr/stroom-auth-service/send_to_stroom.sh
-ADD ./create_crontab.sh /usr/stroom-auth-service/create_crontab.sh
-ADD ./run.sh /usr/stroom-auth-service/run.sh
 
 VOLUME [ "/usr/stroom-auth-service/logs" ]
 
 CMD run.sh
+
+RUN apt-get update && apt-get install -y cron
+
+COPY ./build/send_to_stroom_args.sh /usr/stroom-auth-service/send_to_stroom_args.sh
+COPY ./build/send_to_stroom.sh /usr/stroom-auth-service/send_to_stroom.sh
+COPY ./create_crontab.sh /usr/stroom-auth-service/create_crontab.sh
+COPY ./run.sh /usr/stroom-auth-service/run.sh
+COPY ./build/config.yml /usr/stroom-auth-service/config.yml
+COPY ./build/stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
+
+# TODO add user and group, chown copied files to user:group
