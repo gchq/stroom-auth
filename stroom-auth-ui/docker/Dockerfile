@@ -1,4 +1,5 @@
-# Copyright 2017 Crown Copyright
+#**********************************************************************
+# Copyright 2018 Crown Copyright
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,39 +12,47 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#**********************************************************************
 
-FROM nginx:1.13.8-alpine AS base
+
+# ~~~ builder stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FROM node:8.12.0-alpine AS builder
+
+WORKDIR /root/app
 
 RUN apk add --no-cache \
-    nodejs-current \
-    tini \
-    git \
-    # We need full, non-BusyBox sed
-    sed \
-    # jo is a JSON tool for the command line.
-    # We use it to convert environment vars to JSON. We serve this in 'public'.
-    --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ jo
-RUN npm install --global yarn
-WORKDIR /root/app
-# Set tini as entrypoint
-ENTRYPOINT ["/sbin/tini", "--"]
+        git && \
+    npm install --global yarn
 
-# ---- Dependencies ----
-FROM base AS dependencies
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+# ~~~ Dependencies stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FROM builder AS dependencies
 COPY work/package.json package.json
 RUN yarn install
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# ---- Build ----
+
+# ~~~ Build stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 FROM dependencies AS build
 COPY --from=dependencies /root/app/node_modules /root/app/node_modules
 COPY work/src src
 COPY work/public public
 RUN yarn build
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# ---- Build ----
-FROM base
-COPY --from=build /root/app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+
+
+# ~~~ Final stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FROM nginx:1.13.8-alpine
+
+WORKDIR /root/app
+
+# Set tini as entrypoint
+ENTRYPOINT ["/sbin/tini", "--"]
+
 EXPOSE 5000
 EXPOSE 9443
 
@@ -69,3 +78,19 @@ CMD env | grep AUTH_UI | \
                 ${NGINX_SSL_CLIENT_CERTIFICATE}' \
             < /etc/nginx/template/nginx.conf.template > /etc/nginx/nginx.conf \
     && nginx -g 'daemon off;'
+
+
+# We need full, non-BusyBox sed
+# jo is a JSON tool for generating json output on the command line.
+# We use it to convert environment vars to JSON. We serve this in 'public'.
+# Create a user:group auth:auth to run as
+# Use a uid/gid of 1000 as this is more likely to match the host user
+# in development
+RUN apk add --no-cache \
+        tini \
+        sed \
+        --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ jo
+
+COPY --from=build /root/app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+
