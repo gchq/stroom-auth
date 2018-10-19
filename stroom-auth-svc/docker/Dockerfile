@@ -23,9 +23,10 @@ VOLUME [ "/stroom-auth-service/logs" ]
 
 # run entrypoint script inside tini for better unix process handling, 
 # see https://github.com/krallin/tini/issues/8
-ENTRYPOINT ["/sbin/tini", "--", "docker-entrypoint.sh"]
+#ENTRYPOINT ["/sbin/tini", "--", "./docker-entrypoint.sh"]
+ENTRYPOINT ["tini", "--", "./docker-entrypoint.sh"]
 
-CMD run.sh
+CMD ./run.sh
 
 RUN apt-get update && \
     apt-get install -y \
@@ -39,7 +40,7 @@ RUN apt-get update && \
     mkdir -p /stroom-auth-service/logs/access && \
     mkdir -p /stroom-auth-service/logs/events && \
     mkdir -p /stroom-auth-service/logs/app && \
-    chown -R auth /stroom-auth-service
+    chown -R auth:auth /stroom-auth-service
 
 COPY --chown=auth:auth ./build/send_to_stroom_args.sh /stroom-auth-service/
 COPY --chown=auth:auth ./build/send_to_stroom.sh /stroom-auth-service/
