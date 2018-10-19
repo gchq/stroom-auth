@@ -23,7 +23,9 @@ VOLUME [ "/usr/stroom-auth-service/logs" ]
 
 CMD run.sh
 
-RUN apt-get update && apt-get install -y cron
+RUN apt-get update && \
+    apt-get install -y cron && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY ./build/send_to_stroom_args.sh /usr/stroom-auth-service/send_to_stroom_args.sh
 COPY ./build/send_to_stroom.sh /usr/stroom-auth-service/send_to_stroom.sh
