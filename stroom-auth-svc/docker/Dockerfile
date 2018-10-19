@@ -17,21 +17,35 @@
 FROM openjdk:10.0.2-jre-slim
 
 # TODO consider consistency with stroom/stroom-proxy, i.e. /stroom-auth-svc/
-WORKDIR /usr/stroom-auth-service
+WORKDIR /stroom-auth-service
 
-VOLUME [ "/usr/stroom-auth-service/logs" ]
+VOLUME [ "/stroom-auth-service/logs" ]
+
+# run entrypoint script inside tini for better unix process handling, 
+# see https://github.com/krallin/tini/issues/8
+ENTRYPOINT ["/sbin/tini", "--", "docker-entrypoint.sh"]
 
 CMD run.sh
 
 RUN apt-get update && \
-    apt-get install -y cron && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+        cron \
+        gosu \
+        tini && \
+    rm -rf /var/lib/apt/lists/* && \
+    addgroup --system --gid 1000 auth && \
+    adduser --system --uid 1000 --shell /bin/false --ingroup auth auth && \
+    mkdir -p /stroom-auth-service && \
+    mkdir -p /stroom-auth-service/logs/access && \
+    mkdir -p /stroom-auth-service/logs/events && \
+    mkdir -p /stroom-auth-service/logs/app && \
+    chown -R auth /stroom-auth-service
 
-COPY ./build/send_to_stroom_args.sh /usr/stroom-auth-service/send_to_stroom_args.sh
-COPY ./build/send_to_stroom.sh /usr/stroom-auth-service/send_to_stroom.sh
-COPY ./create_crontab.sh /usr/stroom-auth-service/create_crontab.sh
-COPY ./run.sh /usr/stroom-auth-service/run.sh
-COPY ./build/config.yml /usr/stroom-auth-service/config.yml
-COPY ./build/stroom-auth-service-all.jar /usr/stroom-auth-service/stroom-auth-service-all.jar
+COPY --chown=auth:auth ./build/send_to_stroom_args.sh /stroom-auth-service/
+COPY --chown=auth:auth ./build/send_to_stroom.sh /stroom-auth-service/
+COPY --chown=auth:auth ./create_crontab.sh /stroom-auth-service/
+COPY --chown=auth:auth ./run.sh /stroom-auth-service/
+COPY --chown=auth:auth ./docker-entrypoint.sh /stroom-auth-service/
+COPY --chown=auth:auth ./build/config.yml /stroom-auth-service/
+COPY --chown=auth:auth ./build/stroom-auth-service-all.jar /stroom-auth-service/
 
-# TODO add user and group, chown copied files to user:group
