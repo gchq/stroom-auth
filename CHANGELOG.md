@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Refactor Dockerfiles - add non-root user, add tini/gosu, reduce image size
+
 ## [v0.1-alpha.14]
 
 * Issue **#81** : Remove wait-for-it
