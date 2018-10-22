@@ -13,11 +13,13 @@ build_ui(){
 }
 
 get_send_to_stroom_scripts() {
+    echo "Pulling down sent_to_stroom scripts"
     pushd stroom-auth-svc/docker/build
 
     curl https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom.sh >> send_to_stroom.sh
     curl https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom_args.sh >> send_to_stroom_args.sh
-
+    
+    echo "Making sent_to_stroom scripts executable"
     chmod +x send_to_stroom.sh
     chmod +x send_to_stroom_args.sh
 
@@ -25,20 +27,20 @@ get_send_to_stroom_scripts() {
 }
 
 prep_service_build() {
-
-    # Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
-    ./gradlew clean build shadowJar -x test -x integrationTest
     pushd stroom-auth-svc
     ./config.yml.sh
     popd
     rm -rf ${SERVICE_BUILD_DIR}
     mkdir -p ${SERVICE_BUILD_DIR}
+    echo "Copying build artefacts into Docker build directory" 
     cp -f ${SERVICE_SOURCE_DIR}/config.yml ${SERVICE_BUILD_DIR}/config.yml
     cp -f ${SERVICE_SOURCE_DIR}/build/libs/stroom-auth-service-all.jar ${SERVICE_BUILD_DIR}/stroom-auth-service-all.jar
     get_send_to_stroom_scripts
 }
 
 build_service() {
+    # Exclude tests because we want this to be fast. I guess you'd better test the build before releasing.
+    ./gradlew clean build shadowJar -x test -x integrationTest
     prep_service_build
     echo "--${TAG}--"
     echo "--${SERVICE_DOCKER_DIR}--"
