@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.2 & v1.0-beta.4]
+
 * Refactor Dockerfiles - add non-root user, add tini/gosu, reduce image size
 
 ## [v0.1-alpha.14]
@@ -24,8 +26,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
+# Service
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/service_1.0-beta.4...master
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v0.1-alpha.14...master
+# UI
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/ui_v1.0-beta.2...master
 [v0.1-alpha.14]: https://github.com/gchq/stroom-auth/compare/v0.1-alpha.13...v0.1-alpha.14
 [v0.1-alpha.13]: https://github.com/gchq/stroom-auth/compare/v0.1-alpha.11...v0.1-alpha.13
 [v0.1-alpha.11]: https://github.com/gchq/stroom-auth/compare/v0.1-alpha.10...v0.1-alpha.11
