@@ -6,7 +6,7 @@
 readonly SEND_SCRIPT="/stroom-auth-service/send_to_stroom.sh"
 
 readonly ACCESS_LOG_DIR="/stroom-auth-service/logs/access"
-readonly APP_LOGS="/stroom-auth-service/logs/events"
+readonly APP_LOGS_DIR="/stroom-auth-service/logs/events"
 readonly EVENT_LOG_DIR="/stroom-auth-service/logs/app"
 
 readonly CRONTAB_FILE="/etc/cron.d/send-logs-cron"

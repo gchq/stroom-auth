@@ -28,7 +28,7 @@ VOLUME [ "/stroom-auth-service/logs" ]
 ENTRYPOINT ["tini", "--", "./docker-entrypoint.sh"]
 
 # Run the app
-CMD ./run.sh
+CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar stroom-auth-service-all.jar server config.yml"]
 
 # cron used for sending logs to stroom.
 # gosu/tini used for the entrypoint, to make it run as auth user
@@ -57,7 +57,6 @@ RUN apt-get update && \
 COPY --chown=auth:auth ./build/send_to_stroom_args.sh /stroom-auth-service/
 COPY --chown=auth:auth ./build/send_to_stroom.sh /stroom-auth-service/
 COPY --chown=auth:auth ./create_crontab.sh /stroom-auth-service/
-COPY --chown=auth:auth ./run.sh /stroom-auth-service/
 COPY --chown=auth:auth ./docker-entrypoint.sh /stroom-auth-service/
 COPY --chown=auth:auth ./build/config.yml /stroom-auth-service/
 COPY --chown=auth:auth ./build/stroom-auth-service-all.jar /stroom-auth-service/
