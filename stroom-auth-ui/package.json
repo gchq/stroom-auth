@@ -29,7 +29,7 @@
     "redux-form-material-ui": "^4.2.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "serve": "^6.0.1",
+    "serve": "^7.0.0",
     "sjcl": "^1.0.7",
     "standard": "^10.0.3",
     "stroom-js": "https://github.com/gchq/stroom-js.git#dist",
