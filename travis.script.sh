@@ -30,10 +30,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[0m' # No Colour 
 
-#args: dockerRepo contextRoot tag1VersionPart tag2VersionPart ... tagNVersionPart
 release_service_to_docker_hub() {
-    #echo "release_service_to_docker_hub called with args [$@]"
-
     if [ $# -lt 3 ]; then
         echo "Incorrect args, expecting at least 3"
         exit 1
@@ -47,7 +44,6 @@ release_service_to_docker_hub() {
 
     for tagVersionPart in "$@"; do
         if [ "x${tagVersionPart}" != "x" ]; then
-            #echo -e "Adding docker tag [${GREEN}${tagVersionPart}${NC}]"
             allTagArgs="${allTagArgs} --tag=${dockerRepo}:${tagVersionPart}"
         fi
     done
@@ -66,8 +62,6 @@ release_service_to_docker_hub() {
 }
 
 release_auth_ui_to_docker_hub() {
-    #echo "release_auth_ui_to_docker_hub called with args [$@]"
-
     if [ $# -lt 3 ]; then
         echo "Incorrect args, expecting at least 3"
         exit 1
@@ -81,7 +75,6 @@ release_auth_ui_to_docker_hub() {
 
     for tagVersionPart in "$@"; do
         if [ "x${tagVersionPart}" != "x" ]; then
-            #echo -e "Adding docker tag [${GREEN}${tagVersionPart}${NC}]"
             allTagArgs="${allTagArgs} --tag=${dockerRepo}:${tagVersionPart}"
         fi
     done
@@ -94,7 +87,7 @@ release_auth_ui_to_docker_hub() {
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
 
     ./stroom-auth-ui/docker/build.sh ${tagVersionPart}
-    docker push ${dockerRepo} >/dev/null 2>&1
+    docker push ${dockerRepo} 
 }
 
 echo_travis_env_vars() {
@@ -123,18 +116,17 @@ extract_build_vars() {
         VERSION="${TRAVIS_TAG}"
 
         do_docker_build=true
-
         # This is a tagged commit, so create a docker image with that tag
         VERSION_FIXED_TAG="${TRAVIS_TAG}"
 
         # Extract the major version part for a floating tag
-        majorVer=$(echo "${TRAVIS_TAG}" | grep -oP "^v[0-9]+")
+        majorVer=$(echo "${TRAVIS_TAG}" | grep -oP "v[0-9]+")
         if [ -n "${majorVer}" ]; then
             MAJOR_VER_FLOATING_TAG="${majorVer}${LATEST_SUFFIX}"
         fi
 
         # Extract the minor version part for a floating tag
-        minorVer=$(echo "${TRAVIS_TAG}" | grep -oP "^v[0-9]+\.[0-9]+")
+        minorVer=$(echo "${TRAVIS_TAG}" | grep -oP "v[0-9]+\.[0-9]+")
         if [ -n "${minorVer}" ]; then
             MINOR_VER_FLOATING_TAG="${minorVer}${LATEST_SUFFIX}"
         fi
