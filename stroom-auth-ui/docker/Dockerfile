@@ -15,15 +15,13 @@
 #**********************************************************************
 
 
+
 # ~~~ builder stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 FROM node:8.12.0-alpine AS builder
-
 WORKDIR /root/app
-
 RUN apk add --no-cache \
         git && \
     npm install --global yarn
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -33,6 +31,7 @@ FROM builder AS dependencies
 COPY work/package.json package.json
 RUN yarn install
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 
 # ~~~ Build stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,7 +46,6 @@ RUN yarn build
 
 # ~~~ Final stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 FROM nginx:1.13.8-alpine
-
 WORKDIR /root/app
 
 # Set tini as entrypoint
