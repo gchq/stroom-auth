@@ -6,6 +6,11 @@ set -e
 if [ "$(id -u)" = '0' ]; then
     chown -R auth:auth .
 
+    # This is a bit of a cludge to get round "Text file in use" errors
+    # See: https://github.com/moby/moby/issues/9547
+    # sync ensures all disk writes are persisted
+    sync
+
     # Build the crontab file to send logs to stroom
     echo "Creating the crontab file"
     ./create_crontab.sh
