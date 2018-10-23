@@ -31,7 +31,9 @@ ENTRYPOINT ["tini", "--", "./docker-entrypoint.sh"]
 CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar stroom-auth-service-all.jar server config.yml"]
 
 # cron used for sending logs to stroom.
+# curl used for sending logs to stroom
 # gosu/tini used for the entrypoint, to make it run as auth user
+# procps used to provide 'ps' which is used by the send logs stuff
 # Clear out apt-get cruft that wastes space
 # add auth:auth user:group. Use id 1000 (for want of an id to use) as this is
 # more likely to match the uid for a dev on the host. Not critical but may be
@@ -40,9 +42,11 @@ CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar str
 # Chown everything to the auth user
 RUN apt-get update && \
     apt-get install -y \
-    cron \
-    gosu \
-    tini && \
+        cron \
+        curl \
+        gosu \
+        procps \
+        tini && \
     rm -rf /var/lib/apt/lists/* && \
     addgroup --system --gid 1000 auth && \
     adduser --system --uid 1000 --shell /bin/false --ingroup auth auth && \
