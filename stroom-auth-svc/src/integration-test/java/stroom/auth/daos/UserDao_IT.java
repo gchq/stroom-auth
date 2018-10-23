@@ -32,7 +32,7 @@ public class UserDao_IT extends Database_IT {
 
     @Test
     public void testNewButInactiveUserIsDisabled(){
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
@@ -52,7 +52,7 @@ public class UserDao_IT extends Database_IT {
             createUserAccount(userDao, user03);
 
             // WHEN...
-            setClockToDaysFromNow(userDao, 30);
+            setClockToDaysFromNow(userDao, 31);
             int numberOfDisabledUsers = userDao.disableNewInactiveUsers(30);
 
             // THEN...
@@ -69,7 +69,7 @@ public class UserDao_IT extends Database_IT {
 
     @Test
     public void testInactiveUserIsDisabled(){
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
@@ -111,7 +111,7 @@ public class UserDao_IT extends Database_IT {
 
     @Test
     public void testNeedsPasswordChange() {
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 

@@ -120,6 +120,7 @@ dependencies {
     testCompile testDeps.junit
     testCompile testDeps.assertj
     testCompile testDeps.wiremock
+    testCompile testDeps.test_containers_mysql
 
     integrationTestCompile testDeps.dropwizard_testing
     integrationTestCompile testDeps.moshi

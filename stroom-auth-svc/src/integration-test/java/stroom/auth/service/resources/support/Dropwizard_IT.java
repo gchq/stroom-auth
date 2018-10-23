@@ -18,12 +18,16 @@ package stroom.auth.service.resources.support;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import io.dropwizard.testing.junit.DropwizardAppRule;
+import io.dropwizard.testing.ConfigOverride;
+import io.dropwizard.testing.DropwizardTestSupport;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import stroom.auth.service.App;
+
+import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -31,9 +35,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 public abstract class Dropwizard_IT extends Database_IT {
-
-    @ClassRule
-    public static final DropwizardAppRule appRule = new DropwizardAppRule(App.class, "config.generated.yml");
 
     @ClassRule
     public static WireMockClassRule wireMockRule = new WireMockClassRule(
@@ -52,17 +53,30 @@ public abstract class Dropwizard_IT extends Database_IT {
     protected static AuthenticationManager authenticationManager = new AuthenticationManager();
     protected static TokenManager tokenManager = new TokenManager();
 
+    private static DropwizardTestSupport dropwizardTestSupport;
+
     @BeforeClass
-    public static void setupClass() throws InterruptedException {
-        appPort = appRule.getLocalPort();
+    public static void setupClass() throws InterruptedException, IOException {
+        // We're not using the DropwizardClassRule because we need to inject the JDBC URL, and we need that from
+        // the MySQLContainer class rule in Database_IT. It's not available at that point.
+        dropwizardTestSupport = new DropwizardTestSupport(App.class, "config.generated.yml", ConfigOverride.config("database.url", mysql.getJdbcUrl()));
+        dropwizardTestSupport.before();
+
+
+        appPort = dropwizardTestSupport.getLocalPort();
         authenticationManager.setPort(appPort);
         userManager.setPort(appPort);
         tokenManager.setPort(appPort);
 
-        adminPort = appRule.getAdminPort();
+        adminPort = dropwizardTestSupport.getAdminPort();
         BASE_TASKS_URL = "http://localhost:" + adminPort + "/tasks/";
         HEALTH_CHECKS_URL = "http://localhost:" + adminPort + "/healthcheck?pretty=true";
         Thread.sleep(2000);
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        dropwizardTestSupport.after();
     }
 
     @Before
