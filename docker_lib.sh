@@ -16,10 +16,11 @@ get_send_to_stroom_scripts() {
     echo "Pulling down sent_to_stroom scripts"
     pushd stroom-auth-svc/docker/build
 
+    # TODO we should be curling a tagged/released version, not the head of master
     curl https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom.sh >> send_to_stroom.sh
     curl https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom_args.sh >> send_to_stroom_args.sh
     
-    echo "Making sent_to_stroom scripts executable"
+    echo "Making send_to_stroom scripts executable"
     chmod +x send_to_stroom.sh
     chmod +x send_to_stroom_args.sh
 
