@@ -145,7 +145,7 @@ extract_build_vars() {
         fi
     elif [[ "$TRAVIS_BRANCH" =~ $BRANCH_WHITELIST_REGEX ]]; then
         # This is a branch we want to create a floating snapshot docker image for
-        SNAPSHOT_FLOATING_TAG="${VERSION}-SNAPSHOT"
+        SNAPSHOT_FLOATING_TAG="${TRAVIS_BRANCH}-SNAPSHOT"
         do_docker_build=true
     else
         # No tag so use the branch name as the version, e.g. dev
