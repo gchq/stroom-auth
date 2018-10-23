@@ -6,10 +6,10 @@ set -e
 source docker_lib.sh
 
 AUTH_SERVICE_REPO="gchq/stroom-auth-service"
-AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/."
+AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
 
 AUTH_UI_REPO="gchq/stroom-auth-ui"
-AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/."
+AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
 
 GITHUB_REPO="gchq/stroom-auth"
 GITHUB_API_URL="https://api.github.com/repos/gchq/stroom-auth/releases"
@@ -33,7 +33,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[0m' # No Colour 
 
-createGitTag() {
+create_git_tag() {
     tagName=$1
 
     git config --global user.email "builds@travis-ci.com"
@@ -45,7 +45,7 @@ createGitTag() {
     git push -q https://$TAGPERM@github.com/${GITHUB_REPO} ${tagName} >/dev/null 2>&1
 }
 
-isCronBuildRequired() {
+is_cron_build_required() {
     #GH_USER_AND_TOKEN is set in env section of .travis.yml
     if [ "${GH_USER_AND_TOKEN}x" = "x" ]; then
         #no token so do it unauthenticated
@@ -84,8 +84,8 @@ isCronBuildRequired() {
 }
 
 #args: dockerRepo contextRoot tag1VersionPart tag2VersionPart ... tagNVersionPart
-releaseServiceToDockerHub() {
-    #echo "releaseToDockerHub called with args [$@]"
+release_service_to_docker_hub() {
+    #echo "release_service_to_docker_hub called with args [$@]"
 
     if [ $# -lt 3 ]; then
         echo "Incorrect args, expecting at least 3"
@@ -111,15 +111,15 @@ releaseServiceToDockerHub() {
 
     prep_service_build
 
-    #The username and password are configured in the travis gui
+    # The username and password are configured in the travis gui
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
 
-    docker build ${allTagArgs} ${contextRoot} >/dev/null 2>&1
-    docker push ${dockerRepo} >/dev/null 2>&1
+    docker build ${allTagArgs} ${contextRoot}
+    docker push ${dockerRepo}
 }
 
-releaseAuthUiToDockerHub() {
-    #echo "releaseToDockerHub called with args [$@]"
+release_auth_ui_to_docker_hub() {
+    #echo "release_auth_ui_to_docker_hub called with args [$@]"
 
     if [ $# -lt 3 ]; then
         echo "Incorrect args, expecting at least 3"
@@ -150,93 +150,97 @@ releaseAuthUiToDockerHub() {
     docker push ${dockerRepo} >/dev/null 2>&1
 }
 
-#establish what version of stroom we are building
-if [ -n "$TRAVIS_TAG" ]; then
-    #Tagged commit so use that as our stroom version, e.g. v6.0.0
-    STROOM_VERSION="${TRAVIS_TAG}"
-else
-    #No tag so use the branch name as the version, e.g. dev
-    STROOM_VERSION="${TRAVIS_BRANCH}"
-fi
-
-#Dump all the travis env vars to the console for debugging
-echo -e "TRAVIS_BUILD_NUMBER: [${GREEN}${TRAVIS_BUILD_NUMBER}${NC}]"
-echo -e "TRAVIS_COMMIT:       [${GREEN}${TRAVIS_COMMIT}${NC}]"
-echo -e "TRAVIS_BRANCH:       [${GREEN}${TRAVIS_BRANCH}${NC}]"
-echo -e "TRAVIS_TAG:          [${GREEN}${TRAVIS_TAG}${NC}]"
-echo -e "TRAVIS_PULL_REQUEST: [${GREEN}${TRAVIS_PULL_REQUEST}${NC}]"
-echo -e "TRAVIS_EVENT_TYPE:   [${GREEN}${TRAVIS_EVENT_TYPE}${NC}]"
-echo -e "STROOM_VERSION:      [${GREEN}${STROOM_VERSION}${NC}]"
-
-
-if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then
-    echo "This is a cron build so just tag the commit if we need to and exit"
-
-
-    if isCronBuildRequired; then
-        echo "The release build will happen when travis picks up the tagged commit"
-        #This is a cron triggered build so tag as -DAILY and push a tag to git
-        DATE_ONLY="$(date +%Y%m%d)"
-        gitTag="${STROOM_VERSION}-${DATE_ONLY}-${CRON_TAG_SUFFIX}"
-
-        createGitTag ${gitTag}
-    fi
-else
-    #Normal commit/PR/tag build
-    extraBuildArgs=""
-
+main() {
+    #establish what version of stroom we are building
     if [ -n "$TRAVIS_TAG" ]; then
-        doDockerBuild=true
-
-        #This is a tagged commit, so create a docker image with that tag
-        VERSION_FIXED_TAG="${TRAVIS_TAG}"
-
-        #Extract the major version part for a floating tag
-        majorVer=$(echo "${TRAVIS_TAG}" | grep -oP "^v[0-9]+")
-        if [ -n "${majorVer}" ]; then
-            MAJOR_VER_FLOATING_TAG="${majorVer}${LATEST_SUFFIX}"
-        fi
-
-        #Extract the minor version part for a floating tag
-        minorVer=$(echo "${TRAVIS_TAG}" | grep -oP "^v[0-9]+\.[0-9]+")
-        if [ -n "${minorVer}" ]; then
-            MINOR_VER_FLOATING_TAG="${minorVer}${LATEST_SUFFIX}"
-        fi
-
-        if [[ "$TRAVIS_BRANCH" =~ ${RELEASE_VERSION_REGEX} ]]; then
-            echo "This is a release version so add gradle arg for publishing libs to Bintray"
-            extraBuildArgs="bintrayUpload"
-        fi
-    elif [[ "$TRAVIS_BRANCH" =~ $BRANCH_WHITELIST_REGEX ]]; then
-        #This is a branch we want to create a floating snapshot docker image for
-        SNAPSHOT_FLOATING_TAG="${STROOM_VERSION}-SNAPSHOT"
-        doDockerBuild=true
+        #Tagged commit so use that as our stroom version, e.g. v6.0.0
+        STROOM_VERSION="${TRAVIS_TAG}"
+    else
+        #No tag so use the branch name as the version, e.g. dev
+        STROOM_VERSION="${TRAVIS_BRANCH}"
     fi
 
-    echo -e "VERSION FIXED DOCKER TAG:      [${GREEN}${VERSION_FIXED_TAG}${NC}]"
-    echo -e "SNAPSHOT FLOATING DOCKER TAG:  [${GREEN}${SNAPSHOT_FLOATING_TAG}${NC}]"
-    echo -e "MAJOR VER FLOATING DOCKER TAG: [${GREEN}${MAJOR_VER_FLOATING_TAG}${NC}]"
-    echo -e "MINOR VER FLOATING DOCKER TAG: [${GREEN}${MINOR_VER_FLOATING_TAG}${NC}]"
-    echo -e "doDockerBuild:                 [${GREEN}${doDockerBuild}${NC}]"
-    echo -e "extraBuildArgs:                [${GREEN}${extraBuildArgs}${NC}]"
+    #Dump all the travis env vars to the console for debugging
+    echo -e "TRAVIS_BUILD_NUMBER: [${GREEN}${TRAVIS_BUILD_NUMBER}${NC}]"
+    echo -e "TRAVIS_COMMIT:       [${GREEN}${TRAVIS_COMMIT}${NC}]"
+    echo -e "TRAVIS_BRANCH:       [${GREEN}${TRAVIS_BRANCH}${NC}]"
+    echo -e "TRAVIS_TAG:          [${GREEN}${TRAVIS_TAG}${NC}]"
+    echo -e "TRAVIS_PULL_REQUEST: [${GREEN}${TRAVIS_PULL_REQUEST}${NC}]"
+    echo -e "TRAVIS_EVENT_TYPE:   [${GREEN}${TRAVIS_EVENT_TYPE}${NC}]"
+    echo -e "STROOM_VERSION:      [${GREEN}${STROOM_VERSION}${NC}]"
 
-    #Do the gradle build
-    # Use 1 local worker to avoid using too much memory as each worker will chew up ~500Mb ram
-    ./gradlew -Pversion=$TRAVIS_TAG -PgwtCompilerWorkers=1 -PgwtCompilerMinHeap=50M -PgwtCompilerMaxHeap=500M clean build shadowJar ${extraBuildArgs}
 
-    #Don't do a docker build for pull requests
-    if [ "$doDockerBuild" = true ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then
-        #TODO - the major and minor floating tags assume that the release builds are all done in strict sequence
-        #If say the build for v6.0.1 is re-run after the build for v6.0.2 has run then v6.0-LATEST will point to v6.0.1
-        #which is incorrect, hopefully this course of events is unlikely to happen
-        allDockerTags="${VERSION_FIXED_TAG} ${SNAPSHOT_FLOATING_TAG} ${MAJOR_VER_FLOATING_TAG} ${MINOR_VER_FLOATING_TAG}"
+    if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then
+        echo "This is a cron build so just tag the commit if we need to and exit"
 
-        #build and release the stroom-stats image to dockerhub
-        releaseServiceToDockerHub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
-        releaseAuthUiToDockerHub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${allDockerTags}
+
+        if is_cron_build_required; then
+            echo "The release build will happen when travis picks up the tagged commit"
+            #This is a cron triggered build so tag as -DAILY and push a tag to git
+            DATE_ONLY="$(date +%Y%m%d)"
+            gitTag="${STROOM_VERSION}-${DATE_ONLY}-${CRON_TAG_SUFFIX}"
+
+            create_git_tag ${gitTag}
+        fi
+    else
+        #Normal commit/PR/tag build
+        extraBuildArgs=""
+
+        if [ -n "$TRAVIS_TAG" ]; then
+            doDockerBuild=true
+
+            #This is a tagged commit, so create a docker image with that tag
+            VERSION_FIXED_TAG="${TRAVIS_TAG}"
+
+            #Extract the major version part for a floating tag
+            majorVer=$(echo "${TRAVIS_TAG}" | grep -oP "^v[0-9]+")
+            if [ -n "${majorVer}" ]; then
+                MAJOR_VER_FLOATING_TAG="${majorVer}${LATEST_SUFFIX}"
+            fi
+
+            #Extract the minor version part for a floating tag
+            minorVer=$(echo "${TRAVIS_TAG}" | grep -oP "^v[0-9]+\.[0-9]+")
+            if [ -n "${minorVer}" ]; then
+                MINOR_VER_FLOATING_TAG="${minorVer}${LATEST_SUFFIX}"
+            fi
+
+            if [[ "$TRAVIS_BRANCH" =~ ${RELEASE_VERSION_REGEX} ]]; then
+                echo "This is a release version so add gradle arg for publishing libs to Bintray"
+                extraBuildArgs="bintrayUpload"
+            fi
+        elif [[ "$TRAVIS_BRANCH" =~ $BRANCH_WHITELIST_REGEX ]]; then
+            #This is a branch we want to create a floating snapshot docker image for
+            SNAPSHOT_FLOATING_TAG="${STROOM_VERSION}-SNAPSHOT"
+            doDockerBuild=true
+        fi
+
+        echo -e "VERSION FIXED DOCKER TAG:      [${GREEN}${VERSION_FIXED_TAG}${NC}]"
+        echo -e "SNAPSHOT FLOATING DOCKER TAG:  [${GREEN}${SNAPSHOT_FLOATING_TAG}${NC}]"
+        echo -e "MAJOR VER FLOATING DOCKER TAG: [${GREEN}${MAJOR_VER_FLOATING_TAG}${NC}]"
+        echo -e "MINOR VER FLOATING DOCKER TAG: [${GREEN}${MINOR_VER_FLOATING_TAG}${NC}]"
+        echo -e "doDockerBuild:                 [${GREEN}${doDockerBuild}${NC}]"
+        echo -e "extraBuildArgs:                [${GREEN}${extraBuildArgs}${NC}]"
+
+        #Do the gradle build
+        # Use 1 local worker to avoid using too much memory as each worker will chew up ~500Mb ram
+        ./gradlew -Pversion=$TRAVIS_TAG -PgwtCompilerWorkers=1 -PgwtCompilerMinHeap=50M -PgwtCompilerMaxHeap=500M clean build shadowJar ${extraBuildArgs}
+
+        #Don't do a docker build for pull requests
+        if [ "$doDockerBuild" = true ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then
+            #TODO - the major and minor floating tags assume that the release builds are all done in strict sequence
+            #If say the build for v6.0.1 is re-run after the build for v6.0.2 has run then v6.0-LATEST will point to v6.0.1
+            #which is incorrect, hopefully this course of events is unlikely to happen
+            allDockerTags="${VERSION_FIXED_TAG} ${SNAPSHOT_FLOATING_TAG} ${MAJOR_VER_FLOATING_TAG} ${MINOR_VER_FLOATING_TAG}"
+
+            #build and release the stroom-stats image to dockerhub
+            release_service_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${allDockerTags}
+            release_auth_ui_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${allDockerTags}
+        fi
+
+        #TODO deploy swagger UI
     fi
 
-    #TODO deploy swagger UI
-fi
+    exit 0
+}
 
-exit 0
+main "$@"

@@ -1,16 +1,20 @@
 package stroom.auth.service.resources.support;
 
+import org.flywaydb.core.Flyway;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
+import org.testcontainers.containers.MySQLContainer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashMap;
 
 import static stroom.db.auth.Tables.TOKENS;
 import static stroom.db.auth.Tables.TOKEN_TYPES;
@@ -23,9 +27,18 @@ import static stroom.db.auth.Tables.USERS;
 public abstract class Database_IT {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Database_IT.class);
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3307/auth?useUnicode=yes&characterEncoding=UTF-8";
-    private static final String JDBC_USER = "authuser";
-    private static final String JDBC_PASSWORD = "stroompassword1";
+    protected static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    protected static final String DATABASE_NAME = "auth";
+    protected static final String JDBC_USER = "authuser";
+    protected static final String JDBC_PASSWORD = "stroompassword1";
+
+    private static final String MYSQL_DOCKER_IMAGE = "mysql:5.6.41";
+
+    @ClassRule
+    public static MySQLContainer mysql = new MySQLContainer(MYSQL_DOCKER_IMAGE)
+            .withDatabaseName(DATABASE_NAME)
+            .withUsername(JDBC_USER)
+            .withPassword(JDBC_PASSWORD);
 
     @After
     public void after(){
@@ -34,11 +47,25 @@ public abstract class Database_IT {
 
     @Before
     public void before() {
+
+        var flywayConfiguration = new HashMap<String, String>();
+        flywayConfiguration.put("flyway.driver", JDBC_DRIVER);
+        flywayConfiguration.put("flyway.url", mysql.getJdbcUrl());
+        flywayConfiguration.put("flyway.user", JDBC_USER);
+        flywayConfiguration.put("flyway.password", JDBC_PASSWORD);
+        Flyway flyway = new Flyway();
+        flyway.configure(flywayConfiguration);
+
+        // Start the migration
+        flyway.migrate();
+
         cleanDatabase();
     }
 
     private void cleanDatabase(){
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        var jdbcUrl = mysql.getJdbcUrl();
+        LOGGER.info("The JDBC URL is {}", jdbcUrl);
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, JDBC_USER, JDBC_PASSWORD)) {
             DSLContext database = DSL.using(conn, SQLDialect.MYSQL);
 
             // Delete non-admin users

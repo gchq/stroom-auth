@@ -14,45 +14,48 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.Period;
 import java.time.ZoneId;
+import java.util.UUID;
 
 import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserDao_IT extends Database_IT {
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3307/auth?useUnicode=yes&characterEncoding=UTF-8";
-    private static final String JDBC_USER = "authuser";
-    private static final String JDBC_PASSWORD = "stroompassword1";
-
+    private static final String DISABLED = "disabled";
+    private static final String ENABLED = "enabled";
 
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UserDao_IT.class);
 
     @Test
     public void testNewButInactiveUserIsDisabled(){
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
+            final var user01 = UUID.randomUUID().toString();
+            final var user02 = UUID.randomUUID().toString();
+            final var user03 = UUID.randomUUID().toString();
+
             // Create a test user who should be disabled
-            createUserAccount(userDao, "user01");
+            createUserAccount(userDao, user01);
 
             // Create a user who would be disabled if they hadn't logged in already
-            createUserAccount(userDao, "user02");
-            userDao.recordSuccessfulLogin("user02");
+            createUserAccount(userDao, user02);
+            userDao.recordSuccessfulLogin(user02);
 
             // Advance the clock and create a test user who shouldn't be disabled
             setClockToDaysFromNow(userDao, 10);
-            createUserAccount(userDao, "user03");
+            createUserAccount(userDao, user03);
 
             // WHEN...
-            setClockToDaysFromNow(userDao, 30);
+            setClockToDaysFromNow(userDao, 31);
             int numberOfDisabledUsers = userDao.disableNewInactiveUsers(30);
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get("user01").getState()).isEqualTo("disabled");
-            assertThat(userDao.get("user02").getState()).isEqualTo("enabled");
-            assertThat(userDao.get("user03").getState()).isEqualTo("enabled");
+            assertThat(userDao.get(user01).getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).getState()).isEqualTo(ENABLED);
+            assertThat(userDao.get(user03).getState()).isEqualTo(ENABLED);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,27 +65,30 @@ public class UserDao_IT extends Database_IT {
 
     @Test
     public void testInactiveUserIsDisabled(){
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
+            final var user01 = UUID.randomUUID().toString();
+            final var user02 = UUID.randomUUID().toString();
+
             // Create a test user who should be disabled
-            createUserAccount(userDao, "user01");
-            userDao.recordSuccessfulLogin("user01");
+            createUserAccount(userDao, user01);
+            userDao.recordSuccessfulLogin(user01);
 
             // Advance the clock and create a test user who shouldn't be disabled
             setClockToDaysFromNow(userDao, 10);
-            createUserAccount(userDao, "user02");
-            userDao.recordSuccessfulLogin("user02");
+            createUserAccount(userDao, user02);
+            userDao.recordSuccessfulLogin(user02);
 
             // WHEN...
-            setClockToDaysFromNow(userDao, 90);
+            setClockToDaysFromNow(userDao, 91);
             int numberOfDisabledUsers = userDao.disableInactiveUsers(90);
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get("user01").getState()).isEqualTo("disabled");
-            assertThat(userDao.get("user02").getState()).isEqualTo("enabled");
+            assertThat(userDao.get(user01).getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).getState()).isEqualTo(ENABLED);
 
             // ALSO WHEN...
             setClockToDaysFromNow(userDao, 200);
@@ -90,8 +96,8 @@ public class UserDao_IT extends Database_IT {
 
             //ALSO THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(2);
-            assertThat(userDao.get("user01").getState()).isEqualTo("disabled");
-            assertThat(userDao.get("user02").getState()).isEqualTo("disabled");
+            assertThat(userDao.get(user01).getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).getState()).isEqualTo(DISABLED);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,35 +107,37 @@ public class UserDao_IT extends Database_IT {
 
     @Test
     public void testNeedsPasswordChange() {
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
+            final var user01 = UUID.randomUUID().toString();
+
             // Create a test user who should be disabled
-            createUserAccount(userDao, "user01");
-            userDao.recordSuccessfulLogin("user01");
+            createUserAccount(userDao, user01);
+            userDao.recordSuccessfulLogin(user01);
 
             // WHEN...
             setClockToDaysFromNow(userDao, 90);
 
             // THEN...
             // Simple
-            Boolean shouldNotNeedChange = userDao.needsPasswordChange("user01", 1, true);
+            Boolean shouldNotNeedChange = userDao.needsPasswordChange(user01, 1, true);
             assertThat(shouldNotNeedChange).isTrue();
 
-            Boolean shouldNeedChange = userDao.needsPasswordChange("user01", 200, true);
+            Boolean shouldNeedChange = userDao.needsPasswordChange(user01, 200, true);
             // True because they've not had a password change.
             assertThat(shouldNeedChange).isTrue();
 
             // Boundary cases
-            Boolean shouldNotNeedChangeBoundaryCase = userDao.needsPasswordChange("user01", 90, true);
+            Boolean shouldNotNeedChangeBoundaryCase = userDao.needsPasswordChange(user01, 90, true);
             assertThat(shouldNotNeedChangeBoundaryCase).isTrue();
 
-            userDao.changePassword("user01", "new password");
-            shouldNeedChange = userDao.needsPasswordChange("user01", 200, true);
+            userDao.changePassword(user01, "new password");
+            shouldNeedChange = userDao.needsPasswordChange(user01, 200, true);
             assertThat(shouldNeedChange).isFalse();
 
-            Boolean shouldNeedChangeBoundaryCase = userDao.needsPasswordChange("user01", 91, true);
+            Boolean shouldNeedChangeBoundaryCase = userDao.needsPasswordChange(user01, 91, true);
             assertThat(shouldNeedChangeBoundaryCase).isFalse();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -140,10 +148,10 @@ public class UserDao_IT extends Database_IT {
     private static void createUserAccount(UserDao userDao, String email){
         User user = new User();
         user.setEmail(email);
-        user.setState("enabled");
+        user.setState(ENABLED);
         userDao.create(user, "UserDao_IT");
         User newUser = userDao.get(email);
-        assertThat(newUser.getState()).isEqualTo("enabled");
+        assertThat(newUser.getState()).isEqualTo(ENABLED);
     }
 
     private static UserDao getUserDao(Connection conn){
