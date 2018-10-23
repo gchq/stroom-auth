@@ -21,10 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserDao_IT extends Database_IT {
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3307/auth?useUnicode=yes&characterEncoding=UTF-8";
-    private static final String JDBC_USER = "authuser";
-    private static final String JDBC_PASSWORD = "stroompassword1";
-
     private static final String DISABLED = "disabled";
     private static final String ENABLED = "enabled";
 

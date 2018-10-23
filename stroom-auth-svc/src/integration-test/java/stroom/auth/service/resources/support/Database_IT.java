@@ -27,12 +27,12 @@ import static stroom.db.auth.Tables.USERS;
 public abstract class Database_IT {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Database_IT.class);
 
-    private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String DATABASE_NAME = "auth";
-    private static final String JDBC_USER = "authuser";
-    private static final String JDBC_PASSWORD = "stroompassword1";
+    protected static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    protected static final String DATABASE_NAME = "auth";
+    protected static final String JDBC_USER = "authuser";
+    protected static final String JDBC_PASSWORD = "stroompassword1";
 
-    private static final String MYSQL_DOCKER_IMAGE = "mysql:5.6";
+    private static final String MYSQL_DOCKER_IMAGE = "mysql:5.6.41";
 
     @ClassRule
     public static MySQLContainer mysql = new MySQLContainer(MYSQL_DOCKER_IMAGE)

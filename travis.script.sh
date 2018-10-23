@@ -6,10 +6,10 @@ set -e
 source docker_lib.sh
 
 AUTH_SERVICE_REPO="gchq/stroom-auth-service"
-AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/."
+AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
 
 AUTH_UI_REPO="gchq/stroom-auth-ui"
-AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/."
+AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
 
 GITHUB_REPO="gchq/stroom-auth"
 GITHUB_API_URL="https://api.github.com/repos/gchq/stroom-auth/releases"
