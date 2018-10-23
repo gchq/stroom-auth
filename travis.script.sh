@@ -167,9 +167,17 @@ do_docker_build() {
         all_docker_tags="${VERSION_FIXED_TAG} ${SNAPSHOT_FLOATING_TAG} ${MAJOR_VER_FLOATING_TAG} ${MINOR_VER_FLOATING_TAG}"
         echo -e "all_docker_tags: [${GREEN}${all_docker_tags}${NC}]"
 
-        # Build and release the stroom-stats image to dockerhub
-        release_service_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
-        release_auth_ui_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
+        if [ $all_docker_tags == "ui_*" ]; then
+            echo -e "This tag is specific for UI builds, so we'll only build an image for that: ${all_docker_tags}"
+            release_auth_ui_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
+        elif [ $all_docker_tags == "service_*" ]; then
+            echo -e "This tag is specific for service builds, so we'll only build an image for that: ${all_docker_tags}"
+            release_service_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
+        else # But if the tag isn't specifically for UI or service then build for both
+            echo -e "Building docker images for both UI and the service."
+            release_auth_ui_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
+            release_service_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
+        fi  
     fi
 }
 
