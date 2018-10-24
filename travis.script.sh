@@ -88,11 +88,12 @@ release_auth_ui_to_docker_hub() {
 
     # Prepare the work directory
     # TODO move this back into a common script -- it's used by docker.sh.
-    cd "$(dirname "$0")"
+    pushd ${contextRoot} 
     mkdir -p work
     cp ../package.json work/
     cp -r ../src work/
     cp -r ../public work/
+    popd
     
     docker build ${allTagArgs} ${contextRoot}
     docker push ${dockerRepo} 
