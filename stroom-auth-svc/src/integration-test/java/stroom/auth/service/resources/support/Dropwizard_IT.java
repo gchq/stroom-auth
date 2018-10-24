@@ -56,7 +56,7 @@ public abstract class Dropwizard_IT extends Database_IT {
     private static DropwizardTestSupport dropwizardTestSupport;
 
     @BeforeClass
-    public static void setupClass() throws InterruptedException, IOException {
+    public static void setupClass() throws InterruptedException {
         // We're not using the DropwizardClassRule because we need to inject the JDBC URL, and we need that from
         // the MySQLContainer class rule in Database_IT. It's not available at that point.
         dropwizardTestSupport = new DropwizardTestSupport(App.class, "config.generated.yml", ConfigOverride.config("database.url", mysql.getJdbcUrl()));
