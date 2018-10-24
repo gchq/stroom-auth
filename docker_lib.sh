@@ -12,21 +12,6 @@ build_ui(){
     cd ../..
 }
 
-get_send_to_stroom_scripts() {
-    echo "Pulling down sent_to_stroom scripts"
-    pushd stroom-auth-svc/docker/build
-
-    # TODO we should be curling a tagged/released version, not the head of master
-    curl https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom.sh >> send_to_stroom.sh
-    curl https://raw.githubusercontent.com/gchq/stroom-clients/master/bash/send_to_stroom_args.sh >> send_to_stroom_args.sh
-    
-    echo "Making send_to_stroom scripts executable"
-    chmod +x send_to_stroom.sh
-    chmod +x send_to_stroom_args.sh
-
-    popd
-}
-
 prep_service_build() {
     pushd stroom-auth-svc
     ./config.yml.sh
@@ -36,7 +21,6 @@ prep_service_build() {
     echo "Copying build artefacts into Docker build directory" 
     cp -f ${SERVICE_SOURCE_DIR}/config.yml ${SERVICE_BUILD_DIR}/config.yml
     cp -f ${SERVICE_SOURCE_DIR}/build/libs/stroom-auth-service-all.jar ${SERVICE_BUILD_DIR}/stroom-auth-service-all.jar
-    get_send_to_stroom_scripts
 }
 
 build_service() {

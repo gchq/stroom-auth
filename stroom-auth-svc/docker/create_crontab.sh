@@ -12,6 +12,9 @@ readonly EVENT_LOG_DIR="/stroom-auth-service/logs/events"
 readonly CRONTAB_FILE="/etc/cron.d/send-logs-cron"
 readonly CRON_USER="auth"
 
+# This is emacs regex syntax as the syntax supported by 'find -regex "..."'
+readonly FILE_REGEX='.*/[a-z]+-[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}\.log'
+
 create_crontab_file() {
     # Create the crontab file -- always over-write so we have the latest from the env vars
     echo "Ensuring /etc/cron.d directory"
@@ -39,7 +42,7 @@ create_crontab_file() {
 add_crontab_line(){
     local feed_name=$1
     local file_dir=$2
-    local send_command="${SEND_SCRIPT} ${file_dir} ${feed_name} ${LOGS_SYSTEM} ${LOGS_ENV} ${LOGS_STROOM_URL} -m ${LOGS_MAX_SLEEP} --no_pretty --delete_after_sending --secure"
+    local send_command="${SEND_SCRIPT} ${file_dir} ${feed_name} ${LOGS_SYSTEM} ${LOGS_ENV} ${LOGS_STROOM_URL} --file-regex '${FILE_REGEX}' -m ${LOGS_MAX_SLEEP} --no-pretty --delete-after-sending --secure"
 
     # Construct the crontab line
     local pipe=">> /stroom-auth-service/logs/cron_${feed_name}.log 2>&1"

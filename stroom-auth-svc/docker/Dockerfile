@@ -14,6 +14,23 @@
 # limitations under the License.
 #**********************************************************************
 
+# ~~~ send logs download stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Intermediate build stage to grab all the send logs scripts
+# later copy them all in one go to reduce the number of layers
+# Have to use alpine rather than scratch so we can chmod
+FROM alpine:3.8 as send-logs-scripts
+WORKDIR /scripts
+
+ADD https://raw.githubusercontent.com/gchq/stroom-clients/send-to-stroom-v1.0/bash/send_to_stroom.sh .
+ADD https://raw.githubusercontent.com/gchq/stroom-clients/send-to-stroom-v1.0/bash/send_to_stroom_args.sh .
+RUN chmod u+x ./*.sh
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+# ~~~ Final build stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 # No java 10 alpine image currently available to use, so stuck with
 # the not-so-slim debian-slim
 FROM openjdk:10.0.2-jre-slim
@@ -56,10 +73,11 @@ RUN apt-get update && \
     mkdir -p /stroom-auth-service/logs/app && \
     chown -R auth:auth /stroom-auth-service
 
+# Copy in all the send logs scripts downloaded in the intermediate build stage
+COPY --chown=auth:auth --from=send-logs-scripts /scripts /stroom-auth-service/
+
 # Copy all the artifacts required to run stroom-auth-service
 # In order of likelyhood to change, most staic first.
-COPY --chown=auth:auth ./build/send_to_stroom_args.sh /stroom-auth-service/
-COPY --chown=auth:auth ./build/send_to_stroom.sh /stroom-auth-service/
 COPY --chown=auth:auth ./create_crontab.sh /stroom-auth-service/
 COPY --chown=auth:auth ./docker-entrypoint.sh /stroom-auth-service/
 COPY --chown=auth:auth ./build/config.yml /stroom-auth-service/
