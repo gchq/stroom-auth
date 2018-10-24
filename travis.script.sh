@@ -30,38 +30,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[0m' # No Colour 
 
-release_service_to_docker_hub() {
-    if [ $# -lt 3 ]; then
-        echo "Incorrect args, expecting at least 3"
-        exit 1
-    fi
-    dockerRepo="$1"
-    contextRoot="$2"
-    #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
-    shift 2
-
-    allTagArgs=""
-
-    for tagVersionPart in "$@"; do
-        if [ "x${tagVersionPart}" != "x" ]; then
-            allTagArgs="${allTagArgs} --tag=${dockerRepo}:${tagVersionPart}"
-        fi
-    done
-
-    echo -e "Building and releasing a docker image to ${GREEN}${dockerRepo}${NC} with tags: ${GREEN}${allTagArgs}${NC}"
-    echo -e "dockerRepo:  [${GREEN}${dockerRepo}${NC}]"
-    echo -e "contextRoot: [${GREEN}${contextRoot}${NC}]"
-
-    prep_service_build
-
-    # The username and password are configured in the travis gui
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
-
-    docker build ${allTagArgs} ${contextRoot}
-    docker push ${dockerRepo}
-}
-
-release_auth_ui_to_docker_hub() {
+release_to_docker_hub() {
     if [ $# -lt 3 ]; then
         echo "Incorrect args, expecting at least 3"
         exit 1
@@ -86,15 +55,6 @@ release_auth_ui_to_docker_hub() {
     #The username and password are configured in the travis gui
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
 
-    # Prepare the work directory
-    # TODO move this back into a common script -- it's used by docker.sh.
-    pushd ${contextRoot} 
-    mkdir -p work
-    cp ../package.json work/
-    cp -r ../src work/
-    cp -r ../public work/
-    popd
-    
     docker build ${allTagArgs} ${contextRoot}
     docker push ${dockerRepo} 
 }
@@ -159,6 +119,16 @@ do_gradle_build() {
     ./gradlew -Pversion=$TRAVIS_TAG -PgwtCompilerWorkers=1 -PgwtCompilerMinHeap=50M -PgwtCompilerMaxHeap=500M clean build shadowJar ${extra_build_args}
 }
 
+prep_ui_build() {
+    pushd $1
+    mkdir -p work
+    cp ../package.json work/
+    cp -r ../src work/
+    cp -r ../public work/
+    popd
+}    
+
+
 do_docker_build() {
     # Don't do a docker build for pull requests
     if [ "$do_docker_build" = true ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then
@@ -170,14 +140,22 @@ do_docker_build() {
 
         if [[ $VERSION_FIXED == "ui_"* ]]; then
             echo -e "This tag is specific for UI builds, so we'll only build an image for that: ${all_docker_tags}"
-            release_auth_ui_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
+           
+            prep_ui_build ${AUTH_UI_CONTEXT_ROOT}
+            release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
         elif [[ $VERSION_FIXED == "service_"* ]]; then
             echo -e "This tag is specific for service builds, so we'll only build an image for that: ${all_docker_tags}"
-            release_service_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
+           
+            prep_service_build
+            release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
         else # But if the tag isn't specifically for UI or service then build for both
             echo -e "Building docker images for both UI and the service."
-            release_auth_ui_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
-            release_service_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
+           
+            prep_service_build 
+            release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
+           
+            prep_ui_build ${AUTH_UI_CONTEXT_ROOT}
+            release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
         fi  
     fi
 }
