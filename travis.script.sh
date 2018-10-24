@@ -136,8 +136,8 @@ release_to_docker_hub() {
         echo "Incorrect args, expecting at least 3"
         exit 1
     fi
-    dockerRepo="$1"
-    contextRoot="$2"
+    docker_repo="$1"
+    context_root="$2"
     #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
     shift 2
 
@@ -145,19 +145,19 @@ release_to_docker_hub() {
 
     for tagVersionPart in "$@"; do
         if [ "x${tagVersionPart}" != "x" ]; then
-            allTagArgs="${allTagArgs} --tag=${dockerRepo}:${tagVersionPart}"
+            allTagArgs="${allTagArgs} --tag=${docker_repo}:${tagVersionPart}"
         fi
     done
 
-    echo -e "Building and releasing a docker image to ${GREEN}${dockerRepo}${NC} with tags: ${GREEN}${allTagArgs}${NC}"
-    echo -e "dockerRepo:  [${GREEN}${dockerRepo}${NC}]"
-    echo -e "contextRoot: [${GREEN}${contextRoot}${NC}]"
+    echo -e "Building and releasing a docker image to ${GREEN}${docker_repo}${NC} with tags: ${GREEN}${allTagArgs}${NC}"
+    echo -e "docker_repo:  [${GREEN}${docker_repo}${NC}]"
+    echo -e "context_root: [${GREEN}${context_root}${NC}]"
 
     #The username and password are configured in the travis gui
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
 
-    docker build ${allTagArgs} ${contextRoot}
-    docker push ${dockerRepo} 
+    docker build ${allTagArgs} ${context_root}
+    docker push ${docker_repo} 
 }
 
 main() {
