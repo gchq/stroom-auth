@@ -3,25 +3,6 @@
 #exit script on any error
 set -e
 
-source docker_lib.sh
-
-AUTH_SERVICE_REPO="gchq/stroom-auth-service"
-AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
-
-AUTH_UI_REPO="gchq/stroom-auth-ui"
-AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
-
-VERSION_FIXED_TAG=""
-SNAPSHOT_FLOATING_TAG=""
-MAJOR_VER_FLOATING_TAG=""
-MINOR_VER_FLOATING_TAG=""
-#This is a whitelist of branches to produce docker builds for
-BRANCH_WHITELIST_REGEX='(^dev$|^master$|^v[0-9].*$)'
-RELEASE_VERSION_REGEX='^v[0-9]+\.[0-9]+\.[0-9].*$'
-LATEST_SUFFIX="-LATEST"
-do_docker_build=false
-extra_build_args=""
-
 #Shell Colour constants for use in 'echo -e'
 #e.g.  echo -e "My message ${GREEN}with just this text in green${NC}"
 RED='\033[1;31m'
@@ -30,34 +11,25 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[0m' # No Colour 
 
-release_to_docker_hub() {
-    if [ $# -lt 3 ]; then
-        echo "Incorrect args, expecting at least 3"
-        exit 1
-    fi
-    dockerRepo="$1"
-    contextRoot="$2"
-    #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
-    shift 2
+source docker_lib.sh
 
-    allTagArgs=""
+readonly AUTH_SERVICE_REPO="gchq/stroom-auth-service"
+readonly AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
 
-    for tagVersionPart in "$@"; do
-        if [ "x${tagVersionPart}" != "x" ]; then
-            allTagArgs="${allTagArgs} --tag=${dockerRepo}:${tagVersionPart}"
-        fi
-    done
+readonly AUTH_UI_REPO="gchq/stroom-auth-ui"
+readonly AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
 
-    echo -e "Building and releasing a docker image to ${GREEN}${dockerRepo}${NC} with tags: ${GREEN}${allTagArgs}${NC}"
-    echo -e "dockerRepo:  [${GREEN}${dockerRepo}${NC}]"
-    echo -e "contextRoot: [${GREEN}${contextRoot}${NC}]"
+readonly VERSION_FIXED_TAG=""
+readonly SNAPSHOT_FLOATING_TAG=""
+readonly MAJOR_VER_FLOATING_TAG=""
+readonly MINOR_VER_FLOATING_TAG=""
+#This is a whitelist of branches to produce docker builds for
+readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^v[0-9].*$)'
+readonly RELEASE_VERSION_REGEX='^v[0-9]+\.[0-9]+\.[0-9].*$'
+readonly LATEST_SUFFIX="-LATEST"
 
-    #The username and password are configured in the travis gui
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
-
-    docker build ${allTagArgs} ${contextRoot}
-    docker push ${dockerRepo} 
-}
+do_docker_build=false
+extra_build_args=""
 
 echo_travis_env_vars() {
     # Dump all the travis env vars to the console for debugging
@@ -67,16 +39,6 @@ echo_travis_env_vars() {
     echo -e "TRAVIS_TAG:          [${GREEN}${TRAVIS_TAG}${NC}]"
     echo -e "TRAVIS_PULL_REQUEST: [${GREEN}${TRAVIS_PULL_REQUEST}${NC}]"
     echo -e "TRAVIS_EVENT_TYPE:   [${GREEN}${TRAVIS_EVENT_TYPE}${NC}]"
-}
-
-echo_build_vars() {
-    echo -e "VERSION:                       [${GREEN}${VERSION}${NC}]"
-    echo -e "VERSION FIXED DOCKER TAG:      [${GREEN}${VERSION_FIXED_TAG}${NC}]"
-    echo -e "SNAPSHOT FLOATING DOCKER TAG:  [${GREEN}${SNAPSHOT_FLOATING_TAG}${NC}]"
-    echo -e "MAJOR VER FLOATING DOCKER TAG: [${GREEN}${MAJOR_VER_FLOATING_TAG}${NC}]"
-    echo -e "MINOR VER FLOATING DOCKER TAG: [${GREEN}${MINOR_VER_FLOATING_TAG}${NC}]"
-    echo -e "do_docker_build:               [${GREEN}${do_docker_build}${NC}]"
-    echo -e "extra_build_args:              [${GREEN}${extra_build_args}${NC}]"
 }
 
 extract_build_vars() {
@@ -114,6 +76,16 @@ extract_build_vars() {
     fi
 }
 
+echo_build_vars() {
+    echo -e "VERSION:                       [${GREEN}${VERSION}${NC}]"
+    echo -e "VERSION FIXED DOCKER TAG:      [${GREEN}${VERSION_FIXED_TAG}${NC}]"
+    echo -e "SNAPSHOT FLOATING DOCKER TAG:  [${GREEN}${SNAPSHOT_FLOATING_TAG}${NC}]"
+    echo -e "MAJOR VER FLOATING DOCKER TAG: [${GREEN}${MAJOR_VER_FLOATING_TAG}${NC}]"
+    echo -e "MINOR VER FLOATING DOCKER TAG: [${GREEN}${MINOR_VER_FLOATING_TAG}${NC}]"
+    echo -e "do_docker_build:               [${GREEN}${do_docker_build}${NC}]"
+    echo -e "extra_build_args:              [${GREEN}${extra_build_args}${NC}]"
+}
+
 do_gradle_build() {
     # Use 1 local worker to avoid using too much memory as each worker will chew up ~500Mb ram
     ./gradlew -Pversion=$TRAVIS_TAG -PgwtCompilerWorkers=1 -PgwtCompilerMinHeap=50M -PgwtCompilerMaxHeap=500M clean build shadowJar ${extra_build_args}
@@ -127,7 +99,6 @@ prep_ui_build() {
     cp -r ../public work/
     popd
 }    
-
 
 do_docker_build() {
     # Don't do a docker build for pull requests
@@ -158,6 +129,35 @@ do_docker_build() {
             release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
         fi  
     fi
+}
+
+release_to_docker_hub() {
+    if [ $# -lt 3 ]; then
+        echo "Incorrect args, expecting at least 3"
+        exit 1
+    fi
+    dockerRepo="$1"
+    contextRoot="$2"
+    #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
+    shift 2
+
+    allTagArgs=""
+
+    for tagVersionPart in "$@"; do
+        if [ "x${tagVersionPart}" != "x" ]; then
+            allTagArgs="${allTagArgs} --tag=${dockerRepo}:${tagVersionPart}"
+        fi
+    done
+
+    echo -e "Building and releasing a docker image to ${GREEN}${dockerRepo}${NC} with tags: ${GREEN}${allTagArgs}${NC}"
+    echo -e "dockerRepo:  [${GREEN}${dockerRepo}${NC}]"
+    echo -e "contextRoot: [${GREEN}${contextRoot}${NC}]"
+
+    #The username and password are configured in the travis gui
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
+
+    docker build ${allTagArgs} ${contextRoot}
+    docker push ${dockerRepo} 
 }
 
 main() {
