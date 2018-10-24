@@ -86,7 +86,15 @@ release_auth_ui_to_docker_hub() {
     #The username and password are configured in the travis gui
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
 
-    ./stroom-auth-ui/docker/build.sh ${tagVersionPart}
+    # Prepare the work directory
+    # TODO move this back into a common script -- it's used by docker.sh.
+    cd "$(dirname "$0")"
+    mkdir -p work
+    cp ../package.json work/
+    cp -r ../src work/
+    cp -r ../public work/
+    
+    docker build ${allTagArgs} ${contextRoot}
     docker push ${dockerRepo} 
 }
 
