@@ -15,19 +15,18 @@ source docker_lib.sh
 
 readonly AUTH_SERVICE_REPO="gchq/stroom-auth-service"
 readonly AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
-
 readonly AUTH_UI_REPO="gchq/stroom-auth-ui"
 readonly AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
 
-readonly VERSION_FIXED_TAG=""
-readonly SNAPSHOT_FLOATING_TAG=""
-readonly MAJOR_VER_FLOATING_TAG=""
-readonly MINOR_VER_FLOATING_TAG=""
 #This is a whitelist of branches to produce docker builds for
 readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^v[0-9].*$)'
 readonly RELEASE_VERSION_REGEX='^v[0-9]+\.[0-9]+\.[0-9].*$'
 readonly LATEST_SUFFIX="-LATEST"
 
+version_fixed_tag=""
+snapshot_floating_tag=""
+major_ver_floating_tag=""
+minor_ver_floating_tag=""
 do_docker_build=false
 extra_build_args=""
 
@@ -48,18 +47,18 @@ extract_build_vars() {
 
         do_docker_build=true
         # This is a tagged commit, so create a docker image with that tag
-        VERSION_FIXED_TAG="${TRAVIS_TAG}"
+        version_fixed_tag="${TRAVIS_TAG}"
 
         # Extract the major version part for a floating tag
         majorVer=$(echo "${TRAVIS_TAG}" | grep -oP "v[0-9]+")
         if [ -n "${majorVer}" ]; then
-            MAJOR_VER_FLOATING_TAG="${majorVer}${LATEST_SUFFIX}"
+            major_ver_floating_tag="${majorVer}${LATEST_SUFFIX}"
         fi
 
         # Extract the minor version part for a floating tag
         minorVer=$(echo "${TRAVIS_TAG}" | grep -oP "v[0-9]+\.[0-9]+")
         if [ -n "${minorVer}" ]; then
-            MINOR_VER_FLOATING_TAG="${minorVer}${LATEST_SUFFIX}"
+            minor_ver_floating_tag="${minorVer}${LATEST_SUFFIX}"
         fi
 
         if [[ "$TRAVIS_BRANCH" =~ ${RELEASE_VERSION_REGEX} ]]; then
@@ -68,7 +67,7 @@ extract_build_vars() {
         fi
     elif [[ "$TRAVIS_BRANCH" =~ $BRANCH_WHITELIST_REGEX ]]; then
         # This is a branch we want to create a floating snapshot docker image for
-        SNAPSHOT_FLOATING_TAG="${TRAVIS_BRANCH}-SNAPSHOT"
+        snapshot_floating_tag="${TRAVIS_BRANCH}-SNAPSHOT"
         do_docker_build=true
     else
         # No tag so use the branch name as the version, e.g. dev
@@ -78,10 +77,10 @@ extract_build_vars() {
 
 echo_build_vars() {
     echo -e "VERSION:                       [${GREEN}${VERSION}${NC}]"
-    echo -e "VERSION FIXED DOCKER TAG:      [${GREEN}${VERSION_FIXED_TAG}${NC}]"
-    echo -e "SNAPSHOT FLOATING DOCKER TAG:  [${GREEN}${SNAPSHOT_FLOATING_TAG}${NC}]"
-    echo -e "MAJOR VER FLOATING DOCKER TAG: [${GREEN}${MAJOR_VER_FLOATING_TAG}${NC}]"
-    echo -e "MINOR VER FLOATING DOCKER TAG: [${GREEN}${MINOR_VER_FLOATING_TAG}${NC}]"
+    echo -e "version fixed docker tag:      [${GREEN}${version_fixed_tag}${NC}]"
+    echo -e "snapshot floating docker tag:  [${GREEN}${snapshot_floating_tag}${NC}]"
+    echo -e "major ver floating docker tag: [${GREEN}${major_ver_floating_tag}${NC}]"
+    echo -e "minor ver floating docker tag: [${GREEN}${minor_ver_floating_tag}${NC}]"
     echo -e "do_docker_build:               [${GREEN}${do_docker_build}${NC}]"
     echo -e "extra_build_args:              [${GREEN}${extra_build_args}${NC}]"
 }
@@ -106,7 +105,7 @@ do_docker_build() {
         # TODO - the major and minor floating tags assume that the release builds are all done in strict sequence
         # If say the build for v6.0.1 is re-run after the build for v6.0.2 has run then v6.0-LATEST will point to v6.0.1
         # which is incorrect, hopefully this course of events is unlikely to happen
-        all_docker_tags="${VERSION_FIXED_TAG} ${SNAPSHOT_FLOATING_TAG} ${MAJOR_VER_FLOATING_TAG} ${MINOR_VER_FLOATING_TAG}"
+        all_docker_tags="${version_fixed_tag} ${snapshot_floating_tag} ${major_ver_floating_tag} ${minor_ver_floating_tag}"
         echo -e "all_docker_tags: [${GREEN}${all_docker_tags}${NC}]"
 
         if [[ $VERSION_FIXED == "ui_"* ]]; then
