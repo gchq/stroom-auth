@@ -91,7 +91,8 @@ do_gradle_build() {
 }
 
 prep_ui_build() {
-    pushd $1
+    pushd ${AUTH_UI_CONTEXT_ROOT}
+    echo -e "Building UI from $(pwd)" 
     mkdir -p work
     cp ../package.json work/
     cp -r ../src work/
@@ -124,7 +125,7 @@ do_docker_build() {
             prep_service_build 
             release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
            
-            prep_ui_build ${AUTH_UI_CONTEXT_ROOT}
+            prep_ui_build 
             release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
         fi  
     fi
