@@ -112,7 +112,7 @@ do_docker_build() {
         if [[ $VERSION_FIXED == "ui_"* ]]; then
             echo -e "This tag is specific for UI builds, so we'll only build an image for that: ${all_docker_tags}"
            
-            prep_ui_build ${AUTH_UI_CONTEXT_ROOT}
+            prep_ui_build 
             release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
         elif [[ $VERSION_FIXED == "service_"* ]]; then
             echo -e "This tag is specific for service builds, so we'll only build an image for that: ${all_docker_tags}"
@@ -123,9 +123,9 @@ do_docker_build() {
             echo -e "Building docker images for both UI and the service."
            
             prep_service_build 
-            release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
-           
             prep_ui_build 
+ 
+            release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
             release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
         fi  
     fi
