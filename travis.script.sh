@@ -17,6 +17,8 @@ readonly AUTH_SERVICE_REPO="gchq/stroom-auth-service"
 readonly AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
 readonly AUTH_UI_REPO="gchq/stroom-auth-ui"
 readonly AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
+readonly UI_TAG_PREFIX="ui_"
+readonly SERVIER_TAG_PREFIX="service_"
 
 #This is a whitelist of branches to produce docker builds for
 readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^v[0-9].*$)'
@@ -109,12 +111,20 @@ do_docker_build() {
         all_docker_tags="${version_fixed_tag} ${snapshot_floating_tag} ${major_ver_floating_tag} ${minor_ver_floating_tag}"
         echo -e "all_docker_tags: [${GREEN}${all_docker_tags}${NC}]"
 
-        if [[ $version_fixed_tag == "ui_"* ]]; then
+        # We discover that we're building an image specifically for UI or service by examining the prefix.
+        # I.e. does it contain ui_ or service_? If it does then we only build and push docker images for
+        # that component. We also want to strip this prefix from the tag that was pushed: we don't want
+        # docker images that look like this: gchq/stroom-auth-ui:ui_v1.0-beta4. There is needless repetition 
+        # of 'ui_'. What we want is gchq/stroom-auth-ui:v1.0-beta4.
+        if [[ $version_fixed_tag == "$UI_TAG_PREFIX"* ]]; then
+            all_docker_tags=${all_docker_tags#"${UI_TAG_PREFIX}"}
+
             echo -e "This tag is specific for UI builds, so we'll only build an image for that: ${all_docker_tags}"
            
             prep_ui_build 
             release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
-        elif [[ $version_fixed_tag == "service_"* ]]; then
+        elif [[ $version_fixed_tag == "$SERVICE_TAG_PREFIX"* ]]; then
+            all_docker_tags=${all_docker_tags#"${SERVICE_TAG_PREFIX}"}
             echo -e "This tag is specific for service builds, so we'll only build an image for that: ${all_docker_tags}"
            
             prep_service_build
@@ -142,22 +152,22 @@ release_to_docker_hub() {
     #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
     shift 2
 
-    allTagArgs=""
+    all_tag_args=""
 
-    for tagVersionPart in "$@"; do
-        if [ "x${tagVersionPart}" != "x" ]; then
-            allTagArgs="${allTagArgs} --tag=${docker_repo}:${tagVersionPart}"
+    for tag_version_part in "$@"; do
+        if [ "x${tag_version_part}" != "x" ]; then
+            all_tag_args="${all_tag_args} --tag=${docker_repo}:${tag_version_part}"
         fi
     done
 
-    echo -e "Building and releasing a docker image to ${GREEN}${docker_repo}${NC} with tags: ${GREEN}${allTagArgs}${NC}"
+    echo -e "Building and releasing a docker image to ${GREEN}${docker_repo}${NC} with tags: ${GREEN}${all_tag_args}${NC}"
     echo -e "docker_repo:  [${GREEN}${docker_repo}${NC}]"
     echo -e "context_root: [${GREEN}${context_root}${NC}]"
 
     #The username and password are configured in the travis gui
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
 
-    docker build ${allTagArgs} ${context_root}
+    docker build ${all_tag_args} ${context_root}
     docker push ${docker_repo} 
 }
 
