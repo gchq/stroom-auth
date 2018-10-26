@@ -18,7 +18,7 @@ readonly AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
 readonly AUTH_UI_REPO="gchq/stroom-auth-ui"
 readonly AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
 readonly UI_TAG_PREFIX="ui_"
-readonly SERVIER_TAG_PREFIX="service_"
+readonly SERVICE_TAG_PREFIX="service_"
 
 #This is a whitelist of branches to produce docker builds for
 readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^v[0-9].*$)'
