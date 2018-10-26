@@ -109,12 +109,12 @@ do_docker_build() {
         all_docker_tags="${version_fixed_tag} ${snapshot_floating_tag} ${major_ver_floating_tag} ${minor_ver_floating_tag}"
         echo -e "all_docker_tags: [${GREEN}${all_docker_tags}${NC}]"
 
-        if [[ $VERSION_FIXED == "ui_"* ]]; then
+        if [[ $version_fixed_tag == "ui_"* ]]; then
             echo -e "This tag is specific for UI builds, so we'll only build an image for that: ${all_docker_tags}"
            
             prep_ui_build 
             release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
-        elif [[ $VERSION_FIXED == "service_"* ]]; then
+        elif [[ $version_fixed_tag == "service_"* ]]; then
             echo -e "This tag is specific for service builds, so we'll only build an image for that: ${all_docker_tags}"
            
             prep_service_build
@@ -127,6 +127,7 @@ do_docker_build() {
  
             release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
             release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
+           
         fi  
     fi
 }
