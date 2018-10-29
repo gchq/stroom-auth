@@ -18,6 +18,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
+import { NavLink } from 'react-router-dom';
 
 import { TextField } from 'redux-form-material-ui'
 
@@ -44,12 +45,21 @@ const ResetPasswordRequest = props => {
               component={TextField}
               validate={[required]} />
             <br />
-            <RaisedButton
-              className='ResetPasswordRequest-button'
-              primary
-              disabled={pristine || submitting}
-              type='submit'
-              label='Send me a reset email' />
+            <div className="ResetPasswordRequest-actions">
+              <RaisedButton
+                className='ResetPasswordRequest-button'
+                primary
+                disabled={pristine || submitting}
+                type='submit'
+                label='Send' />
+              <NavLink to='/login' className='ResetPasswordRequest-cancel'>
+                <RaisedButton
+                  className='ResetPasswordRequest-cancel-button'
+                  type='button'
+                  label='Cancel' 
+                  to='/login'/> 
+              </NavLink>
+            </div>
           </form>
         </div>
       </Card>
