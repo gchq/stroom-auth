@@ -47,6 +47,7 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 import static stroom.db.auth.Tables.USERS;
 
@@ -175,11 +176,18 @@ public class UserDao {
         }
     }
 
-    public User get(String email) {
-        User user = database
+    public Optional<User> get(String email) {
+        var userQuery = database
                 .selectFrom(USERS)
-                .where(USERS.EMAIL.eq(email)).fetchOne().into(User.class);
-        return user;
+                .where(USERS.EMAIL.eq(email)).fetchOptional();
+
+        if(userQuery.isPresent()) {
+            // Convert the UsersRecord into a User.
+            return Optional.of(userQuery.get().into(User.class));
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     public void changePassword(String email, String newPassword) {

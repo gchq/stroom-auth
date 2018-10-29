@@ -379,11 +379,16 @@ public final class AuthenticationResource {
             @Context @NotNull HttpServletRequest httpServletRequest,
             @PathParam("email") String emailAddress) throws NoSuchUserException {
         stroomEventLoggingService.resetPassword(httpServletRequest, emailAddress);
-        User user = userDao.get(emailAddress);
-        String resetToken = tokenDao.createEmailResetToken(emailAddress);
-        emailSender.send(user, resetToken);
-        Response response = status(Status.OK).build();
-        return response;
+        Optional<User> user = userDao.get(emailAddress);
+        if(user.isPresent()) {
+            String resetToken = tokenDao.createEmailResetToken(emailAddress);
+            emailSender.send(user.get(), resetToken);
+            Response response = status(Status.OK).build();
+            return response;
+        }
+        else{
+            return status(Status.NOT_FOUND).entity("User does not exist").build();
+        }
     }
 
     @GET

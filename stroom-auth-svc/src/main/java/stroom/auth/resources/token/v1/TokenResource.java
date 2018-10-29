@@ -366,10 +366,16 @@ public class TokenResource {
                 update,
                 "Toggle whether a token is enabled or not.");
 
-        User updatingUser = userDao.get(authenticatedServiceUser.getName());
+        Optional<User> updatingUser = userDao.get(authenticatedServiceUser.getName());
 
-        tokenDao.enableOrDisableToken(tokenId, enabled, updatingUser);
-        return Response.status(Response.Status.OK).build();
+        if(updatingUser.isPresent()) {
+            tokenDao.enableOrDisableToken(tokenId, enabled, updatingUser.get());
+            return Response.status(Response.Status.OK).build();
+        }
+        else {
+            LOGGER.error("Unable to find the user that we just authenticated!");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @ApiOperation(

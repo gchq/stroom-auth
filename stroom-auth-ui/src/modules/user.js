@@ -335,11 +335,9 @@ export const submitPasswordChangeRequest = (formData) => {
       method: 'get',
       mode: 'cors'
     })
-    .then(handleStatus)
     .then(() => {
       dispatch(push('/confirmPasswordResetEmail'))
     })
-    .catch(error => handleErrors(error, dispatch, jwsToken))
   }
 }
 

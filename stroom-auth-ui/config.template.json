@@ -6,5 +6,5 @@
   "stroomUiUrl": "http://IP_ADDRESS:8080/stroom",
   "advertisedUrl": "http://IP_ADDRESS:5000",
   "appClientId": "stroom-accounts",
-  "allowPasswordResets": false
+  "allowPasswordResets": true
 }

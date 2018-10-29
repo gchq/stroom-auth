@@ -53,9 +53,9 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).getState()).isEqualTo(DISABLED);
-            assertThat(userDao.get(user02).getState()).isEqualTo(ENABLED);
-            assertThat(userDao.get(user03).getState()).isEqualTo(ENABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
+            assertThat(userDao.get(user03).get().getState()).isEqualTo(ENABLED);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,8 +87,8 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).getState()).isEqualTo(DISABLED);
-            assertThat(userDao.get(user02).getState()).isEqualTo(ENABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
 
             // ALSO WHEN...
             setClockToDaysFromNow(userDao, 200);
@@ -96,8 +96,8 @@ public class UserDao_IT extends Database_IT {
 
             //ALSO THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(2);
-            assertThat(userDao.get(user01).getState()).isEqualTo(DISABLED);
-            assertThat(userDao.get(user02).getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(DISABLED);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -150,7 +150,7 @@ public class UserDao_IT extends Database_IT {
         user.setEmail(email);
         user.setState(ENABLED);
         userDao.create(user, "UserDao_IT");
-        User newUser = userDao.get(email);
+        User newUser = userDao.get(email).get();
         assertThat(newUser.getState()).isEqualTo(ENABLED);
     }
 
