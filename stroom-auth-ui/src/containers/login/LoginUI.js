@@ -35,7 +35,7 @@ import { login as onSubmit } from '../../modules/login'
 class LoginForm extends React.Component {
 
   render() {
-    const { handleSubmit, pristine, submitting } = this.props
+    const { handleSubmit, pristine, submitting, allowPasswordResets } = this.props
     return (
       <div className='content-floating-without-appbar'>
         <Card className='Login-card'>
@@ -74,7 +74,10 @@ class LoginForm extends React.Component {
                 fullWidth
                 label='Sign in' />
               <br />
-              <NavLink to={'/resetPasswordRequest'}><p className='LoginForm-resetPasswordText'>Reset password?</p></NavLink>
+              { allowPasswordResets ? (
+                <NavLink to={'/resetPasswordRequest'}><p className='LoginForm-resetPasswordText'>Reset password?</p></NavLink>
+                ) : (undefined)
+              }
             </div>
           </form>
         </Card>
@@ -88,6 +91,7 @@ const ReduxLoginForm = reduxForm({
 })(LoginForm)
 
 const mapStateToProps = state => ({
+    allowPasswordResets: state.config.allowPasswordResets
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

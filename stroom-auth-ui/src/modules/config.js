@@ -30,7 +30,8 @@ export default (state = initialState, action) => {
         authorisationServiceUrl: action.config.authorisationServiceUrl,
         stroomUiUrl: action.config.stroomUiUrl,
         advertisedUrl: action.config.advertisedUrl,
-        appClientId: action.config.appClientId
+        appClientId: action.config.appClientId,
+        allowPasswordResets: action.config.allowPasswordResets,
       }
     default:
       return state
