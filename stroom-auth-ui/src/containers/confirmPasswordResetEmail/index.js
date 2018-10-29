@@ -17,6 +17,8 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { NavLink } from 'react-router-dom';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import Card from 'material-ui/Card'
 
@@ -30,6 +32,7 @@ class ConfirmPasswordResetEmail extends Component {
         <Card className='ConfirmPasswordResetEmail-card'>
           <h3>Password reset email has been sent.</h3>
           <p>Please check your email. You should receive a message with a link that will let you change your password. This link will be valid for 60 minutes.</p>
+          <NavLink to='/login'> <RaisedButton label='Back to login'/> </NavLink>
         </Card>
       </div>
     )

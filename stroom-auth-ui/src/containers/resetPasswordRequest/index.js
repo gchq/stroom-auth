@@ -56,7 +56,7 @@ const ResetPasswordRequest = props => {
                 <RaisedButton
                   className='ResetPasswordRequest-cancel-button'
                   type='button'
-                  label='Cancel' 
+                  label='Back to login' 
                   to='/login'/> 
               </NavLink>
             </div>
