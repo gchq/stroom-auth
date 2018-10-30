@@ -69,7 +69,8 @@ ext.versions = [
 ]
 
 ext.testVersions = [
-    junit: '4.12'
+    junit: '4.12',
+    junit_jupiter: '5.2.0'
 ]
 
 ext.deps = [
@@ -113,10 +114,12 @@ ext.testDeps = [
     dropwizard_testing: "io.dropwizard:dropwizard-testing:$versions.dropwizard",
     fuel: 'com.github.kittinunf.fuel:fuel:1.7.0',
     junit: "junit:junit:$testVersions.junit",
+    junit_jupiter: "org.junit.jupiter:junit-jupiter-api:$testVersions.junit_jupiter",
     moshi: 'com.squareup.moshi:moshi:1.5.0',
     unirest: 'com.mashape.unirest:unirest-java:1.4.9',
     wiremock: 'com.github.tomakehurst:wiremock:2.12.0',
     test_containers_mysql: 'org.testcontainers:mysql:1.9.1',
+    mockito: 'org.mockito:mockito-core:2.23.0',
 ]
 
 //defines a list of gradle projects that we will publish with maven/bintray

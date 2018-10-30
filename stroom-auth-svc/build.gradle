@@ -121,6 +121,8 @@ dependencies {
     testCompile testDeps.assertj
     testCompile testDeps.wiremock
     testCompile testDeps.test_containers_mysql
+    testCompile testDeps.mockito
+    testCompile testDeps.junit_jupiter
 
     integrationTestCompile testDeps.dropwizard_testing
     integrationTestCompile testDeps.moshi

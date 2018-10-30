@@ -139,8 +139,9 @@ class ChangePassword extends Component {
                   </div>
                 </div>
 
-                <p className='ChangePassword-errorMessage'>{changePasswordErrorMessage}</p>
-
+                <div>
+                {changePasswordErrorMessage.map((error, index) => (<p key={index} className='ChangePassword-errorMessage'>{error}</p>))}
+                </div>
                 <br />
 
                 <div className='ChangePassword-actions'>

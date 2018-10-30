@@ -25,6 +25,14 @@ public class PasswordIntegrityChecksConfig {
     @JsonProperty
     private boolean forcePasswordChangeOnFirstLogin = true;
 
+    @JsonProperty
+    // The default is to let everything through
+    private String passwordComplexityRegex = ".*";
+
+    @NotNull
+    @JsonProperty
+    private int minimumPasswordLength;
+
     public int getDisableInactiveNewAccountAfterXDays() {
         return disableInactiveNewAccountAfterXDays;
     }
@@ -43,5 +51,13 @@ public class PasswordIntegrityChecksConfig {
 
     public boolean isForcePasswordChangeOnFirstLogin() {
         return forcePasswordChangeOnFirstLogin;
+    }
+
+    public String getPasswordComplexityRegex() {
+        return passwordComplexityRegex;
+    }
+
+    public int getMinimumPasswordLength() {
+        return minimumPasswordLength;
     }
 }

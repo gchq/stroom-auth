@@ -416,19 +416,22 @@ public final class AuthenticationResource {
             @ApiParam("changePasswordRequest") @NotNull ChangePasswordRequest changePasswordRequest,
             //TODO: Delete this parameter
             @PathParam("id") int userId) {
-        UserDao.LoginResult loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
-        if(loginResult == UserDao.LoginResult.BAD_CREDENTIALS
-            || loginResult == UserDao.LoginResult.DISABLED_BAD_CREDENTIALS
-            || loginResult == UserDao.LoginResult.LOCKED_BAD_CREDENTIALS){
-            String message = "The old password is not correct! " +
-                "To change your password you need to enter your old password correctly.";
-            return Response.status(Status.UNAUTHORIZED).entity(message).build();
-        }
-        else {
+
+        var loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
+
+        var responseBuilder = ChangePasswordValidator.validateNewPassword(
+                this.config.getPasswordIntegrityChecksConfig(),
+                loginResult,
+                changePasswordRequest.getNewPassword(),
+                changePasswordRequest.getOldPassword());
+
+        if(responseBuilder.failedOn.size() == 0){
+            responseBuilder.withSuccess();
             stroomEventLoggingService.changePassword(httpServletRequest, changePasswordRequest.getEmail());
             userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
-            return Response.status(Status.OK).entity("Your password has been changed.").build();
         }
+        
+        return Response.status(Status.OK).entity(responseBuilder.build()).build();
     }
 
     @GET

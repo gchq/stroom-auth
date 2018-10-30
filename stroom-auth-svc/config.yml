@@ -132,3 +132,7 @@ passwordIntegrityChecks:
   requirePasswordChangeAfterXDays: ${REQUIRE_PASSWORD_CHANGE_AFTER_X_DAYS:- 30}
   secondsBetweenChecks: ${SECONDS_BETWEEN_PASSWORD_INTEGRITY_CHECKS:- 120}
   forcePasswordChangeOnFirstLogin: ${FORCE_PASSWORD_CHANGE_ON_FIRST_LOGIN:-true}
+  # There is an effective regex here: https://stackoverflow.com/questions/3802192/regexp-java-for-password-validation
+  # That regex won't work when pasted directly into this YAML.
+  minimumPasswordLength: ${MINIMUM_PASSWORD_LENGTH:-8}
+  passwordComplexityRegex: ${PASSWORD_COMPLEXITY_REGEX:-.*}

@@ -57,9 +57,16 @@ public abstract class Dropwizard_IT extends Database_IT {
 
     @BeforeClass
     public static void setupClass() throws InterruptedException {
-        // We're not using the DropwizardClassRule because we need to inject the JDBC URL, and we need that from
-        // the MySQLContaiclass rule in Database_IT. It's not available at that point.
-        dropwizardTestSupport = new DropwizardTestSupport(App.class, "config.generated.yml", ConfigOverride.config("database.url", mysql.getJdbcUrl()));
+
+        dropwizardTestSupport = new DropwizardTestSupport(
+                App.class,
+                "config.generated.yml",
+                // We're not using the DropwizardClassRule because we need to inject the JDBC URL, and we need that from
+                // the MySQLContainer class rule in Database_IT. It's not available at that point.
+                ConfigOverride.config("database.url", mysql.getJdbcUrl()),
+                // We need prevent forced password changing, because that breaks the automatic login.
+                // TODO: upgrade the test login automation to handle forced password changes.
+                ConfigOverride.config("passwordIntegrityChecks.forcePasswordChangeOnFirstLogin", "false"));
         dropwizardTestSupport.before();
 
 
