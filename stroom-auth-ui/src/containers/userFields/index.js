@@ -122,7 +122,7 @@ class UserFields extends Component {
 
           <div className='field-container'>
             <div className='label-container'>
-              <label>State</label>
+              <label>Account status</label>
             </div>
             <div className='input-container'>
               <Field name='state'

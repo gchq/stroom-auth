@@ -112,9 +112,9 @@ class UserSearch extends Component {
       maxWidth: 190,
       filterMethod: (filter, row) => this.filterRow(row, filter)
     }, {
-      Header: 'State',
+      Header: 'Account status',
       accessor: 'state',
-      maxWidth: 80,
+      maxWidth: 100,
       Cell: row => this.renderStateCell(row.value),
       Filter: ({filter, onChange}) => this.getStateCellFilter(filter, onChange)
     }, {

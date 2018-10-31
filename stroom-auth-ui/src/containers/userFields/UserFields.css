@@ -29,7 +29,7 @@
 .label-container {
   /* A bit of padding here helps align the label with the input. */
   padding-bottom:10px;
-   width:100px; 
+   width:150px; 
 }
 
 /* This makes any labels container within aligned to the bottom. 
