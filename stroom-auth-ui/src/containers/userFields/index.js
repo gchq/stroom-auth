@@ -128,8 +128,8 @@ class UserFields extends Component {
               <Field name='state'
                 component={SelectField}
                 validate={[required]}>
-                <MenuItem value='enabled' primaryText='Enabled' />
-                <MenuItem value='disabled' primaryText='Disabled' />
+                <MenuItem value='enabled' primaryText='Active' />
+                <MenuItem value='disabled' primaryText='Inactive' />
                 <MenuItem value='locked' primaryText='Locked' />
               </Field>
             </div>

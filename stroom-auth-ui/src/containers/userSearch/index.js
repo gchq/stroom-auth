@@ -46,7 +46,7 @@ class UserSearch extends Component {
     switch (state) {
       case 'enabled':
         stateColour = '#57d500'
-        stateText = 'Enabled'
+        stateText = 'Active'
         break
       case 'locked':
         stateColour = '#ff2e00'
@@ -54,7 +54,7 @@ class UserSearch extends Component {
         break
       case 'disabled':
         stateColour = '#ff2e00'
-        stateText = 'Disabled'
+        stateText = 'Inactive'
         break
       default:
         stateColour = '#ffbf00'
@@ -82,9 +82,9 @@ class UserSearch extends Component {
         value={filter ? filter.value : 'all'}
       >
         <option value=''>Show all</option>
-        <option value='enabled'>Enabled only</option>
+        <option value='enabled'>Active only</option>
         <option value='locked'>Locked only</option>
-        <option value='disabled'>Disabled only</option>
+        <option value='disabled'>Inactive only</option>
       </select>
     )
   }
