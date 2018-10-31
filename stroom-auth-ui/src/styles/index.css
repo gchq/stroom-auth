@@ -20,3 +20,27 @@ body {
   font-family: sans-serif;
   background-color: #FAFAFA;
 }
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 0.6rem;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+    border-radius: 3px;
+    height: 30px;
+    border: none;
+    background-color: #e4e4e4;
+    color: #4d5250;
+    padding: 0 10px 0 10px; 
+}
+
+button:hover {
+    background-color: #a8a8a8;
+    color: black;
+}

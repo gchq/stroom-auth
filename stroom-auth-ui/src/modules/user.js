@@ -39,7 +39,7 @@ const initialState = {
   showCreateLoader: false,
   alertText: "",
   showAlert: false,
-  changePasswordErrorMessage: []
+  changePasswordErrorMessage: [],
 };
 
 export default (state = initialState, action) => {

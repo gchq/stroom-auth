@@ -21,3 +21,10 @@
 .CreateUserForm-field {
   width: 400px;
 }
+
+.CreateUserForm-field_button {
+    width: 400px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-right: 50px;
+}

@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
 .left-container {
   width: 450px;
 }
@@ -24,6 +29,16 @@
 
 .field-container {
    display: flex;
+   flex-direction: row;
+   aligh-items: center;
+}
+
+.field-container label {
+    align-self: center;
+    width: 200px;
+    display: block;
+    text-align: right;
+    margin-right: 15px;
 }
 
 .label-container {
@@ -32,15 +47,3 @@
    width:150px; 
 }
 
-/* This makes any labels container within aligned to the bottom. 
-We need this because otherwise the label will sit too high. */
-.label-container:after {
-  content: "";
-  display: inline-block;
-  height: 100%;
-  vertical-align: bottom;
-}
-
-.input-container {
-   width: 250px; 
-}

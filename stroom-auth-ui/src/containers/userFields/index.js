@@ -18,10 +18,6 @@ import React, { Component } from 'react'
 import { Field } from 'redux-form'
 import PropTypes from 'prop-types'
 
-import { MenuItem } from 'material-ui/Menu'
-import FlatButton from 'material-ui/FlatButton'
-import { SelectField, TextField } from 'redux-form-material-ui'
-
 import './UserFields.css'
 import { required, email } from '../../validations'
 
@@ -47,193 +43,142 @@ class UserFields extends Component {
       <div className='container'>
         <div className='left-container'>
           <div className='field-container'>
-            <div className='label-container'>
               <label>Email</label>
-            </div>
-            <div className='input-container'>
               <Field
                 className='CreateUserForm-field'
                 name='email'
-                component={TextField}
+                component="input"
+                type="text"
                 validate={[required]}
                 warn={email}
                 />
-            </div>
           </div>
           <div className='field-container'>
-            <div className='label-container'>
               <label>Password</label>
-            </div>
-            <div className='input-container'>
-
               {showPasswordField ? (
                 <Field
                   className='CreateUserForm-field'
                   name='password'
                   type='password'
-                  component={TextField}
+                  component='input'
                   validate={[required]} />
                 ) : (
-                  <FlatButton
-                    label='Edit password'
-                    secondary
-                    onTouchTap={() => this.handleShowPasswordField()} />
+                  <div className='CreateUserForm-field_button'>
+                  <button
+                    onClick={() => this.handleShowPasswordField()}>Edit password</button>
+                    </div>
                 )}
-            </div>
 
           </div>
           <div className='field-container'>
-            <div className='label-container'>
               <label>First name</label>
-            </div>
-            <div className='input-container'>
               <Field
                 className='CreateUserForm-field'
                 name='first_name'
-                component={TextField}
+                component='input'
+                type='text'
                 />
-            </div>
           </div>
           <div className='field-container'>
-            <div className='label-container'>
               <label>Last name</label>
-            </div>
-            <div className='input-container'>
               <Field
                 className='CreateUserForm-field'
                 name='last_name'
-                component={TextField}
-                />
-            </div>
+                component='input'
+                type='text'/>
           </div>
           <div className='field-container'>
-            <div className='label-container'>
               <label>Comments</label>
-            </div>
-            <div className='input-container'>
               <Field
                 className='CreateUserForm-field'
                 name='comments'
-                component={TextField}
-                multiLine
+                component='input'
+                type='text'multiLine
                 />
-            </div>
           </div>
 
           <div className='field-container'>
-            <div className='label-container'>
               <label>Account status</label>
-            </div>
-            <div className='input-container'>
               <Field name='state'
-                component={SelectField}
+                component='select'
                 validate={[required]}>
-                <MenuItem value='enabled' primaryText='Active' />
-                <MenuItem value='disabled' primaryText='Inactive' />
-                <MenuItem value='locked' primaryText='Locked' />
+                <option value='enabled'>Active</option>
+                <option value='disabled'>Inactive</option>
+                <option value='locked'>Locked</option>
               </Field>
-            </div>
           </div>
         </div>
 
         {showCalculatedFields ? (
           <div className='right-container'>
             <div className='field-container'>
-              <div className='label-container'>
                 <label>Login failures</label>
-              </div>
-              <div className='input-container'>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='login_failures'
-                  component={TextField}
-                />
-              </div>
+                  component='input'
+                  type='text'/>
             </div>
 
             <div className='field-container'>
-              <div className='label-container'>
                 <label>Login count</label>
-              </div>
-              <div className='input-container'>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='login_count'
-                  component={TextField}
-                />
-              </div>
+                  component='input'
+                  type='text'/>
             </div>
 
             <div className='field-container'>
-              <div className='label-container'>
                 <label>Last login</label>
-              </div>
-              <div className='input-container'>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='last_login'
-                  component={TextField}
-                />
-              </div>
+                  component='input'
+                  type='text'/>
             </div>
 
             <div className='field-container'>
-              <div className='label-container'>
                 <label>Updated on</label>
-              </div>
-              <div className='input-container'>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='updated_on'
-                  component={TextField}
-                />
-              </div>
+                  component='input'
+                  type='text'/>
             </div>
 
             <div className='field-container'>
-              <div className='label-container'>
                 <label>Updated by</label>
-              </div>
-              <div className='input-container'>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='updated_by_user'
-                  component={TextField}
-                />
-              </div>
+                  component='input'
+                  type='text'/>
             </div>
 
             <div className='field-container'>
-              <div className='label-container'>
                 <label>Created on</label>
-              </div>
-              <div className='input-container'>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='created_on'
-                  component={TextField}
-                />
-              </div>
+                  component='input'
+                  type='text'/>
             </div>
 
             <div className='field-container'>
-              <div className='label-container'>
                 <label>Created by</label>
-              </div>
-              <div className='input-container'>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='created_by_user'
-                  component={TextField}
-                />
-              </div>
+                  component='input'
+                  type='text'/>
             </div>
           </div>
           ) : (<div />)}
