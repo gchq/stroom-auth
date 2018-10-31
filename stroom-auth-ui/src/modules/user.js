@@ -308,7 +308,7 @@ export const changePassword = () => {
 
     if (newPassword !== newPasswordConfirmation) {
       dispatch(
-        showChangePasswordErrorMessage(["The new passwords do not match!"])
+        showChangePasswordErrorMessage(["The new passwords do not match"])
       );
     } else {
       fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
