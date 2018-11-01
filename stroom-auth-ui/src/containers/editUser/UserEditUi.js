@@ -20,8 +20,6 @@ import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { NavLink } from 'react-router-dom'
 
-import Snackbar from 'material-ui/Snackbar'
-
 import './EditUser.css'
 import UserFields from '../userFields'
 import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
@@ -41,13 +39,7 @@ const UserEditForm = props => {
         </NavLink>
         <UserFields showCalculatedFields constrainPasswordEditing />
       </form>
-      <Snackbar
-        open={showAlert}
-        message={alertText}
-        autoHideDuration={4000}
-        onRequestClose={() => toggleAlertVisibility('')}
-      />
-      </div>
+    </div>
   )
 }
 

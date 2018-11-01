@@ -19,8 +19,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 
-import Snackbar from 'material-ui/Snackbar'
-
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
 import UserEdit from '../editUser'
@@ -65,12 +63,6 @@ class UserLayout extends Component {
           {showCreate ? (<UserCreate />) : (undefined)}
           {showEdit ? (<UserEdit />) : (undefined)}
         </div>
-        <Snackbar
-          open={showAlert}
-          message={alertText}
-          autoHideDuration={4000}
-          onRequestClose={() => toggleAlertVisibility()}
-        />
       </div>
 
     )

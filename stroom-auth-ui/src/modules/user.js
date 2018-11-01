@@ -183,7 +183,7 @@ export const saveChanges = editedUser => {
     })
       .then(handleStatus)
       .then(() => {
-        dispatch(push(`/user/${id}`));
+        dispatch(push('/userSearch'));
         dispatch(toggleAlertVisibility("User has been updated"));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));

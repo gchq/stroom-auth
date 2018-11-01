@@ -21,7 +21,6 @@ import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
 
 import Toggle from 'material-ui/Toggle'
-import Paper from 'material-ui/Paper'
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
@@ -143,7 +142,8 @@ class UserSearch extends Component {
     }]
   }
 
-  toggleFiltering (isFilteringEnabled) {
+  toggleFiltering (event) {
+    const isFilteringEnabled = event.target.checked
     this.setState({isFilteringEnabled})
   }
 
@@ -152,13 +152,15 @@ class UserSearch extends Component {
     const { isFilteringEnabled } = this.state
     const deleteButtonDisabled = !selectedUserRowId
     return (
-      <Paper className='UserSearch-main' zDepth={0}>
+      <div className='UserSearch-main' zDepth={0}>
         <div className='UserSearch-header'>
-           <Toggle
-                className='toggle-small toggle-small-low'
-                label='Show filtering'
-                labelPosition='right'
-                onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
+            <label>Enable filtering?</label> 
+           <input 
+             type='checkbox'
+             value={isFilteringEnabled}
+             className='toggle-small toggle-small-low'
+             checked={isFilteringEnabled}
+             onChange={(event) => this.toggleFiltering(event)}/>
 
               <NavLink to={'/newUser'} >
                 <button className='toolbar-button-small'>Create</button>
@@ -228,7 +230,7 @@ class UserSearch extends Component {
               }} />
           </div>
         </div>
-      </Paper>
+      </div>
     )
   }
 }
