@@ -18,22 +18,8 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
-import { NavLink } from 'react-router-dom'
 
-import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
-import IconButton from 'material-ui/IconButton'
 import Snackbar from 'material-ui/Snackbar'
-import Toggle from 'material-ui/Toggle'
-import Dialog from 'material-ui/Dialog'
-import { blue600, amber900, fullWhite } from 'material-ui/styles/colors'
-import Paper from 'material-ui/Card'
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
-import Add from 'material-ui-icons/Add'
-import Edit from 'material-ui-icons/Edit'
-import Delete from 'material-ui-icons/Delete'
-import Help from 'material-ui-icons/Help'
-import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight'
 
 import TokenSearch from '../tokenSearch'
 import TokenCreate from '../tokenCreate'
@@ -48,7 +34,6 @@ class TokenLayout extends Component {
   constructor () {
     super()
     this.state = {
-      isFilteringEnabled: false,
       isHelpDialogOpen: false
     }
   }
@@ -57,10 +42,7 @@ class TokenLayout extends Component {
     this.context.store.dispatch(deleteSelectedToken())
   }
 
-  toggleFiltering (isFilteringEnabled) {
-    this.setState({isFilteringEnabled})
-  }
-
+  
   handleHelpDialogOpen () {
     this.setState({isHelpDialogOpen: true})
   }
@@ -74,66 +56,8 @@ class TokenLayout extends Component {
     const showSearch = show === 'search'
     const showCreate = show === 'create'
     const showEdit = show === 'edit'
-    const showCreateButton = showSearch
-    const showEditButton = showSearch
-    const deleteButtonDisabled = !selectedTokenRowId
-    const editButtonDisabled = !selectedTokenRowId
     return (
-      <Paper className='Layout-main' zDepth={0}>
-        <Toolbar className='toolbar-small'>
-          <ToolbarGroup>
-            <NavLink to={'/tokens'}>
-              <ToolbarTitle text='API keys' className='toolbar-title-small' />
-            </NavLink>
-            {showCreate ? (<KeyboardArrowRight />) : (undefined)}
-            {showCreate ? (<ToolbarTitle text='Create' className='UserLayout-toolbarTitle' />) : (undefined)}
-          </ToolbarGroup>
-          <ToolbarGroup>
-
-            {showSearch ? (
-              <Toggle
-                className='toggle-small toggle-small-low'
-                label='Show filtering'
-                labelPosition='right'
-                onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
-            ) : (undefined)}
-
-            {showCreateButton ? (
-              <NavLink to={'/token/newApiToken'}>
-                <RaisedButton label='Create' primary className='toolbar-button-small'
-                  icon={<Add color={fullWhite} />} />
-              </NavLink>
-            ) : (undefined)}
-
-            {showEditButton
-              ? deleteButtonDisabled ? (
-                <div>
-                  <RaisedButton label='View/Edit' primary className='toolbar-button-small'
-                    disabled={editButtonDisabled}
-                    icon={<Edit color={fullWhite} />} />
-                </div>
-              ) : (
-                <NavLink to={`/token/${selectedTokenRowId}`}>
-                  <RaisedButton label='View/Edit' primary className='toolbar-button-small'
-                    disabled={editButtonDisabled}
-                    icon={<Edit color={fullWhite} />} />
-                </NavLink>
-              ) : (undefined)}
-
-            {showSearch ? (
-              <div>
-                <RaisedButton label='Delete' primary
-                  icon={<Delete color={fullWhite} />} disabled={deleteButtonDisabled}
-                  onClick={() => this.deleteToken()}
-                  className='toolbar-button-small' />
-              </div>
-            ) : (undefined)}
-
-            <IconButton onClick={() => this.handleHelpDialogOpen()}>
-              <Help color={blue600} hoverColor={amber900} />
-            </IconButton>
-          </ToolbarGroup>
-        </Toolbar>
+      <div className='Layout-main'>
         <div className='User-content' id='User-content'>
           {showSearch ? (<TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
           {showCreate ? (<TokenCreate />) : (undefined)}
@@ -145,20 +69,7 @@ class TokenLayout extends Component {
           autoHideDuration={4000}
           onRequestClose={() => toggleAlertVisibility('')}
         />
-        <Dialog
-          title={<div><span><Help color={blue600} /></span> &nbsp;<span>API Keys</span></div>}
-          actions={
-            <FlatButton
-              label='OK'
-              primary
-              onTouchTap={() => this.handleHelpDialogClose()} />}
-          modal={false}
-          open={this.state.isHelpDialogOpen}
-          onRequestClose={() => this.handleHelpDialogClose()}>
-          <p>This area is for managing API keys.</p>
-          <p>An API token is issued to a user so they may create an application that integrates with Stroom.</p>
-        </Dialog>
-      </Paper>
+       </div>
 
     )
   }

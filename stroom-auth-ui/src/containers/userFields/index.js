@@ -32,7 +32,7 @@ const renderField = ({
           <label>{label}</label>
           <div>
           {type === 'textarea' ? (
-              <textarea rows='3'/>)
+              <textarea {...input} rows='3'/>)
               :(
             <input disabled={disabled} {...input} type={type} />)}
             {touched &&

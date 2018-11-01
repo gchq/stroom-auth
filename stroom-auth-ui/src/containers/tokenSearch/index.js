@@ -18,6 +18,12 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { NavLink } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Checkbox from 'rc-checkbox'
+import 'rc-checkbox/assets/index.css';
+
+
 
 import Toggle from 'material-ui/Toggle'
 
@@ -33,7 +39,14 @@ import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from '.
 
 // TODO change the CSS references from 'User' - maybe make the CSS common?
 class TokenSearch extends Component {
-  toggleRow (id) {
+ constructor() {
+      super()
+    this.state = {
+      isFilteringEnabled: false,
+    }
+  } 
+    
+    toggleRow (id) {
     // Tell the redux store so the control buttons get displayed correctly
     this.props.changeSelectedRow(id)
   }
@@ -41,17 +54,18 @@ class TokenSearch extends Component {
   fetchTokens (securityToken, state) {
     this.props.performTokenSearch(securityToken, state.pageSize, state.page, state.sorted, state.filtered)
   }
+  toggleFiltering (event) {
+    const isFilteringEnabled = event.target.checked
+    this.setState({isFilteringEnabled})
+  }
 
   getEnabledCellRenderer (row) {
     let state = row.value
     let tokenId = row.original.id
-    return (
-      <Toggle
-        className='toggle-small  toggle-small-high'
-        defaultToggled={state}
-        onToggle={(_, isEnabled) => this.props.setEnabledStateOnToken(tokenId, isEnabled)}
-        />
-    )
+    return (       <div className='TokenSearch__table__checkbox'> <Checkbox defaultChecked={state}
+                                                onChange={(event) => this.props.setEnabledStateOnToken(tokenId, !state)}/>
+</div>
+          )
   }
 
   getEnabledCellFilter (filter, onChange) {
@@ -106,8 +120,44 @@ class TokenSearch extends Component {
   }
 
   render () {
-    return (
+      const { selectedTokenRowId } = this.props
+      const noTokenSelected = !selectedTokenRowId
+     const { isFilteringEnabled } = this.state
+   return (
       <div className='UserSearch-main'>
+        <div className='header'>
+              <NavLink to={'/token/newApiToken'}>
+                <button className='toolbar-button-small'><FontAwesomeIcon icon='plus'/> Create</button>
+              </NavLink>
+
+            {
+               noTokenSelected ? (
+                <div>
+                  <button className='toolbar-button-small'
+                    disabled={noTokenSelected}><FontAwesomeIcon icon='edit'/> View/edit</button>
+                </div>
+              ) : (
+                <NavLink to={`/token/${selectedTokenRowId}`}>
+                  <button className='toolbar-button-small'
+                    disabled={noTokenSelected}><FontAwesomeIcon icon='edit'/> View/edit</button>
+                </NavLink>
+              ) }
+
+              <div>
+                <button
+                   disabled={noTokenSelected}
+                  onClick={() => this.deleteToken()}
+                  className='toolbar-button-small' ><FontAwesomeIcon icon="trash"/> Delete</button>
+              </div>
+
+              <div className='UserSearch-filteringToggle'>
+                       <label>Show filtering</label> 
+                      <Checkbox
+                        checked={isFilteringEnabled}
+                        onChange={(event) => this.toggleFiltering(event)}/>
+           </div> 
+
+        </div>
         <div className='UserSearch-content'>
           <div className='table-small-container'>
             <ReactTable
@@ -116,7 +166,7 @@ class TokenSearch extends Component {
               manual
               className='-striped -highlight UserSearch-table'
               columns={this.getColumnFormat()}
-              filterable={this.props.isFilteringEnabled}
+              filterable={isFilteringEnabled}
               showPagination
               showPageSizeOptions={false}
               loading={this.props.showSearchLoader}
@@ -154,10 +204,6 @@ class TokenSearch extends Component {
       </div>
     )
   }
-}
-
-TokenSearch.propTypes = {
-  isFilteringEnabled: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
