@@ -40,6 +40,7 @@ const initialState = {
   alertText: "",
   showAlert: false,
   changePasswordErrorMessage: [],
+  userBeingEdited: { state: "enabled" }
 };
 
 export default (state = initialState, action) => {
@@ -183,7 +184,7 @@ export const saveChanges = editedUser => {
     })
       .then(handleStatus)
       .then(() => {
-        dispatch(push('/userSearch'));
+        dispatch(push("/userSearch"));
         dispatch(toggleAlertVisibility("User has been updated"));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));
@@ -218,7 +219,7 @@ export const createUser = newUser => {
       .then(getBody)
       .then(newUserId => {
         dispatch(showCreateLoader(false));
-        dispatch(push('/userSearch'));
+        dispatch(push("/userSearch"));
         dispatch(toggleAlertVisibility("User has been created"));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));
