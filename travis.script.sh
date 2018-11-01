@@ -15,14 +15,16 @@ source docker_lib.sh
 
 readonly AUTH_SERVICE_REPO="gchq/stroom-auth-service"
 readonly AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
+
 readonly AUTH_UI_REPO="gchq/stroom-auth-ui"
 readonly AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
-readonly UI_TAG_PREFIX="ui_"
-readonly SERVICE_TAG_PREFIX="service_"
 
-#This is a whitelist of branches to produce docker builds for
-readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^v[0-9].*$)'
-readonly RELEASE_VERSION_REGEX='^v[0-9]+\.[0-9]+\.[0-9].*$'
+# This is a whitelist of branches to produce docker builds for
+readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^[0-9].*$)'
+
+# Tags matching this regex will trigger a bintray release
+readonly RELEASE_VERSION_REGEX='^v[0-9]+\.[0-9]+.*$'
+
 readonly LATEST_SUFFIX="-LATEST"
 
 version_fixed_tag=""
@@ -45,6 +47,7 @@ echo_travis_env_vars() {
 extract_build_vars() {
     # Normal commit/PR/tag build
     if [ -n "$TRAVIS_TAG" ]; then
+        echo -e "This is a tagged build"
         VERSION="${TRAVIS_TAG}"
 
         do_docker_build=true
@@ -63,11 +66,12 @@ extract_build_vars() {
             minor_ver_floating_tag="${minorVer}${LATEST_SUFFIX}"
         fi
 
-        if [[ "$TRAVIS_BRANCH" =~ ${RELEASE_VERSION_REGEX} ]]; then
+        if [[ "$TRAVIS_TAG" =~ ${RELEASE_VERSION_REGEX} ]]; then
             echo "This is a release version so add gradle arg for publishing libs to Bintray"
             extra_build_args="bintrayUpload"
         fi
     elif [[ "$TRAVIS_BRANCH" =~ $BRANCH_WHITELIST_REGEX ]]; then
+        echo -e "This is a white-listed branch build"
         # This is a branch we want to create a floating snapshot docker image for
         snapshot_floating_tag="${TRAVIS_BRANCH}-SNAPSHOT"
         do_docker_build=true
@@ -88,8 +92,8 @@ echo_build_vars() {
 }
 
 do_gradle_build() {
-    # Use 1 local worker to avoid using too much memory as each worker will chew up ~500Mb ram
-    ./gradlew -Pversion=$TRAVIS_TAG -PgwtCompilerWorkers=1 -PgwtCompilerMinHeap=50M -PgwtCompilerMaxHeap=500M clean build shadowJar ${extra_build_args}
+    # If -pversion is not set, the build will use a default
+    ./gradlew -Pversion=$TRAVIS_TAG clean build shadowJar ${extra_build_args}
 }
 
 prep_ui_build() {
@@ -111,34 +115,15 @@ do_docker_build() {
         all_docker_tags="${version_fixed_tag} ${snapshot_floating_tag} ${major_ver_floating_tag} ${minor_ver_floating_tag}"
         echo -e "all_docker_tags: [${GREEN}${all_docker_tags}${NC}]"
 
-        # We discover that we're building an image specifically for UI or service by examining the prefix.
-        # I.e. does it contain ui_ or service_? If it does then we only build and push docker images for
-        # that component. We also want to strip this prefix from the tag that was pushed: we don't want
-        # docker images that look like this: gchq/stroom-auth-ui:ui_v1.0-beta4. There is needless repetition 
-        # of 'ui_'. What we want is gchq/stroom-auth-ui:v1.0-beta4.
-        if [[ $version_fixed_tag == "$UI_TAG_PREFIX"* ]]; then
-            all_docker_tags=${all_docker_tags#"${UI_TAG_PREFIX}"}
+        echo -e "Building docker images for both UI and the service."
 
-            echo -e "This tag is specific for UI builds, so we'll only build an image for that: ${all_docker_tags}"
-           
-            prep_ui_build 
-            release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
-        elif [[ $version_fixed_tag == "$SERVICE_TAG_PREFIX"* ]]; then
-            all_docker_tags=${all_docker_tags#"${SERVICE_TAG_PREFIX}"}
-            echo -e "This tag is specific for service builds, so we'll only build an image for that: ${all_docker_tags}"
-           
-            prep_service_build
-            release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
-        else # But if the tag isn't specifically for UI or service then build for both
-            echo -e "Building docker images for both UI and the service."
-           
-            prep_service_build 
-            prep_ui_build 
- 
-            release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
-            release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
-           
-        fi  
+        echo -e "Preparing for service docker build"
+        prep_ui_build 
+        release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
+
+        echo -e "Preparing for ui docker build"
+        prep_service_build 
+        release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
     fi
 }
 
