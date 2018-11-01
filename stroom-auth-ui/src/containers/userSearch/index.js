@@ -22,7 +22,6 @@ import { NavLink } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Checkbox from 'rc-checkbox'
 import 'rc-checkbox/assets/index.css';
-import Toggle from 'material-ui/Toggle'
 
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
@@ -31,7 +30,7 @@ import dateFormat from 'dateformat'
 
 import './UserSearch.css'
 import '../../styles/table-small.css'
-import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
+import { deleteSelectedUser } from '../../modules/user'
 import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 
 class UserSearch extends Component {
@@ -158,7 +157,7 @@ class UserSearch extends Component {
     const { isFilteringEnabled } = this.state
     const deleteButtonDisabled = !selectedUserRowId
     return (
-      <div className='UserSearch-main' zDepth={0}>
+      <div className='UserSearch-main'>
         <div className='header'>
              <NavLink to={'/newUser'} >
                 <button className='toolbar-button-small'><FontAwesomeIcon icon="plus"/> Create</button>

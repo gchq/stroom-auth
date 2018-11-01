@@ -26,7 +26,7 @@ import UserFields from '../userFields'
 import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
 
 const UserEditForm = props => {
-  const { handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility } = props
+  const { handleSubmit, pristine, submitting } = props
   return (
       <div>
       <form onSubmit={handleSubmit}>
@@ -47,7 +47,8 @@ const UserEditForm = props => {
 }
 
 const ReduxUserEditForm = reduxForm({
-  form: 'UserEditForm'
+  form: 'UserEditForm',
+  enabledReinitalize: true
 })(UserEditForm)
 
 const mapStateToProps = state => ({

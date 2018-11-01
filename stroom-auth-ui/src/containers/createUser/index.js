@@ -29,11 +29,9 @@ import { createUser as onSubmit } from '../../modules/user'
 const UserCreateForm = props => {
   const { handleSubmit, pristine, submitting, error } = props
   return (
-    <div className=''>
-        <div>
-          <form onSubmit={handleSubmit}>
-             <div className='header'>
-
+    <div>
+      <form onSubmit={handleSubmit}>
+       <div className='header'>
               <button className='toolbar-button-small'
                 disabled={pristine || submitting}
                 type='submit'><FontAwesomeIcon icon="save" /> Save</button>
@@ -45,7 +43,6 @@ const UserCreateForm = props => {
       {error && <strong>{error}</strong>}
          </form>
         </div>
-    </div>
   )
 }
 

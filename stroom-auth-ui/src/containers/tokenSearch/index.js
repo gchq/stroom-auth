@@ -19,7 +19,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import Paper from 'material-ui/Paper'
 import Toggle from 'material-ui/Toggle'
 
 import ReactTable from 'react-table'
@@ -108,7 +107,7 @@ class TokenSearch extends Component {
 
   render () {
     return (
-      <Paper className='UserSearch-main' zDepth={0}>
+      <div className='UserSearch-main'>
         <div className='UserSearch-content'>
           <div className='table-small-container'>
             <ReactTable
@@ -152,7 +151,7 @@ class TokenSearch extends Component {
               }} />
           </div>
         </div>
-      </Paper>
+      </div>
     )
   }
 }

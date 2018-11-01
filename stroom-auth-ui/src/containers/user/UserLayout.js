@@ -50,14 +50,12 @@ class UserLayout extends Component {
   };
 
   render () {
-    const { show, selectedUserRowId, showAlert, alertText, toggleAlertVisibility } = this.props
+    const { show } = this.props
     const showSearch = show === 'search'
     const showCreate = show === 'create'
     const showEdit = show === 'edit'
-    const showCreateButton = showSearch
-    const deleteButtonDisabled = !selectedUserRowId
     return (
-      <div className='Layout-main' zDepth={0}>
+      <div className='Layout-main'>
         <div className='User-content'>
           {showSearch ? (<UserSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
           {showCreate ? (<UserCreate />) : (undefined)}
