@@ -24,9 +24,14 @@ import {blue600, amber900} from 'material-ui/styles/colors'
 import { MuiThemeProvider } from 'material-ui/styles'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faTimes, faSave, faPlus, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
+
 import './styles/index.css'
 import App from './containers/app'
 import store, { history } from './store'
+
+library.add(faSave, faTimes, faPlus, faTrash, faEdit)
 
 const theme = getMuiTheme({
   palette: {

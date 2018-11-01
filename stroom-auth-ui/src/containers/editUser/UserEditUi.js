@@ -19,6 +19,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { NavLink } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import './EditUser.css'
 import UserFields from '../userFields'
@@ -34,9 +35,9 @@ const UserEditForm = props => {
           className='toolbar-button-small'
           disabled={pristine || submitting}
           type='submit'
-         >Save</button>
+         ><FontAwesomeIcon icon='save'/> Save</button>
         <NavLink to='/userSearch'>
-          <button className='toolbar-button-small'>Cancel</button>
+          <button className='toolbar-button-small'><FontAwesomeIcon icon='times'/> Cancel</button>
         </NavLink>
       </div>
         <UserFields showCalculatedFields constrainPasswordEditing />

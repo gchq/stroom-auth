@@ -19,6 +19,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { NavLink } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import './CreateUserForm.css'
 import '../Layout.css'
@@ -32,11 +33,12 @@ const UserCreateForm = props => {
         <div>
           <form onSubmit={handleSubmit}>
              <div className='header'>
+
               <button className='toolbar-button-small'
                 disabled={pristine || submitting}
-                type='submit'>Save</button>
+                type='submit'><FontAwesomeIcon icon="save" /> Save</button>
               <NavLink to='/userSearch'>
-                <button className='toolbar-button-small'>Cancel</button>
+                <button className='toolbar-button-small'><FontAwesomeIcon icon="times"/> Cancel</button>
               </NavLink>
             </div>
             <UserFields showCalculatedFields={false} constrainPasswordEditing={false} />

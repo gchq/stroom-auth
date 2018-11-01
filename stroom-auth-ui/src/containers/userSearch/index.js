@@ -19,7 +19,9 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Checkbox from 'rc-checkbox'
+import 'rc-checkbox/assets/index.css';
 import Toggle from 'material-ui/Toggle'
 
 import ReactTable from 'react-table'
@@ -29,7 +31,7 @@ import dateFormat from 'dateformat'
 
 import './UserSearch.css'
 import '../../styles/table-small.css'
-
+import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
 import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 
 class UserSearch extends Component {
@@ -42,6 +44,10 @@ class UserSearch extends Component {
 
   componentDidMount () {
     this.props.performUserSearch(this.props.token)
+  }
+ 
+  deleteSelectedUser () {
+    this.context.store.dispatch(deleteSelectedUser())
   }
 
   toggleRow (id) {
@@ -155,16 +161,16 @@ class UserSearch extends Component {
       <div className='UserSearch-main' zDepth={0}>
         <div className='header'>
              <NavLink to={'/newUser'} >
-                <button className='toolbar-button-small'>Create</button>
+                <button className='toolbar-button-small'><FontAwesomeIcon icon="plus"/> Create</button>
               </NavLink>
                {deleteButtonDisabled ? (
                 <div>
                   <button className='toolbar-button-small'
-                    disabled >View/edit</button>
+                    disabled ><FontAwesomeIcon icon="edit"/> View/edit</button>
                 </div>
               ) : (
                 <NavLink to={`/user/${selectedUserRowId}`} >
-                  <button className='toolbar-button-small'>View/edit</button>
+                  <button className='toolbar-button-small'><FontAwesomeIcon icon="edit"/> View/edit</button>
                 </NavLink>
               ) }
 
@@ -172,17 +178,13 @@ class UserSearch extends Component {
                 <button 
                   disabled={deleteButtonDisabled}
                   onClick={() => this.deleteSelectedUser()}
-                  className='toolbar-button-small'>Delete</button>
+                  className='toolbar-button-small'><FontAwesomeIcon icon="trash"/> Delete</button>
               </div>
               <div className='UserSearch-filteringToggle'>
             <label>Enable filtering?</label> 
-           <input 
-             type='checkbox'
-             value={isFilteringEnabled}
-             className='toggle-small toggle-small-low'
+           <Checkbox
              checked={isFilteringEnabled}
              onChange={(event) => this.toggleFiltering(event)}/>
-
 </div> 
 
         </div>
@@ -236,6 +238,10 @@ class UserSearch extends Component {
   }
 }
 
+UserSearch.contextTypes = {
+  store: PropTypes.object.isRequired
+}
+
 const mapStateToProps = state => ({
   token: state.authentication.idToken,
   showSearchLoader: state.userSearch.showSearchLoader,
@@ -246,6 +252,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+  deleteSelectedUser,
   performUserSearch,
   changeSelectedRow
 }, dispatch)

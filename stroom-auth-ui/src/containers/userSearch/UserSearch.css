@@ -44,4 +44,11 @@ p.warning {
 .UserSearch-filteringToggle {
     font-size:14px;
     padding: 0 5px 0 7px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.UserSearch-filteringToggle label {
+    padding: 0 5px 0 4px;
 }

@@ -46,10 +46,10 @@
  * If the icons aren't left-aligned it might not work properly. 
  * If there's no icon this won't have any effect. 
  */
-.toolbar-button-small svg {
+/*.toolbar-button-small svg {
   margin-left: 4px !important;
   height: 18px !important;
-}
+}*/
 
 /****************************************
  * SMALL TOOLBAR BUTTON END
