@@ -153,16 +153,8 @@ class UserSearch extends Component {
     const deleteButtonDisabled = !selectedUserRowId
     return (
       <div className='UserSearch-main' zDepth={0}>
-        <div className='UserSearch-header'>
-            <label>Enable filtering?</label> 
-           <input 
-             type='checkbox'
-             value={isFilteringEnabled}
-             className='toggle-small toggle-small-low'
-             checked={isFilteringEnabled}
-             onChange={(event) => this.toggleFiltering(event)}/>
-
-              <NavLink to={'/newUser'} >
+        <div className='header'>
+             <NavLink to={'/newUser'} >
                 <button className='toolbar-button-small'>Create</button>
               </NavLink>
                {deleteButtonDisabled ? (
@@ -182,7 +174,16 @@ class UserSearch extends Component {
                   onClick={() => this.deleteSelectedUser()}
                   className='toolbar-button-small'>Delete</button>
               </div>
+              <div className='UserSearch-filteringToggle'>
+            <label>Enable filtering?</label> 
+           <input 
+             type='checkbox'
+             value={isFilteringEnabled}
+             className='toggle-small toggle-small-low'
+             checked={isFilteringEnabled}
+             onChange={(event) => this.toggleFiltering(event)}/>
 
+</div> 
 
         </div>
         <div className='UserSearch-content' >

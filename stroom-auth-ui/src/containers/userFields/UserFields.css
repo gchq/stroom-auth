@@ -20,7 +20,7 @@
 }
 
 .left-container {
-  width: 450px;
+  width: 570px;
 }
 
 .right-container {
@@ -30,15 +30,50 @@
 .field-container {
    display: flex;
    flex-direction: row;
-   aligh-items: center;
 }
 
 .field-container label {
     align-self: center;
-    width: 200px;
+    width: 130px;
     display: block;
     text-align: right;
     margin-right: 15px;
+}
+
+.field-container input, textarea {
+    width: 180px;
+}
+
+.field-container select {
+    width: 200px;
+}
+
+.field-container button {
+    margin: 11px 0;
+    width: 200px;
+}
+
+.field-container__error {
+    font-size: 11px;
+    color: red;
+    padding-left: 5px;
+}
+
+.field-container__warning {
+    font-size: 11px;
+    color: orange;
+    padding-left: 5px;
+}
+
+.right-container .field-container label {
+    font-size: 12px;
+    width: 80px;
+}
+
+.right-container .field-container input {
+    font-size: 12px;
+    padding: 3px;
+    margin: 5px;
 }
 
 .label-container {

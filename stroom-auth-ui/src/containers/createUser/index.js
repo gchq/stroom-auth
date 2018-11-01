@@ -26,20 +26,21 @@ import UserFields from '../userFields'
 import { createUser as onSubmit } from '../../modules/user'
 
 const UserCreateForm = props => {
-  const { handleSubmit, pristine, submitting } = props
+  const { handleSubmit, pristine, submitting, error } = props
   return (
     <div className=''>
         <div>
           <form onSubmit={handleSubmit}>
-             <div>
-              <button
-                disabled={submitting}
-                type='submit'>Create</button>
+             <div className='header'>
+              <button className='toolbar-button-small'
+                disabled={pristine || submitting}
+                type='submit'>Save</button>
               <NavLink to='/userSearch'>
-                <button>Cancel</button>
+                <button className='toolbar-button-small'>Cancel</button>
               </NavLink>
             </div>
             <UserFields showCalculatedFields={false} constrainPasswordEditing={false} />
+      {error && <strong>{error}</strong>}
          </form>
         </div>
     </div>

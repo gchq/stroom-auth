@@ -25,6 +25,7 @@
 .UserSearch-header {
   display: flex;
   flex-direction: row;
+  padding: 5px;
 }
 
 /* We need the button to be small so it doesn't make the cell in the table too big */
@@ -38,4 +39,9 @@ p.warning {
   font-style: italic;
   padding: 3px; 
   margin-bottom: 0;
+}
+
+.UserSearch-filteringToggle {
+    font-size:14px;
+    padding: 0 5px 0 7px;
 }

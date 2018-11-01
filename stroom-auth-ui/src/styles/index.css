@@ -22,13 +22,14 @@ body {
 }
 
 input,
-select {
-  width: 100%;
+select, 
+textarea {
   padding: 0.6rem;
   margin: 8px 0;
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-family: sans-serif;
 }
 
 button {
@@ -48,4 +49,10 @@ button:hover {
 button:disabled {
     background-color: rgb(244, 244, 244);
     color: rgb(0, 0, 0, 0.3);
+}
+
+.header {
+   display: flex;
+  flex-direction: row;
+    padding: 5px;
 }

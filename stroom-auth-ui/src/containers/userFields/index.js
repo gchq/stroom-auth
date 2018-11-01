@@ -31,10 +31,13 @@ const renderField = ({
         <div className='field-container'>
           <label>{label}</label>
           <div>
-            <input disabled={disabled} {...input} placeholder={label} type={type} />
+          {type === 'textarea' ? (
+              <textarea rows='3'/>)
+              :(
+            <input disabled={disabled} {...input} type={type} />)}
             {touched &&
-              ((error && <span>{error}</span>) ||
-                (warning && <span>{warning}</span>))}
+              ((error && <span className='field-container__error'>{error}</span>) ||
+                (warning && <span className='field-container__warning'>{warning}</span>))}
           </div>
         </div>
       )
@@ -56,7 +59,7 @@ class UserFields extends Component {
   }
 
   render () {
-          const { showCalculatedFields, constrainPasswordEditing } = this.props
+          const { showCalculatedFields, constrainPasswordEditing, error } = this.props
     const showPasswordField = this.state.isPasswordEditingEnabled || !constrainPasswordEditing
     return (
       <div className='container'>
@@ -79,7 +82,8 @@ class UserFields extends Component {
                   validate={[required]}
                   label='Password'/>
                 ) : (
-                  <div className='CreateUserForm-field_button'>
+                  <div className='field-container'>
+                    <label>Password</label>
                   <button
                     onClick={() => this.handleShowPasswordField()}>Edit password</button>
                     </div>
@@ -101,7 +105,7 @@ class UserFields extends Component {
                 className='CreateUserForm-field'
                 name='comments'
                 component={renderField}
-                type='text'
+                type='textarea'
                 label='Comments'/>
 
           <div className='field-container'>
@@ -175,6 +179,8 @@ class UserFields extends Component {
                   label='Created by'/>
           </div>
           ) : (<div />)}
+              {error && <strong>{error}</strong>}
+
       </div>
     )
   }

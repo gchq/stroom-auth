@@ -218,7 +218,7 @@ export const createUser = newUser => {
       .then(getBody)
       .then(newUserId => {
         dispatch(showCreateLoader(false));
-        dispatch(push(`/user/${newUserId}`));
+        dispatch(push('/userSearch'));
         dispatch(toggleAlertVisibility("User has been created"));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));

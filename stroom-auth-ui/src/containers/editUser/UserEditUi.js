@@ -29,14 +29,16 @@ const UserEditForm = props => {
   return (
       <div>
       <form onSubmit={handleSubmit}>
+        <div className='header'>
          <button
+          className='toolbar-button-small'
           disabled={pristine || submitting}
           type='submit'
          >Save</button>
-          &nbsp; &nbsp;
         <NavLink to='/userSearch'>
-          <button>Cancel</button>
+          <button className='toolbar-button-small'>Cancel</button>
         </NavLink>
+      </div>
         <UserFields showCalculatedFields constrainPasswordEditing />
       </form>
     </div>
