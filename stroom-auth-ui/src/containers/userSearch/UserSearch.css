@@ -22,6 +22,11 @@
   padding: 0;
 }
 
+.UserSearch-header {
+  display: flex;
+  flex-direction: row;
+}
+
 /* We need the button to be small so it doesn't make the cell in the table too big */
 .UserSearch-tableButton {
   padding:0 !important;

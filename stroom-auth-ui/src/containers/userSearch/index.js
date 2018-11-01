@@ -18,7 +18,9 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { NavLink } from 'react-router-dom'
 
+import Toggle from 'material-ui/Toggle'
 import Paper from 'material-ui/Paper'
 
 import ReactTable from 'react-table'
@@ -32,6 +34,13 @@ import '../../styles/table-small.css'
 import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
 
 class UserSearch extends Component {
+  constructor() {
+      super()
+    this.state = {
+      isFilteringEnabled: false,
+    }
+  }
+
   componentDidMount () {
     this.props.performUserSearch(this.props.token)
   }
@@ -134,10 +143,48 @@ class UserSearch extends Component {
     }]
   }
 
+  toggleFiltering (isFilteringEnabled) {
+    this.setState({isFilteringEnabled})
+  }
+
   render () {
+    const { selectedUserRowId } = this.props
+    const { isFilteringEnabled } = this.state
+    const deleteButtonDisabled = !selectedUserRowId
     return (
       <Paper className='UserSearch-main' zDepth={0}>
+        <div className='UserSearch-header'>
+           <Toggle
+                className='toggle-small toggle-small-low'
+                label='Show filtering'
+                labelPosition='right'
+                onToggle={(event, isFilteringEnabled) => this.toggleFiltering(isFilteringEnabled)} />
+
+              <NavLink to={'/newUser'} >
+                <button className='toolbar-button-small'>Create</button>
+              </NavLink>
+               {deleteButtonDisabled ? (
+                <div>
+                  <button className='toolbar-button-small'
+                    disabled >View/edit</button>
+                </div>
+              ) : (
+                <NavLink to={`/user/${selectedUserRowId}`} >
+                  <button className='toolbar-button-small'>View/edit</button>
+                </NavLink>
+              ) }
+
+              <div>
+                <button 
+                  disabled={deleteButtonDisabled}
+                  onClick={() => this.deleteSelectedUser()}
+                  className='toolbar-button-small'>Delete</button>
+              </div>
+
+
+        </div>
         <div className='UserSearch-content' >
+             
           <div className='table-small-container'>
             <ReactTable
               data={this.props.results}
@@ -147,7 +194,7 @@ class UserSearch extends Component {
                 id: 'email',
                 desc: true
               }]}
-              filterable={this.props.isFilteringEnabled}
+              filterable={isFilteringEnabled}
               showPagination
               loading={this.props.showSearchLoader}
               defaultPageSize={50}
@@ -184,10 +231,6 @@ class UserSearch extends Component {
       </Paper>
     )
   }
-}
-
-UserSearch.propTypes = {
-  isFilteringEnabled: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({

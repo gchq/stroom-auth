@@ -20,9 +20,6 @@ import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { NavLink } from 'react-router-dom'
 
-import Card from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-
 import './CreateUserForm.css'
 import '../Layout.css'
 import UserFields from '../userFields'
@@ -32,26 +29,19 @@ const UserCreateForm = props => {
   const { handleSubmit, pristine, submitting } = props
   return (
     <div className=''>
-      <Card className='CreateUserForm-card'>
         <div>
           <form onSubmit={handleSubmit}>
-            <UserFields showCalculatedFields={false} constrainPasswordEditing={false} />
-            <div>
-              <RaisedButton
-                primary
-                disabled={pristine || submitting}
-                type='submit'
-                label='Create the user' />
-              &nbsp; &nbsp;
+             <div>
+              <button
+                disabled={submitting}
+                type='submit'>Create</button>
               <NavLink to='/userSearch'>
-                <RaisedButton
-                  primary
-                  label='Cancel' />
+                <button>Cancel</button>
               </NavLink>
             </div>
-          </form>
+            <UserFields showCalculatedFields={false} constrainPasswordEditing={false} />
+         </form>
         </div>
-      </Card>
     </div>
   )
 }

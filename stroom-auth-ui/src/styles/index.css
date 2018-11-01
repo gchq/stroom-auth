@@ -21,7 +21,7 @@ body {
   background-color: #FAFAFA;
 }
 
-input[type="text"],
+input,
 select {
   width: 100%;
   padding: 0.6rem;
@@ -43,4 +43,9 @@ button {
 button:hover {
     background-color: #a8a8a8;
     color: black;
+}
+
+button:disabled {
+    background-color: rgb(244, 244, 244);
+    color: rgb(0, 0, 0, 0.3);
 }

@@ -21,6 +21,25 @@ import PropTypes from 'prop-types'
 import './UserFields.css'
 import { required, email } from '../../validations'
 
+const renderField = ({
+        disabled,
+        input,
+        label,
+        type,
+        meta: { touched, error, warning }
+      }) => (
+        <div className='field-container'>
+          <label>{label}</label>
+          <div>
+            <input disabled={disabled} {...input} placeholder={label} type={type} />
+            {touched &&
+              ((error && <span>{error}</span>) ||
+                (warning && <span>{warning}</span>))}
+          </div>
+        </div>
+      )
+
+
 /*
 This can display all user fields, or not.
 */
@@ -37,31 +56,28 @@ class UserFields extends Component {
   }
 
   render () {
-    const { showCalculatedFields, constrainPasswordEditing } = this.props
+          const { showCalculatedFields, constrainPasswordEditing } = this.props
     const showPasswordField = this.state.isPasswordEditingEnabled || !constrainPasswordEditing
     return (
       <div className='container'>
         <div className='left-container'>
-          <div className='field-container'>
-              <label>Email</label>
               <Field
                 className='CreateUserForm-field'
                 name='email'
-                component="input"
+                component={renderField}
                 type="text"
                 validate={[required]}
                 warn={email}
+                label='Email'
                 />
-          </div>
-          <div className='field-container'>
-              <label>Password</label>
               {showPasswordField ? (
                 <Field
                   className='CreateUserForm-field'
                   name='password'
                   type='password'
-                  component='input'
-                  validate={[required]} />
+                  component={renderField}
+                  validate={[required]}
+                  label='Password'/>
                 ) : (
                   <div className='CreateUserForm-field_button'>
                   <button
@@ -69,33 +85,24 @@ class UserFields extends Component {
                     </div>
                 )}
 
-          </div>
-          <div className='field-container'>
-              <label>First name</label>
               <Field
                 className='CreateUserForm-field'
                 name='first_name'
-                component='input'
+                component={renderField}
                 type='text'
-                />
-          </div>
-          <div className='field-container'>
-              <label>Last name</label>
+                label='First name'/>
               <Field
                 className='CreateUserForm-field'
                 name='last_name'
-                component='input'
-                type='text'/>
-          </div>
-          <div className='field-container'>
-              <label>Comments</label>
+                component={renderField}
+                type='text'
+                label='Last name'/>
               <Field
                 className='CreateUserForm-field'
                 name='comments'
-                component='input'
-                type='text'multiLine
-                />
-          </div>
+                component={renderField}
+                type='text'
+                label='Comments'/>
 
           <div className='field-container'>
               <label>Account status</label>
@@ -111,75 +118,61 @@ class UserFields extends Component {
 
         {showCalculatedFields ? (
           <div className='right-container'>
-            <div className='field-container'>
-                <label>Login failures</label>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='login_failures'
-                  component='input'
-                  type='text'/>
-            </div>
+                  component={renderField}
+                  type='text'
+                  label='Login failures'/>
 
-            <div className='field-container'>
-                <label>Login count</label>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='login_count'
-                  component='input'
-                  type='text'/>
-            </div>
+                  component={renderField}
+                  type='text'
+                  label='Login count'/>
 
-            <div className='field-container'>
-                <label>Last login</label>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='last_login'
-                  component='input'
-                  type='text'/>
-            </div>
+                  component={renderField}
+                  type='text'
+                  label='Last login'/>
 
-            <div className='field-container'>
-                <label>Updated on</label>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='updated_on'
-                  component='input'
-                  type='text'/>
-            </div>
+                  component={renderField}
+                  type='text'
+                  label='Updated on'/>
 
-            <div className='field-container'>
-                <label>Updated by</label>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='updated_by_user'
-                  component='input'
-                  type='text'/>
-            </div>
+                  component={renderField}
+                  type='text'
+                  label='Updated by'/>
 
-            <div className='field-container'>
-                <label>Created on</label>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='created_on'
-                  component='input'
-                  type='text'/>
-            </div>
+                  component={renderField}
+                  type='text'
+                  label='Created on'/>
 
-            <div className='field-container'>
-                <label>Created by</label>
                 <Field
                   disabled
                   className='CreateUserForm-field'
                   name='created_by_user'
-                  component='input'
-                  type='text'/>
-            </div>
+                  component={renderField}
+                  type='text'
+                  label='Created by'/>
           </div>
           ) : (<div />)}
       </div>

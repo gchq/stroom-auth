@@ -20,8 +20,6 @@ import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { NavLink } from 'react-router-dom'
 
-import Card from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
 import Snackbar from 'material-ui/Snackbar'
 
 import './EditUser.css'
@@ -31,20 +29,17 @@ import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user
 const UserEditForm = props => {
   const { handleSubmit, pristine, submitting, alertText, showAlert, toggleAlertVisibility } = props
   return (
-    <Card className='EditUserForm-card'>
+      <div>
       <form onSubmit={handleSubmit}>
-        <UserFields showCalculatedFields constrainPasswordEditing />
-        <RaisedButton
-          primary
+         <button
           disabled={pristine || submitting}
           type='submit'
-          label='Update the user' />
+         >Save</button>
           &nbsp; &nbsp;
         <NavLink to='/userSearch'>
-          <RaisedButton
-            primary
-            label='Cancel' />
+          <button>Cancel</button>
         </NavLink>
+        <UserFields showCalculatedFields constrainPasswordEditing />
       </form>
       <Snackbar
         open={showAlert}
@@ -52,7 +47,7 @@ const UserEditForm = props => {
         autoHideDuration={4000}
         onRequestClose={() => toggleAlertVisibility('')}
       />
-    </Card>
+      </div>
   )
 }
 
