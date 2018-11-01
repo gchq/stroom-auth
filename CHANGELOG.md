@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.7]
+
+* Fix bintray upload
+
 ## [v1.0-beta.6]
 
 * Issue **gchq/stroom#877** : State -> Account status
@@ -53,7 +57,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.6...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.7...master
+[v1.0-beta.7]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.6...v0.1-beta.7
 [v1.0-beta.6]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.5...v0.1-beta.6
 [v1.0-beta.5]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.4...v0.1-beta.5
 [v1.0-beta.4]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.2...v0.1-beta.4
