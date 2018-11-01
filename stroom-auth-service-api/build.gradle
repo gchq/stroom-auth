@@ -86,7 +86,6 @@ task execute(type:JavaExec) {
 //}
 
 dependencies {
-    //TODO use deps variable instead of hard coding
     compile deps.javax_annotations
     compile deps.swagger_annotations
     compile deps.okhttp

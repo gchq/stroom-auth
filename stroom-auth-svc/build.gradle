@@ -18,7 +18,6 @@ apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow' 
 apply plugin: 'com.benjaminsproule.swagger'
 apply plugin: 'org.flywaydb.flyway'
-apply plugin: 'com.jfrog.bintray'
 
 mainClassName = 'stroom.auth.service.App'
 
@@ -57,39 +56,6 @@ sourceSets {
 run {
     args 'server', './config.generated.yml'
 }
-
-//configurations {
-    //testArtifacts
-    //sourceArtifacts
-
-    //// This means our integration tests get all the dependencies from our tests and we don't need to specify them twice.
-    //integrationTestCompile.extendsFrom testCompile
-    //integrationTestRuntime.extendsFrom testRuntime
-//}
-
-//task sources(type: Jar) {
-    //baseName = "${project.name}-source"
-    //from sourceSets.main.allSource
-//}
-
-//artifacts {
-    //sourceArtifacts sources
-//}
-
-//// This task lets us run the actual integration tests.
-//task integrationTest(type: Test) {
-    //testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    //classpath = sourceSets.integrationTest.runtimeClasspath
-//}
-
-//// These lines pull the integration test task into our build process.
-//check.dependsOn integrationTest
-//integrationTest.mustRunAfter test
-
-//// This means the reports from our integration tests won't over-write the reports from our unit tests.
-//tasks.withType(Test) {
-    //reports.html.destination = file("${reporting.baseDir}/${name}")
-//}
 
 dependencies {
     compile project(':stroom-persistence')

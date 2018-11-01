@@ -22,7 +22,7 @@ buildscript {
         maven { url "https://dl.bintray.com/stroom/stroom" }
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath('io.swagger:swagger-codegen:2.2.2') // Generates client from YAML/JSON
         classpath 'mysql:mysql-connector-java:5.1.40'
     }
@@ -35,10 +35,8 @@ plugins {
     id 'org.flywaydb.flyway' version '5.1.4'
 }
 
-apply plugin: 'com.jfrog.bintray'
-
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
+    gradleVersion = '4.10.2'
 }
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
@@ -137,7 +135,6 @@ def javaProjects = subprojects.findAll { project ->
     ] 
 }
 
-apply plugin: 'com.jfrog.bintray'
 
 //Configuration applicable to all projects
 allprojects {
@@ -255,8 +252,6 @@ configure(projectsToBePublished) {
 
     println "Configuring ${project.path} for publishing"
 
-    apply plugin: 'com.jfrog.bintray'
-
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray' 
@@ -314,10 +309,14 @@ configure(projectsToBePublished) {
         }
     }
 
-    //configuration for the bintray plugin for uploading maven artefacts to bintray
-    //see https://github.com/bintray/gradle-bintray-plugin
-    //run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
+    // configuration for the bintray plugin for uploading maven artefacts to bintray
+    // see https://github.com/bintray/gradle-bintray-plugin
+    // run task bintrayUpload to push the files, assuming that 
+    // BINTRAY_USER/BINTRAY_KEY are set as env vars
     bintray {
+        // set to true to test bintray uploading
+        dryRun = false
+
         //Must never write these to log or system out
         user = System.getenv('BINTRAY_USER') //set in Travis UI
         key = System.getenv('BINTRAY_KEY') //set in Travis UI
