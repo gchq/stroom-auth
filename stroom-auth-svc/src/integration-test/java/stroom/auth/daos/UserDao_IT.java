@@ -32,9 +32,9 @@ public class UserDao_IT extends Database_IT {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
-            final var user01 = UUID.randomUUID().toString();
-            final var user02 = UUID.randomUUID().toString();
-            final var user03 = UUID.randomUUID().toString();
+            final String user01 = UUID.randomUUID().toString();
+            final String user02 = UUID.randomUUID().toString();
+            final String user03 = UUID.randomUUID().toString();
 
             // Create a test user who should be disabled
             createUserAccount(userDao, user01);
@@ -69,8 +69,8 @@ public class UserDao_IT extends Database_IT {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
-            final var user01 = UUID.randomUUID().toString();
-            final var user02 = UUID.randomUUID().toString();
+            final String user01 = UUID.randomUUID().toString();
+            final String user02 = UUID.randomUUID().toString();
 
             // Create a test user who should be disabled
             createUserAccount(userDao, user01);
@@ -111,7 +111,7 @@ public class UserDao_IT extends Database_IT {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
-            final var user01 = UUID.randomUUID().toString();
+            final String user01 = UUID.randomUUID().toString();
 
             // Create a test user who should be disabled
             createUserAccount(userDao, user01);

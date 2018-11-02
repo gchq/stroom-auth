@@ -18,6 +18,7 @@
 
 package stroom.auth;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.mailer.Mailer;
@@ -27,6 +28,7 @@ import stroom.auth.config.Config;
 import stroom.auth.config.EmailConfig;
 import stroom.auth.config.SmtpConfig;
 import stroom.auth.resources.user.v1.User;
+import stroom.auth.util.logging.LambdaLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +44,9 @@ public class EmailSender {
     @Inject
     public EmailSender(Config config) {
         this.config = config;
-        var smtpConfig = config.getEmailConfig().getSmtpConfig();
+        final SmtpConfig smtpConfig = Preconditions.checkNotNull(config.getEmailConfig(),
+                "Missing 'email' section in config")
+                .getSmtpConfig();
 
         if (!Strings.isNullOrEmpty(smtpConfig.getUsername()) && !Strings.isNullOrEmpty(smtpConfig.getPassword())) {
             LOGGER.info("Sending reset email using username and password");
@@ -61,18 +65,22 @@ public class EmailSender {
     }
 
     public void send(User user, String resetToken) {
-        var emailConfig = config.getEmailConfig();
-        var resetName = user.getFirst_name() + "" + user.getLast_name();
-        var resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
-        var passwordResetEmailText = String.format(emailConfig.getPasswordResetText(), resetUrl);
+        Preconditions.checkNotNull(user, "No User object supplied");
+        Preconditions.checkNotNull(user.getEmail(), LambdaLogger.buildMessage("User {} has no email address", user));
+        Preconditions.checkNotNull(config.getEmailConfig(), "Missing 'email' section in config");
 
-        var email = new Email();
+        final EmailConfig emailConfig = config.getEmailConfig();
+        final String resetName = user.getFirst_name() + "" + user.getLast_name();
+        final String resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
+        final String passwordResetEmailText = String.format(emailConfig.getPasswordResetText(), resetUrl);
+
+        final Email email = new Email();
         email.setFromAddress(emailConfig.getFromName(), emailConfig.getFromAddress());
         email.setReplyToAddress(emailConfig.getFromName(), emailConfig.getFromAddress());
         email.addRecipient(resetName, user.getEmail(), Message.RecipientType.TO);
         email.setSubject(emailConfig.getPasswordResetSubject());
         email.setText(passwordResetEmailText);
-        
+
         new Mailer(serverConfig, transportStrategy).sendMail(email);
     }
 }

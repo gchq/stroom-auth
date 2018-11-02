@@ -12,7 +12,7 @@ public class ChangePasswordValidator {
             final String newPassword,
             final String oldPassword){
 
-        var responseBuilder = ChangePasswordResponseBuilder.aChangePasswordResponse();
+        final ChangePasswordResponseBuilder responseBuilder = ChangePasswordResponseBuilder.aChangePasswordResponse();
 
         if(loginResult == LoginResult.BAD_CREDENTIALS
                 || loginResult == LoginResult.DISABLED_BAD_CREDENTIALS

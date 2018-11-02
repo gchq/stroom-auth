@@ -39,6 +39,10 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.10.2'
 }
 
+if(JavaVersion.current() != JavaVersion.VERSION_1_8){
+    throw new GradleException("This build must be run with java 8")
+}
+
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
 //use that, else use a default value
 ext.getPropertyOrDefault = { propName, defaultValue -> 
@@ -152,8 +156,9 @@ configure(javaProjects) {
     apply plugin: 'java'
     apply plugin: 'idea'
 
-    sourceCompatibility = 1.10
-    targetCompatibility = 1.10
+    // Stroom v6 is j8 and it uses the auth api lib so need to target j8
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     repositories {
         mavenLocal()

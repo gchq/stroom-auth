@@ -16,12 +16,13 @@ if [ "$(id -u)" = '0' ]; then
     ./create_crontab.sh
 
     # Start the cron daemon
-    echo "Starting cron"
-    cron &
+    echo "Starting cron in the background"
+    crond
 
-    #runs all args as user auth, rather than as root
     echo "Switching to user 'auth'"
-    exec gosu auth "$@"
+    #su-exec is the alpine equivalent of gosu
+    #runs all args as user proxy, rather than as root
+    exec su-exec auth "$@"
 fi
 
 exec "$@"

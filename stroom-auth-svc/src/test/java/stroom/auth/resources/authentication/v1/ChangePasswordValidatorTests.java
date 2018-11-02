@@ -1,14 +1,14 @@
 package stroom.auth.resources.authentication.v1;
 
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import stroom.auth.config.PasswordIntegrityChecksConfig;
 import stroom.auth.daos.UserDao;
 
 import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ChangePasswordValidatorTests {
 
@@ -16,10 +16,10 @@ public class ChangePasswordValidatorTests {
 
     @Test
     public void test_good_password() {
-        var mockedConfig = mock(PasswordIntegrityChecksConfig.class);
+        final PasswordIntegrityChecksConfig mockedConfig = mock(PasswordIntegrityChecksConfig.class);
         when(mockedConfig.getPasswordComplexityRegex()).thenReturn(".*");
 
-        var result = ChangePasswordValidator.validateNewPassword(
+        final ChangePasswordResponse.ChangePasswordResponseBuilder result = ChangePasswordValidator.validateNewPassword(
                 mockedConfig,
                 UserDao.LoginResult.GOOD_CREDENTIALS,
                 "!Hem38sjds", "&jdMf7ksh");
@@ -32,10 +32,10 @@ public class ChangePasswordValidatorTests {
 
     @Test
     public void test_bad_password(){
-        var mockedConfig = mock(PasswordIntegrityChecksConfig.class);
+        final PasswordIntegrityChecksConfig mockedConfig = mock(PasswordIntegrityChecksConfig.class);
         when(mockedConfig.getPasswordComplexityRegex()).thenReturn(".*");
 
-        var result = ChangePasswordValidator.validateNewPassword(
+        final ChangePasswordResponse.ChangePasswordResponseBuilder result = ChangePasswordValidator.validateNewPassword(
                 mockedConfig,
                 UserDao.LoginResult.BAD_CREDENTIALS,
                 "!Hem38sjds", "&jdMf7ksh");
@@ -49,11 +49,11 @@ public class ChangePasswordValidatorTests {
 
     @Test
     public void test_too_short_password(){
-        var mockedConfig = mock(PasswordIntegrityChecksConfig.class);
+        final PasswordIntegrityChecksConfig mockedConfig = mock(PasswordIntegrityChecksConfig.class);
         when(mockedConfig.getPasswordComplexityRegex()).thenReturn(".*");
         when(mockedConfig.getMinimumPasswordLength()).thenReturn(5);
 
-        var result = ChangePasswordValidator.validateNewPassword(
+        final ChangePasswordResponse.ChangePasswordResponseBuilder result = ChangePasswordValidator.validateNewPassword(
                 mockedConfig,
                 UserDao.LoginResult.GOOD_CREDENTIALS,
                 "!Hem", "&jdMf7ksh");
@@ -67,10 +67,10 @@ public class ChangePasswordValidatorTests {
 
     @Test
     public void test_too_simple_password() {
-        var mockedConfig = mock(PasswordIntegrityChecksConfig.class);
+        final PasswordIntegrityChecksConfig mockedConfig = mock(PasswordIntegrityChecksConfig.class);
         when(mockedConfig.getPasswordComplexityRegex()).thenReturn(COMPLEXITY_REGEX);
 
-        var result = ChangePasswordValidator.validateNewPassword(
+        final ChangePasswordResponse.ChangePasswordResponseBuilder result = ChangePasswordValidator.validateNewPassword(
                 mockedConfig,
                 UserDao.LoginResult.GOOD_CREDENTIALS,
                 "Hem", "&jdMf7ksh");
@@ -84,10 +84,10 @@ public class ChangePasswordValidatorTests {
 
     @Test
     public void test_reused_password() {
-        var mockedConfig = mock(PasswordIntegrityChecksConfig.class);
+        final PasswordIntegrityChecksConfig mockedConfig = mock(PasswordIntegrityChecksConfig.class);
         when(mockedConfig.getPasswordComplexityRegex()).thenReturn(".*");
 
-        var result = ChangePasswordValidator.validateNewPassword(
+        final ChangePasswordResponse.ChangePasswordResponseBuilder result = ChangePasswordValidator.validateNewPassword(
                 mockedConfig,
                 UserDao.LoginResult.GOOD_CREDENTIALS,
                 "&jdMf7ksh", "&jdMf7ksh");
@@ -101,11 +101,11 @@ public class ChangePasswordValidatorTests {
 
     @Test
     public void test_good_combination(){
-        var mockedConfig = mock(PasswordIntegrityChecksConfig.class);
+        final PasswordIntegrityChecksConfig mockedConfig = mock(PasswordIntegrityChecksConfig.class);
         when(mockedConfig.getPasswordComplexityRegex()).thenReturn(COMPLEXITY_REGEX);
         when(mockedConfig.getMinimumPasswordLength()).thenReturn(4);
 
-        var result = ChangePasswordValidator.validateNewPassword(
+        final ChangePasswordResponse.ChangePasswordResponseBuilder result = ChangePasswordValidator.validateNewPassword(
                 mockedConfig,
                 UserDao.LoginResult.GOOD_CREDENTIALS,
                 "&Hem38sjds", "&jdMf7ksh");
@@ -118,11 +118,11 @@ public class ChangePasswordValidatorTests {
 
     @Test
     public void test_bad_combination(){
-        var mockedConfig = mock(PasswordIntegrityChecksConfig.class);
+        final PasswordIntegrityChecksConfig mockedConfig = mock(PasswordIntegrityChecksConfig.class);
         when(mockedConfig.getPasswordComplexityRegex()).thenReturn(COMPLEXITY_REGEX);
         when(mockedConfig.getMinimumPasswordLength()).thenReturn(4);
 
-        var result = ChangePasswordValidator.validateNewPassword(
+        final ChangePasswordResponse.ChangePasswordResponseBuilder result = ChangePasswordValidator.validateNewPassword(
                 mockedConfig,
                 UserDao.LoginResult.BAD_CREDENTIALS,
                 "Hem", "Hem");
