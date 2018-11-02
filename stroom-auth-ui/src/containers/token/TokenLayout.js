@@ -52,7 +52,7 @@ class TokenLayout extends Component {
   }
 
   render () {
-    const { show, selectedTokenRowId, showAlert, alertText, toggleAlertVisibility } = this.props
+    const { show, showAlert, alertText, toggleAlertVisibility } = this.props
     const showSearch = show === 'search'
     const showCreate = show === 'create'
     const showEdit = show === 'edit'

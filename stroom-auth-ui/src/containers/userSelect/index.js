@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, useState } from "react";
-import Select from "react-select";
+import React, { useState } from "react";
 import AsyncSelect from "react-select/lib/Async";
 import { useMappedState } from "redux-react-hook";
 

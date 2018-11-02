@@ -17,16 +17,12 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Checkbox from 'rc-checkbox'
 import 'rc-checkbox/assets/index.css';
-import Toggle from 'material-ui/Toggle'
-
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
-
 import dateFormat from 'dateformat'
 
 import './TokenSearch.css'

@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { reduxForm, Field } from 'redux-form'
 import { NavLink } from 'react-router-dom'
-import PropTypes, { object } from 'prop-types'
-import { compose, lifecycle, withProps, withHandlers } from "recompose";
+import { compose } from "recompose";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { AutoComplete } from 'redux-form-material-ui'
-import Card from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-import { Formik, Form, withFormik  } from 'formik'
-import { useDispatch } from 'redux-react-hook'
+import { Formik } from 'formik'
 import AsyncUserSelect from '../userSelect'
 import './CreateTokenForm.css'
 import '../Layout.css'
