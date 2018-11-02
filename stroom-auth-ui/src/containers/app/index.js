@@ -37,7 +37,8 @@ import ResetPasswordRequest from '../../containers/resetPasswordRequest'
 import ConfirmPasswordResetEmail from '../../containers/confirmPasswordResetEmail'
 import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
-import { AuthenticationRequest, HandleAuthenticationResponse } from 'stroom-js'
+import AuthenticationRequest from '../../startup/authentication/AuthenticationRequest'
+import HandleAuthenticationResponse from '../../startup/authentication/HandleAuthenticationResponse'
 import { handleSessionTimeout } from '../../modules/login'
 
 class App extends Component {
@@ -53,11 +54,13 @@ class App extends Component {
             <BrowserRouter basename={'/'} />
             <Switch>
               {/* Authentication routes */}
-              <Route exact path={'/handleAuthentication'} render={() => (<HandleAuthenticationResponse
+              <Route exact path={'/handleAuthentication'} 
+                render={() => (<HandleAuthenticationResponse
                 authenticationServiceUrl={this.props.authenticationServiceUrl}
                 authorisationServiceUrl={this.props.authorisationServiceUrl} />
               )} />
-              <Route exact path={'/handleAuthenticationResponse'} render={() => (<HandleAuthenticationResponse
+              <Route exact path={'/handleAuthenticationResponse'} 
+                render={() => (<HandleAuthenticationResponse
                 authenticationServiceUrl={this.props.authenticationServiceUrl}
                 authorisationServiceUrl={this.props.authorisationServiceUrl} />
               )} />
@@ -143,7 +146,7 @@ class App extends Component {
             <FlatButton
               label='Log in again'
               primary
-              onTouchTap={this.props.handleSessionTimeout}
+              onClick={this.props.handleSessionTimeout}
             />
           ]}
           modal
