@@ -131,14 +131,10 @@ export const deleteSelectedToken = (tokenId) => {
   }
 }
 
-export const createToken = (newToken) => {
+export const createToken = (email, setSubmitting) => {
   return (dispatch, getState) => {
     dispatch(hideCreateError())
     const jwsToken = getState().authentication.idToken
-    const { email } = newToken
-
-    // TODO wire this in
-    // dispatch(showCreateLoader(true))
 
     fetch(getState().config.tokenServiceUrl, {
       headers: {
@@ -158,6 +154,7 @@ export const createToken = (newToken) => {
         .then(getJsonBody)
         .then((newToken) => {
           dispatch(push(`/token/${newToken.id}`))
+            setSubmitting(false)
         })
         .catch(error => {
           handleErrors(error, dispatch, jwsToken)

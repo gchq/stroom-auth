@@ -1,0 +1,7 @@
+.AsyncUserSelect {
+    width: 300px;
+}
+
+.AsyncUserSelect input {
+    height: 0px;
+}
