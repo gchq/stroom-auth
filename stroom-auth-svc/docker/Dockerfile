@@ -33,9 +33,12 @@ RUN chmod u+x ./*.sh
 
 # ~~~ Final build stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# No java 10 alpine image currently available to use, so stuck with
-# the not-so-slim debian-slim
-FROM openjdk:10.0.2-jre-slim
+
+# NOTE: 
+# This Dockerfile used to be openjdk:10.0.2-jre-slim (debian)
+# When this needs to be uplifted to java 10 again the j10 version can be found at:
+# commit 388db68fb90b623cc9ed360d6a20dab77134e152, tag v1.0-beta.7
+FROM openjdk:8u171-jre-alpine
 
 WORKDIR /stroom-auth-service
 
@@ -44,31 +47,26 @@ VOLUME [ "/stroom-auth-service/logs" ]
 
 # run entrypoint script inside tini for better unix process handling, 
 # see https://github.com/krallin/tini/issues/8
-ENTRYPOINT ["tini", "--", "./docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "docker-entrypoint.sh"]
 
 # Run the app
 CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar stroom-auth-service-all.jar server config.yml"]
 
-# cron used for sending logs to stroom.
-# curl used for sending logs to stroom
-# gosu/tini used for the entrypoint, to make it run as auth user
-# procps used to provide 'ps' which is used by the send logs stuff
-# Clear out apt-get cruft that wastes space
+# bash/curl required for sending logs
+# su-exec required for running stroom as not-root user
+# tini required for process control in the entrypoint
 # add auth:auth user:group. Use id 1000 (for want of an id to use) as this is
 # more likely to match the uid for a dev on the host. Not critical but may be
 # beneficial in development.
 # Ensure we have all the dirs we need
 # Chown everything to the auth user
-RUN apt-get update && \
-    apt-get install -y \
-        cron \
+RUN apk add --no-cache \
+        bash \
         curl \
-        gosu \
-        procps \
+        su-exec \
         tini && \
-    rm -rf /var/lib/apt/lists/* && \
-    addgroup --system --gid 1000 auth && \
-    adduser --system --uid 1000 --shell /bin/false --ingroup auth auth && \
+    addgroup -g 1000 -S auth && \
+    adduser -u 1000 -S -s /bin/false -D -G auth auth && \
     mkdir -p /stroom-auth-service && \
     mkdir -p /stroom-auth-service/logs/access && \
     mkdir -p /stroom-auth-service/logs/events && \

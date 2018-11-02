@@ -19,9 +19,10 @@ if [ "$(id -u)" = '0' ]; then
     echo "Starting cron"
     cron &
 
-    #runs all args as user auth, rather than as root
     echo "Switching to user 'auth'"
-    exec gosu auth "$@"
+    #su-exec is the alpine equivalent of gosu
+    #runs all args as user proxy, rather than as root
+    exec su-exec auth "$@"
 fi
 
 exec "$@"
