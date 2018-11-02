@@ -41,10 +41,6 @@ class TokenLayout extends Component {
     };
   }
 
-  deleteToken() {
-    this.context.store.dispatch(deleteSelectedToken());
-  }
-
   handleHelpDialogOpen() {
     this.setState({ isHelpDialogOpen: true });
   }

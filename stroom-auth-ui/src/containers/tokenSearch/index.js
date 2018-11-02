@@ -24,6 +24,7 @@ import "rc-checkbox/assets/index.css";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import dateFormat from "dateformat";
+import PropTypes from "prop-types";
 
 import "./TokenSearch.css";
 import "../../styles/table-small.css";
@@ -34,6 +35,11 @@ import {
   setEnabledStateOnToken
 } from "../../modules/tokenSearch";
 
+import {
+  deleteSelectedToken,
+} from "../../modules/token";
+
+
 // TODO change the CSS references from 'User' - maybe make the CSS common?
 class TokenSearch extends Component {
   constructor() {
@@ -41,6 +47,10 @@ class TokenSearch extends Component {
     this.state = {
       isFilteringEnabled: false
     };
+  }
+  
+  deleteToken() {
+    this.context.store.dispatch(deleteSelectedToken());
   }
 
   toggleRow(id) {
@@ -240,6 +250,10 @@ class TokenSearch extends Component {
     );
   }
 }
+
+TokenSearch.contextTypes = {
+  store: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => ({
   idToken: state.authentication.idToken,
