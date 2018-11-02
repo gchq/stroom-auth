@@ -20,6 +20,7 @@ import { toggleAlertVisibility } from './token'
 export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER'
 export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS'
 export const SELECT_ROW = 'tokenSearch/SELECT_ROW'
+export const TOGGLE_ENABLED = 'tokenSearch/TOGGLE_ENABLED'
 export const CHANGE_LAST_USED_PAGE_SIZE = 'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE'
 export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE'
 export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED'
@@ -56,6 +57,11 @@ export default (state = initialState, action) => {
           selectedTokenRowId: action.selectedTokenRowId
         }
       }
+      case TOGGLE_ENABLED:
+          return {
+              ...state,
+              results: state.results.map((result, i) => result.id === action.id ? {...result, enabled: !result.enabled} : result)
+          }
     case CHANGE_LAST_USED_PAGE_SIZE:
       return {
         ...state,
@@ -94,6 +100,13 @@ export function showSearchLoader (showSearchLoader) {
     type: SHOW_SEARCH_LOADER,
     showSearchLoader
   }
+}
+
+export function toggleEnabled (id) {
+    return {
+        type: TOGGLE_ENABLED,
+        id
+    }
 }
 
 export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) => {
@@ -217,6 +230,7 @@ export const changeSelectedRow = (tokenId) => {
 
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
+      dispatch(toggleEnabled(tokenId))
     const securityToken = getState().authentication.idToken
     fetch(`${getState().config.tokenServiceUrl}/${tokenId}/state/?enabled=${isEnabled}`, {
       headers: {

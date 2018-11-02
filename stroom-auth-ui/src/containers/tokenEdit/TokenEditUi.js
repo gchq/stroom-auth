@@ -23,7 +23,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { TextField, Toggle } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
 import Snackbar from 'material-ui/Snackbar'
-
+import Checkbox from 'rc-checkbox'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import ContentCopy from 'material-ui-icons/ContentCopy'
 import { amber900 } from 'material-ui/styles/colors'
@@ -31,7 +31,7 @@ import { amber900 } from 'material-ui/styles/colors'
 import './TokenEdit.css'
 import {toggleEnabledState} from '../../modules/token'
 import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
-import { renderField } from '../../renderField'
+import { renderField, renderCheckbox } from '../../renderField'
 
 export class TokenEditUi extends Component {
 
@@ -78,7 +78,7 @@ export class TokenEditUi extends Component {
               <Field
                 className='TokenEditForm-field'
                 name='enabled' 
-                component={Toggle}
+                component={renderCheckbox}
                 onChange={() => toggleEnabledState()} />
             </div>
           </div>

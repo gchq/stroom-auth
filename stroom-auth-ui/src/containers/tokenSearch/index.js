@@ -22,9 +22,6 @@ import { NavLink } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Checkbox from 'rc-checkbox'
 import 'rc-checkbox/assets/index.css';
-
-
-
 import Toggle from 'material-ui/Toggle'
 
 import ReactTable from 'react-table'
@@ -60,11 +57,15 @@ class TokenSearch extends Component {
   }
 
   getEnabledCellRenderer (row) {
-    let state = row.value
-    let tokenId = row.original.id
-    return (       <div className='TokenSearch__table__checkbox'> <Checkbox defaultChecked={state}
-                                                onChange={(event) => this.props.setEnabledStateOnToken(tokenId, !state)}/>
-</div>
+    const state = row.value ? 1 : 0;
+    const tokenId = row.original.id
+    return (
+        <div className='TokenSearch__table__checkbox' onClick={() => this.props.setEnabledStateOnToken(tokenId, !state)}> 
+            <Checkbox 
+                defaultChecked={state} 
+                checked={state}
+/>
+        </div>
           )
   }
 

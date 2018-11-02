@@ -15,6 +15,7 @@
  */
 
 import React from 'react'
+import Checkbox from 'rc-checkbox'
 
 export const renderField = ({
         disabled,
@@ -27,7 +28,7 @@ export const renderField = ({
           <label>{label}</label>
           <div>
           {type === 'textarea' ? (
-              <textarea {...input} rows='3'/>)
+              <textarea disabled={disabled} {...input} rows='3'/>)
               :(
             <input disabled={disabled} {...input} type={type} />)}
             {touched &&
@@ -37,3 +38,21 @@ export const renderField = ({
         </div>
       );
 
+export const renderCheckbox = ({
+    disabled,
+    input,
+    label,
+    meta: { touched, error, warning }
+}) => {
+    const checkedState = input.value ? 1 : 0
+    return (
+    <div className='field-container'>
+    <label>{label}</label>
+    <div>
+    <Checkbox defaultChecked={checkedState} checked={checkedState} disabled={disabled} {...input} />
+    {touched &&
+              ((error && <span className='field-container__error'>{error}</span>) ||
+                (warning && <span className='field-container__warning'>{warning}</span>))}
+   </div>
+    </div>
+)};
