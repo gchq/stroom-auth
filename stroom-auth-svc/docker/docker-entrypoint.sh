@@ -16,8 +16,8 @@ if [ "$(id -u)" = '0' ]; then
     ./create_crontab.sh
 
     # Start the cron daemon
-    echo "Starting cron"
-    cron &
+    echo "Starting cron in the background"
+    crond
 
     echo "Switching to user 'auth'"
     #su-exec is the alpine equivalent of gosu

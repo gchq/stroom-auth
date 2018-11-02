@@ -47,7 +47,7 @@ VOLUME [ "/stroom-auth-service/logs" ]
 
 # run entrypoint script inside tini for better unix process handling, 
 # see https://github.com/krallin/tini/issues/8
-ENTRYPOINT ["/sbin/tini", "--", "docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/stroom-auth-service/docker-entrypoint.sh"]
 
 # Run the app
 CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar stroom-auth-service-all.jar server config.yml"]
