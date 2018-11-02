@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright 2017 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,67 +14,75 @@
  * limitations under the License.
  */
 
-import React from 'react'
-import { connect } from 'react-redux'
-import { NavLink } from 'react-router-dom'
+import React from "react";
+import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { compose } from "recompose";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Formik } from 'formik'
-import AsyncUserSelect from '../userSelect'
-import './CreateTokenForm.css'
-import '../Layout.css'
-import { createToken as onSubmit, userAutoCompleteChange } from '../../modules/token'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Formik } from "formik";
+import AsyncUserSelect from "../userSelect";
+import "./CreateTokenForm.css";
+import "../Layout.css";
+import {
+  createToken as onSubmit,
+  userAutoCompleteChange
+} from "../../modules/token";
 
-
-const enhance = compose(connect(
+const enhance = compose(
+  connect(
     ({
-        authentication: {idToken},
-        token: { matchingAutoCompleteResults, errorMessage}
+      authentication: { idToken },
+      token: { matchingAutoCompleteResults, errorMessage }
     }) => ({
-        idToken, matchingAutoCompleteResults, errorMessage
+      idToken,
+      matchingAutoCompleteResults,
+      errorMessage
     }),
     {
-        userAutoCompleteChange, onSubmit
+      userAutoCompleteChange,
+      onSubmit
     }
-),
+  )
 );
 
 const TokenCreateForm = props => {
-    const { 
-        onSubmit
-    } = props
-    return (
-        <div className='CreateTokenForm-card'>
-     <Formik
+  const { onSubmit } = props;
+  return (
+    <div className="CreateTokenForm-card">
+      <Formik
         onSubmit={(values, actions) => {
-   onSubmit(values.user.label, actions.setSubmitting)
-      actions.setSubmitting(false)
+          onSubmit(values.user.label, actions.setSubmitting);
+          actions.setSubmitting(false);
         }}
         render={props => (
-            <form onSubmit={props.handleSubmit}>
-        <div className='header'>
-          <button
-                  type='submit'><FontAwesomeIcon icon='plus'/> Create API key</button>
-                <NavLink to='/tokens'>
-                  <button>Cancel</button>
-                </NavLink>
- </div>
-              <div className='left-container'>
-                <div className='field-container'>
-                  <div className='label-container'>
-                    <label>User's email</label>
-                  </div>
-                  <div className='input-container'>
-                  <AsyncUserSelect 
-                    onChange={props.setFieldValue}/>                    
-                  </div>
+          <form onSubmit={props.handleSubmit}>
+            <div className="header">
+              <button type="submit">
+                <FontAwesomeIcon icon="plus" /> Create API key
+              </button>
+              <NavLink to="/tokens">
+                <button>Cancel</button>
+              </NavLink>
+            </div>
+            <div className="left-container">
+              <div className="field-container">
+                <div className="label-container">
+                  <label>User's email</label>
+                </div>
+                <div className="input-container">
+                  <AsyncUserSelect onChange={props.setFieldValue} />
                 </div>
               </div>
-              <div className='CreateTokenForm-errorMessage'> {props.errorMessage}</div>
-            </form>
-        )}/>
-        </div>
-    )
-  }
+            </div>
+            <div className="CreateTokenForm-errorMessage">
+              {" "}
+              {props.errorMessage}
+            </div>
+          </form>
+        )}
+      />
+    </div>
+  );
+};
 
-export default enhance(TokenCreateForm)
+export default enhance(TokenCreateForm);

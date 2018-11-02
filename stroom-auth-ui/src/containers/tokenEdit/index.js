@@ -14,31 +14,28 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react'
-import PropTypes, {object} from 'prop-types'
+import React, { Component } from "react";
+import PropTypes, { object } from "prop-types";
 
-import TokenEditUi from './TokenEditUi'
-import { fetchApiKey } from '../../modules/token'
+import TokenEditUi from "./TokenEditUi";
+import { fetchApiKey } from "../../modules/token";
 
 class TokenEditForm extends Component {
-  constructor () {
-    super()
-    this.state = {
-    }
+  constructor() {
+    super();
+    this.state = {};
   }
 
-  async componentDidMount () {
-    const tokenId = this.context.router.route.match.params.tokenId
-    this.context.store.dispatch(fetchApiKey(tokenId))
+  async componentDidMount() {
+    const tokenId = this.context.router.route.match.params.tokenId;
+    this.context.store.dispatch(fetchApiKey(tokenId));
 
     // TODO get user from API and put into store
     // TODO Load from store? How?
   }
 
-  render () {
-    return (
-      <TokenEditUi />
-    )
+  render() {
+    return <TokenEditUi />;
   }
 }
 
@@ -47,6 +44,6 @@ TokenEditForm.contextTypes = {
   router: PropTypes.shape({
     history: object.isRequired
   })
-}
+};
 
-export default TokenEditForm
+export default TokenEditForm;

@@ -23,19 +23,20 @@
 }
 
 /* We need the button to be small so it doesn't make the cell in the table too big */
+
 .UserSearch-tableButton {
-  padding:0 !important;
-  width:0 !important;
-  height:0 !important;
+  padding: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 p.warning {
   font-style: italic;
-  padding: 3px; 
+  padding: 3px;
   margin-bottom: 0;
 }
 
 .TokenSearch__table__checkbox {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }

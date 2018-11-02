@@ -29,26 +29,27 @@
 }
 
 /* We need the button to be small so it doesn't make the cell in the table too big */
+
 .UserSearch-tableButton {
-  padding:0 !important;
-  width:0 !important;
-  height:0 !important;
+  padding: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 p.warning {
   font-style: italic;
-  padding: 3px; 
+  padding: 3px;
   margin-bottom: 0;
 }
 
 .UserSearch-filteringToggle {
-    font-size:14px;
-    padding: 0 5px 0 7px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  font-size: 14px;
+  padding: 0 5px 0 7px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .UserSearch-filteringToggle label {
-    padding: 0 5px 0 4px;
+  padding: 0 5px 0 4px;
 }

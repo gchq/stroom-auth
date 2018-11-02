@@ -14,190 +14,216 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import { NavLink } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Checkbox from 'rc-checkbox'
-import 'rc-checkbox/assets/index.css';
+import React, { Component } from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Checkbox from "rc-checkbox";
+import "rc-checkbox/assets/index.css";
 
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
-import dateFormat from 'dateformat'
+import dateFormat from "dateformat";
 
-import './UserSearch.css'
-import '../../styles/table-small.css'
-import { deleteSelectedUser } from '../../modules/user'
-import { performUserSearch, changeSelectedRow } from '../../modules/userSearch'
+import "./UserSearch.css";
+import "../../styles/table-small.css";
+import { deleteSelectedUser } from "../../modules/user";
+import { performUserSearch, changeSelectedRow } from "../../modules/userSearch";
 
 class UserSearch extends Component {
   constructor() {
-      super()
+    super();
     this.state = {
-      isFilteringEnabled: false,
-    }
+      isFilteringEnabled: false
+    };
   }
 
-  componentDidMount () {
-    this.props.performUserSearch(this.props.token)
-  }
- 
-  deleteSelectedUser () {
-    this.context.store.dispatch(deleteSelectedUser())
+  componentDidMount() {
+    this.props.performUserSearch(this.props.token);
   }
 
-  toggleRow (id) {
+  deleteSelectedUser() {
+    this.context.store.dispatch(deleteSelectedUser());
+  }
+
+  toggleRow(id) {
     // Tell the redux store so the control buttons get displayed correctly
-    this.props.changeSelectedRow(id)
+    this.props.changeSelectedRow(id);
   }
 
-  renderStateCell (state) {
-    let stateColour, stateText
+  renderStateCell(state) {
+    let stateColour, stateText;
     switch (state) {
-      case 'enabled':
-        stateColour = '#57d500'
-        stateText = 'Active'
-        break
-      case 'locked':
-        stateColour = '#ff2e00'
-        stateText = 'Locked'
-        break
-      case 'disabled':
-        stateColour = '#ff2e00'
-        stateText = 'Inactive'
-        break
+      case "enabled":
+        stateColour = "#57d500";
+        stateText = "Active";
+        break;
+      case "locked":
+        stateColour = "#ff2e00";
+        stateText = "Locked";
+        break;
+      case "disabled":
+        stateColour = "#ff2e00";
+        stateText = "Inactive";
+        break;
       default:
-        stateColour = '#ffbf00'
-        stateText = 'Unknown!'
+        stateColour = "#ffbf00";
+        stateText = "Unknown!";
     }
     return (
       <span>
-        <span style={{
-          color: stateColour,
-          transition: 'all .3s ease'
-        }}>
+        <span
+          style={{
+            color: stateColour,
+            transition: "all .3s ease"
+          }}
+        >
           &#x25cf;
-        </span> {
-          stateText
-        }
+        </span>{" "}
+        {stateText}
       </span>
-    )
+    );
   }
 
-  getStateCellFilter (filter, onChange) {
+  getStateCellFilter(filter, onChange) {
     return (
       <select
         onChange={event => onChange(event.target.value)}
-        style={{ width: '100%' }}
-        value={filter ? filter.value : 'all'}
+        style={{ width: "100%" }}
+        value={filter ? filter.value : "all"}
       >
-        <option value=''>Show all</option>
-        <option value='enabled'>Active only</option>
-        <option value='locked'>Locked only</option>
-        <option value='disabled'>Inactive only</option>
+        <option value="">Show all</option>
+        <option value="enabled">Active only</option>
+        <option value="locked">Locked only</option>
+        <option value="disabled">Inactive only</option>
       </select>
-    )
+    );
   }
 
-  formatDate (dateString) {
-    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss'
-    return dateString ? dateFormat(dateString, dateFormatString) : ''
+  formatDate(dateString) {
+    const dateFormatString = "ddd mmm d yyyy, hh:MM:ss";
+    return dateString ? dateFormat(dateString, dateFormatString) : "";
   }
 
-  filterRow(row, filter){
-    var index = row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase())
-    return index >= 0
+  filterRow(row, filter) {
+    var index = row[filter.id]
+      .toLowerCase()
+      .indexOf(filter.value.toLowerCase());
+    return index >= 0;
   }
 
-  getColumnFormat () {
-    return [{
-      Header: '',
-      accessor: 'id',
-      Cell: row => (<div>{this.props.selectedUserRowId === row.value ? 'selected' : 'unselected'}</div>),
-      filterable: false,
-      show: false
-    }, {
-      Header: 'Email',
-      accessor: 'email',
-      maxWidth: 190,
-      filterMethod: (filter, row) => this.filterRow(row, filter)
-    }, {
-      Header: 'Account status',
-      accessor: 'state',
-      maxWidth: 100,
-      Cell: row => this.renderStateCell(row.value),
-      Filter: ({filter, onChange}) => this.getStateCellFilter(filter, onChange)
-    }, {
-      Header: 'Last login',
-      accessor: 'last_login',
-      Cell: row => this.formatDate(row.value),
-      maxWidth: 165,
-      filterable: false
-    }, {
-      Header: 'Login failures',
-      accessor: 'login_failures',
-      maxWidth: 100
-    }, {
-      Header: 'Comments',
-      accessor: 'comments',
-      filterMethod: (filter, row) => this.filterRow(row, filter)
-    }]
+  getColumnFormat() {
+    return [
+      {
+        Header: "",
+        accessor: "id",
+        Cell: row => (
+          <div>
+            {this.props.selectedUserRowId === row.value
+              ? "selected"
+              : "unselected"}
+          </div>
+        ),
+        filterable: false,
+        show: false
+      },
+      {
+        Header: "Email",
+        accessor: "email",
+        maxWidth: 190,
+        filterMethod: (filter, row) => this.filterRow(row, filter)
+      },
+      {
+        Header: "Account status",
+        accessor: "state",
+        maxWidth: 100,
+        Cell: row => this.renderStateCell(row.value),
+        Filter: ({ filter, onChange }) =>
+          this.getStateCellFilter(filter, onChange)
+      },
+      {
+        Header: "Last login",
+        accessor: "last_login",
+        Cell: row => this.formatDate(row.value),
+        maxWidth: 165,
+        filterable: false
+      },
+      {
+        Header: "Login failures",
+        accessor: "login_failures",
+        maxWidth: 100
+      },
+      {
+        Header: "Comments",
+        accessor: "comments",
+        filterMethod: (filter, row) => this.filterRow(row, filter)
+      }
+    ];
   }
 
-  toggleFiltering (event) {
-    const isFilteringEnabled = event.target.checked
-    this.setState({isFilteringEnabled})
+  toggleFiltering(event) {
+    const isFilteringEnabled = event.target.checked;
+    this.setState({ isFilteringEnabled });
   }
 
-  render () {
-    const { selectedUserRowId } = this.props
-    const { isFilteringEnabled } = this.state
-    const deleteButtonDisabled = !selectedUserRowId
+  render() {
+    const { selectedUserRowId } = this.props;
+    const { isFilteringEnabled } = this.state;
+    const deleteButtonDisabled = !selectedUserRowId;
     return (
-      <div className='UserSearch-main'>
-        <div className='header'>
-             <NavLink to={'/newUser'} >
-                <button className='toolbar-button-small'><FontAwesomeIcon icon="plus"/> Create</button>
-              </NavLink>
-               {deleteButtonDisabled ? (
-                <div>
-                  <button className='toolbar-button-small'
-                    disabled ><FontAwesomeIcon icon="edit"/> View/edit</button>
-                </div>
-              ) : (
-                <NavLink to={`/user/${selectedUserRowId}`} >
-                  <button className='toolbar-button-small'><FontAwesomeIcon icon="edit"/> View/edit</button>
-                </NavLink>
-              ) }
+      <div className="UserSearch-main">
+        <div className="header">
+          <NavLink to={"/newUser"}>
+            <button className="toolbar-button-small">
+              <FontAwesomeIcon icon="plus" /> Create
+            </button>
+          </NavLink>
+          {deleteButtonDisabled ? (
+            <div>
+              <button className="toolbar-button-small" disabled>
+                <FontAwesomeIcon icon="edit" /> View/edit
+              </button>
+            </div>
+          ) : (
+            <NavLink to={`/user/${selectedUserRowId}`}>
+              <button className="toolbar-button-small">
+                <FontAwesomeIcon icon="edit" /> View/edit
+              </button>
+            </NavLink>
+          )}
 
-              <div>
-                <button 
-                  disabled={deleteButtonDisabled}
-                  onClick={() => this.deleteSelectedUser()}
-                  className='toolbar-button-small'><FontAwesomeIcon icon="trash"/> Delete</button>
-              </div>
-              <div className='UserSearch-filteringToggle'>
-            <label>Enable filtering?</label> 
-           <Checkbox
-             checked={isFilteringEnabled}
-             onChange={(event) => this.toggleFiltering(event)}/>
-</div> 
-
+          <div>
+            <button
+              disabled={deleteButtonDisabled}
+              onClick={() => this.deleteSelectedUser()}
+              className="toolbar-button-small"
+            >
+              <FontAwesomeIcon icon="trash" /> Delete
+            </button>
+          </div>
+          <div className="UserSearch-filteringToggle">
+            <label>Enable filtering?</label>
+            <Checkbox
+              checked={isFilteringEnabled}
+              onChange={event => this.toggleFiltering(event)}
+            />
+          </div>
         </div>
-        <div className='UserSearch-content' >
-             
-          <div className='table-small-container'>
+        <div className="UserSearch-content">
+          <div className="table-small-container">
             <ReactTable
               data={this.props.results}
-              className='-striped -highlight UserSearch-table'
+              className="-striped -highlight UserSearch-table"
               columns={this.getColumnFormat()}
-              defaultSorted={[{
-                id: 'email',
-                desc: true
-              }]}
+              defaultSorted={[
+                {
+                  id: "email",
+                  desc: true
+                }
+              ]}
               filterable={isFilteringEnabled}
               showPagination
               loading={this.props.showSearchLoader}
@@ -206,40 +232,43 @@ class UserSearch extends Component {
                 // We use 'calc' because we want full height but need
                 // to account for the header. Obviously if the header height
                 // changes this offset will need to change too.
-                height: 'calc(100vh - 40px)'
+                height: "calc(100vh - 40px)"
               }}
               getTheadTrProps={() => {
                 return {
-                  className: 'table-header-small'
-                }
+                  className: "table-header-small"
+                };
               }}
               getTheadProps={() => {
                 return {
-                  className: 'table-row-small'
-                }
+                  className: "table-row-small"
+                };
               }}
               getTrProps={(state, rowInfo) => {
-                let selected = false
+                let selected = false;
                 if (rowInfo) {
-                  selected = rowInfo.row.id === this.props.selectedUserRowId
+                  selected = rowInfo.row.id === this.props.selectedUserRowId;
                 }
                 return {
                   onClick: (target, event) => {
-                    this.toggleRow(rowInfo.row.id)
+                    this.toggleRow(rowInfo.row.id);
                   },
-                  className: selected ? 'table-row-small table-row-selected' : 'table-row-small'
-                }
-              }} />
+                  className: selected
+                    ? "table-row-small table-row-selected"
+                    : "table-row-small"
+                };
+              }}
+            />
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
 UserSearch.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   token: state.authentication.idToken,
@@ -248,15 +277,19 @@ const mapStateToProps = state => ({
   errorStatus: state.user.errorStatus,
   errorText: state.user.errorText,
   selectedUserRowId: state.userSearch.selectedUserRowId
-})
+});
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  deleteSelectedUser,
-  performUserSearch,
-  changeSelectedRow
-}, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      deleteSelectedUser,
+      performUserSearch,
+      changeSelectedRow
+    },
+    dispatch
+  );
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(UserSearch)
+)(UserSearch);

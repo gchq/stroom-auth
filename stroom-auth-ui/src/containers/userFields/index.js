@@ -14,160 +14,176 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
-import { Field } from 'redux-form'
-import PropTypes from 'prop-types'
+import React, { Component } from "react";
+import { Field } from "redux-form";
+import PropTypes from "prop-types";
 
-import './UserFields.css'
-import { required, email } from '../../validations'
-import {renderField} from '../../renderField'
+import "./UserFields.css";
+import { required, email } from "../../validations";
+import { renderField } from "../../renderField";
 
 /*
 This can display all user fields, or not.
 */
 class UserFields extends Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.state = {
       isPasswordEditingEnabled: false
-    }
+    };
   }
 
-  handleShowPasswordField () {
-    this.setState({isPasswordEditingEnabled: true})
+  handleShowPasswordField() {
+    this.setState({ isPasswordEditingEnabled: true });
   }
 
-  render () {
-          const { showCalculatedFields, constrainPasswordEditing, error } = this.props
-    const showPasswordField = this.state.isPasswordEditingEnabled || !constrainPasswordEditing
+  render() {
+    const {
+      showCalculatedFields,
+      constrainPasswordEditing,
+      error
+    } = this.props;
+    const showPasswordField =
+      this.state.isPasswordEditingEnabled || !constrainPasswordEditing;
     return (
-      <div className='container'>
-        <div className='left-container'>
-              <Field
-                className='CreateUserForm-field'
-                name='email'
-                component={renderField}
-                type="text"
-                validate={[required]}
-                warn={email}
-                label='Email'
-                />
-              {showPasswordField ? (
-                <Field
-                  className='CreateUserForm-field'
-                  name='password'
-                  type='password'
-                  component={renderField}
-                  validate={[required]}
-                  label='Password'/>
-                ) : (
-                  <div className='field-container'>
-                    <label>Password</label>
-                  <button
-                    onClick={() => this.handleShowPasswordField()}>Edit password</button>
-                    </div>
-                )}
+      <div className="container">
+        <div className="left-container">
+          <Field
+            className="CreateUserForm-field"
+            name="email"
+            component={renderField}
+            type="text"
+            validate={[required]}
+            warn={email}
+            label="Email"
+          />
+          {showPasswordField ? (
+            <Field
+              className="CreateUserForm-field"
+              name="password"
+              type="password"
+              component={renderField}
+              validate={[required]}
+              label="Password"
+            />
+          ) : (
+            <div className="field-container">
+              <label>Password</label>
+              <button onClick={() => this.handleShowPasswordField()}>
+                Edit password
+              </button>
+            </div>
+          )}
 
-              <Field
-                className='CreateUserForm-field'
-                name='first_name'
-                component={renderField}
-                type='text'
-                label='First name'/>
-              <Field
-                className='CreateUserForm-field'
-                name='last_name'
-                component={renderField}
-                type='text'
-                label='Last name'/>
-              <Field
-                className='CreateUserForm-field'
-                name='comments'
-                component={renderField}
-                type='textarea'
-                label='Comments'/>
+          <Field
+            className="CreateUserForm-field"
+            name="first_name"
+            component={renderField}
+            type="text"
+            label="First name"
+          />
+          <Field
+            className="CreateUserForm-field"
+            name="last_name"
+            component={renderField}
+            type="text"
+            label="Last name"
+          />
+          <Field
+            className="CreateUserForm-field"
+            name="comments"
+            component={renderField}
+            type="textarea"
+            label="Comments"
+          />
 
-          <div className='field-container'>
-              <label>Account status</label>
-              <Field name='state'
-                component='select'
-                validate={[required]}>
-                <option value='enabled'>Active</option>
-                <option value='disabled'>Inactive</option>
-                <option value='locked'>Locked</option>
-              </Field>
+          <div className="field-container">
+            <label>Account status</label>
+            <Field name="state" component="select" validate={[required]}>
+              <option value="enabled">Active</option>
+              <option value="disabled">Inactive</option>
+              <option value="locked">Locked</option>
+            </Field>
           </div>
         </div>
 
         {showCalculatedFields ? (
-          <div className='right-container'>
-                <Field
-                  disabled
-                  className='CreateUserForm-field'
-                  name='login_failures'
-                  component={renderField}
-                  type='text'
-                  label='Login failures'/>
+          <div className="right-container">
+            <Field
+              disabled
+              className="CreateUserForm-field"
+              name="login_failures"
+              component={renderField}
+              type="text"
+              label="Login failures"
+            />
 
-                <Field
-                  disabled
-                  className='CreateUserForm-field'
-                  name='login_count'
-                  component={renderField}
-                  type='text'
-                  label='Login count'/>
+            <Field
+              disabled
+              className="CreateUserForm-field"
+              name="login_count"
+              component={renderField}
+              type="text"
+              label="Login count"
+            />
 
-                <Field
-                  disabled
-                  className='CreateUserForm-field'
-                  name='last_login'
-                  component={renderField}
-                  type='text'
-                  label='Last login'/>
+            <Field
+              disabled
+              className="CreateUserForm-field"
+              name="last_login"
+              component={renderField}
+              type="text"
+              label="Last login"
+            />
 
-                <Field
-                  disabled
-                  className='CreateUserForm-field'
-                  name='updated_on'
-                  component={renderField}
-                  type='text'
-                  label='Updated on'/>
+            <Field
+              disabled
+              className="CreateUserForm-field"
+              name="updated_on"
+              component={renderField}
+              type="text"
+              label="Updated on"
+            />
 
-                <Field
-                  disabled
-                  className='CreateUserForm-field'
-                  name='updated_by_user'
-                  component={renderField}
-                  type='text'
-                  label='Updated by'/>
+            <Field
+              disabled
+              className="CreateUserForm-field"
+              name="updated_by_user"
+              component={renderField}
+              type="text"
+              label="Updated by"
+            />
 
-                <Field
-                  disabled
-                  className='CreateUserForm-field'
-                  name='created_on'
-                  component={renderField}
-                  type='text'
-                  label='Created on'/>
+            <Field
+              disabled
+              className="CreateUserForm-field"
+              name="created_on"
+              component={renderField}
+              type="text"
+              label="Created on"
+            />
 
-                <Field
-                  disabled
-                  className='CreateUserForm-field'
-                  name='created_by_user'
-                  component={renderField}
-                  type='text'
-                  label='Created by'/>
+            <Field
+              disabled
+              className="CreateUserForm-field"
+              name="created_by_user"
+              component={renderField}
+              type="text"
+              label="Created by"
+            />
           </div>
-          ) : (<div />)}
-              {error && <strong>{error}</strong>}
-
+        ) : (
+          <div />
+        )}
+        {error && <strong>{error}</strong>}
       </div>
-    )
+    );
   }
 }
 
 UserFields.propTypes = {
   showCalculatedFields: PropTypes.bool.isRequired,
   constrainPasswordEditing: PropTypes.bool.isRequired
-}
+};
 
-export default UserFields
+export default UserFields;

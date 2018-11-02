@@ -14,84 +14,93 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import { bindActionCreators } from 'redux'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { bindActionCreators } from "redux";
 
-import Snackbar from 'material-ui/Snackbar'
+import Snackbar from "material-ui/Snackbar";
 
-import TokenSearch from '../tokenSearch'
-import TokenCreate from '../tokenCreate'
-import TokenEdit from '../tokenEdit'
-import { deleteSelectedToken, toggleAlertVisibility } from '../../modules/token'
+import TokenSearch from "../tokenSearch";
+import TokenCreate from "../tokenCreate";
+import TokenEdit from "../tokenEdit";
+import {
+  deleteSelectedToken,
+  toggleAlertVisibility
+} from "../../modules/token";
 
-import '../../styles/index.css'
-import '../../styles/toolbar-small.css'
-import '../../styles/toggle-small.css'
+import "../../styles/index.css";
+import "../../styles/toolbar-small.css";
+import "../../styles/toggle-small.css";
 
 class TokenLayout extends Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.state = {
       isHelpDialogOpen: false
-    }
+    };
   }
 
-  deleteToken () {
-    this.context.store.dispatch(deleteSelectedToken())
+  deleteToken() {
+    this.context.store.dispatch(deleteSelectedToken());
   }
 
-  
-  handleHelpDialogOpen () {
-    this.setState({isHelpDialogOpen: true})
+  handleHelpDialogOpen() {
+    this.setState({ isHelpDialogOpen: true });
   }
 
-  handleHelpDialogClose () {
-    this.setState({isHelpDialogOpen: false})
+  handleHelpDialogClose() {
+    this.setState({ isHelpDialogOpen: false });
   }
 
-  render () {
-    const { show, showAlert, alertText, toggleAlertVisibility } = this.props
-    const showSearch = show === 'search'
-    const showCreate = show === 'create'
-    const showEdit = show === 'edit'
+  render() {
+    const { show, showAlert, alertText, toggleAlertVisibility } = this.props;
+    const showSearch = show === "search";
+    const showCreate = show === "create";
+    const showEdit = show === "edit";
     return (
-      <div className='Layout-main'>
-        <div className='User-content' id='User-content'>
-          {showSearch ? (<TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
-          {showCreate ? (<TokenCreate />) : (undefined)}
-          {showEdit ? (<TokenEdit />) : (undefined)}
+      <div className="Layout-main">
+        <div className="User-content" id="User-content">
+          {showSearch ? (
+            <TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />
+          ) : (
+            undefined
+          )}
+          {showCreate ? <TokenCreate /> : undefined}
+          {showEdit ? <TokenEdit /> : undefined}
         </div>
         <Snackbar
           open={showAlert}
           message={alertText}
           autoHideDuration={4000}
-          onRequestClose={() => toggleAlertVisibility('')}
+          onRequestClose={() => toggleAlertVisibility("")}
         />
-       </div>
-
-    )
+      </div>
+    );
   }
 }
 
 TokenLayout.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   show: state.token.show,
   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
   showAlert: state.token.showAlert,
   alertText: state.token.alertText
-})
+});
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  deleteSelectedToken,
-  toggleAlertVisibility
-}, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      deleteSelectedToken,
+      toggleAlertVisibility
+    },
+    dispatch
+  );
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TokenLayout)
+)(TokenLayout);

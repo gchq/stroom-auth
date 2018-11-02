@@ -18,7 +18,7 @@ import React, { useState } from "react";
 import AsyncSelect from "react-select/lib/Async";
 import { useMappedState } from "redux-react-hook";
 
-import './asyncUserSelect.css'
+import "./asyncUserSelect.css";
 
 const loadOptions = (inputValue, callback, idToken, url) => {
   fetch(`${url}/search?email=${inputValue}`, {
@@ -45,22 +45,22 @@ const mapState = state => ({
 });
 
 function AsyncUserSelect(props) {
-    const {onChange} = props;
+  const { onChange } = props;
   const [inputValue, setInputValue] = useState("");
   const { idToken, url } = useMappedState(mapState);
 
   return (
-      <AsyncSelect
-        id='selectedUser'
-        className='AsyncUserSelect'
-        cacheOptions
-        loadOptions={(inputValue, callback) =>
-          loadOptions(inputValue, callback, idToken, url)
-        }
-        defaultOptions
-        onInputChange={setInputValue}
-        onChange={(value) => onChange('user', value)}
-      />
+    <AsyncSelect
+      id="selectedUser"
+      className="AsyncUserSelect"
+      cacheOptions
+      loadOptions={(inputValue, callback) =>
+        loadOptions(inputValue, callback, idToken, url)
+      }
+      defaultOptions
+      onInputChange={setInputValue}
+      onChange={value => onChange("user", value)}
+    />
   );
 }
 

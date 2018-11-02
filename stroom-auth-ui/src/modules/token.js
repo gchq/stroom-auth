@@ -13,27 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { initialize } from 'redux-form'
-import { push } from 'react-router-redux'
+import { initialize } from "redux-form";
+import { push } from "react-router-redux";
 
-import { HttpError } from '../ErrorTypes'
-import { handleErrors, getBody, getJsonBody } from './fetchFunctions'
-import { performTokenSearch, changeSelectedRow, setEnabledStateOnToken } from './tokenSearch'
-import { performUserSearch } from './userSearch'
+import { HttpError } from "../ErrorTypes";
+import { handleErrors, getBody, getJsonBody } from "./fetchFunctions";
+import {
+  performTokenSearch,
+  changeSelectedRow,
+  setEnabledStateOnToken
+} from "./tokenSearch";
+import { performUserSearch } from "./userSearch";
 
-export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER'
-export const TOGGLE_ALERT_VISIBILITY = 'token/TOGGLE_ALERT_VISIBILITY'
-export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = 'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS'
-export const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN'
-export const SHOW_ERROR_MESSAGE = 'token/SHOW_ERROR_MESSAGE'
-export const HIDE_ERROR_MESSAGE = 'token/HIDE_ERROR_MESSAGE'
+export const CHANGE_VISIBLE_CONTAINER = "token/CHANGE_VISIBLE_CONTAINER";
+export const TOGGLE_ALERT_VISIBILITY = "token/TOGGLE_ALERT_VISIBILITY";
+export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS =
+  "token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS";
+export const CHANGE_READ_CREATED_TOKEN = "token/CHANGE_READ_CREATED_TOKEN";
+export const SHOW_ERROR_MESSAGE = "token/SHOW_ERROR_MESSAGE";
+export const HIDE_ERROR_MESSAGE = "token/HIDE_ERROR_MESSAGE";
 
 const initialState = {
   showAlert: false,
-  alertText: '',
+  alertText: "",
   matchingAutoCompleteResults: [],
-  errorMessage: ''
-}
+  errorMessage: ""
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -41,190 +46,200 @@ export default (state = initialState, action) => {
       return {
         ...state,
         show: action.show
-      }
+      };
 
     case TOGGLE_ALERT_VISIBILITY:
-      const showAlert = !state.showAlert
+      const showAlert = !state.showAlert;
       return {
         ...state,
         showAlert: showAlert,
         alertText: action.alertText
-      }
+      };
 
     case UPDATE_MATCHING_AUTO_COMPLETE_RESULTS:
       return {
         ...state,
         matchingAutoCompleteResults: action.matchingAutoCompleteResults
-      }
+      };
 
     case CHANGE_READ_CREATED_TOKEN:
       return {
         ...state,
         lastReadToken: action.lastReadToken
-      }
+      };
 
     case SHOW_ERROR_MESSAGE:
       return {
         ...state,
         errorMessage: action.message
-      }
+      };
 
     case HIDE_ERROR_MESSAGE:
       return {
         ...state,
-        errorMessage: ''
-      }
+        errorMessage: ""
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export function changeVisibleContainer (container) {
+export function changeVisibleContainer(container) {
   return {
     type: CHANGE_VISIBLE_CONTAINER,
     show: container
-  }
+  };
 }
 
-export function toggleAlertVisibility (alertText) {
+export function toggleAlertVisibility(alertText) {
   return {
     type: TOGGLE_ALERT_VISIBILITY,
     alertText: alertText
-  }
+  };
 }
 
-function showCreateError (message) {
+function showCreateError(message) {
   return {
     type: SHOW_ERROR_MESSAGE,
     message
-  }
+  };
 }
 
-function hideCreateError () {
+function hideCreateError() {
   return {
     type: HIDE_ERROR_MESSAGE
-  }
+  };
 }
 
-export const deleteSelectedToken = (tokenId) => {
+export const deleteSelectedToken = tokenId => {
   return (dispatch, getState) => {
-    const jwsToken = getState().authentication.idToken
-    const tokenIdToDelete = getState().tokenSearch.selectedTokenRowId
+    const jwsToken = getState().authentication.idToken;
+    const tokenIdToDelete = getState().tokenSearch.selectedTokenRowId;
     fetch(`${getState().config.tokenServiceUrl}/${tokenIdToDelete}`, {
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwsToken
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + jwsToken
       },
-      method: 'delete',
-      mode: 'cors'
+      method: "delete",
+      mode: "cors"
     })
-        .then(handleStatus)
-        .then(getBody)
-        .then(() => {
-          dispatch(changeSelectedRow(tokenId))
-          dispatch(performTokenSearch(jwsToken))
-          dispatch(toggleAlertVisibility('Token has been deleted'))
-        })
-        .catch(error => handleErrors(error, dispatch, jwsToken))
-  }
-}
+      .then(handleStatus)
+      .then(getBody)
+      .then(() => {
+        dispatch(changeSelectedRow(tokenId));
+        dispatch(performTokenSearch(jwsToken));
+        dispatch(toggleAlertVisibility("Token has been deleted"));
+      })
+      .catch(error => handleErrors(error, dispatch, jwsToken));
+  };
+};
 
 export const createToken = (email, setSubmitting) => {
   return (dispatch, getState) => {
-    dispatch(hideCreateError())
-    const jwsToken = getState().authentication.idToken
+    dispatch(hideCreateError());
+    const jwsToken = getState().authentication.idToken;
 
     fetch(getState().config.tokenServiceUrl, {
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwsToken
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + jwsToken
       },
-      method: 'post',
-      mode: 'cors',
+      method: "post",
+      mode: "cors",
       body: JSON.stringify({
         userEmail: email,
-        tokenType: 'api',
+        tokenType: "api",
         enabled: true
       })
     })
-        .then(handleStatus)
-        .then(getJsonBody)
-        .then((newToken) => {
-          dispatch(push(`/token/${newToken.id}`))
-            setSubmitting(false)
-        })
-        .catch(error => {
-          handleErrors(error, dispatch, jwsToken)
-          if (error.status === 400) {
-            dispatch(showCreateError('There is no such user! Please select one from the dropdown.'))
-          }
-        })
-  }
-}
+      .then(handleStatus)
+      .then(getJsonBody)
+      .then(newToken => {
+        dispatch(push(`/token/${newToken.id}`));
+        setSubmitting(false);
+      })
+      .catch(error => {
+        handleErrors(error, dispatch, jwsToken);
+        if (error.status === 400) {
+          dispatch(
+            showCreateError(
+              "There is no such user! Please select one from the dropdown."
+            )
+          );
+        }
+      });
+  };
+};
 
-export const fetchApiKey = (apiKeyId) => {
+export const fetchApiKey = apiKeyId => {
   return (dispatch, getState) => {
-    const jwsToken = getState().authentication.idToken
+    const jwsToken = getState().authentication.idToken;
     // TODO: remove any errors
     // TODO: show loading spinner
     fetch(`${getState().config.tokenServiceUrl}/${apiKeyId}`, {
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwsToken
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + jwsToken
       },
-      method: 'get',
-      mode: 'cors'
+      method: "get",
+      mode: "cors"
     })
-    .then(handleStatus)
-    .then(getJsonBody)
-    .then(apiKey => {
-      dispatch({
-        type: CHANGE_READ_CREATED_TOKEN,
-        lastReadToken: apiKey
+      .then(handleStatus)
+      .then(getJsonBody)
+      .then(apiKey => {
+        dispatch({
+          type: CHANGE_READ_CREATED_TOKEN,
+          lastReadToken: apiKey
+        });
+        // Use the redux-form action creator to re-initialize the form with this API key
+        dispatch(initialize("TokenEditForm", apiKey));
       })
-      // Use the redux-form action creator to re-initialize the form with this API key
-      dispatch(initialize('TokenEditForm', apiKey))
-    })
-    .catch(error => handleErrors(error, dispatch, jwsToken))
-  }
-}
+      .catch(error => handleErrors(error, dispatch, jwsToken));
+  };
+};
 
-export function userAutoCompleteChange (autocompleteText, securityToken) {
+export function userAutoCompleteChange(autocompleteText, securityToken) {
   return (dispatch, getState) => {
-    performUserSearch(securityToken)
-    let matchingAutoCompleteResults = []
-    const autoCompleteSuggestionLimit = 10 // We want to avoid having a vast drop-down box
+    performUserSearch(securityToken);
+    let matchingAutoCompleteResults = [];
+    const autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
     getState().userSearch.results.forEach(result => {
-      if (result.email.indexOf(autocompleteText) !== -1 &&
-        matchingAutoCompleteResults.length <= autoCompleteSuggestionLimit) {
-        matchingAutoCompleteResults.push(result.email)
+      if (
+        result.email.indexOf(autocompleteText) !== -1 &&
+        matchingAutoCompleteResults.length <= autoCompleteSuggestionLimit
+      ) {
+        matchingAutoCompleteResults.push(result.email);
       }
-    })
+    });
     dispatch({
       type: UPDATE_MATCHING_AUTO_COMPLETE_RESULTS,
       matchingAutoCompleteResults
-    })
-  }
+    });
+  };
 }
 
-function handleStatus (response) {
+function handleStatus(response) {
   if (response.status === 200) {
-    return Promise.resolve(response)
+    return Promise.resolve(response);
   } else if (response.status === 409) {
-    return Promise.reject(new HttpError(response.status, 'This token already exists!'))
+    return Promise.reject(
+      new HttpError(response.status, "This token already exists!")
+    );
   } else {
-    return Promise.reject(new HttpError(response.status, response.statusText))
+    return Promise.reject(new HttpError(response.status, response.statusText));
   }
 }
 
-export function toggleEnabledState () {
+export function toggleEnabledState() {
   return (dispatch, getState) => {
-    const tokenId = getState().form.TokenEditForm.values.id
-    const nextState = getState().form.TokenEditForm.values.enabled ? 'false' : 'true'
-    dispatch(setEnabledStateOnToken(tokenId, nextState))
-  }
+    const tokenId = getState().form.TokenEditForm.values.id;
+    const nextState = getState().form.TokenEditForm.values.enabled
+      ? "false"
+      : "true";
+    dispatch(setEnabledStateOnToken(tokenId, nextState));
+  };
 }

@@ -14,61 +14,55 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import TokenLayout from './TokenLayout'
-import { changeVisibleContainer } from '../../modules/token'
-import { performUserSearch } from '../../modules/userSearch'
+import TokenLayout from "./TokenLayout";
+import { changeVisibleContainer } from "../../modules/token";
+import { performUserSearch } from "../../modules/userSearch";
 
 export class TokenCreate extends Component {
-  componentWillMount () {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('create'))
-    this.context.store.dispatch(performUserSearch())
+    this.context.store.dispatch(changeVisibleContainer("create"));
+    this.context.store.dispatch(performUserSearch());
   }
 
-  render () {
-    return (
-      <TokenLayout />
-    )
+  render() {
+    return <TokenLayout />;
   }
 }
 
 export class TokenSearch extends Component {
-  componentWillMount () {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('search'))
+    this.context.store.dispatch(changeVisibleContainer("search"));
   }
 
-  render () {
-    return (
-      <TokenLayout />
-    )
+  render() {
+    return <TokenLayout />;
   }
 }
 
 export class TokenEdit extends Component {
-  componentWillMount () {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('edit'))
+    this.context.store.dispatch(changeVisibleContainer("edit"));
   }
 
-  render () {
-    return (
-      <TokenLayout />
-    )
+  render() {
+    return <TokenLayout />;
   }
 }
 
 TokenCreate.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 TokenSearch.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
 
 TokenEdit.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
