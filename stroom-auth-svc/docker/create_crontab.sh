@@ -9,16 +9,20 @@ readonly ACCESS_LOG_DIR="/stroom-auth-service/logs/access"
 readonly APP_LOG_DIR="/stroom-auth-service/logs/app"
 readonly EVENT_LOG_DIR="/stroom-auth-service/logs/events"
 
-readonly CRONTAB_FILE="/etc/cron.d/send-logs-cron"
-readonly CRON_USER="auth"
+# Consider changing to this approach, maybe also with crontab -u auth myScript.sh
+# https://stackoverflow.com/questions/37015624/how-to-run-a-cron-job-inside-a-docker-container
 
-# This is emacs regex syntax as the syntax supported by 'find -regex "..."'
+readonly CRONTAB_DIR="/var/spool/cron/crontabs"
+readonly CRON_USER="auth"
+readonly CRONTAB_FILE="${CRONTAB_DIR}/root"
+#readonly CRONTAB_FILE="${CRONTAB_DIR}/${CRON_USER}"
+
 readonly FILE_REGEX='.*/[a-z]+-[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}\.log'
 
 create_crontab_file() {
     # Create the crontab file -- always over-write so we have the latest from the env vars
     echo "Ensuring /etc/cron.d directory"
-    mkdir -p /etc/cron.d
+    mkdir -p ${CRONTAB_DIR}
     
     echo "Truncating crontab file [${CRONTAB_FILE}]"
     truncate -s 0 ${CRONTAB_FILE}
@@ -46,7 +50,9 @@ add_crontab_line(){
 
     # Construct the crontab line
     local pipe=">> /stroom-auth-service/logs/cron_${feed_name}.log 2>&1"
-    local crontab="${LOGS_CRONTAB:-* * * * *} ${CRON_USER} ${send_command} ${pipe}"
+    #local crontab="${LOGS_CRONTAB:-* * * * *} ${CRON_USER} ${send_command} ${pipe}"
+    # alpine cron doesn't seem to allow running as another user
+    local crontab="${LOGS_CRONTAB:-* * * * *} ${send_command} ${pipe}"
     echo "Created crontab entry for ${feed_name}: ${crontab}"
     echo "${crontab}" >> "${CRONTAB_FILE}"
 }
