@@ -20,28 +20,7 @@ import PropTypes from 'prop-types'
 
 import './UserFields.css'
 import { required, email } from '../../validations'
-
-const renderField = ({
-        disabled,
-        input,
-        label,
-        type,
-        meta: { touched, error, warning }
-      }) => (
-        <div className='field-container'>
-          <label>{label}</label>
-          <div>
-          {type === 'textarea' ? (
-              <textarea {...input} rows='3'/>)
-              :(
-            <input disabled={disabled} {...input} type={type} />)}
-            {touched &&
-              ((error && <span className='field-container__error'>{error}</span>) ||
-                (warning && <span className='field-container__warning'>{warning}</span>))}
-          </div>
-        </div>
-      )
-
+import {renderField} from '../../renderField'
 
 /*
 This can display all user fields, or not.

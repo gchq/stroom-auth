@@ -28,14 +28,15 @@ import {
   faSave,
   faPlus,
   faTrash,
-  faEdit
+  faEdit,
+  faCopy,
 } from "@fortawesome/free-solid-svg-icons";
 
 import "./styles/index.css";
 import App from "./containers/app";
 import store, { history } from "./store";
 
-library.add(faSave, faTimes, faPlus, faTrash, faEdit);
+library.add(faSave, faTimes, faPlus, faTrash, faEdit, faCopy);
 
 const theme = getMuiTheme({
   palette: {

@@ -19,9 +19,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Field, reduxForm } from 'redux-form'
 import { NavLink } from 'react-router-dom'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { TextField, Toggle } from 'redux-form-material-ui'
-import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import Snackbar from 'material-ui/Snackbar'
 
@@ -32,6 +31,7 @@ import { amber900 } from 'material-ui/styles/colors'
 import './TokenEdit.css'
 import {toggleEnabledState} from '../../modules/token'
 import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
+import { renderField } from '../../renderField'
 
 export class TokenEditUi extends Component {
 
@@ -41,34 +41,35 @@ export class TokenEditUi extends Component {
     const jws = token !== undefined ? token.token : ''
 
     return (
-      <Card className='EditUserForm-card'>
-        <form onSubmit={handleSubmit}>
-          <div className='field-container'>
-            <div className='label-container'>
-              <label>Issued to</label>
-            </div>
-            <div className='input-container'>
+              <form onSubmit={handleSubmit}>
+            <div className='header'>
+<CopyToClipboard text={jws}>
+            <button><FontAwesomeIcon icon='copy'/> Copy API key to clipboard</button>
+          </CopyToClipboard >
+          &nbsp;&nbsp;
+          <NavLink to='/tokens'>
+            <button>OK</button>
+          </NavLink>
+</div>
+<div className='EditToken__content'>
+
+        <div className='left-container'>
               <Field
                 disabled
                 className='TokenEditForm-field'
                 name='user_email'
-                component={TextField}
+                label='Issued to'
+                type='text'
+                component={renderField}
                 />
-            </div>
-          </div>
-          <div className='field-container'>
-            <div className='label-container'>
-              <label>API key</label>
-            </div>
-            <div className='input-container'>
               <Field
                 disabled
                 className='TokenEditForm-field'
                 name='token'
-                component={TextField}
+                label='API key'
+                type='textarea'
+                component={renderField}
                 />
-            </div>
-          </div>
           <div className='field-container'>
             <div className='label-container'>
               <label>Enabled</label>
@@ -76,84 +77,53 @@ export class TokenEditUi extends Component {
             <div className='input-container'>
               <Field
                 className='TokenEditForm-field'
-                name='enabled' component={Toggle}
+                name='enabled' 
+                component={Toggle}
                 onChange={() => toggleEnabledState()} />
             </div>
           </div>
-          <div className='field-container'>
-            <div className='label-container'>
-              <label>Expires on</label>
-            </div>
-            <div className='input-container'>
               <Field
                 disabled
                 className='TokenEditForm-field'
                 name='expires_on'
-                component={TextField}
+                component={renderField}
+                type='text'
+                label='Expires on'
                 />
-            </div>
-          </div>
-          <div className='field-container'>
-            <div className='label-container'>
-              <label>Issued on</label>
-            </div>
-            <div className='input-container'>
+        </div>
+        <div className='right-container'>
               <Field
                 disabled
                 className='TokenEditForm-field'
                 name='issued_on'
-                component={TextField}
+                label='Issued on'
+                component={renderField}
                 />
-            </div>
-          </div>
-          <div className='field-container'>
-            <div className='label-container'>
-              <label>Updated on</label>
-            </div>
-            <div className='input-container'>
               <Field
                 disabled
                 className='TokenEditForm-field'
                 name='updated_on'
-                component={TextField}
+                label='Updated on'
+                component={renderField}
                 />
-            </div>
-          </div>
-          <div className='field-container'>
-            <div className='label-container'>
-              <label>Updated by</label>
-            </div>
-            <div className='input-container'>
               <Field
                 disabled
                 className='TokenEditForm-field'
                 name='updated_by_user'
-                component={TextField}
+                label='Updated by'
+                component={renderField}
                 />
-            </div>
-          </div>
-          <br />
-          <CopyToClipboard text={jws}>
-            <RaisedButton
-              label='Copy API key to clipboard'
-              primary
-              icon={<ContentCopy color={amber900} />} />
-          </CopyToClipboard >
-          &nbsp;&nbsp;
-          <NavLink to='/tokens'>
-            <RaisedButton
-              primary
-              label='OK' />
-          </NavLink>
-        </form>
+        </div>
+        </div>
         <Snackbar
           open={showAlert}
           message={alertText}
           autoHideDuration={4000}
           onRequestClose={() => toggleAlertVisibility('')}
         />
-      </Card>
-    )
+
+        </form>
+        )
   }
 }
 

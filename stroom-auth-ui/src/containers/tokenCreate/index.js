@@ -19,7 +19,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
 import { NavLink } from 'react-router-dom'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AutoComplete } from 'redux-form-material-ui'
 import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -32,10 +32,16 @@ export class TokenCreateForm extends Component {
   render () {
     const { handleSubmit, pristine, submitting } = this.props
     return (
-      <div className=''>
-        <Card className='CreateTokenForm-card'>
-          <div>
+        <div className='CreateTokenForm-card'>
             <form onSubmit={handleSubmit}>
+        <div className='header'>
+          <button
+                  disabled={pristine || submitting}
+                  type='submit'><FontAwesomeIcon icon='plus'/> Create API key</button>
+                <NavLink to='/tokens'>
+                  <button>Cancel</button>
+                </NavLink>
+ </div>
               <div className='left-container'>
                 <div className='field-container'>
                   <div className='label-container'>
@@ -54,24 +60,8 @@ export class TokenCreateForm extends Component {
                 </div>
               </div>
               <div className='CreateTokenForm-errorMessage'> {this.props.errorMessage}</div>
-              <br />
-              <div>
-                <RaisedButton
-                  primary
-                  disabled={pristine || submitting}
-                  type='submit'
-                  label='Create API key' />
-                &nbsp;&nbsp;
-                <NavLink to='/tokens'>
-                  <RaisedButton
-                    primary
-                    label='Cancel' />
-                </NavLink>
-              </div>
             </form>
-          </div>
-        </Card>
-      </div>
+        </div>
     )
   }
 }
