@@ -177,22 +177,18 @@ public class UserDao {
     }
 
     public Optional<User> get(String email) {
-        var userQuery = database
+        Optional<UsersRecord> userQuery = database
                 .selectFrom(USERS)
                 .where(USERS.EMAIL.eq(email)).fetchOptional();
 
-        if(userQuery.isPresent()) {
-            // Convert the UsersRecord into a User.
-            return Optional.of(userQuery.get().into(User.class));
-        }
-        else {
-            return Optional.empty();
-        }
+        // Convert the UsersRecord into a User.
+        return userQuery.map(usersRecord ->
+                usersRecord.into(User.class));
     }
 
     public void changePassword(String email, String newPassword) {
-        UsersRecord user = (UsersRecord) database
-                .selectFrom((Table) USERS)
+        UsersRecord user = database
+                .selectFrom(USERS)
                 .where(new Condition[]{USERS.EMAIL.eq(email)})
                 .fetchOne();
 

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.Map;
 
 import static stroom.db.auth.Tables.TOKENS;
 import static stroom.db.auth.Tables.TOKEN_TYPES;
@@ -48,7 +49,7 @@ public abstract class Database_IT {
     @Before
     public void before() {
 
-        var flywayConfiguration = new HashMap<String, String>();
+        Map<String, String> flywayConfiguration = new HashMap<String, String>();
         flywayConfiguration.put("flyway.driver", JDBC_DRIVER);
         flywayConfiguration.put("flyway.url", mysql.getJdbcUrl());
         flywayConfiguration.put("flyway.user", JDBC_USER);
@@ -63,7 +64,7 @@ public abstract class Database_IT {
     }
 
     private void cleanDatabase(){
-        var jdbcUrl = mysql.getJdbcUrl();
+        final String jdbcUrl = mysql.getJdbcUrl();
         LOGGER.info("The JDBC URL is {}", jdbcUrl);
         try (Connection conn = DriverManager.getConnection(jdbcUrl, JDBC_USER, JDBC_PASSWORD)) {
             DSLContext database = DSL.using(conn, SQLDialect.MYSQL);

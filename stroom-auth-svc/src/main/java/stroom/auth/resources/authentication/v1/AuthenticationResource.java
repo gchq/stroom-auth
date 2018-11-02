@@ -177,7 +177,7 @@ public final class AuthenticationResource {
         // If the prompt is 'login' then we always want to prompt the user to login in with username and password.
         boolean requireLoginPrompt = !Strings.isNullOrEmpty(prompt) && prompt.equalsIgnoreCase("login");
         boolean loginUsingCertificate = optionalCn.isPresent() && !requireLoginPrompt;
-        if(requireLoginPrompt){
+        if (requireLoginPrompt) {
             LOGGER.info("Relying party requested a user login page by using 'prompt=login'");
         }
 
@@ -195,13 +195,13 @@ public final class AuthenticationResource {
             String cn = optionalCn.get();
             Optional<String> optionalSubject = getIdFromCertificate(cn);
 
-            if(!optionalSubject.isPresent()){
+            if (!optionalSubject.isPresent()) {
                 String errorMessage = "User is presenting a certificate but this certificate cannot be processed!";
                 LOGGER.error(errorMessage);
                 responseBuilder = status(Status.FORBIDDEN).entity(errorMessage);
             } else {
                 String subject = optionalSubject.get();
-                if(!userDao.exists(subject)){
+                if (!userDao.exists(subject)) {
                     User newUser = new User();
                     newUser.setEmail(subject);
                     newUser.setState("enabled");
@@ -264,7 +264,7 @@ public final class AuthenticationResource {
             @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException, UnsupportedEncodingException {
         LOGGER.info("Received a login request for session " + credentials.getSessionId());
         String sessionId = httpSession.getId();
-        if(!Strings.isNullOrEmpty(credentials.getSessionId())) {
+        if (!Strings.isNullOrEmpty(credentials.getSessionId())) {
             LOGGER.debug("There is a session ID in the request body so we'll use that instead of the one in the httpSession.");
             sessionId = credentials.getSessionId();
         }
@@ -281,7 +281,7 @@ public final class AuthenticationResource {
 
         // Check the credentials
         UserDao.LoginResult loginResult = userDao.areCredentialsValid(credentials.getEmail(), credentials.getPassword());
-        switch (loginResult){
+        switch (loginResult) {
             case BAD_CREDENTIALS:
                 LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
                 userDao.incrementLoginFailures(credentials.getEmail());
@@ -291,8 +291,8 @@ public final class AuthenticationResource {
                 String redirectionUrl = processSuccessfulLogin(session, credentials, sessionId);
                 stroomEventLoggingService.successfulLogin(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
-                    .entity(redirectionUrl)
-                    .build();
+                        .entity(redirectionUrl)
+                        .build();
             case USER_DOES_NOT_EXIST:
                 // We don't want to let the user know the account they tried to log in with doesn't exist.
                 // If we did we'd be revealing the presence or absence of an account or email address and
@@ -317,7 +317,7 @@ public final class AuthenticationResource {
                 throw new UnauthorisedException("This account is disabled. Please contact your administrator.");
             default:
                 String errorMessage = String.format("%s does not support a LoginResult of %s",
-                    this.getClass().getSimpleName(), loginResult.toString());
+                        this.getClass().getSimpleName(), loginResult.toString());
                 throw new NotImplementedException(errorMessage);
         }
     }
@@ -360,7 +360,7 @@ public final class AuthenticationResource {
             response = String.class, tags = {"Authentication"})
     public final Response getIdToken(@QueryParam("accessCode") @NotNull String accessCode) {
         Optional<RelyingParty> relyingParty = this.sessionManager.getByAccessCode(accessCode);
-        if(!relyingParty.isPresent()){
+        if (!relyingParty.isPresent()) {
             return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
         }
         String idToken = relyingParty.get().getIdToken();
@@ -380,13 +380,12 @@ public final class AuthenticationResource {
             @PathParam("email") String emailAddress) throws NoSuchUserException {
         stroomEventLoggingService.resetPassword(httpServletRequest, emailAddress);
         Optional<User> user = userDao.get(emailAddress);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             String resetToken = tokenDao.createEmailResetToken(emailAddress);
             emailSender.send(user.get(), resetToken);
             Response response = status(Status.OK).build();
             return response;
-        }
-        else{
+        } else {
             return status(Status.NOT_FOUND).entity("User does not exist").build();
         }
     }
@@ -417,20 +416,20 @@ public final class AuthenticationResource {
             //TODO: Delete this parameter
             @PathParam("id") int userId) {
 
-        var loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
+        final UserDao.LoginResult loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
 
-        var responseBuilder = ChangePasswordValidator.validateNewPassword(
+        final ChangePasswordResponse.ChangePasswordResponseBuilder responseBuilder = ChangePasswordValidator.validateNewPassword(
                 this.config.getPasswordIntegrityChecksConfig(),
                 loginResult,
                 changePasswordRequest.getNewPassword(),
                 changePasswordRequest.getOldPassword());
 
-        if(responseBuilder.failedOn.size() == 0){
+        if (responseBuilder.failedOn.size() == 0) {
             responseBuilder.withSuccess();
             stroomEventLoggingService.changePassword(httpServletRequest, changePasswordRequest.getEmail());
             userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
         }
-        
+
         return Response.status(Status.OK).entity(responseBuilder.build()).build();
     }
 
@@ -457,8 +456,8 @@ public final class AuthenticationResource {
     @Timed
     @NotNull
     public final Response postAuthenticationRedirect(
-        @Session HttpSession httpSession,
-        @QueryParam("clientId") @NotNull String clientId) throws UnsupportedEncodingException {
+            @Session HttpSession httpSession,
+            @QueryParam("clientId") @NotNull String clientId) throws UnsupportedEncodingException {
         String httpSessionId = httpSession.getId();
         stroom.auth.Session session = this.sessionManager.get(httpSessionId).get();
         RelyingParty relyingParty = session.getRelyingParty(clientId);
@@ -466,18 +465,17 @@ public final class AuthenticationResource {
         String username = session.getUserEmail();
 
         boolean userNeedsToChangePassword = userDao.needsPasswordChange(
-            username, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays(),
+                username, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays(),
                 config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin());
 
-        if(userNeedsToChangePassword){
+        if (userNeedsToChangePassword) {
             String redirectUrl = getPostAuthenticationCheckUrl(clientId);
             String encodedRedirectUrl = URLEncoder.encode(redirectUrl, Charset.defaultCharset().name());
             String changePasswordLocation = String.format("%s?&redirect_url=%s",
-                this.config.getChangePasswordUrl(), encodedRedirectUrl);
+                    this.config.getChangePasswordUrl(), encodedRedirectUrl);
             URI changePasswordUri = UriBuilder.fromUri(changePasswordLocation).build();
             return seeOther(changePasswordUri).build();
-        }
-        else {
+        } else {
             //TODO this method needs to take just a relying party
             session.setAuthenticated(true);
             URI redirectionUrl = buildRedirectionUrl(relyingParty.getRedirectUrl(), relyingParty.getAccessCode(), relyingParty.getState());
@@ -485,7 +483,7 @@ public final class AuthenticationResource {
         }
     }
 
-    private String createIdToken(String subject, String nonce, String state, String authSessionId){
+    private String createIdToken(String subject, String nonce, String state, String authSessionId) {
         TokenBuilder tokenBuilder = tokenBuilderFactory
                 .newBuilder(Token.TokenType.USER)
                 .subject(subject)
@@ -499,7 +497,7 @@ public final class AuthenticationResource {
         return idToken;
     }
 
-    private URI buildRedirectionUrl(String redirectUrl, String accessCode, String state){
+    private URI buildRedirectionUrl(String redirectUrl, String accessCode, String state) {
         URI fullRedirectionUrl = UriBuilder
                 .fromUri(redirectUrl)
                 .queryParam("accessCode", accessCode)
@@ -509,7 +507,7 @@ public final class AuthenticationResource {
     }
 
 
-    private Optional<String> getIdFromCertificate(String cn) {
+    private Optional<String> getIdFromCertificate(final String cn) {
         Pattern idExtractionPattern = Pattern.compile(this.config.getCertificateDnPattern());
         Matcher idExtractionMatcher = idExtractionPattern.matcher(cn);
         idExtractionMatcher.find();
@@ -521,14 +519,16 @@ public final class AuthenticationResource {
             } else {
                 return Optional.empty();
             }
-        } catch(IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             LOGGER.error("Unable to extract user ID from CN. CN was {} and pattern was {}", cn,
                     this.config.getCertificateDnPattern());
             return Optional.empty();
         }
     }
 
-    private String processSuccessfulLogin(stroom.auth.Session session, Credentials credentials, String sessionId) throws UnsupportedEncodingException {
+    private String processSuccessfulLogin(final stroom.auth.Session session,
+                                          final Credentials credentials,
+                                          final String sessionId) throws UnsupportedEncodingException {
         // Make sure the session is authenticated and ready for use
         session.setAuthenticated(false);
         session.setUserEmail(credentials.getEmail());
@@ -550,9 +550,9 @@ public final class AuthenticationResource {
         return redirectionUrl;
     }
 
-    private String getPostAuthenticationCheckUrl(String clientId){
+    private String getPostAuthenticationCheckUrl(String clientId) {
         String postAuthenticationCheckUrl = String.format("%s/%s/v1/postAuthenticationRedirect?clientId=%s",
-            this.config.getAdvertisedHost(), config.getOwnPath(), clientId);
+                this.config.getAdvertisedHost(), config.getOwnPath(), clientId);
         return postAuthenticationCheckUrl;
     }
 
