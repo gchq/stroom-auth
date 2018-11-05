@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Uplift service docker image base to openjdk:8u181-jdk-alpine3.8
+
 ## [v1.0-beta.8]
 
 * Downgrade to java 8 for compatibility with stroom v6

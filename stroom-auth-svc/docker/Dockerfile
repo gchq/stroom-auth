@@ -38,7 +38,8 @@ RUN chmod u+x ./*.sh
 # This Dockerfile used to be openjdk:10.0.2-jre-slim (debian)
 # When this needs to be uplifted to java 10 again the j10 version can be found at:
 # commit 388db68fb90b623cc9ed360d6a20dab77134e152, tag v1.0-beta.7
-FROM openjdk:8u171-jre-alpine
+# Further to this, master branch is J10 and thus openjdk:10.0.2-jre-slim 
+FROM openjdk:8u181-jdk-alpine3.8
 
 WORKDIR /stroom-auth-service
 
