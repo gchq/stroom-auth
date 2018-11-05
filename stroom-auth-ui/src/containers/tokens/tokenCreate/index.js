@@ -67,12 +67,8 @@ const TokenCreateForm = props => {
             </div>
             <div className="left-container">
               <div className="field-container">
-                <div className="label-container">
                   <label>User's email</label>
-                </div>
-                <div className="input-container">
                   <AsyncUserSelect onChange={props.setFieldValue} />
-                </div>
               </div>
             </div>
             <div className="CreateTokenForm-errorMessage">
