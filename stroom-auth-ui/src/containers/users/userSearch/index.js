@@ -205,7 +205,7 @@ class UserSearch extends Component {
             </button>
           </div>
           <div className="UserSearch-filteringToggle">
-            <label>Enable filtering?</label>
+            <label>Show filtering</label>
             <Checkbox
               checked={isFilteringEnabled}
               onChange={event => this.toggleFiltering(event)}

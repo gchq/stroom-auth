@@ -48,17 +48,19 @@ function AsyncUserSelect(props) {
   const { onChange } = props;
   const [inputValue, setInputValue] = useState("");
   const { idToken, url } = useMappedState(mapState);
-
+  
   return (
     <AsyncSelect
-      id="selectedUser"
       className="AsyncUserSelect"
       cacheOptions
+      defaultOptions
       loadOptions={(inputValue, callback) =>
         loadOptions(inputValue, callback, idToken, url)
       }
-      defaultOptions
-      onInputChange={setInputValue}
+      onInputChange={value => {
+          setInputValue(value)
+          return value
+      }}
       onChange={value => onChange("user", value)}
     />
   );
