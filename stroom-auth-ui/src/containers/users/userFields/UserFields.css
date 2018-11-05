@@ -37,7 +37,12 @@
   width: 130px;
   display: block;
   text-align: right;
-  margin-right: 15px;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.field-container input {
+    height: 10px;
 }
 
 .field-container input,
