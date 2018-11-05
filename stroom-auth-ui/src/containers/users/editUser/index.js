@@ -14,36 +14,40 @@
  * limitations under the License.
  */
 
-import React, { Component } from "react";
-import PropTypes, { object } from "prop-types";
+import React, {Component} from 'react'
+import PropTypes, {object} from 'prop-types'
 
-import TokenEditUi from "./TokenEditUi";
-import { fetchApiKey } from "../../modules/token";
+import UserEditUi from './UserEditUi'
+import { fetchUser } from '../../../modules/user'
 
-class TokenEditForm extends Component {
-  constructor() {
-    super();
-    this.state = {};
+class UserEditForm extends Component {
+  constructor () {
+    super()
+    this.state = {
+      rules: []
+    }
   }
 
-  async componentDidMount() {
-    const tokenId = this.context.router.route.match.params.tokenId;
-    this.context.store.dispatch(fetchApiKey(tokenId));
+  async componentDidMount () {
+    const userId = this.context.router.route.match.params.userId
+    this.context.store.dispatch(fetchUser(userId))
 
     // TODO get user from API and put into store
     // TODO Load from store? How?
   }
 
-  render() {
-    return <TokenEditUi />;
+  render () {
+    return (
+      <UserEditUi />
+    )
   }
 }
 
-TokenEditForm.contextTypes = {
+UserEditForm.contextTypes = {
   store: PropTypes.object.isRequired,
   router: PropTypes.shape({
     history: object.isRequired
   })
-};
+}
 
-export default TokenEditForm;
+export default UserEditForm

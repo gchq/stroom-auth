@@ -20,13 +20,13 @@ import { NavLink } from "react-router-dom";
 import { compose } from "recompose";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Formik } from "formik";
-import AsyncUserSelect from "../userSelect";
+import { AsyncUserSelect } from "../../users";
 import "./CreateTokenForm.css";
-import "../Layout.css";
+import "../../Layout.css";
 import {
   createToken as onSubmit,
   userAutoCompleteChange
-} from "../../modules/token";
+} from "../../../modules/token";
 
 const enhance = compose(
   connect(

@@ -14,59 +14,55 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import UserLayout from './UserLayout'
-import { changeVisibleContainer } from '../../modules/user'
+import TokenLayout from "./TokenLayout";
+import { changeVisibleContainer } from "../../../modules/token";
+import { performUserSearch } from "../../../modules/userSearch";
 
-export class UserCreate extends Component {
-  componentWillMount () {
+export class TokenCreate extends Component {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('create'))
+    this.context.store.dispatch(changeVisibleContainer("create"));
+    this.context.store.dispatch(performUserSearch());
   }
 
-  render () {
-    return (
-      <UserLayout />
-    )
+  render() {
+    return <TokenLayout />;
   }
 }
 
-UserCreate.contextTypes = {
-  store: PropTypes.object.isRequired
-}
-
-export class UserEdit extends Component {
-  componentWillMount () {
+export class TokenSearch extends Component {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('edit'))
+    this.context.store.dispatch(changeVisibleContainer("search"));
   }
 
-  render () {
-    return (
-      <UserLayout />
-    )
+  render() {
+    return <TokenLayout />;
   }
 }
 
-UserEdit.contextTypes = {
-  store: PropTypes.object.isRequired
-}
-
-export class UserSearch extends Component {
-  componentWillMount () {
+export class TokenEdit extends Component {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('search'))
+    this.context.store.dispatch(changeVisibleContainer("edit"));
   }
 
-  render () {
-    return (
-      <UserLayout />
-    )
+  render() {
+    return <TokenLayout />;
   }
 }
 
-UserSearch.contextTypes = {
+TokenCreate.contextTypes = {
   store: PropTypes.object.isRequired
-}
+};
+
+TokenSearch.contextTypes = {
+  store: PropTypes.object.isRequired
+};
+
+TokenEdit.contextTypes = {
+  store: PropTypes.object.isRequired
+};

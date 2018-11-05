@@ -27,11 +27,11 @@ import TokenEdit from "../tokenEdit";
 import {
   deleteSelectedToken,
   toggleAlertVisibility
-} from "../../modules/token";
+} from "../../../modules/token";
 
-import "../../styles/index.css";
-import "../../styles/toolbar-small.css";
-import "../../styles/toggle-small.css";
+import "../../../styles/index.css";
+import "../../../styles/toolbar-small.css";
+import "../../../styles/toggle-small.css";
 
 class TokenLayout extends Component {
   constructor() {

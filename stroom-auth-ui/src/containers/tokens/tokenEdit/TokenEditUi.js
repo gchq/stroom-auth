@@ -24,12 +24,12 @@ import Snackbar from "material-ui/Snackbar";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 import "./TokenEdit.css";
-import { toggleEnabledState } from "../../modules/token";
+import { toggleEnabledState } from "../../../modules/token";
 import {
   saveChanges as onSubmit,
   toggleAlertVisibility
-} from "../../modules/user";
-import { renderField, renderCheckbox } from "../../renderField";
+} from "../../../modules/user";
+import { renderField, renderCheckbox } from "../../../renderField";
 
 export class TokenEditUi extends Component {
   render() {

@@ -24,9 +24,9 @@ import { useDispatch } from "redux-react-hook";
 import { initialize } from "redux-form";
 
 import "./CreateUserForm.css";
-import "../Layout.css";
+import "../../Layout.css";
 import UserFields from "../userFields";
-import { createUser as onSubmit } from "../../modules/user";
+import { createUser as onSubmit } from "../../../modules/user";
 
 function UserCreateForm(props) {
   const { handleSubmit, pristine, submitting, error } = props;

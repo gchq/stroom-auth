@@ -22,11 +22,11 @@ import { bindActionCreators } from 'redux'
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
 import UserEdit from '../editUser'
-import { deleteSelectedUser, toggleAlertVisibility } from '../../modules/user'
+import { deleteSelectedUser, toggleAlertVisibility } from '../../../modules/user'
 
-import '../../styles/index.css'
-import '../../styles/toolbar-small.css'
-import '../../styles/toggle-small.css'
+import '../../../styles/index.css'
+import '../../../styles/toolbar-small.css'
+import '../../../styles/toggle-small.css'
 
 class UserLayout extends Component {
   constructor () {

@@ -19,8 +19,8 @@ import { Field } from "redux-form";
 import PropTypes from "prop-types";
 
 import "./UserFields.css";
-import { required, email } from "../../validations";
-import { renderField } from "../../renderField";
+import { required, email } from "../../../validations";
+import { renderField } from "../../../renderField";
 
 /*
 This can display all user fields, or not.

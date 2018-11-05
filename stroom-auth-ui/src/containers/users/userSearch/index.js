@@ -29,9 +29,9 @@ import "react-table/react-table.css";
 import dateFormat from "dateformat";
 
 import "./UserSearch.css";
-import "../../styles/table-small.css";
-import { deleteSelectedUser } from "../../modules/user";
-import { performUserSearch, changeSelectedRow } from "../../modules/userSearch";
+import "../../../styles/table-small.css";
+import { deleteSelectedUser } from "../../../modules/user";
+import { performUserSearch, changeSelectedRow } from "../../../modules/userSearch";
 
 class UserSearch extends Component {
   constructor() {

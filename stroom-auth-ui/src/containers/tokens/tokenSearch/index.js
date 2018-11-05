@@ -27,17 +27,17 @@ import dateFormat from "dateformat";
 import PropTypes from "prop-types";
 
 import "./TokenSearch.css";
-import "../../styles/table-small.css";
-import "../../styles/toggle-small.css";
+import "../../../styles/table-small.css";
+import "../../../styles/toggle-small.css";
 import {
   performTokenSearch,
   changeSelectedRow,
   setEnabledStateOnToken
-} from "../../modules/tokenSearch";
+} from "../../../modules/tokenSearch";
 
 import {
   deleteSelectedToken,
-} from "../../modules/token";
+} from "../../../modules/token";
 
 
 // TODO change the CSS references from 'User' - maybe make the CSS common?

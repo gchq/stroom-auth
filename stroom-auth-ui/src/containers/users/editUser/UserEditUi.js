@@ -23,7 +23,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import './EditUser.css'
 import UserFields from '../userFields'
-import {saveChanges as onSubmit, toggleAlertVisibility} from '../../modules/user'
+import {saveChanges as onSubmit, toggleAlertVisibility} from '../../../modules/user'
 
 const UserEditForm = props => {
   const { handleSubmit, pristine, submitting } = props
