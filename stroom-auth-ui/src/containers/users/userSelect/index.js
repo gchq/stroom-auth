@@ -44,13 +44,32 @@ const mapState = state => ({
   url: state.config.userServiceUrl
 });
 
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    fontSize: 14
+  }),
+  placeholder: (provided, state) => ({
+    fontSize: 14
+  }),
+  input: (provided, state) => ({
+    ...provided,
+    fontSize: 14
+  }),
+  singleValue: (provided, state) => ({
+    ...provided,
+    fontSize: 14
+  })
+};
+
 function AsyncUserSelect(props) {
   const { onChange } = props;
   const [inputValue, setInputValue] = useState("");
   const { idToken, url } = useMappedState(mapState);
-  
+
   return (
     <AsyncSelect
+      styles={customStyles}
       className="AsyncUserSelect"
       cacheOptions
       defaultOptions
@@ -58,8 +77,8 @@ function AsyncUserSelect(props) {
         loadOptions(inputValue, callback, idToken, url)
       }
       onInputChange={value => {
-          setInputValue(value)
-          return value
+        setInputValue(value);
+        return value;
       }}
       onChange={value => onChange("user", value)}
     />
