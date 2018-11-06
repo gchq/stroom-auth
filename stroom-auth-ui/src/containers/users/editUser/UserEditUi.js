@@ -31,12 +31,6 @@ import {
   toggleAlertVisibility,
 } from '../../../modules/user';
 
-// We don't have the original password -- that's encrypted on the server
-// But we need the 'Password' field to be populated with something,
-// so we use a dummy password. This also allows us to check to see if
-// the password has been changed.
-const DUMMY_PASSWORD = 'xxxxxxxx';
-
 const enhance = compose(
   connect(
     ({
@@ -129,13 +123,6 @@ const UserEditForm = props => {
   return (
     <Formik
       onSubmit={(values, actions) => {
-        // If the password field is the same as the initial dummy password
-        // then we'll throw the value away so we don't send it to the server.
-        // If it's not then it'll have been validated against the verify
-        // password field already and we'll let it through.
-        if (values.password === DUMMY_PASSWORD) {
-          values.password = undefined;
-        }
         onSubmit(values);
       }}
       initialValues={{...userBeingEdited}}
