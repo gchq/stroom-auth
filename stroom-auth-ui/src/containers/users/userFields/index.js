@@ -21,6 +21,9 @@ import * as moment from 'moment';
 
 import './UserFields.css';
 
+const SERVER_DATE_TIME_FORMAT = 'ddd MMM D YYYY, HH:mm:ss';
+const DISPLAY_DATE_TIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
+
 const Validation = ({propertyName, errors, touched}) => {
   if (errors) {
     const error = errors[propertyName];
@@ -38,24 +41,53 @@ const LoginFailureCopy = ({attemptCount}) => (
 );
 
 const LoginStatsCopy = ({lastLogin, loginCount}) => {
-  lastLogin = moment(lastLogin);
-  let loginStatsCopy =
-    loginCount === 0 ? (
-      <div>This user has never logged in.</div>
-    ) : (
+  if (lastLogin !== undefined) {
+    lastLogin = moment(lastLogin, SERVER_DATE_TIME_FORMAT);
+    const loginStatsCopy = (
       <div>
         <p>
           Last login: {lastLogin.fromNow()}, at{' '}
-          {lastLogin.format('MMMM Do YYYY, h:mm:ss a')}{' '}
+          {lastLogin.format(DISPLAY_DATE_TIME_FORMAT)}{' '}
         </p>
         <p>Total logins: {loginCount}</p>
       </div>
     );
-  return loginStatsCopy;
+    return loginStatsCopy;
+  } else {
+    return <div>This user has never logged in.</div>;
+  }
 };
 
 const UpdatedCopy = ({updatedBy, updatedOn}) => {
-    updatedOn
+  if (updatedOn !== undefined) {
+    updatedOn = moment(updatedOn, SERVER_DATE_TIME_FORMAT);
+    return (
+      <div>
+        <p>
+          This user account was updated {updatedOn.from()}, at{' '}
+          {updatedOn.format(DISPLAY_DATE_TIME_FORMAT)}. It was updated by{' '}
+          <em>{updatedBy}</em>.
+        </p>
+      </div>
+    );
+  } else {
+    return <div>This user account has never been updated.</div>;
+  }
+};
+
+const CreatedCopy = ({createdBy, createdOn}) => {
+  if (createdOn !== undefined) {
+    createdOn = moment(createdOn, SERVER_DATE_TIME_FORMAT);
+    return (
+      <div>
+        <p>
+          This user account was created {createdOn.from()}, at{' '}
+          {createdOn.format(DISPLAY_DATE_TIME_FORMAT)}. It was created by{' '}
+          <em>{createdBy}</em>.
+        </p>
+      </div>
+    );
+  }
 };
 
 const UserFields = ({
@@ -93,7 +125,7 @@ const UserFields = ({
           </div>
           <div className="field-container vertical">
             <label>Account status</label>
-            <Field name="state" component="select" >
+            <Field name="state" component="select">
               <option value="enabled">Active</option>
               <option value="disabled">Inactive</option>
               <option value="locked">Locked</option>
@@ -169,32 +201,13 @@ const UserFields = ({
           </div>
           <div className="section__fields">
             <div className="section__fields__rows">
-              <Field
-                disabled
-                name="updated_on"
-                type="text"
-                label="Updated on"
+              <UpdatedCopy
+                updatedBy={userBeingEdited.updated_by_user}
+                updatedOn={userBeingEdited.updated_on}
               />
-
-              <Field
-                disabled
-                name="updated_by_user"
-                type="text"
-                label="Updated by"
-              />
-
-              <Field
-                disabled
-                name="created_on"
-                type="text"
-                label="Created on"
-              />
-
-              <Field
-                disabled
-                name="created_by_user"
-                type="text"
-                label="Created by"
+              <CreatedCopy
+                createdBy={userBeingEdited.created_by_user}
+                createdOn={userBeingEdited.created_on}
               />
             </div>
           </div>
