@@ -18,6 +18,7 @@ import React, {Component} from 'react';
 //import {Field} from 'redux-form';
 import PropTypes from 'prop-types';
 import {Field} from 'formik';
+import * as moment from 'moment';
 
 import './UserFields.css';
 import {required, email} from '../../../validations';
@@ -54,7 +55,28 @@ class UserFields extends Component {
       constrainPasswordEditing,
       errors,
       touched,
+      userBeingEdited,
     } = this.props;
+    const loginFailureCopy = (
+      <p>
+        Login attempts with an incorrect password:{' '}
+        {userBeingEdited.login_failures}
+      </p>
+    );
+    const lastLogin = moment(userBeingEdited.last_login);
+    let loginStatsCopy =
+      userBeingEdited.login_count === 0 ? (
+        <div>This user has never logged in.</div>
+      ) : (
+        <div>
+          <p>
+            Last login: {lastLogin.fromNow()}, at{' '}
+            {lastLogin.format('MMMM Do YYYY, h:mm:ss a')}{' '}
+          </p>
+          <p>Total logins: {userBeingEdited.login_count}</p>
+        </div>
+      );
+
     const showPasswordField =
       this.state.isPasswordEditingEnabled || !constrainPasswordEditing;
     return (
@@ -148,26 +170,8 @@ class UserFields extends Component {
               </div>
               <div className="section__fields">
                 <div className="section__fields_row">
-                  <Field
-                    disabled
-                    name="login_failures"
-                    type="text"
-                    label="Login failures"
-                  />
-
-                  <Field
-                    disabled
-                    name="login_count"
-                    type="text"
-                    label="Login count"
-                  />
-
-                  <Field
-                    disabled
-                    name="last_login"
-                    type="text"
-                    label="Last login"
-                  />
+                  {loginFailureCopy}
+                  {loginStatsCopy}
                 </div>
               </div>
             </div>

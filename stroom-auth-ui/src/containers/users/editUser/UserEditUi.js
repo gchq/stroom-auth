@@ -53,6 +53,7 @@ const enhance = compose(
   withProps(({userBeingEdited}) => {
     userBeingEdited.password = undefined;
     userBeingEdited.verifyPassword = undefined;
+    return {userBeingEdited};
   }),
 );
 
@@ -149,6 +150,7 @@ const UserEditForm = props => {
             <UserFields
               showCalculatedFields
               constrainPasswordEditing
+              userBeingEdited={userBeingEdited}
               errors={errors}
               touched={touched}
             />

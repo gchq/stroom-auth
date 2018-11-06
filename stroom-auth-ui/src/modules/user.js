@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-import { initialize } from "redux-form";
-import { push } from "react-router-redux";
-import dateFormat from "dateformat";
+import {initialize} from 'redux-form';
+import {push} from 'react-router-redux';
+import dateFormat from 'dateformat';
 
-import { HttpError } from "../ErrorTypes";
-import { handleErrors, getBody, getJsonBody } from "./fetchFunctions";
-import { performUserSearch, changeSelectedRow } from "./userSearch";
+import {HttpError} from '../ErrorTypes';
+import {handleErrors, getBody, getJsonBody} from './fetchFunctions';
+import {performUserSearch, changeSelectedRow} from './userSearch';
 
-export const CREATE_REQUEST = "user/CREATE_REQUEST";
-export const CREATE_RESPONSE = "user/CREATE_RESPONSE";
-export const SHOW_CREATE_LOADER = "user/SHOW_CREATE_LOADER";
-export const SAVE_USER_BEING_EDITED = "user/SAVE_USER_BEING_EDITED";
-export const CHANGE_VISIBLE_CONTAINER = "user/CHANGE_VISIBLE_CONTAINER";
-export const TOGGLE_ALERT_VISIBILITY = "user/TOGGLE_ALERT_VISIBILITY";
+export const CREATE_REQUEST = 'user/CREATE_REQUEST';
+export const CREATE_RESPONSE = 'user/CREATE_RESPONSE';
+export const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER';
+export const SAVE_USER_BEING_EDITED = 'user/SAVE_USER_BEING_EDITED';
+export const CHANGE_VISIBLE_CONTAINER = 'user/CHANGE_VISIBLE_CONTAINER';
+export const TOGGLE_ALERT_VISIBILITY = 'user/TOGGLE_ALERT_VISIBILITY';
 export const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE =
-  "user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE";
+  'user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE';
 export const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE =
-  "user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE";
+  'user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE';
 
 const initialState = {
-  user: "",
-  password: "",
+  user: '',
+  password: '',
   showCreateLoader: false,
-  alertText: "",
+  alertText: '',
   showAlert: false,
   changePasswordErrorMessage: [],
 };
@@ -46,30 +46,30 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case CREATE_REQUEST:
       return {
-        ...state
+        ...state,
         // TODO mark something as 'creating'
       };
     case CREATE_RESPONSE:
       return {
-        ...state
+        ...state,
         // TODO change creating to 'created' or something similar
       };
     case SHOW_CREATE_LOADER:
       return {
         ...state,
-        showCreateLoader: action.showCreateLoader
+        showCreateLoader: action.showCreateLoader,
       };
 
     case SAVE_USER_BEING_EDITED:
       return {
         ...state,
-        userBeingEdited: action.user
+        userBeingEdited: action.user,
       };
 
     case CHANGE_VISIBLE_CONTAINER:
       return {
         ...state,
-        show: action.show
+        show: action.show,
       };
 
     case TOGGLE_ALERT_VISIBILITY:
@@ -77,19 +77,19 @@ export default (state = initialState, action) => {
       return {
         ...state,
         showAlert: showAlert,
-        alertText: action.alertText
+        alertText: action.alertText,
       };
 
     case SHOW_CHANGE_PASSWORD_ERROR_MESSAGE:
       return {
         ...state,
-        changePasswordErrorMessage: action.message
+        changePasswordErrorMessage: action.message,
       };
 
     case HIDE_CHANGE_PASSWORD_ERROR_MESSAGE:
       return {
         ...state,
-        changePasswordErrorMessage: []
+        changePasswordErrorMessage: [],
       };
 
     default:
@@ -100,42 +100,42 @@ export default (state = initialState, action) => {
 export function showCreateLoader(showCreateLoader) {
   return {
     type: SHOW_CREATE_LOADER,
-    showCreateLoader
+    showCreateLoader,
   };
 }
 
 export function changeVisibleContainer(container) {
   return {
     type: CHANGE_VISIBLE_CONTAINER,
-    show: container
+    show: container,
   };
 }
 
 export function toggleAlertVisibility(alertText) {
   return {
     type: TOGGLE_ALERT_VISIBILITY,
-    alertText: alertText
+    alertText: alertText,
   };
 }
 
 function showChangePasswordErrorMessage(message) {
   return {
     type: SHOW_CHANGE_PASSWORD_ERROR_MESSAGE,
-    message
+    message,
   };
 }
 
 function hideChangePasswordErrorMessage() {
   return {
-    type: HIDE_CHANGE_PASSWORD_ERROR_MESSAGE
+    type: HIDE_CHANGE_PASSWORD_ERROR_MESSAGE,
   };
 }
 
 function saveUserBeingEdited(user) {
-    return {
-        type: SAVE_USER_BEING_EDITED,
-        user
-    }
+  return {
+    type: SAVE_USER_BEING_EDITED,
+    user,
+  };
 }
 
 function handleStatus(response) {
@@ -145,8 +145,8 @@ function handleStatus(response) {
     return Promise.reject(
       new HttpError(
         response.status,
-        "This user already exists - please use a different email address."
-      )
+        'This user already exists - please use a different email address.',
+      ),
     );
   } else {
     return Promise.reject(new HttpError(response.status, response.statusText));
@@ -154,8 +154,8 @@ function handleStatus(response) {
 }
 
 function formatDate(dateString) {
-  const dateFormatString = "ddd mmm d yyyy, hh:MM:ss";
-  return dateString ? dateFormat(dateString, dateFormatString) : "";
+  const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
+  return dateString ? dateFormat(dateString, dateFormatString) : '';
 }
 
 export const saveChanges = editedUser => {
@@ -168,31 +168,31 @@ export const saveChanges = editedUser => {
       first_name,
       last_name,
       comments,
-      state
+      state,
     } = editedUser;
 
     fetch(`${getState().config.userServiceUrl}/${id}`, {
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jwsToken
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwsToken,
       },
-      method: "put",
-      mode: "cors",
+      method: 'put',
+      mode: 'cors',
       body: JSON.stringify({
         email,
         password,
         first_name,
         last_name,
         comments,
-        state
-      })
+        state,
+      }),
     })
       .then(handleStatus)
       .then(() => {
-          dispatch(saveUserBeingEdited(undefined))
-        dispatch(push("/userSearch"));
-        dispatch(toggleAlertVisibility("User has been updated"));
+        dispatch(saveUserBeingEdited(undefined));
+        dispatch(push('/userSearch'));
+        dispatch(toggleAlertVisibility('User has been updated'));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));
   };
@@ -201,33 +201,33 @@ export const saveChanges = editedUser => {
 export const createUser = newUser => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken;
-    const { email, password, first_name, last_name, comments, state } = newUser;
+    const {email, password, first_name, last_name, comments, state} = newUser;
 
     dispatch(showCreateLoader(true));
 
     fetch(getState().config.userServiceUrl, {
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jwsToken
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwsToken,
       },
-      method: "post",
-      mode: "cors",
+      method: 'post',
+      mode: 'cors',
       body: JSON.stringify({
         email,
         password,
         first_name,
         last_name,
         comments,
-        state
-      })
+        state,
+      }),
     })
       .then(handleStatus)
       .then(getBody)
       .then(newUserId => {
         dispatch(showCreateLoader(false));
-        dispatch(push("/userSearch"));
-        dispatch(toggleAlertVisibility("User has been created"));
+        dispatch(push('/userSearch'));
+        dispatch(toggleAlertVisibility('User has been created'));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));
   };
@@ -240,12 +240,12 @@ export const fetchUser = userId => {
     // TODO: show loading spinner
     fetch(`${getState().config.userServiceUrl}/${userId}`, {
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jwsToken
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwsToken,
       },
-      method: "get",
-      mode: "cors"
+      method: 'get',
+      mode: 'cors',
     })
       .then(handleStatus)
       .then(getJsonBody)
@@ -265,19 +265,19 @@ export const deleteSelectedUser = userId => {
     const userIdToDelete = getState().userSearch.selectedUserRowId;
     fetch(`${getState().config.userServiceUrl}/${userIdToDelete}`, {
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jwsToken
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwsToken,
       },
-      method: "delete",
-      mode: "cors"
+      method: 'delete',
+      mode: 'cors',
     })
       .then(handleStatus)
       .then(getBody)
       .then(() => {
         dispatch(changeSelectedRow(userId));
         dispatch(performUserSearch(jwsToken));
-        dispatch(toggleAlertVisibility("User has been deleted"));
+        dispatch(toggleAlertVisibility('User has been deleted'));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));
   };
@@ -287,11 +287,11 @@ export const changePasswordForCurrentUser = () => {
   return (dispatch, getState) => {
     fetch(`${getState().config.userServiceUrl}/me`, {
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      method: "get",
-      mode: "cors"
+      method: 'get',
+      mode: 'cors',
     })
       .then(handleStatus)
       .then(getJsonBody)
@@ -315,17 +315,17 @@ export const changePassword = () => {
 
     if (newPassword !== newPasswordConfirmation) {
       dispatch(
-        showChangePasswordErrorMessage(["The new passwords do not match"])
+        showChangePasswordErrorMessage(['The new passwords do not match']),
       );
     } else {
       fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-        method: "post",
-        mode: "cors",
-        body: JSON.stringify({ newPassword, oldPassword, email })
+        method: 'post',
+        mode: 'cors',
+        body: JSON.stringify({newPassword, oldPassword, email}),
       })
         .then(getJsonBody)
         .then(response => {
@@ -335,23 +335,23 @@ export const changePassword = () => {
               // TODO: Maybe show a message with a delay.
               window.location.href = redirectUrl;
             } else {
-              dispatch(toggleAlertVisibility("Your password has been changed"));
+              dispatch(toggleAlertVisibility('Your password has been changed'));
             }
           } else {
             let errorMessage = [];
-            if (response.failedOn.includes("BAD_OLD_PASSWORD")) {
-              errorMessage.push("Your new old password is not correct");
+            if (response.failedOn.includes('BAD_OLD_PASSWORD')) {
+              errorMessage.push('Your new old password is not correct');
             }
-            if (response.failedOn.includes("COMPLEXITY")) {
+            if (response.failedOn.includes('COMPLEXITY')) {
               errorMessage.push(
-                "Your new password does not meet the complexity requirements"
+                'Your new password does not meet the complexity requirements',
               );
             }
-            if (response.failedOn.includes("REUSE")) {
-              errorMessage.push("You may not reuse your previous password");
+            if (response.failedOn.includes('REUSE')) {
+              errorMessage.push('You may not reuse your previous password');
             }
-            if (response.failedOn.includes("LENGTH")) {
-              errorMessage.push("Your new password is too short");
+            if (response.failedOn.includes('LENGTH')) {
+              errorMessage.push('Your new password is too short');
             }
             dispatch(showChangePasswordErrorMessage(errorMessage));
           }
@@ -368,14 +368,14 @@ export const submitPasswordChangeRequest = formData => {
     const jwsToken = getState().authentication.idToken;
     fetch(authenticationServiceUrl, {
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jwsToken
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwsToken,
       },
-      method: "get",
-      mode: "cors"
+      method: 'get',
+      mode: 'cors',
     }).then(() => {
-      dispatch(push("/confirmPasswordResetEmail"));
+      dispatch(push('/confirmPasswordResetEmail'));
     });
   };
 };
@@ -387,19 +387,19 @@ function getUser(user) {
 
 function modifyDataForDisplay(user) {
   if (!user.last_login) {
-    user.last_login = "Never logged in";
+    user.last_login = 'Never logged in';
   } else {
     user.last_login = formatDate(user.last_login);
   }
 
   if (!user.updated_on) {
-    user.updated_on = "Never been updated";
+    user.updated_on = 'Never been updated';
   } else {
     user.updated_on = formatDate(user.updated_on);
   }
 
   if (!user.updated_by_user) {
-    user.updated_by_user = "Never been updated";
+    user.updated_by_user = 'Never been updated';
   }
 
   user.created_on = formatDate(user.created_on);
