@@ -21,7 +21,7 @@ import * as moment from 'moment';
 
 import './UserFields.css';
 
-const SERVER_DATE_TIME_FORMAT = 'ddd MMM D YYYY, HH:mm:ss';
+const SERVER_DATE_TIME_FORMAT = 'ddd MMM Do YYYY, HH:mm:ss';
 const DISPLAY_DATE_TIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
 
 const Validation = ({propertyName, errors, touched}) => {
@@ -59,7 +59,7 @@ const LoginStatsCopy = ({lastLogin, loginCount}) => {
 };
 
 const UpdatedCopy = ({updatedBy, updatedOn}) => {
-  if (updatedOn !== undefined) {
+  if (updatedOn !== undefined && updatedBy !== 'Never been updated') {
     updatedOn = moment(updatedOn, SERVER_DATE_TIME_FORMAT);
     return (
       <div>
