@@ -67,10 +67,10 @@ export default (state = initialState, action) => {
       };
 
     case CLEAR_USER_BEING_EDITED:
-          return {
-              ...state,
-              userBeingEdited: undefined
-          };
+      return {
+        ...state,
+        userBeingEdited: undefined,
+      };
 
     case CHANGE_VISIBLE_CONTAINER:
       return {
@@ -145,9 +145,9 @@ function saveUserBeingEdited(user) {
 }
 
 export function clearUserBeingEdited() {
-    return {
-        type: CLEAR_USER_BEING_EDITED
-    }
+  return {
+    type: CLEAR_USER_BEING_EDITED,
+  };
 }
 
 function handleStatus(response) {

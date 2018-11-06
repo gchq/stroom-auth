@@ -14,59 +14,53 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
-import UserLayout from './UserLayout'
-import { changeVisibleContainer } from '../../../modules/user'
+import UserLayout from './UserLayout';
+import {changeVisibleContainer} from '../../../modules/user';
 
 export class UserCreate extends Component {
-  componentWillMount () {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('create'))
+    this.context.store.dispatch(changeVisibleContainer('create'));
   }
 
-  render () {
-    return (
-      <UserLayout />
-    )
+  render() {
+    return <UserLayout />;
   }
 }
 
 UserCreate.contextTypes = {
-  store: PropTypes.object.isRequired
-}
+  store: PropTypes.object.isRequired,
+};
 
 export class UserEdit extends Component {
-  componentWillMount () {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('edit'))
+    this.context.store.dispatch(changeVisibleContainer('edit'));
   }
 
-  render () {
-    return (
-      <UserLayout />
-    )
+  render() {
+    return <UserLayout />;
   }
 }
 
 UserEdit.contextTypes = {
-  store: PropTypes.object.isRequired
-}
+  store: PropTypes.object.isRequired,
+};
 
 export class UserSearch extends Component {
-  componentWillMount () {
+  componentWillMount() {
     // We're going to store what we're displaying in the state. We could also detect what to display from the route.
-    this.context.store.dispatch(changeVisibleContainer('search'))
+    this.context.store.dispatch(changeVisibleContainer('search'));
   }
 
-  render () {
-    return (
-      <UserLayout />
-    )
+  render() {
+    return <UserLayout />;
   }
 }
 
 UserSearch.contextTypes = {
-  store: PropTypes.object.isRequired
-}
+  store: PropTypes.object.isRequired,
+};

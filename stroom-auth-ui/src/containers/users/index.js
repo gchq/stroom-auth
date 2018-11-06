@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { UserCreate, UserEdit, UserSearch } from './user'
-import NewUser from './newUser'
-import AsyncUserSelect from './userSelect'
+import {UserCreate, UserEdit, UserSearch} from './user';
+import NewUser from './newUser';
+import AsyncUserSelect from './userSelect';
 
-export { UserCreate, UserEdit, UserSearch, NewUser, AsyncUserSelect }
-
+export {UserCreate, UserEdit, UserSearch, NewUser, AsyncUserSelect};

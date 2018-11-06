@@ -14,65 +14,75 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import { bindActionCreators } from 'redux'
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import {bindActionCreators} from 'redux';
 
-import UserSearch from '../userSearch'
-import UserCreate from '../createUser'
-import UserEdit from '../editUser'
-import { toggleAlertVisibility, clearUserBeingEdited } from '../../../modules/user'
+import UserSearch from '../userSearch';
+import UserCreate from '../createUser';
+import UserEdit from '../editUser';
+import {
+  toggleAlertVisibility,
+  clearUserBeingEdited,
+} from '../../../modules/user';
 
-import '../../../styles/index.css'
-import '../../../styles/toolbar-small.css'
-import '../../../styles/toggle-small.css'
+import '../../../styles/index.css';
+import '../../../styles/toolbar-small.css';
+import '../../../styles/toggle-small.css';
 
 class UserLayout extends Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.state = {
       isFilteringEnabled: false,
-    }
+    };
   }
   componentDidMount() {
     this.context.store.dispatch(clearUserBeingEdited());
   }
 
-
-  render () {
-    const { show } = this.props
-    const showSearch = show === 'search'
-    const showCreate = show === 'create'
-    const showEdit = show === 'edit'
+  render() {
+    const {show} = this.props;
+    const showSearch = show === 'search';
+    const showCreate = show === 'create';
+    const showEdit = show === 'edit';
     return (
-      <div className='Layout-main'>
-        <div className='User-content'>
-          {showSearch ? (<UserSearch isFilteringEnabled={this.state.isFilteringEnabled} />) : (undefined)}
-          {showCreate ? (<UserCreate />) : (undefined)}
-          {showEdit ? (<UserEdit />) : (undefined)}
+      <div className="Layout-main">
+        <div className="User-content">
+          {showSearch ? (
+            <UserSearch isFilteringEnabled={this.state.isFilteringEnabled} />
+          ) : (
+            undefined
+          )}
+          {showCreate ? <UserCreate /> : undefined}
+          {showEdit ? <UserEdit /> : undefined}
         </div>
       </div>
-    )
+    );
   }
 }
 
 UserLayout.contextTypes = {
-  store: PropTypes.object.isRequired
-}
+  store: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = state => ({
   show: state.user.show,
   selectedUserRowId: state.userSearch.selectedUserRowId,
   showAlert: state.user.showAlert,
-  alertText: state.user.alertText
-})
+  alertText: state.user.alertText,
+});
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  toggleAlertVisibility
-}, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      toggleAlertVisibility,
+    },
+    dispatch,
+  );
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(UserLayout)
+  mapDispatchToProps,
+)(UserLayout);

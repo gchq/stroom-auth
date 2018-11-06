@@ -57,19 +57,21 @@ const enhance = compose(
 );
 
 const UserEditForm = ({
-    userBeingEdited,
-    idToken,
-    authenticationServiceUrl,
-    handleSubmit,
-    onSubmit,
-  }) => {
+  userBeingEdited,
+  idToken,
+  authenticationServiceUrl,
+  handleSubmit,
+  onSubmit,
+}) => {
   return (
     <Formik
       onSubmit={(values, actions) => {
         onSubmit(values);
       }}
       initialValues={{...userBeingEdited}}
-      validate={values => validateAsync(values, idToken, authenticationServiceUrl)}
+      validate={values =>
+        validateAsync(values, idToken, authenticationServiceUrl)
+      }
       validationSchema={UserValidationSchema}>
       {({errors, touched}) => {
         const isPristine = !hasAnyProps(touched);

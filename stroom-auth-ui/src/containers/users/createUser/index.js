@@ -30,10 +30,7 @@ import {UserValidationSchema, validateAsync} from '../validation';
 
 const enhance = compose(
   connect(
-    ({
-      authentication: {idToken},
-      config: {authenticationServiceUrl},
-    }) => ({
+    ({authentication: {idToken}, config: {authenticationServiceUrl}}) => ({
       idToken,
       authenticationServiceUrl,
     }),
@@ -41,11 +38,7 @@ const enhance = compose(
   ),
 );
 
-const UserCreateForm = ({
-  onSubmit,
-  idToken,
-  authenticationServiceUrl,
-}) => {
+const UserCreateForm = ({onSubmit, idToken, authenticationServiceUrl}) => {
   return (
     <Formik
       onSubmit={(values, actions) => {

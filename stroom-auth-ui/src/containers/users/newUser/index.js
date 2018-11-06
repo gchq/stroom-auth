@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
-import { Redirect } from 'react-router'
+import React, {Component} from 'react';
+import {Redirect} from 'react-router';
 
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
 class NewUser extends Component {
-  render () {
-    return (<Redirect to={'/user'} />)
+  render() {
+    return <Redirect to={'/user'} />;
   }
 }
 
-const mapStateToProps = state => ({
-})
+const mapStateToProps = state => ({});
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-}, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(NewUser)
+  mapDispatchToProps,
+)(NewUser);

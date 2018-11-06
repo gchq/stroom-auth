@@ -15,7 +15,7 @@
  */
 
 .CreateUserForm-card {
-  padding:30px;
+  padding: 30px;
 }
 
 .CreateUserForm-field {
@@ -23,8 +23,8 @@
 }
 
 .CreateUserForm-field_button {
-    width: 400px;
-    margin-top: 12px;
-    margin-bottom: 12px;
-    margin-right: 50px;
+  width: 400px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  margin-right: 50px;
 }

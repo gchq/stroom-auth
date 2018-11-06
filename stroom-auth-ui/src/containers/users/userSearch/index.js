@@ -14,30 +14,33 @@
  * limitations under the License.
  */
 
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Checkbox from "rc-checkbox";
-import "rc-checkbox/assets/index.css";
+import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import {NavLink} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import Checkbox from 'rc-checkbox';
+import 'rc-checkbox/assets/index.css';
 
-import ReactTable from "react-table";
-import "react-table/react-table.css";
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 
-import dateFormat from "dateformat";
+import dateFormat from 'dateformat';
 
-import "./UserSearch.css";
-import "../../../styles/table-small.css";
-import { deleteSelectedUser } from "../../../modules/user";
-import { performUserSearch, changeSelectedRow } from "../../../modules/userSearch";
+import './UserSearch.css';
+import '../../../styles/table-small.css';
+import {deleteSelectedUser} from '../../../modules/user';
+import {
+  performUserSearch,
+  changeSelectedRow,
+} from '../../../modules/userSearch';
 
 class UserSearch extends Component {
   constructor() {
     super();
     this.state = {
-      isFilteringEnabled: false
+      isFilteringEnabled: false,
     };
   }
 
@@ -57,32 +60,31 @@ class UserSearch extends Component {
   renderStateCell(state) {
     let stateColour, stateText;
     switch (state) {
-      case "enabled":
-        stateColour = "#57d500";
-        stateText = "Active";
+      case 'enabled':
+        stateColour = '#57d500';
+        stateText = 'Active';
         break;
-      case "locked":
-        stateColour = "#ff2e00";
-        stateText = "Locked";
+      case 'locked':
+        stateColour = '#ff2e00';
+        stateText = 'Locked';
         break;
-      case "disabled":
-        stateColour = "#ff2e00";
-        stateText = "Inactive";
+      case 'disabled':
+        stateColour = '#ff2e00';
+        stateText = 'Inactive';
         break;
       default:
-        stateColour = "#ffbf00";
-        stateText = "Unknown!";
+        stateColour = '#ffbf00';
+        stateText = 'Unknown!';
     }
     return (
       <span>
         <span
           style={{
             color: stateColour,
-            transition: "all .3s ease"
-          }}
-        >
+            transition: 'all .3s ease',
+          }}>
           &#x25cf;
-        </span>{" "}
+        </span>{' '}
         {stateText}
       </span>
     );
@@ -92,9 +94,8 @@ class UserSearch extends Component {
     return (
       <select
         onChange={event => onChange(event.target.value)}
-        style={{ width: "100%" }}
-        value={filter ? filter.value : "all"}
-      >
+        style={{width: '100%'}}
+        value={filter ? filter.value : 'all'}>
         <option value="">Show all</option>
         <option value="enabled">Active only</option>
         <option value="locked">Locked only</option>
@@ -104,8 +105,8 @@ class UserSearch extends Component {
   }
 
   formatDate(dateString) {
-    const dateFormatString = "ddd mmm d yyyy, hh:MM:ss";
-    return dateString ? dateFormat(dateString, dateFormatString) : "";
+    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
+    return dateString ? dateFormat(dateString, dateFormatString) : '';
   }
 
   filterRow(row, filter) {
@@ -118,65 +119,65 @@ class UserSearch extends Component {
   getColumnFormat() {
     return [
       {
-        Header: "",
-        accessor: "id",
+        Header: '',
+        accessor: 'id',
         Cell: row => (
           <div>
             {this.props.selectedUserRowId === row.value
-              ? "selected"
-              : "unselected"}
+              ? 'selected'
+              : 'unselected'}
           </div>
         ),
         filterable: false,
-        show: false
+        show: false,
       },
       {
-        Header: "Email",
-        accessor: "email",
+        Header: 'Email',
+        accessor: 'email',
         maxWidth: 190,
-        filterMethod: (filter, row) => this.filterRow(row, filter)
+        filterMethod: (filter, row) => this.filterRow(row, filter),
       },
       {
-        Header: "Account status",
-        accessor: "state",
+        Header: 'Account status',
+        accessor: 'state',
         maxWidth: 100,
         Cell: row => this.renderStateCell(row.value),
-        Filter: ({ filter, onChange }) =>
-          this.getStateCellFilter(filter, onChange)
+        Filter: ({filter, onChange}) =>
+          this.getStateCellFilter(filter, onChange),
       },
       {
-        Header: "Last login",
-        accessor: "last_login",
+        Header: 'Last login',
+        accessor: 'last_login',
         Cell: row => this.formatDate(row.value),
         maxWidth: 165,
-        filterable: false
+        filterable: false,
       },
       {
-        Header: "Login failures",
-        accessor: "login_failures",
-        maxWidth: 100
+        Header: 'Login failures',
+        accessor: 'login_failures',
+        maxWidth: 100,
       },
       {
-        Header: "Comments",
-        accessor: "comments",
-        filterMethod: (filter, row) => this.filterRow(row, filter)
-      }
+        Header: 'Comments',
+        accessor: 'comments',
+        filterMethod: (filter, row) => this.filterRow(row, filter),
+      },
     ];
   }
 
   toggleFiltering(event) {
     const isFilteringEnabled = event.target.checked;
-    this.setState({ isFilteringEnabled });
+    this.setState({isFilteringEnabled});
   }
 
   render() {
-    const { selectedUserRowId } = this.props;
-    const { isFilteringEnabled } = this.state;
+    const {selectedUserRowId} = this.props;
+    const {isFilteringEnabled} = this.state;
     const deleteButtonDisabled = !selectedUserRowId;
     return (
       <div className="UserSearch-main">
         <div className="header">
-          <NavLink to={"/newUser"}>
+          <NavLink to={'/newUser'}>
             <button className="toolbar-button-small">
               <FontAwesomeIcon icon="plus" /> Create
             </button>
@@ -199,8 +200,7 @@ class UserSearch extends Component {
             <button
               disabled={deleteButtonDisabled}
               onClick={() => this.deleteSelectedUser()}
-              className="toolbar-button-small"
-            >
+              className="toolbar-button-small">
               <FontAwesomeIcon icon="trash" /> Delete
             </button>
           </div>
@@ -220,9 +220,9 @@ class UserSearch extends Component {
               columns={this.getColumnFormat()}
               defaultSorted={[
                 {
-                  id: "email",
-                  desc: true
-                }
+                  id: 'email',
+                  desc: true,
+                },
               ]}
               filterable={isFilteringEnabled}
               showPagination
@@ -232,16 +232,16 @@ class UserSearch extends Component {
                 // We use 'calc' because we want full height but need
                 // to account for the header. Obviously if the header height
                 // changes this offset will need to change too.
-                height: "calc(100vh - 40px)"
+                height: 'calc(100vh - 40px)',
               }}
               getTheadTrProps={() => {
                 return {
-                  className: "table-header-small"
+                  className: 'table-header-small',
                 };
               }}
               getTheadProps={() => {
                 return {
-                  className: "table-row-small"
+                  className: 'table-row-small',
                 };
               }}
               getTrProps={(state, rowInfo) => {
@@ -254,8 +254,8 @@ class UserSearch extends Component {
                     this.toggleRow(rowInfo.row.id);
                   },
                   className: selected
-                    ? "table-row-small table-row-selected"
-                    : "table-row-small"
+                    ? 'table-row-small table-row-selected'
+                    : 'table-row-small',
                 };
               }}
             />
@@ -267,7 +267,7 @@ class UserSearch extends Component {
 }
 
 UserSearch.contextTypes = {
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -276,7 +276,7 @@ const mapStateToProps = state => ({
   results: state.userSearch.results,
   errorStatus: state.user.errorStatus,
   errorText: state.user.errorText,
-  selectedUserRowId: state.userSearch.selectedUserRowId
+  selectedUserRowId: state.userSearch.selectedUserRowId,
 });
 
 const mapDispatchToProps = dispatch =>
@@ -284,12 +284,12 @@ const mapDispatchToProps = dispatch =>
     {
       deleteSelectedUser,
       performUserSearch,
-      changeSelectedRow
+      changeSelectedRow,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(UserSearch);

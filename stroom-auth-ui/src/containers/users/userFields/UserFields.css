@@ -33,9 +33,9 @@
 }
 
 .field-container.vertical {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .field-container label {
@@ -43,7 +43,7 @@
 }
 
 .field-container input {
-    height: 10px;
+  height: 10px;
 }
 
 .field-container input,
@@ -90,32 +90,32 @@ textarea {
 }
 
 .section {
-    display: flex;
-    flex-direction:row;
-    width: 100%;
-    border-top: solid 1px lightgrey;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-top: solid 1px lightgrey;
 }
 
 .section__title {
-    width: 33%;
+  width: 33%;
 }
 
 .section__fields {
-    width: 66%;
-    display: flex;
-    flex-direction: column;
+  width: 66%;
+  display: flex;
+  flex-direction: column;
 }
 
 .section__fields__row {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 .section__fields__row.1-column * {
-    width: 100%;
+  width: 100%;
 }
 
 .section__fields__comments {
-    width: 500px;
+  width: 500px;
 }

@@ -52,7 +52,7 @@ const validateAsync = (values, idToken, url) => {
             } else if (failureType === 'COMPLEXITY') {
               asyncErrors.push('Does not meet complexity requirements');
             }
-              return null
+            return null;
           });
         }
         if (asyncErrors.length > 0) {
