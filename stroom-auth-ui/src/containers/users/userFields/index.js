@@ -15,7 +15,7 @@
  */
 
 import React, {Component} from 'react';
-//import {Field} from 'redux-form';
+import {compose, withProps} from 'recompose';
 import PropTypes from 'prop-types';
 import {Field} from 'formik';
 import * as moment from 'moment';
@@ -23,207 +23,193 @@ import * as moment from 'moment';
 import './UserFields.css';
 import {required, email} from '../../../validations';
 
-function AccountFields(props) {
-  return undefined;
-}
-
 const Validation = ({propertyName, errors, touched}) => {
-  const error = errors[propertyName];
-  const isTouched = touched[propertyName];
-  if (error && isTouched) {
-    return <div className="validation-error">{error}</div>;
-  } else {
-    return null;
-  }
+  if (errors) {
+    const error = errors[propertyName];
+    const isTouched = touched[propertyName];
+    if (error && isTouched) {
+      return <div className="validation-error">{error}</div>;
+    } else {
+      return null;
+    }
+  } else return null;
 };
 
-class UserFields extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isPasswordEditingEnabled: false,
-    };
-  }
+const LoginFailureCopy = ({attemptCount}) => (
+  <p>Login attempts with an incorrect password: {attemptCount}</p>
+);
 
-  handleShowPasswordField() {
-    this.setState({isPasswordEditingEnabled: true});
-  }
-
-  render() {
-    const {
-      showCalculatedFields,
-      constrainPasswordEditing,
-      errors,
-      touched,
-      userBeingEdited,
-    } = this.props;
-    const loginFailureCopy = (
-      <p>
-        Login attempts with an incorrect password:{' '}
-        {userBeingEdited.login_failures}
-      </p>
+const LoginStatsCopy = ({lastLogin, loginCount}) => {
+  lastLogin = moment(lastLogin);
+  let loginStatsCopy =
+    loginCount === 0 ? (
+      <div>This user has never logged in.</div>
+    ) : (
+      <div>
+        <p>
+          Last login: {lastLogin.fromNow()}, at{' '}
+          {lastLogin.format('MMMM Do YYYY, h:mm:ss a')}{' '}
+        </p>
+        <p>Total logins: {loginCount}</p>
+      </div>
     );
-    const lastLogin = moment(userBeingEdited.last_login);
-    let loginStatsCopy =
-      userBeingEdited.login_count === 0 ? (
-        <div>This user has never logged in.</div>
-      ) : (
-        <div>
-          <p>
-            Last login: {lastLogin.fromNow()}, at{' '}
-            {lastLogin.format('MMMM Do YYYY, h:mm:ss a')}{' '}
-          </p>
-          <p>Total logins: {userBeingEdited.login_count}</p>
-        </div>
-      );
+  return loginStatsCopy;
+};
 
-    const showPasswordField =
-      this.state.isPasswordEditingEnabled || !constrainPasswordEditing;
-    return (
-      <div className="container">
-        <div className="section">
-          <div className="section__title">
-            <h3>Account</h3>
+const UpdatedCopy = ({updatedBy, updatedOn}) => {
+  //    updatedOn k
+};
+
+const UserFields = ({
+  showCalculatedFields,
+  errors,
+  touched,
+  userBeingEdited,
+}) => (
+  <div className="container">
+    <div className="section">
+      <div className="section__title">
+        <h3>Account</h3>
+      </div>
+      <div className="section__fields">
+        <div className="section__fields__row">
+          <div className="field-container vertical">
+            <label>First name</label>
+            <Field name="first_name" type="text" label="First name" />
           </div>
-          <div className="section__fields">
-            <div className="section__fields__row">
-              <div className="field-container vertical">
-                <label>First name</label>
-                <Field name="first_name" type="text" label="First name" />
-              </div>
-              <div className="field-container vertical">
-                <label>Email</label>
-                <Field name="email" validate={[required]} label="Email" />
-                <Validation
-                  propertyName="email"
-                  errors={errors}
-                  touched={touched}
-                />
-              </div>
-            </div>
-
-            <div className="section__fields__row">
-              <div className="field-container vertical">
-                <label>Last name</label>
-                <Field name="last_name" type="text" label="Last name" />
-              </div>
-              <div className="field-container vertical">
-                <label>Account status</label>
-                <Field name="state" component="select" validate={[required]}>
-                  <option value="enabled">Active</option>
-                  <option value="disabled">Inactive</option>
-                  <option value="locked">Locked</option>
-                </Field>
-              </div>
-            </div>
+          <div className="field-container vertical">
+            <label>Email</label>
+            <Field name="email" validate={[required]} label="Email" />
+            <Validation
+              propertyName="email"
+              errors={errors}
+              touched={touched}
+            />
           </div>
         </div>
 
-        <div className="section">
-          <div className="section__title">
-            <h3>Password</h3>
-            <p>You can change this user's password here</p>
+        <div className="section__fields__row">
+          <div className="field-container vertical">
+            <label>Last name</label>
+            <Field name="last_name" type="text" label="Last name" />
           </div>
-          <div className="section__fields">
-            <div className="section__fields__row">
-              <div className="field-container vertical">
-                <label>Password</label>
-                <Field name="password" type="password" label="Password" />
-                <Validation
-                  propertyName="password"
-                  errors={errors}
-                  touched={touched}
-                />
-              </div>
-              <div className="field-container vertical">
-                <label>Verify password</label>
-                <Field name="verifyPassword" type="password" />
-                <Validation
-                  propertyName="verifyPassword"
-                  errors={errors}
-                  touched={touched}
-                />
-              </div>
-            </div>
+          <div className="field-container vertical">
+            <label>Account status</label>
+            <Field name="state" component="select" validate={[required]}>
+              <option value="enabled">Active</option>
+              <option value="disabled">Inactive</option>
+              <option value="locked">Locked</option>
+            </Field>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div className="section">
+      <div className="section__title">
+        <h3>Password</h3>
+        <p>You can change this user's password here</p>
+      </div>
+      <div className="section__fields">
+        <div className="section__fields__row">
+          <div className="field-container vertical">
+            <label>Password</label>
+            <Field name="password" type="password" label="Password" />
+            <Validation
+              propertyName="password"
+              errors={errors}
+              touched={touched}
+            />
+          </div>
+          <div className="field-container vertical">
+            <label>Verify password</label>
+            <Field name="verifyPassword" type="password" />
+            <Validation
+              propertyName="verifyPassword"
+              errors={errors}
+              touched={touched}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="section">
+      <div className="section__title">
+        <h3>Comments</h3>
+      </div>
+      <div className="section__fields">
+        <div className="section__fields__row 1-column">
+          <Field
+            className="section__fields__comments"
+            name="comments"
+            type="textarea"
+          />
+        </div>
+      </div>
+    </div>
+
+    {showCalculatedFields ? (
+      <React.Fragment>
         <div className="section">
           <div className="section__title">
-            <h3>Comments</h3>
+            <h3>Statistics</h3>
           </div>
           <div className="section__fields">
-            <div className="section__fields__row 1-column">
-              <Field
-                className="section__fields__comments"
-                name="comments"
-                type="textarea"
+            <div className="section__fields_row">
+              <LoginFailureCopy attemptCount={userBeingEdited.login_count} />
+              <LoginStatsCopy
+                lastLogin={userBeingEdited.last_login}
+                loginCount={userBeingEdited.login_count}
               />
             </div>
           </div>
         </div>
 
-        {showCalculatedFields ? (
-          <React.Fragment>
-            <div className="section">
-              <div className="section__title">
-                <h3>Statistics</h3>
-              </div>
-              <div className="section__fields">
-                <div className="section__fields_row">
-                  {loginFailureCopy}
-                  {loginStatsCopy}
-                </div>
-              </div>
+        <div className="section">
+          <div className="section__title">
+            <h3>Audit</h3>
+          </div>
+          <div className="section__fields">
+            <div className="section__fields__rows">
+              <Field
+                disabled
+                name="updated_on"
+                type="text"
+                label="Updated on"
+              />
+
+              <Field
+                disabled
+                name="updated_by_user"
+                type="text"
+                label="Updated by"
+              />
+
+              <Field
+                disabled
+                name="created_on"
+                type="text"
+                label="Created on"
+              />
+
+              <Field
+                disabled
+                name="created_by_user"
+                type="text"
+                label="Created by"
+              />
             </div>
-
-            <div className="section">
-              <div className="section__title">
-                <h3>Audit</h3>
-              </div>
-              <div className="section__fields">
-                <div className="section__fields__rows">
-                  <Field
-                    disabled
-                    name="updated_on"
-                    type="text"
-                    label="Updated on"
-                  />
-
-                  <Field
-                    disabled
-                    name="updated_by_user"
-                    type="text"
-                    label="Updated by"
-                  />
-
-                  <Field
-                    disabled
-                    name="created_on"
-                    type="text"
-                    label="Created on"
-                  />
-
-                  <Field
-                    disabled
-                    name="created_by_user"
-                    type="text"
-                    label="Created by"
-                  />
-                </div>
-              </div>
-            </div>
-          </React.Fragment>
-        ) : (
-          undefined
-        )}
-      </div>
-    );
-  }
-}
+          </div>
+        </div>
+      </React.Fragment>
+    ) : (
+      undefined
+    )}
+  </div>
+);
 
 UserFields.propTypes = {
   showCalculatedFields: PropTypes.bool.isRequired,
-  constrainPasswordEditing: PropTypes.bool.isRequired,
 };
 
 export default UserFields;

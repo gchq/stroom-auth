@@ -22,7 +22,6 @@ import {NavLink} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Formik, Form} from 'formik';
 import {withProps, branch, compose, renderComponent} from 'recompose';
-import * as Yup from 'yup';
 
 import './EditUser.css';
 import UserFields from '../userFields';
@@ -30,6 +29,8 @@ import {
   saveChanges as onSubmit,
   toggleAlertVisibility,
 } from '../../../modules/user';
+import {hasAnyProps} from '../../../lang';
+import {UserValidationSchema, validateAsync} from '../validation';
 
 const enhance = compose(
   connect(
@@ -57,81 +58,24 @@ const enhance = compose(
   }),
 );
 
-const UserValidationSchema = Yup.object().shape({
-  email: Yup.string().required('Required'),
-});
-
-function hasAnyProps(object) {
-  let hasProps = false;
-  for (const prop in object) {
-    if (object.hasOwnProperty(prop)) {
-      hasProps = true;
-    }
-  }
-  return hasProps;
-}
-
-const validate = (values, idToken, url) => {
-  if (values.email !== undefined && values.password !== undefined) {
-    if (
-      values.verifyPassword !== undefined &&
-      values.password !== values.verifyPassword
-    ) {
-      return {verifyPassword: 'Passwords do not match'};
-    }
-
-    return fetch(`${url}/isPasswordValid`, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-      method: 'post',
-      mode: 'cors',
-      body: JSON.stringify({
-        email: values.email,
-        newPassword: values.password,
-      }),
-    })
-      .then(response => response.json())
-      .then(body => {
-        let asyncErrors = [];
-        if (body.failedOn.length > 0) {
-          body.failedOn.map(failureType => {
-            if (failureType === 'LENGTH') {
-              asyncErrors.push('Not long enough');
-            } else if (failureType === 'COMPLEXITY') {
-              asyncErrors.push('Does not meet complexity requirements');
-            }
-          });
-        }
-        if (asyncErrors.length > 0) {
-          throw {password: asyncErrors.join('\n')};
-        }
-      });
-  } else {
-  }
-};
-
-const UserEditForm = props => {
-  const {
+const UserEditForm = ({
     userBeingEdited,
     idToken,
     authenticationServiceUrl,
     handleSubmit,
     onSubmit,
-  } = props;
+  }) => {
   return (
     <Formik
       onSubmit={(values, actions) => {
         onSubmit(values);
       }}
       initialValues={{...userBeingEdited}}
-      validate={values => validate(values, idToken, authenticationServiceUrl)}
+      validate={values => validateAsync(values, idToken, authenticationServiceUrl)}
       validationSchema={UserValidationSchema}>
       {({errors, touched}) => {
-        let isPristine = !hasAnyProps(touched);
-        let hasErrors = hasAnyProps(errors);
+        const isPristine = !hasAnyProps(touched);
+        const hasErrors = hasAnyProps(errors);
         return (
           <Form>
             <div className="header">
@@ -149,7 +93,6 @@ const UserEditForm = props => {
             </div>
             <UserFields
               showCalculatedFields
-              constrainPasswordEditing
               userBeingEdited={userBeingEdited}
               errors={errors}
               touched={touched}
