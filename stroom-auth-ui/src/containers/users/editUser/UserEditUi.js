@@ -14,55 +14,162 @@
  * limitations under the License.
  */
 
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { reduxForm } from 'redux-form'
-import { NavLink } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {reduxForm} from 'redux-form';
+import {NavLink} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Formik, Form} from 'formik';
+import {withProps, branch, compose, renderComponent} from 'recompose';
+import * as Yup from 'yup';
 
-import './EditUser.css'
-import UserFields from '../userFields'
-import {saveChanges as onSubmit, toggleAlertVisibility} from '../../../modules/user'
+import './EditUser.css';
+import UserFields from '../userFields';
+import {
+  saveChanges as onSubmit,
+  toggleAlertVisibility,
+} from '../../../modules/user';
 
-const UserEditForm = props => {
-  const { handleSubmit, pristine, submitting } = props
-  return (
-      <div>
-      <form onSubmit={handleSubmit}>
-        <div className='header'>
-         <button
-          className='toolbar-button-small'
-          disabled={pristine || submitting}
-          type='submit'
-         ><FontAwesomeIcon icon='save'/> Save</button>
-        <NavLink to='/userSearch'>
-          <button className='toolbar-button-small'><FontAwesomeIcon icon='times'/> Cancel</button>
-        </NavLink>
-      </div>
-        <UserFields showCalculatedFields constrainPasswordEditing />
-      </form>
-    </div>
-  )
+// We don't have the original password -- that's encrypted on the server
+// But we need the 'Password' field to be populated with something,
+// so we use a dummy password. This also allows us to check to see if
+// the password has been changed.
+const DUMMY_PASSWORD = 'xxxxxxxx';
+
+const enhance = compose(
+  connect(
+    ({
+      user: {userBeingEdited, showAlert, alertText},
+      authentication: {idToken},
+      config: {authenticationServiceUrl},
+    }) => ({
+      userBeingEdited,
+      showAlert,
+      alertText,
+      idToken,
+      authenticationServiceUrl,
+    }),
+    {onSubmit, toggleAlertVisibility},
+  ),
+  branch(
+    ({userBeingEdited}) => !userBeingEdited,
+    renderComponent(() => <div>Loading data...</div>),
+  ),
+  withProps(({userBeingEdited}) => {
+    userBeingEdited.password = undefined;
+    userBeingEdited.verifyPassword = undefined;
+  }),
+);
+
+const UserValidationSchema = Yup.object().shape({
+  email: Yup.string().required('Required'),
+});
+
+function hasAnyProps(object) {
+  let hasProps = false;
+  for (const prop in object) {
+    if (object.hasOwnProperty(prop)) {
+      hasProps = true;
+    }
+  }
+  return hasProps;
 }
 
-const ReduxUserEditForm = reduxForm({
-  form: 'UserEditForm',
-  enabledReinitalize: true
-})(UserEditForm)
+const validate = (values, idToken, url) => {
+  if (values.email !== undefined && values.password !== undefined) {
+    if (
+      values.verifyPassword !== undefined &&
+      values.password !== values.verifyPassword
+    ) {
+      return {verifyPassword: 'Passwords do not match'};
+    }
 
-const mapStateToProps = state => ({
-  initialValues: state.user.userBeingEdited,
-  showAlert: state.user.showAlert,
-  alertText: state.user.alertText
-})
+    return fetch(`${url}/isPasswordValid`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + idToken,
+      },
+      method: 'post',
+      mode: 'cors',
+      body: JSON.stringify({
+        email: values.email,
+        newPassword: values.password,
+      }),
+    })
+      .then(response => response.json())
+      .then(body => {
+        let asyncErrors = [];
+        if (body.failedOn.length > 0) {
+          body.failedOn.map(failureType => {
+            if (failureType === 'LENGTH') {
+              asyncErrors.push('Not long enough');
+            } else if (failureType === 'COMPLEXITY') {
+              asyncErrors.push('Does not meet complexity requirements');
+            }
+          });
+        }
+        if (asyncErrors.length > 0) {
+          throw {password: asyncErrors.join('\n')};
+        }
+      });
+  } else {
+  }
+};
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  onSubmit,
-  toggleAlertVisibility
-}, dispatch)
+const UserEditForm = props => {
+  const {
+    userBeingEdited,
+    idToken,
+    authenticationServiceUrl,
+    handleSubmit,
+    onSubmit,
+  } = props;
+  return (
+    <Formik
+      onSubmit={(values, actions) => {
+        // If the password field is the same as the initial dummy password
+        // then we'll throw the value away so we don't send it to the server.
+        // If it's not then it'll have been validated against the verify
+        // password field already and we'll let it through.
+        if (values.password === DUMMY_PASSWORD) {
+          values.password = undefined;
+        }
+        onSubmit(values);
+      }}
+      initialValues={{...userBeingEdited}}
+      validate={values => validate(values, idToken, authenticationServiceUrl)}
+      validationSchema={UserValidationSchema}>
+      {({errors, touched}) => {
+        let isPristine = !hasAnyProps(touched);
+        let hasErrors = hasAnyProps(errors);
+        return (
+          <Form>
+            <div className="header">
+              <button
+                className="toolbar-button-small"
+                disabled={isPristine || hasErrors}
+                type="submit">
+                <FontAwesomeIcon icon="save" /> Save
+              </button>
+              <NavLink to="/userSearch">
+                <button className="toolbar-button-small">
+                  <FontAwesomeIcon icon="times" /> Cancel
+                </button>
+              </NavLink>
+            </div>
+            <UserFields
+              showCalculatedFields
+              constrainPasswordEditing
+              errors={errors}
+              touched={touched}
+            />
+          </Form>
+        );
+      }}
+    </Formik>
+  );
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReduxUserEditForm)
+export default enhance(UserEditForm);

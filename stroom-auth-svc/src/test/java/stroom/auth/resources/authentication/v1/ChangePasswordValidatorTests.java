@@ -44,7 +44,7 @@ public class ChangePasswordValidatorTests {
                 .as("Should have failed type of BAD_OLD_PASSWORD: %s",
                         result.failedOn.stream().map(Object::toString).collect(Collectors.joining(", ")))
                 .hasSize(1)
-                .contains(ChangePasswordResponse.FailTypes.BAD_OLD_PASSWORD);
+                .contains(PasswordValidationFailureType.BAD_OLD_PASSWORD);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class ChangePasswordValidatorTests {
                 .as("Should have failed type of LENGTH: %s",
                         result.failedOn.stream().map(Object::toString).collect(Collectors.joining(", ")))
                 .hasSize(1)
-                .contains(ChangePasswordResponse.FailTypes.LENGTH);
+                .contains(PasswordValidationFailureType.LENGTH);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ChangePasswordValidatorTests {
                 .as("Should have failed type of COMPLEXITY: %s",
                         result.failedOn.stream().map(Object::toString).collect(Collectors.joining(", ")))
                 .hasSize(1)
-                .contains(ChangePasswordResponse.FailTypes.COMPLEXITY);
+                .contains(PasswordValidationFailureType.COMPLEXITY);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ChangePasswordValidatorTests {
                 .as("Should have failed type of REUSE: %s",
                         result.failedOn.stream().map(Object::toString).collect(Collectors.joining(", ")))
                 .hasSize(1)
-                .contains(ChangePasswordResponse.FailTypes.REUSE);
+                .contains(PasswordValidationFailureType.REUSE);
     }
 
     @Test
@@ -131,10 +131,10 @@ public class ChangePasswordValidatorTests {
                 .as("Should have no failed types: %s",
                         result.failedOn.stream().map(Object::toString).collect(Collectors.joining(", ")))
                 .hasSize(4)
-                .contains(ChangePasswordResponse.FailTypes.REUSE)
-                .contains(ChangePasswordResponse.FailTypes.COMPLEXITY)
-                .contains(ChangePasswordResponse.FailTypes.LENGTH)
-                .contains(ChangePasswordResponse.FailTypes.BAD_OLD_PASSWORD);
+                .contains(PasswordValidationFailureType.REUSE)
+                .contains(PasswordValidationFailureType.COMPLEXITY)
+                .contains(PasswordValidationFailureType.LENGTH)
+                .contains(PasswordValidationFailureType.BAD_OLD_PASSWORD);
 
 
     }

@@ -14,168 +14,198 @@
  * limitations under the License.
  */
 
-import React, { Component } from "react";
-import { Field } from "redux-form";
-import PropTypes from "prop-types";
+import React, {Component} from 'react';
+//import {Field} from 'redux-form';
+import PropTypes from 'prop-types';
+import {Field} from 'formik';
 
-import "./UserFields.css";
-import { required, email } from "../../../validations";
-import { renderField } from "../../../renderField";
+import './UserFields.css';
+import {required, email} from '../../../validations';
+import {renderField, renderVerticalField} from '../../../renderField';
 
-/*
-This can display all user fields, or not.
-*/
+function AccountFields(props) {
+  return undefined;
+}
+
+const Validation = ({propertyName, errors, touched}) => {
+  const error = errors[propertyName];
+  const isTouched = touched[propertyName];
+  if (error && isTouched) {
+    return <div className="validation-error">{error}</div>;
+  } else {
+    return null;
+  }
+};
+
 class UserFields extends Component {
   constructor() {
     super();
     this.state = {
-      isPasswordEditingEnabled: false
+      isPasswordEditingEnabled: false,
     };
   }
 
   handleShowPasswordField() {
-    this.setState({ isPasswordEditingEnabled: true });
+    this.setState({isPasswordEditingEnabled: true});
   }
 
   render() {
     const {
       showCalculatedFields,
       constrainPasswordEditing,
-      error
+      errors,
+      touched,
     } = this.props;
     const showPasswordField =
       this.state.isPasswordEditingEnabled || !constrainPasswordEditing;
     return (
       <div className="container">
-        <div className="left-container">
-          <Field
-            className="CreateUserForm-field"
-            name="email"
-            component={renderField}
-            type="text"
-            validate={[required]}
-            warn={email}
-            label="Email"
-          />
-          {showPasswordField ? (
-            <Field
-              className="CreateUserForm-field"
-              name="password"
-              type="password"
-              component={renderField}
-              validate={[required]}
-              label="Password"
-            />
-          ) : (
-            <div className="field-container">
-              <label>Password</label>
-              <button onClick={() => this.handleShowPasswordField()}>
-                Edit password
-              </button>
+        <div className="section">
+            <div className="section__title"><h3>Account</h3></div>
+          <div className="section__fields">
+            <div className="section__fields__row">
+              <div className="field-container vertical">
+                <label>First name</label>
+                <Field name="first_name" type="text" label="First name" />
+              </div>
+              <div className="field-container vertical">
+                <label>Email</label>
+                <Field name="email" validate={[required]} label="Email" />
+                <Validation
+                  propertyName="email"
+                  errors={errors}
+                  touched={touched}
+                />
+              </div>
             </div>
-          )}
 
-          <Field
-            className="CreateUserForm-field"
-            name="first_name"
-            component={renderField}
-            type="text"
-            label="First name"
-          />
-          <Field
-            className="CreateUserForm-field"
-            name="last_name"
-            component={renderField}
-            type="text"
-            label="Last name"
-          />
-          <Field
-            className="CreateUserForm-field"
-            name="comments"
-            component={renderField}
-            type="textarea"
-            label="Comments"
-          />
+            <div className="section__fields__row">
+              <div className="field-container vertical">
+                <label>Last name</label>
+                <Field name="last_name" type="text" label="Last name" />
+              </div>
+              <div className="field-container vertical">
+                <label>Account status</label>
+                <Field name="state" component="select" validate={[required]}>
+                  <option value="enabled">Active</option>
+                  <option value="disabled">Inactive</option>
+                  <option value="locked">Locked</option>
+                </Field>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <div className="field-container">
-            <label>Account status</label>
-            <Field name="state" component="select" validate={[required]}>
-              <option value="enabled">Active</option>
-              <option value="disabled">Inactive</option>
-              <option value="locked">Locked</option>
-            </Field>
+        <div className="section">
+            <div className="section__title"><h3>Password</h3><p>You can change this user's password here</p></div>
+          <div className="section__fields">
+            <div className="section__fields__row">
+              <div className="field-container vertical">
+                <label>Password</label>
+                <Field
+                  name="password"
+                  type="password"
+                  label="Password"
+                />
+                <Validation
+                  propertyName="password"
+                  errors={errors}
+                  touched={touched}
+                />
+              </div>
+              <div className="field-container vertical">
+                <label>Verify password</label>
+                <Field name="verifyPassword" type="password" />
+                <Validation
+                  propertyName="verifyPassword"
+                  errors={errors}
+                  touched={touched}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="section">
+            <div className="section__title"><h3>Comments</h3></div>
+          <div className="section__fields">
+            <div className="section__fields__row 1-column">
+                <Field
+                    className="section__fields__comments"
+                name="comments"
+                type="textarea"
+              />
+            </div>
           </div>
         </div>
 
         {showCalculatedFields ? (
-          <div className="right-container">
-            <Field
-              disabled
-              className="CreateUserForm-field"
-              name="login_failures"
-              component={renderField}
-              type="text"
-              label="Login failures"
-            />
+          <React.Fragment>
+            <div className="section">
+                <div className="section__title"><h3>Statistics</h3></div>
+              <div className="section__fields">
+                <div className="section__fields_row">
+                  <Field
+                    disabled
+                    name="login_failures"
+                    type="text"
+                    label="Login failures"
+                  />
 
-            <Field
-              disabled
-              className="CreateUserForm-field"
-              name="login_count"
-              component={renderField}
-              type="text"
-              label="Login count"
-            />
+                  <Field
+                    disabled
+                    name="login_count"
+                    type="text"
+                    label="Login count"
+                  />
 
-            <Field
-              disabled
-              className="CreateUserForm-field"
-              name="last_login"
-              component={renderField}
-              type="text"
-              label="Last login"
-            />
+                  <Field
+                    disabled
+                    name="last_login"
+                    type="text"
+                    label="Last login"
+                  />
+                </div>
+              </div>
+            </div>
 
-            <Field
-              disabled
-              className="CreateUserForm-field"
-              name="updated_on"
-              component={renderField}
-              type="text"
-              label="Updated on"
-            />
+            <div className="section">
+                <div className="section__title"><h3>Audit</h3></div>
+              <div className="section__fields">
+                <div className="section__fields__rows">
+                  <Field
+                    disabled
+                    name="updated_on"
+                    type="text"
+                    label="Updated on"
+                  />
 
-            <Field
-              disabled
-              className="CreateUserForm-field"
-              name="updated_by_user"
-              component={renderField}
-              type="text"
-              label="Updated by"
-            />
+                  <Field
+                    disabled
+                    name="updated_by_user"
+                    type="text"
+                    label="Updated by"
+                  />
 
-            <Field
-              disabled
-              className="CreateUserForm-field"
-              name="created_on"
-              component={renderField}
-              type="text"
-              label="Created on"
-            />
+                  <Field
+                    disabled
+                    name="created_on"
+                    type="text"
+                    label="Created on"
+                  />
 
-            <Field
-              disabled
-              className="CreateUserForm-field"
-              name="created_by_user"
-              component={renderField}
-              type="text"
-              label="Created by"
-            />
-          </div>
+                  <Field
+                    disabled
+                    name="created_by_user"
+                    type="text"
+                    label="Created by"
+                  />
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
         ) : (
-          <div />
+          undefined
         )}
-        {error && <strong>{error}</strong>}
       </div>
     );
   }
@@ -183,7 +213,7 @@ class UserFields extends Component {
 
 UserFields.propTypes = {
   showCalculatedFields: PropTypes.bool.isRequired,
-  constrainPasswordEditing: PropTypes.bool.isRequired
+  constrainPasswordEditing: PropTypes.bool.isRequired,
 };
 
 export default UserFields;

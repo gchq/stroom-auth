@@ -25,7 +25,7 @@ import { performUserSearch, changeSelectedRow } from "./userSearch";
 export const CREATE_REQUEST = "user/CREATE_REQUEST";
 export const CREATE_RESPONSE = "user/CREATE_RESPONSE";
 export const SHOW_CREATE_LOADER = "user/SHOW_CREATE_LOADER";
-export const SAVE_USER_TO_EDIT_FORM = "user/SAVE_USER_TO_EDIT_FORM";
+export const SAVE_USER_BEING_EDITED = "user/SAVE_USER_BEING_EDITED";
 export const CHANGE_VISIBLE_CONTAINER = "user/CHANGE_VISIBLE_CONTAINER";
 export const TOGGLE_ALERT_VISIBILITY = "user/TOGGLE_ALERT_VISIBILITY";
 export const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE =
@@ -40,7 +40,6 @@ const initialState = {
   alertText: "",
   showAlert: false,
   changePasswordErrorMessage: [],
-  userBeingEdited: { state: "enabled" }
 };
 
 export default (state = initialState, action) => {
@@ -61,7 +60,7 @@ export default (state = initialState, action) => {
         showCreateLoader: action.showCreateLoader
       };
 
-    case SAVE_USER_TO_EDIT_FORM:
+    case SAVE_USER_BEING_EDITED:
       return {
         ...state,
         userBeingEdited: action.user
@@ -132,6 +131,13 @@ function hideChangePasswordErrorMessage() {
   };
 }
 
+function saveUserBeingEdited(user) {
+    return {
+        type: SAVE_USER_BEING_EDITED,
+        user
+    }
+}
+
 function handleStatus(response) {
   if (response.status === 200) {
     return Promise.resolve(response);
@@ -184,6 +190,7 @@ export const saveChanges = editedUser => {
     })
       .then(handleStatus)
       .then(() => {
+          dispatch(saveUserBeingEdited(undefined))
         dispatch(push("/userSearch"));
         dispatch(toggleAlertVisibility("User has been updated"));
       })
@@ -246,8 +253,7 @@ export const fetchUser = userId => {
       .then(modifyDataForDisplay)
       .then(user => {
         dispatch(showCreateLoader(false));
-        // Use the redux-form action creator to re-initialize the form with this user
-        dispatch(initialize("UserEditForm", user));
+        dispatch(saveUserBeingEdited(user));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));
   };

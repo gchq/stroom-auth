@@ -447,6 +447,27 @@ public final class AuthenticationResource {
         return Response.status(Status.OK).entity(userNeedsToChangePassword).build();
     }
 
+    @POST
+    @Path("isPasswordValid")
+    @Timed
+    @NotNull
+    @ApiOperation(value = "Returns the length and complexity rules.",
+            response = Boolean.class, tags = {"Authentication"})
+    public final Response isPasswordValid(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @ApiParam("passwordValidationRequest") @NotNull PasswordValidationRequest passwordValidationRequest) {
+
+        PasswordValidationFailureType[] failedOn = PasswordValidator
+                .validate(config.getPasswordIntegrityChecksConfig(), passwordValidationRequest.getNewPassword());
+
+        PasswordValidationResponse response = PasswordValidationResponse.PasswordValidationResponseBuilder
+                .aPasswordValidationResponse()
+                .withFailedOn(failedOn)
+                .build();
+
+        return Response.status(Status.OK).entity(response).build();
+    }
+
     /**
      * Checks to see if the user needs to change their password, and re-directs them accordingly if they do.
      * If they don't it will create the redirection URL with access code as normal.

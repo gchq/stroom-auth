@@ -14,39 +14,39 @@
  * limitations under the License.
  */
 
-import React from "react";
-import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { compose } from "recompose";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Formik } from "formik";
-import { AsyncUserSelect } from "../../users";
-import "./CreateTokenForm.css";
-import "../../Layout.css";
+import React from 'react';
+import {connect} from 'react-redux';
+import {NavLink} from 'react-router-dom';
+import {compose} from 'recompose';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Formik} from 'formik';
+import {AsyncUserSelect} from '../../users';
+import './CreateTokenForm.css';
+import '../../Layout.css';
 import {
   createToken as onSubmit,
-  userAutoCompleteChange
-} from "../../../modules/token";
+  userAutoCompleteChange,
+} from '../../../modules/token';
 
 const enhance = compose(
   connect(
     ({
-      authentication: { idToken },
-      token: { matchingAutoCompleteResults, errorMessage }
+      authentication: {idToken},
+      token: {matchingAutoCompleteResults, errorMessage},
     }) => ({
       idToken,
       matchingAutoCompleteResults,
-      errorMessage
+      errorMessage,
     }),
     {
       userAutoCompleteChange,
-      onSubmit
-    }
-  )
+      onSubmit,
+    },
+  ),
 );
 
 const TokenCreateForm = props => {
-  const { onSubmit } = props;
+  const {onSubmit} = props;
   return (
     <div className="CreateTokenForm-card">
       <Formik
@@ -57,22 +57,23 @@ const TokenCreateForm = props => {
         render={props => (
           <form onSubmit={props.handleSubmit}>
             <div className="header">
-              <button className='toolbar-button-small' type="submit">
+              <button className="toolbar-button-small" type="submit">
                 <FontAwesomeIcon icon="plus" /> Create
               </button>
               <NavLink to="/tokens">
-                <button className='toolbar-button-small'>
-                    <FontAwesomeIcon icon='times'/> Cancel</button>
+                <button className="toolbar-button-small">
+                  <FontAwesomeIcon icon="times" /> Cancel
+                </button>
               </NavLink>
             </div>
             <div className="left-container">
               <div className="field-container">
-                  <label>User's email</label>
-                  <AsyncUserSelect onChange={props.setFieldValue} />
+                <label>User's email</label>
+                <AsyncUserSelect onChange={props.setFieldValue} />
               </div>
             </div>
             <div className="CreateTokenForm-errorMessage">
-              {" "}
+              {' '}
               {props.errorMessage}
             </div>
           </form>

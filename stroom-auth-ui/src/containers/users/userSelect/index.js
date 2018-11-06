@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-import React, { useState } from "react";
-import AsyncSelect from "react-select/lib/Async";
-import { useMappedState } from "redux-react-hook";
+import React, {useState} from 'react';
+import AsyncSelect from 'react-select/lib/Async';
+import {useMappedState} from 'redux-react-hook';
 
-import "./asyncUserSelect.css";
+import './asyncUserSelect.css';
 
 const loadOptions = (inputValue, callback, idToken, url) => {
   fetch(`${url}/search?email=${inputValue}`, {
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + idToken
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + idToken,
     },
-    method: "get",
-    mode: "cors"
+    method: 'get',
+    mode: 'cors',
   })
     .then(response => response.json())
     .then(body => {
       const options = body.map(result => {
-        return { value: result.id, label: result.email };
+        return {value: result.id, label: result.email};
       });
       callback(options);
     });
@@ -41,31 +41,31 @@ const loadOptions = (inputValue, callback, idToken, url) => {
 
 const mapState = state => ({
   idToken: state.authentication.idToken,
-  url: state.config.userServiceUrl
+  url: state.config.userServiceUrl,
 });
 
 const customStyles = {
   option: (provided, state) => ({
     ...provided,
-    fontSize: 14
+    fontSize: 14,
   }),
   placeholder: (provided, state) => ({
-    fontSize: 14
+    fontSize: 14,
   }),
   input: (provided, state) => ({
     ...provided,
-    fontSize: 14
+    fontSize: 14,
   }),
   singleValue: (provided, state) => ({
     ...provided,
-    fontSize: 14
-  })
+    fontSize: 14,
+  }),
 };
 
 function AsyncUserSelect(props) {
-  const { onChange } = props;
-  const [inputValue, setInputValue] = useState("");
-  const { idToken, url } = useMappedState(mapState);
+  const {onChange} = props;
+  const [inputValue, setInputValue] = useState('');
+  const {idToken, url} = useMappedState(mapState);
 
   return (
     <AsyncSelect
@@ -80,7 +80,7 @@ function AsyncUserSelect(props) {
         setInputValue(value);
         return value;
       }}
-      onChange={value => onChange("user", value)}
+      onChange={value => onChange('user', value)}
     />
   );
 }
