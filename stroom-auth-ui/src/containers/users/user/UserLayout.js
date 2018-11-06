@@ -22,7 +22,7 @@ import { bindActionCreators } from 'redux'
 import UserSearch from '../userSearch'
 import UserCreate from '../createUser'
 import UserEdit from '../editUser'
-import { deleteSelectedUser, toggleAlertVisibility } from '../../../modules/user'
+import { toggleAlertVisibility, clearUserBeingEdited } from '../../../modules/user'
 
 import '../../../styles/index.css'
 import '../../../styles/toolbar-small.css'
@@ -33,21 +33,12 @@ class UserLayout extends Component {
     super()
     this.state = {
       isFilteringEnabled: false,
-      isHelpDialogOpen: false
     }
   }
-
-  deleteSelectedUser () {
-    this.context.store.dispatch(deleteSelectedUser())
+  componentDidMount() {
+    this.context.store.dispatch(clearUserBeingEdited());
   }
 
-  handleHelpDialogOpen () {
-    this.setState({isHelpDialogOpen: true})
-  };
-
-  handleHelpDialogClose () {
-    this.setState({isHelpDialogOpen: false})
-  };
 
   render () {
     const { show } = this.props
@@ -62,7 +53,6 @@ class UserLayout extends Component {
           {showEdit ? (<UserEdit />) : (undefined)}
         </div>
       </div>
-
     )
   }
 }
@@ -79,7 +69,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  deleteSelectedUser,
   toggleAlertVisibility
 }, dispatch)
 

@@ -31,6 +31,7 @@ export const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE =
   'user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE';
 export const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE =
   'user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE';
+export const CLEAR_USER_BEING_EDITED = 'user/CLEAR_USER_BEING_EDITED';
 
 const initialState = {
   user: '',
@@ -64,6 +65,12 @@ export default (state = initialState, action) => {
         ...state,
         userBeingEdited: action.user,
       };
+
+    case CLEAR_USER_BEING_EDITED:
+          return {
+              ...state,
+              userBeingEdited: undefined
+          };
 
     case CHANGE_VISIBLE_CONTAINER:
       return {
@@ -135,6 +142,12 @@ function saveUserBeingEdited(user) {
     type: SAVE_USER_BEING_EDITED,
     user,
   };
+}
+
+export function clearUserBeingEdited() {
+    return {
+        type: CLEAR_USER_BEING_EDITED
+    }
 }
 
 function handleStatus(response) {
