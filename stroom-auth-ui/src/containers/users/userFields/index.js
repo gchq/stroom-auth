@@ -60,7 +60,9 @@ class UserFields extends Component {
     return (
       <div className="container">
         <div className="section">
-            <div className="section__title"><h3>Account</h3></div>
+          <div className="section__title">
+            <h3>Account</h3>
+          </div>
           <div className="section__fields">
             <div className="section__fields__row">
               <div className="field-container vertical">
@@ -96,16 +98,15 @@ class UserFields extends Component {
         </div>
 
         <div className="section">
-            <div className="section__title"><h3>Password</h3><p>You can change this user's password here</p></div>
+          <div className="section__title">
+            <h3>Password</h3>
+            <p>You can change this user's password here</p>
+          </div>
           <div className="section__fields">
             <div className="section__fields__row">
               <div className="field-container vertical">
                 <label>Password</label>
-                <Field
-                  name="password"
-                  type="password"
-                  label="Password"
-                />
+                <Field name="password" type="password" label="Password" />
                 <Validation
                   propertyName="password"
                   errors={errors}
@@ -125,11 +126,13 @@ class UserFields extends Component {
           </div>
         </div>
         <div className="section">
-            <div className="section__title"><h3>Comments</h3></div>
+          <div className="section__title">
+            <h3>Comments</h3>
+          </div>
           <div className="section__fields">
             <div className="section__fields__row 1-column">
-                <Field
-                    className="section__fields__comments"
+              <Field
+                className="section__fields__comments"
                 name="comments"
                 type="textarea"
               />
@@ -140,7 +143,9 @@ class UserFields extends Component {
         {showCalculatedFields ? (
           <React.Fragment>
             <div className="section">
-                <div className="section__title"><h3>Statistics</h3></div>
+              <div className="section__title">
+                <h3>Statistics</h3>
+              </div>
               <div className="section__fields">
                 <div className="section__fields_row">
                   <Field
@@ -168,7 +173,9 @@ class UserFields extends Component {
             </div>
 
             <div className="section">
-                <div className="section__title"><h3>Audit</h3></div>
+              <div className="section__title">
+                <h3>Audit</h3>
+              </div>
               <div className="section__fields">
                 <div className="section__fields__rows">
                   <Field
