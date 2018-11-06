@@ -38,27 +38,6 @@ export const renderField = ({
         </div>
       );
 
-export const renderVerticalField = ({
-    disabled,
-    input, 
-    label, 
-    type, 
-    meta: { touched, error, warning}
-}) => (
-       <div className='field-container--vertical'>
-    {label ? <label>{label}</label> : (undefined) }
-          <div>
-          {type === 'textarea' ? (
-              <textarea disabled={disabled} {...input} rows='3'/>)
-              :(
-            <input disabled={disabled} {...input} type={type} />)}
-            {touched &&
-              ((error && <span className='field-container__error'>{error}</span>) ||
-                (warning && <span className='field-container__warning'>{warning}</span>))}
-          </div>
-        </div>
-  );
-
 export const renderCheckbox = ({
     disabled,
     input,

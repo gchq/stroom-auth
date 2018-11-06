@@ -21,7 +21,6 @@ import {Field} from 'formik';
 
 import './UserFields.css';
 import {required, email} from '../../../validations';
-import {renderField, renderVerticalField} from '../../../renderField';
 
 function AccountFields(props) {
   return undefined;
