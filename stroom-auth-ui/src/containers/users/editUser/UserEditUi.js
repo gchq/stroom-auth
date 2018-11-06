@@ -16,8 +16,6 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {reduxForm} from 'redux-form';
 import {NavLink} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Formik, Form} from 'formik';

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react';
-import {compose, withProps} from 'recompose';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {Field} from 'formik';
 import * as moment from 'moment';
 
 import './UserFields.css';
-import {required, email} from '../../../validations';
 
 const Validation = ({propertyName, errors, touched}) => {
   if (errors) {
@@ -57,7 +55,7 @@ const LoginStatsCopy = ({lastLogin, loginCount}) => {
 };
 
 const UpdatedCopy = ({updatedBy, updatedOn}) => {
-  //    updatedOn k
+    updatedOn
 };
 
 const UserFields = ({
@@ -79,7 +77,7 @@ const UserFields = ({
           </div>
           <div className="field-container vertical">
             <label>Email</label>
-            <Field name="email" validate={[required]} label="Email" />
+            <Field name="email" label="Email" />
             <Validation
               propertyName="email"
               errors={errors}
@@ -95,7 +93,7 @@ const UserFields = ({
           </div>
           <div className="field-container vertical">
             <label>Account status</label>
-            <Field name="state" component="select" validate={[required]}>
+            <Field name="state" component="select" >
               <option value="enabled">Active</option>
               <option value="disabled">Inactive</option>
               <option value="locked">Locked</option>

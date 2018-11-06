@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-import React, {useCallback, useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {reduxForm} from 'redux-form';
 import {NavLink} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {initialize} from 'redux-form';
 import {Formik, Form} from 'formik';
 import {compose} from 'recompose';
 
@@ -34,7 +31,6 @@ import {UserValidationSchema, validateAsync} from '../validation';
 const enhance = compose(
   connect(
     ({
-      user: {showCreateLoader, errorStatus, errorText},
       authentication: {idToken},
       config: {authenticationServiceUrl},
     }) => ({
@@ -47,9 +43,6 @@ const enhance = compose(
 
 const UserCreateForm = ({
   onSubmit,
-  pristine,
-  submitting,
-  error,
   idToken,
   authenticationServiceUrl,
 }) => {
@@ -85,7 +78,6 @@ const UserCreateForm = ({
               errors={errors}
               touched={touched}
             />
-            {error && <strong>{error}</strong>}
           </Form>
         );
       }}

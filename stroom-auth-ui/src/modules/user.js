@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {initialize} from 'redux-form';
 import {push} from 'react-router-redux';
 import dateFormat from 'dateformat';
 
