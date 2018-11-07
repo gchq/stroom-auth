@@ -35,7 +35,7 @@
 .field-container.vertical {
   display: flex;
   flex-direction: column;
-  width:50%;
+  width: 50%;
 }
 
 .field-container label {
@@ -72,8 +72,8 @@ textarea {
   padding-left: 5px;
 }
 
-.field-container--with-validation{
-  display:flex;
+.field-container--with-validation {
+  display: flex;
   flex-direction: row;
   align-items: center;
 }
@@ -100,7 +100,7 @@ textarea {
   flex-direction: row;
   width: 100%;
   border-top: solid 1px lightgrey;
-  padding:5px 5px 20px 5px;
+  padding: 5px 5px 20px 5px;
 }
 
 .section__title {
@@ -108,10 +108,27 @@ textarea {
   padding-left: 5px;
 }
 
+.section__subtitle {
+  font-size: 14px;
+}
+
 .section__fields {
   width: 66%;
   display: flex;
   flex-direction: column;
+}
+
+.section__fields--copy-only {
+  width: 66%;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+}
+
+.section__fields--copy-only .copy {
+  padding: 3px 0 3px 0;
 }
 
 .section__fields__row {

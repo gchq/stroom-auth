@@ -25,7 +25,9 @@ const SERVER_DATE_TIME_FORMAT = 'ddd MMM Do YYYY, HH:mm:ss';
 const DISPLAY_DATE_TIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
 
 const LoginFailureCopy = ({attemptCount}) => (
-  <p>Login attempts with an incorrect password: {attemptCount}</p>
+  <div className="copy">
+    Login attempts with an incorrect password: {attemptCount}
+  </div>
 );
 
 const LoginStatsCopy = ({lastLogin, loginCount}) => {
@@ -33,16 +35,16 @@ const LoginStatsCopy = ({lastLogin, loginCount}) => {
     lastLogin = moment(lastLogin, SERVER_DATE_TIME_FORMAT);
     const loginStatsCopy = (
       <div>
-        <p>
+        <div className="copy">
           Last login: {lastLogin.fromNow()}, at{' '}
           {lastLogin.format(DISPLAY_DATE_TIME_FORMAT)}{' '}
-        </p>
-        <p>Total logins: {loginCount}</p>
+        </div>
+        <div className="copy">Total logins: {loginCount}</div>
       </div>
     );
     return loginStatsCopy;
   } else {
-    return <div>This user has never logged in.</div>;
+    return <div className="copy">This user has never logged in.</div>;
   }
 };
 
@@ -51,15 +53,21 @@ const UpdatedCopy = ({updatedBy, updatedOn}) => {
     updatedOn = moment(updatedOn, SERVER_DATE_TIME_FORMAT);
     return (
       <div>
-        <p>
-          This user account was updated {updatedOn.from()}, at{' '}
-          {updatedOn.format(DISPLAY_DATE_TIME_FORMAT)}. It was updated by{' '}
-          <em>{updatedBy}</em>.
-        </p>
+        <div className="copy">
+          This user account was <strong>updated</strong> {updatedOn.from()}, at{' '}
+          {updatedOn.format(DISPLAY_DATE_TIME_FORMAT)}.
+        </div>
+        <div className="copy">
+          It was <strong>updated by</strong> <em>{updatedBy}</em>.
+        </div>
       </div>
     );
   } else {
-    return <div>This user account has never been updated.</div>;
+    return (
+      <div className="copy">
+        This user account has never been <strong>updated</strong>.
+      </div>
+    );
   }
 };
 
@@ -68,11 +76,13 @@ const CreatedCopy = ({createdBy, createdOn}) => {
     createdOn = moment(createdOn, SERVER_DATE_TIME_FORMAT);
     return (
       <div>
-        <p>
-          This user account was created {createdOn.from()}, at{' '}
-          {createdOn.format(DISPLAY_DATE_TIME_FORMAT)}. It was created by{' '}
-          <em>{createdBy}</em>.
-        </p>
+        <div className="copy">
+          This user account was <strong>created</strong> {createdOn.from()}, at{' '}
+          {createdOn.format(DISPLAY_DATE_TIME_FORMAT)}.
+        </div>
+        <div className="copy">
+          It was <strong>created by</strong> <em>{createdBy}</em>.
+        </div>
       </div>
     );
   }
@@ -127,7 +137,9 @@ const UserFields = ({
     <div className="section">
       <div className="section__title">
         <h3>Password</h3>
-        <p>You can change this user's password here</p>
+        <p className="section__subtitle">
+          You can change this user's password here
+        </p>
       </div>
       <div className="section__fields">
         <div className="section__fields__row">
@@ -175,7 +187,7 @@ const UserFields = ({
           <div className="section__title">
             <h3>Statistics</h3>
           </div>
-          <div className="section__fields">
+          <div className="section__fields--copy-only">
             <div className="section__fields_row">
               <LoginFailureCopy attemptCount={userBeingEdited.login_count} />
               <LoginStatsCopy
@@ -190,7 +202,7 @@ const UserFields = ({
           <div className="section__title">
             <h3>Audit</h3>
           </div>
-          <div className="section__fields">
+          <div className="section__fields--copy-only">
             <div className="section__fields__rows">
               <UpdatedCopy
                 updatedBy={userBeingEdited.updated_by_user}
