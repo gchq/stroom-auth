@@ -114,13 +114,13 @@ const UserEditForm = ({
           <Form>
             <div className="header">
               <button
-                className="toolbar-button-small"
+                className="toolbar-button-small primary"
                 disabled={isPristine || hasErrors}
                 type="submit">
                 <FontAwesomeIcon icon="save" /> Save
               </button>
               <NavLink to="/userSearch">
-                <button className="toolbar-button-small">
+                <button className="toolbar-button-small secondary">
                   <FontAwesomeIcon icon="times" /> Cancel
                 </button>
               </NavLink>

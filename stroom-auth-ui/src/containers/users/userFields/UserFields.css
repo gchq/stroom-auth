@@ -35,7 +35,7 @@
 .field-container.vertical {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  width:50%;
 }
 
 .field-container label {
@@ -72,6 +72,12 @@ textarea {
   padding-left: 5px;
 }
 
+.field-container--with-validation{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .right-container .field-container label {
   font-size: 12px;
   width: 80px;
@@ -94,10 +100,12 @@ textarea {
   flex-direction: row;
   width: 100%;
   border-top: solid 1px lightgrey;
+  padding:5px 5px 20px 5px;
 }
 
 .section__title {
   width: 33%;
+  padding-left: 5px;
 }
 
 .section__fields {
@@ -110,6 +118,7 @@ textarea {
   width: 100%;
   display: flex;
   flex-direction: row;
+  padding-top: 5px;
 }
 
 .section__fields__row.1-column * {

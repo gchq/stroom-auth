@@ -16,25 +16,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Field} from 'formik';
+import {Field, ErrorMessage} from 'formik';
 import * as moment from 'moment';
 
 import './UserFields.css';
 
 const SERVER_DATE_TIME_FORMAT = 'ddd MMM Do YYYY, HH:mm:ss';
 const DISPLAY_DATE_TIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
-
-const Validation = ({propertyName, errors, touched}) => {
-  if (errors) {
-    const error = errors[propertyName];
-    const isTouched = touched[propertyName];
-    if (error && isTouched) {
-      return <div className="validation-error">{error}</div>;
-    } else {
-      return null;
-    }
-  } else return null;
-};
 
 const LoginFailureCopy = ({attemptCount}) => (
   <p>Login attempts with an incorrect password: {attemptCount}</p>
@@ -109,12 +97,13 @@ const UserFields = ({
           </div>
           <div className="field-container vertical">
             <label>Email</label>
-            <Field name="email" label="Email" />
-            <Validation
-              propertyName="email"
-              errors={errors}
-              touched={touched}
-            />
+            <div className="field-container--with-validation">
+              <Field name="email" label="Email" />
+              <ErrorMessage
+                name="email"
+                render={msg => <div className="validation-error">{msg}</div>}
+              />
+            </div>
           </div>
         </div>
 
@@ -144,21 +133,23 @@ const UserFields = ({
         <div className="section__fields__row">
           <div className="field-container vertical">
             <label>Password</label>
-            <Field name="password" type="password" label="Password" />
-            <Validation
-              propertyName="password"
-              errors={errors}
-              touched={touched}
-            />
+            <div className="field-container--with-validation">
+              <Field name="password" type="password" label="Password" />
+              <ErrorMessage
+                name="password"
+                render={msg => <div className="validation-error">{msg}</div>}
+              />
+            </div>
           </div>
           <div className="field-container vertical">
             <label>Verify password</label>
-            <Field name="verifyPassword" type="password" />
-            <Validation
-              propertyName="verifyPassword"
-              errors={errors}
-              touched={touched}
-            />
+            <div className="field-container--with-validation">
+              <Field name="verifyPassword" type="password" />
+              <ErrorMessage
+                name="verifyPassword"
+                render={msg => <div className="validation-error">{msg}</div>}
+              />
+            </div>
           </div>
         </div>
       </div>
