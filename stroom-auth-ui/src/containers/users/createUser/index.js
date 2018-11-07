@@ -38,9 +38,22 @@ const enhance = compose(
   ),
 );
 
+// If we don't pass initialValues to Formik then they won't be controlled
+// and we'll get console errors when they're used.
+const initialValues = {
+  first_name: '',
+  last_name: '',
+  email: '',
+  state: 'enabled',
+  password: '',
+  verifyPassword: '',
+  comments: '',
+};
+
 const UserCreateForm = ({onSubmit, idToken, authenticationServiceUrl}) => {
   return (
     <Formik
+      initialValues={initialValues}
       onSubmit={(values, actions) => {
         onSubmit(values);
       }}
