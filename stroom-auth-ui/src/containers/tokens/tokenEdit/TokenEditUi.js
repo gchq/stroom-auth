@@ -49,13 +49,12 @@ export class TokenEditUi extends Component {
       <form onSubmit={handleSubmit}>
         <div className="header">
           <CopyToClipboard text={jws}>
-            <button className="primary">
-              <FontAwesomeIcon icon="copy" /> Copy API key to clipboard
+            <button className="primary toolbar-button-small">
+              <FontAwesomeIcon icon="copy"/> Copy key
             </button>
           </CopyToClipboard>
-          &nbsp;&nbsp;
           <NavLink to="/tokens">
-            <button className="primary">OK</button>
+            <button className="primary toolbar-button-small">OK</button>
           </NavLink>
         </div>
         <div className="EditToken__content">
