@@ -178,19 +178,19 @@ const UserSearch = ({
     <div className="UserSearch-main">
       <div className="header">
         <NavLink to={'/newUser'}>
-          <button className="toolbar-button-small">
+          <button className="toolbar-button-small primary">
             <FontAwesomeIcon icon="plus" /> Create
           </button>
         </NavLink>
         {deleteButtonDisabled ? (
           <div>
-            <button className="toolbar-button-small" disabled>
+            <button className="toolbar-button-small primary" disabled>
               <FontAwesomeIcon icon="edit" /> View/edit
             </button>
           </div>
         ) : (
           <NavLink to={`/user/${selectedUserRowId}`}>
-            <button className="toolbar-button-small">
+            <button className="toolbar-button-small primary">
               <FontAwesomeIcon icon="edit" /> View/edit
             </button>
           </NavLink>
@@ -200,7 +200,7 @@ const UserSearch = ({
           <button
             disabled={deleteButtonDisabled}
             onClick={() => deleteSelectedUser()}
-            className="toolbar-button-small">
+            className="toolbar-button-small primary">
             <FontAwesomeIcon icon="trash" /> Delete
           </button>
         </div>

@@ -62,8 +62,13 @@ button.primary {
  color: white;
 }
 
+
 button.primary:hover {
-    color: #4d5250;
+    background-color: #007be6;
+}
+
+button.primary:disabled {
+    background-color: #7fb5e4;
 }
 
 button.secondary {
@@ -72,8 +77,8 @@ button.secondary {
 }
 
 button.secondary:hover {
-    background-color: #fafafa;
-    color: #1e88e5;
+    background-color: #1e88e5;
+    color: white;
 }
 
 .header {

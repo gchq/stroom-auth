@@ -57,11 +57,11 @@ const TokenCreateForm = props => {
         render={props => (
           <form onSubmit={props.handleSubmit}>
             <div className="header">
-              <button className="toolbar-button-small" type="submit">
+              <button className="toolbar-button-small primary" type="submit">
                 <FontAwesomeIcon icon="plus" /> Create
               </button>
               <NavLink to="/tokens">
-                <button className="toolbar-button-small">
+                <button className="toolbar-button-small primary">
                   <FontAwesomeIcon icon="times" /> Cancel
                 </button>
               </NavLink>

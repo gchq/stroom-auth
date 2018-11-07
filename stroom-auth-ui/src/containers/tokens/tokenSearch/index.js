@@ -157,7 +157,7 @@ class TokenSearch extends Component {
       <div className="UserSearch-main">
         <div className="header">
           <NavLink to={"/token/newApiToken"}>
-            <button className="toolbar-button-small">
+            <button className="toolbar-button-small primary">
               <FontAwesomeIcon icon="plus" /> Create
             </button>
           </NavLink>
@@ -165,7 +165,7 @@ class TokenSearch extends Component {
           {noTokenSelected ? (
             <div>
               <button
-                className="toolbar-button-small"
+                className="toolbar-button-small primary"
                 disabled={noTokenSelected}
               >
                 <FontAwesomeIcon icon="edit" /> View/edit
@@ -174,7 +174,7 @@ class TokenSearch extends Component {
           ) : (
             <NavLink to={`/token/${selectedTokenRowId}`}>
               <button
-                className="toolbar-button-small"
+                className="toolbar-button-small primary"
                 disabled={noTokenSelected}
               >
                 <FontAwesomeIcon icon="edit" /> View/edit
@@ -186,7 +186,7 @@ class TokenSearch extends Component {
             <button
               disabled={noTokenSelected}
               onClick={() => this.deleteToken()}
-              className="toolbar-button-small"
+              className="toolbar-button-small primary"
             >
               <FontAwesomeIcon icon="trash" /> Delete
             </button>
