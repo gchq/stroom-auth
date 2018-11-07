@@ -20,7 +20,10 @@ import {Field, ErrorMessage} from 'formik';
 import * as moment from 'moment';
 
 import './UserFields.css';
-import {UpdatedCopy, LoginStatsCopy, CreatedCopy} from '../../auditCopy';
+import {
+  AuditCopy,
+  LoginStatsCopy,
+} from '../../auditCopy';
 
 const LoginFailureCopy = ({attemptCount}) => (
   <div className="copy">
@@ -125,7 +128,7 @@ const UserFields = ({
       <React.Fragment>
         <div className="section">
           <div className="section__title">
-            <h3>Statistics</h3>
+            <h3>Recent activity</h3>
           </div>
           <div className="section__fields--copy-only">
             <div className="section__fields_row">
@@ -144,13 +147,11 @@ const UserFields = ({
           </div>
           <div className="section__fields--copy-only">
             <div className="section__fields__rows">
-              <UpdatedCopy
-                updatedBy={userBeingEdited.updated_by_user}
-                updatedOn={userBeingEdited.updated_on}
-              />
-              <CreatedCopy
-                createdBy={userBeingEdited.created_by_user}
+              <AuditCopy
                 createdOn={userBeingEdited.created_on}
+                createdBy={userBeingEdited.created_by_user}
+                updatedOn={userBeingEdited.updated_on}
+                updatedBy={userBeingEdited.updated_by_user}
               />
             </div>
           </div>

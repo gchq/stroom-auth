@@ -14,41 +14,38 @@
  * limitations under the License.
  */
 
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Checkbox from "rc-checkbox";
-import "rc-checkbox/assets/index.css";
-import ReactTable from "react-table";
-import "react-table/react-table.css";
-import dateFormat from "dateformat";
-import PropTypes from "prop-types";
+import React, {Component} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {NavLink} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import Checkbox from 'rc-checkbox';
+import 'rc-checkbox/assets/index.css';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+import dateFormat from 'dateformat';
+import PropTypes from 'prop-types';
 
-import "./TokenSearch.css";
-import "../../../styles/table-small.css";
-import "../../../styles/toggle-small.css";
+import './TokenSearch.css';
+import '../../../styles/table-small.css';
+import '../../../styles/toggle-small.css';
 import {
   performTokenSearch,
   changeSelectedRow,
-  setEnabledStateOnToken
-} from "../../../modules/tokenSearch";
+  setEnabledStateOnToken,
+} from '../../../modules/tokenSearch';
 
-import {
-  deleteSelectedToken,
-} from "../../../modules/token";
-
+import {deleteSelectedToken} from '../../../modules/token';
 
 // TODO change the CSS references from 'User' - maybe make the CSS common?
 class TokenSearch extends Component {
   constructor() {
     super();
     this.state = {
-      isFilteringEnabled: false
+      isFilteringEnabled: false,
     };
   }
-  
+
   deleteToken() {
     this.context.store.dispatch(deleteSelectedToken());
   }
@@ -64,12 +61,12 @@ class TokenSearch extends Component {
       state.pageSize,
       state.page,
       state.sorted,
-      state.filtered
+      state.filtered,
     );
   }
   toggleFiltering(event) {
     const isFilteringEnabled = event.target.checked;
-    this.setState({ isFilteringEnabled });
+    this.setState({isFilteringEnabled});
   }
 
   getEnabledCellRenderer(row) {
@@ -78,8 +75,7 @@ class TokenSearch extends Component {
     return (
       <div
         className="TokenSearch__table__checkbox"
-        onClick={() => this.props.setEnabledStateOnToken(tokenId, !state)}
-      >
+        onClick={() => this.props.setEnabledStateOnToken(tokenId, !state)}>
         <Checkbox defaultChecked={state} checked={state} />
       </div>
     );
@@ -89,9 +85,8 @@ class TokenSearch extends Component {
     return (
       <select
         onChange={event => onChange(event.target.value)}
-        style={{ width: "100%" }}
-        value={filter ? filter.value : "all"}
-      >
+        style={{width: '100%'}}
+        value={filter ? filter.value : 'all'}>
         <option value="">Show all</option>
         <option value="true">Enabled only</option>
         <option value="false">Disabled only</option>
@@ -100,63 +95,63 @@ class TokenSearch extends Component {
   }
 
   formatDate(dateString) {
-    const dateFormatString = "ddd mmm d yyyy, hh:MM:ss";
-    return dateString ? dateFormat(dateString, dateFormatString) : "";
+    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
+    return dateString ? dateFormat(dateString, dateFormatString) : '';
   }
 
   getColumnFormat() {
     return [
       {
-        Header: "",
-        accessor: "id",
+        Header: '',
+        accessor: 'id',
         Cell: row => (
           <div>
             {this.props.selectedTokenRowId === row.value
-              ? "selected"
-              : "unselected"}
+              ? 'selected'
+              : 'unselected'}
           </div>
         ),
         filterable: false,
-        show: false
+        show: false,
       },
       {
-        Header: "User",
-        accessor: "user_email",
-        maxWidth: 190
+        Header: 'User',
+        accessor: 'user_email',
+        maxWidth: 190,
       },
       {
-        Header: "Enabled",
-        accessor: "enabled",
+        Header: 'Enabled',
+        accessor: 'enabled',
         maxWidth: 80,
         Cell: row => this.getEnabledCellRenderer(row),
-        Filter: ({ filter, onChange }) =>
-          this.getEnabledCellFilter(filter, onChange)
+        Filter: ({filter, onChange}) =>
+          this.getEnabledCellFilter(filter, onChange),
       },
       {
-        Header: "Expires on",
-        accessor: "expires_on",
+        Header: 'Expires on',
+        accessor: 'expires_on',
         Cell: row => this.formatDate(row.value),
-        Filter: ({ filter, onChange }) => undefined, // Disable filtering by this column - how do we filter on dates?
-        maxWidth: 165
+        Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+        maxWidth: 165,
       },
       {
-        Header: "Issued on",
-        accessor: "issued_on",
+        Header: 'Issued on',
+        accessor: 'issued_on',
         Cell: row => this.formatDate(row.value),
-        Filter: ({ filter, onChange }) => undefined, // Disable filtering by this column - how do we filter on dates?
-        maxWidth: 165
-      }
+        Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+        maxWidth: 165,
+      },
     ];
   }
 
   render() {
-    const { selectedTokenRowId } = this.props;
+    const {selectedTokenRowId} = this.props;
     const noTokenSelected = !selectedTokenRowId;
-    const { isFilteringEnabled } = this.state;
+    const {isFilteringEnabled} = this.state;
     return (
       <div className="UserSearch-main">
         <div className="header">
-          <NavLink to={"/token/newApiToken"}>
+          <NavLink to={'/token/newApiToken'}>
             <button className="toolbar-button-small primary">
               <FontAwesomeIcon icon="plus" /> Create
             </button>
@@ -166,8 +161,7 @@ class TokenSearch extends Component {
             <div>
               <button
                 className="toolbar-button-small primary"
-                disabled={noTokenSelected}
-              >
+                disabled={noTokenSelected}>
                 <FontAwesomeIcon icon="edit" /> View/edit
               </button>
             </div>
@@ -175,8 +169,7 @@ class TokenSearch extends Component {
             <NavLink to={`/token/${selectedTokenRowId}`}>
               <button
                 className="toolbar-button-small primary"
-                disabled={noTokenSelected}
-              >
+                disabled={noTokenSelected}>
                 <FontAwesomeIcon icon="edit" /> View/edit
               </button>
             </NavLink>
@@ -186,8 +179,7 @@ class TokenSearch extends Component {
             <button
               disabled={noTokenSelected}
               onClick={() => this.deleteToken()}
-              className="toolbar-button-small primary"
-            >
+              className="toolbar-button-small primary">
               <FontAwesomeIcon icon="trash" /> Delete
             </button>
           </div>
@@ -218,25 +210,29 @@ class TokenSearch extends Component {
                 // We use 'calc' because we want full height but need
                 // to account for the header. Obviously if the header height
                 // changes this offset will need to change too.
-                height: "calc(100vh - 40px)"
+                height: 'calc(100vh - 40px)',
               }}
               getTheadTrProps={() => {
                 return {
-                  className: "table-header-small"
+                  className: 'table-header-small',
                 };
               }}
               getTrProps={(state, rowInfo) => {
                 let selected = false;
+                let enabled = true;
                 if (rowInfo) {
                   selected = rowInfo.row.id === this.props.selectedTokenRowId;
+                  enabled = rowInfo.row.enabled;
                 }
+
+                let className = 'table-row-small';
+                className += selected ? ' table-row-selected' : '';
+                className += enabled ? '' : ' table-row-dimmed';
                 return {
                   onClick: (target, event) => {
                     this.toggleRow(rowInfo.row.id);
                   },
-                  className: selected
-                    ? "table-row-small table-row-selected"
-                    : "table-row-small"
+                  className,
                 };
               }}
               onFetchData={(state, instance) => {
@@ -252,7 +248,7 @@ class TokenSearch extends Component {
 }
 
 TokenSearch.contextTypes = {
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -264,7 +260,7 @@ const mapStateToProps = state => ({
   errorStatus: state.token.errorStatus,
   errorText: state.token.errorText,
   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
-  pageSize: state.tokenSearch.lastUsedPageSize
+  pageSize: state.tokenSearch.lastUsedPageSize,
 });
 
 const mapDispatchToProps = dispatch =>
@@ -272,12 +268,12 @@ const mapDispatchToProps = dispatch =>
     {
       performTokenSearch,
       changeSelectedRow,
-      setEnabledStateOnToken
+      setEnabledStateOnToken,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(TokenSearch);

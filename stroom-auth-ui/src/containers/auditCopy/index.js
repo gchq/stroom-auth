@@ -17,37 +17,12 @@
 import React from 'react';
 import * as moment from 'moment';
 
-//const SERVER_DATE_TIME_FORMAT = 'ddd MMM Do YYYY, HH:mm:ss';
-const DISPLAY_DATE_TIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';       
-
-export const UpdatedCopy = ({updatedBy, updatedOn}) => {
-  if (updatedOn !== undefined && updatedBy !== 'Never been updated') {
-    updatedOn = moment(updatedOn);
-      //updatedOn = moment(updatedOn, SERVER_DATE_TIME_FORMAT);
-    return (
-      <div>
-        <div className="copy">
-          This user account was <strong>updated</strong> {updatedOn.from()}, at{' '}
-          {updatedOn.format(DISPLAY_DATE_TIME_FORMAT)}.
-        </div>
-        <div className="copy">
-          It was <strong>updated by</strong> <em>{updatedBy}</em>.
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="copy">
-        This user account has never been <strong>updated</strong>.
-      </div>
-    );
-  }
-};
+const DISPLAY_DATE_TIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
 
 export const LoginStatsCopy = ({lastLogin, loginCount}) => {
   if (lastLogin !== undefined) {
     lastLogin = moment(lastLogin);
-      //lastLogin = moment(lastLogin, SERVER_DATE_TIME_FORMAT);
+    //lastLogin = moment(lastLogin, SERVER_DATE_TIME_FORMAT);
     const loginStatsCopy = (
       <div>
         <div className="copy">
@@ -63,20 +38,40 @@ export const LoginStatsCopy = ({lastLogin, loginCount}) => {
   }
 };
 
-export const CreatedCopy = ({createdBy, createdOn}) => {
-  if (createdOn !== undefined) {
-    createdOn = moment(createdOn);
-      //createdOn = moment(createdOn, SERVER_DATE_TIME_FORMAT);
+export const AuditCopy = ({createdBy, createdOn, updatedBy, updatedOn}) => {
+  return (
+    <div>
+      <OnCopy on={createdOn} verb="Created" />
+      <ByCopy by={createdBy} verb="Created by" />
+      <OnCopy on={updatedOn} verb="Updated" />
+      <ByCopy by={updatedBy} verb="Updated by" />
+    </div>
+  );
+};
+
+export const OnCopy = ({on, verb, fallbackCopy}) => {
+  if (on !== undefined) {
+    on = moment(on);
     return (
-      <div>
-        <div className="copy">
-          This user account was <strong>created</strong> {createdOn.from()}, at{' '}
-          {createdOn.format(DISPLAY_DATE_TIME_FORMAT)}.
-        </div>
-        <div className="copy">
-          It was <strong>created by</strong> <em>{createdBy}</em>.
-        </div>
+      <div className="copy">
+        <strong>{verb}</strong> {on.from()}, at{' '}
+        {on.format(DISPLAY_DATE_TIME_FORMAT)}.{' '}
       </div>
     );
+  } else {
+    return <div className="copy">{fallbackCopy}</div>;
+  }
+};
+
+export const ByCopy = ({by, verb, fallbackCopy}) => {
+  if (by !== undefined) {
+    return (
+      <div className="copy">
+        <strong>{verb}</strong> '{by}
+        '.
+      </div>
+    );
+  } else {
+    return <div className="copy">{fallbackCopy}</div>;
   }
 };

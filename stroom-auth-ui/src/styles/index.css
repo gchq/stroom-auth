@@ -33,7 +33,7 @@ textarea {
   margin: 8px 0;
   display: inline-block;
   border: 1px solid #ccc;
-  border-radius: 20px;
+  border-radius: 3px;
   font-family: sans-serif;
   background-color: #f7f7f7;
 }
@@ -98,7 +98,7 @@ button.secondary:hover {
   flex-direction: row;
   width: 100%;
   border-top: solid 1px lightgrey;
-  padding: 5px 5px 20px 5px;
+  padding: 5px 5px 15px 5px;
 }
 
 .section__title {
@@ -121,7 +121,7 @@ button.secondary:hover {
   padding: 10px;
   background-color: #f9f9f9;
   border: none;
-  border-radius: 15px;
+  border-radius: 3px;
   font-size: 16px;
 }
 
@@ -130,7 +130,7 @@ button.secondary:hover {
 }
 
 .section__fields--copy-only.constrained{
-    width: 50%;
+    width: 66%;
     font-size:12px;
     word-wrap: break-word;
 }
@@ -140,6 +140,7 @@ button.secondary:hover {
   display: flex;
   flex-direction: row;
   padding-top: 5px;
+  padding-bottom:5px;
 }
 
 .section__fields__row.1-column * {

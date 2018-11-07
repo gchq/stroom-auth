@@ -1,4 +1,5 @@
-.table-small-container .ReactTable input, .table-small-container .ReactTable select {
+.table-small-container .ReactTable input,
+.table-small-container .ReactTable select {
   padding: 2px 7px !important;
   font-size: 12px !important;
 }
@@ -8,23 +9,26 @@
 }
 
 .table-header-small {
-  height:25px;
+  height: 25px;
   font-size: 13px;
   font-weight: 500;
   color: #4d4d4d;
 }
 
 .table-row-small {
-  height:25px;
-  font-size:12px;
-  padding-top:0px;
+  height: 25px;
+  font-size: 12px;
+  padding-top: 0px;
 }
 
-.table-row-selected{
-  /* This is amber100, a lighter version of the accent colour, amber900 */
-  background-color: #FFECB3 !important;
- }
+.table-row-dimmed {
+  color: darkgray;
+}
 
+.table-row-selected {
+  /* This is amber100, a lighter version of the accent colour, amber900 */
+  background-color: #ffecb3 !important;
+}
 
 .table-small-container .pagination-top span {
   font-size: 13px;
