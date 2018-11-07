@@ -21,7 +21,7 @@ import { handleErrors, getBody, getJsonBody } from "./fetchFunctions";
 import {
   performTokenSearch,
   changeSelectedRow,
-  setEnabledStateOnToken
+  persistStateChange
 } from "./tokenSearch";
 import { performUserSearch } from "./userSearch";
 
@@ -32,6 +32,7 @@ export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS =
 export const CHANGE_READ_CREATED_TOKEN = "token/CHANGE_READ_CREATED_TOKEN";
 export const SHOW_ERROR_MESSAGE = "token/SHOW_ERROR_MESSAGE";
 export const HIDE_ERROR_MESSAGE = "token/HIDE_ERROR_MESSAGE";
+export const TOGGLE_STATE = "token/TOGGLE_STATE";
 
 const initialState = {
   showAlert: false,
@@ -79,7 +80,14 @@ export default (state = initialState, action) => {
         ...state,
         errorMessage: ""
       };
-
+    case TOGGLE_STATE:
+          return {
+              ...state,
+              lastReadToken: {
+                  ...state.lastReadToken,
+                  enabled: !state.lastReadToken.enabled,
+              }
+          };
     default:
       return state;
   }
@@ -112,6 +120,11 @@ function hideCreateError() {
   };
 }
 
+export function toggleState() {
+    return {
+        type:TOGGLE_STATE
+    }
+}
 export const deleteSelectedToken = tokenId => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken;
@@ -234,10 +247,33 @@ function handleStatus(response) {
 
 export function toggleEnabledState() {
   return (dispatch, getState) => {
-    const tokenId = getState().form.TokenEditForm.values.id;
-    const nextState = getState().form.TokenEditForm.values.enabled
+    const tokenId = getState().token.lastReadToken.id;
+    const nextState = getState().token.lastReadToken.enabled
       ? "false"
       : "true";
-    dispatch(setEnabledStateOnToken(tokenId, nextState));
+      //    persistStateChange(tokenId, nextState, getState, dispatch);
+    const securityToken = getState().authentication.idToken;
+    fetch(
+      `${
+        getState().config.tokenServiceUrl
+      }/${tokenId}/state/?enabled=${nextState}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + securityToken
+        },
+        method: "get",
+        mode: "cors"
+      }
+    )
+      .then(handleStatus)
+      .catch(() => {
+        dispatch(
+          toggleAlertVisibility("Unable to change the state of this token!")
+        );
+        // TODO Display snackbar with an error message
+      dispatch(toggleState());
+      });
   };
 }

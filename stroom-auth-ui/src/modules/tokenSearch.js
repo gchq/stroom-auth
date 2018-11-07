@@ -245,7 +245,12 @@ export const changeSelectedRow = tokenId => {
 
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
-    dispatch(toggleEnabled(tokenId));
+      dispatch(toggleEnabled(tokenId));
+      persistStateChange(tokenId, isEnabled, getState, dispatch);
+  };
+};
+
+export const persistStateChange = (tokenId, isEnabled, getState, dispatch) => {
     const securityToken = getState().authentication.idToken;
     fetch(
       `${
@@ -268,8 +273,7 @@ export const setEnabledStateOnToken = (tokenId, isEnabled) => {
         );
         // TODO Display snackbar with an error message
       });
-  };
-};
+}
 
 export const getRowsPerPage = () => {
   const viewport = document.getElementById("User-content");
