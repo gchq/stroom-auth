@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react';
+import React from 'react';
 import {Redirect} from 'react-router';
-
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
 
 const NewUser = () => {
   return <Redirect to={'/user'} />;
