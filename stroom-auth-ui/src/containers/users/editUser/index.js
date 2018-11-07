@@ -73,24 +73,36 @@ const enhance = compose(
     renderComponent(() => <div>Loading data...</div>),
   ),
   withProps(({userBeingEdited}) => {
-    userBeingEdited.password = undefined;
-    userBeingEdited.verifyPassword = undefined;
-    return {userBeingEdited};
+    // Formik needs every field to have an initialValue, otherwise
+    // the field won't be controlled and we'll get console errors.
+    return {
+      initialValues: {
+          ...userBeingEdited,
+        email: userBeingEdited.email || '',
+        first_name: userBeingEdited.first_name || '',
+        last_name: userBeingEdited.last_name || '',
+        state: userBeingEdited.state || 'enabled',
+        password: undefined,
+        verifyPassword: undefined,
+        comments: userBeingEdited.comments || '',
+      },
+    };
   }),
 );
 
 const UserEditForm = ({
-    userBeingEdited,
-    idToken,
-    authenticationServiceUrl,
-    onSubmit,
-  }) => {
+  userBeingEdited,
+  initialValues,
+  idToken,
+  authenticationServiceUrl,
+  onSubmit,
+}) => {
   return (
     <Formik
       onSubmit={(values, actions) => {
         onSubmit(values);
       }}
-      initialValues={{...userBeingEdited}}
+      initialValues={initialValues}
       validate={values =>
         validateAsync(values, idToken, authenticationServiceUrl)
       }
