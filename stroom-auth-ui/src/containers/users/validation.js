@@ -21,9 +21,15 @@ const UserValidationSchema = Yup.object().shape({
 });
 
 const validateAsync = (values, idToken, url) => {
-  if (values.email !== undefined && values.password !== undefined) {
+  if (
+    values.email !== undefined &&
+    values.email !== '' &&
+    values.password !== undefined &&
+    values.password !== ''
+  ) {
     if (
       values.verifyPassword !== undefined &&
+      values.verifyPassword !== '' &&
       values.password !== values.verifyPassword
     ) {
       return {verifyPassword: 'Passwords do not match'};

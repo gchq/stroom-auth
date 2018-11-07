@@ -77,13 +77,13 @@ const enhance = compose(
     // the field won't be controlled and we'll get console errors.
     return {
       initialValues: {
-          ...userBeingEdited,
+        ...userBeingEdited,
         email: userBeingEdited.email || '',
         first_name: userBeingEdited.first_name || '',
         last_name: userBeingEdited.last_name || '',
         state: userBeingEdited.state || 'enabled',
-        password: undefined,
-        verifyPassword: undefined,
+        password: '',
+        verifyPassword: '',
         comments: userBeingEdited.comments || '',
       },
     };
