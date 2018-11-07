@@ -20,73 +20,13 @@ import {Field, ErrorMessage} from 'formik';
 import * as moment from 'moment';
 
 import './UserFields.css';
-
-const SERVER_DATE_TIME_FORMAT = 'ddd MMM Do YYYY, HH:mm:ss';
-const DISPLAY_DATE_TIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
+import {UpdatedCopy, LoginStatsCopy, CreatedCopy} from '../../auditCopy';
 
 const LoginFailureCopy = ({attemptCount}) => (
   <div className="copy">
     Login attempts with an incorrect password: {attemptCount}
   </div>
 );
-
-const LoginStatsCopy = ({lastLogin, loginCount}) => {
-  if (lastLogin !== undefined) {
-    lastLogin = moment(lastLogin, SERVER_DATE_TIME_FORMAT);
-    const loginStatsCopy = (
-      <div>
-        <div className="copy">
-          Last login: {lastLogin.fromNow()}, at{' '}
-          {lastLogin.format(DISPLAY_DATE_TIME_FORMAT)}{' '}
-        </div>
-        <div className="copy">Total logins: {loginCount}</div>
-      </div>
-    );
-    return loginStatsCopy;
-  } else {
-    return <div className="copy">This user has never logged in.</div>;
-  }
-};
-
-const UpdatedCopy = ({updatedBy, updatedOn}) => {
-  if (updatedOn !== undefined && updatedBy !== 'Never been updated') {
-    updatedOn = moment(updatedOn, SERVER_DATE_TIME_FORMAT);
-    return (
-      <div>
-        <div className="copy">
-          This user account was <strong>updated</strong> {updatedOn.from()}, at{' '}
-          {updatedOn.format(DISPLAY_DATE_TIME_FORMAT)}.
-        </div>
-        <div className="copy">
-          It was <strong>updated by</strong> <em>{updatedBy}</em>.
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="copy">
-        This user account has never been <strong>updated</strong>.
-      </div>
-    );
-  }
-};
-
-const CreatedCopy = ({createdBy, createdOn}) => {
-  if (createdOn !== undefined) {
-    createdOn = moment(createdOn, SERVER_DATE_TIME_FORMAT);
-    return (
-      <div>
-        <div className="copy">
-          This user account was <strong>created</strong> {createdOn.from()}, at{' '}
-          {createdOn.format(DISPLAY_DATE_TIME_FORMAT)}.
-        </div>
-        <div className="copy">
-          It was <strong>created by</strong> <em>{createdBy}</em>.
-        </div>
-      </div>
-    );
-  }
-};
 
 const UserFields = ({
   showCalculatedFields,

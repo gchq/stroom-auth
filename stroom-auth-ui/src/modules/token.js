@@ -195,8 +195,6 @@ export const fetchApiKey = apiKeyId => {
           type: CHANGE_READ_CREATED_TOKEN,
           lastReadToken: apiKey
         });
-        // Use the redux-form action creator to re-initialize the form with this API key
-        dispatch(initialize("TokenEditForm", apiKey));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));
   };

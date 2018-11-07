@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import React from "react";
-import { render } from "react-dom";
-import { Provider } from "react-redux";
-import { StoreProvider } from "redux-react-hook";
-import { ConnectedRouter } from "react-router-redux";
-import { blue600, amber900 } from "material-ui/styles/colors";
-import { MuiThemeProvider } from "material-ui/styles";
-import getMuiTheme from "material-ui/styles/getMuiTheme";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import React from 'react';
+import {render} from 'react-dom';
+import {Provider} from 'react-redux';
+import {StoreProvider} from 'redux-react-hook';
+import {ConnectedRouter} from 'react-router-redux';
+import {blue600, amber900} from 'material-ui/styles/colors';
+import {MuiThemeProvider} from 'material-ui/styles';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import {library} from '@fortawesome/fontawesome-svg-core';
 import {
   faTimes,
   faSave,
@@ -30,19 +30,20 @@ import {
   faTrash,
   faEdit,
   faCopy,
-} from "@fortawesome/free-solid-svg-icons";
+  faArrowLeft,
+} from '@fortawesome/free-solid-svg-icons';
 
-import "./styles/index.css";
-import App from "./containers/app";
-import store, { history } from "./store";
+import './styles/index.css';
+import App from './containers/app';
+import store, {history} from './store';
 
-library.add(faSave, faTimes, faPlus, faTrash, faEdit, faCopy);
+library.add(faSave, faTimes, faPlus, faTrash, faEdit, faCopy, faArrowLeft);
 
 const theme = getMuiTheme({
   palette: {
     primary1Color: blue600,
-    accent1Color: amber900
-  }
+    accent1Color: amber900,
+  },
 });
 
 // TODO: The StoreProvider is required by redux-react-hooks.
@@ -57,5 +58,5 @@ render(
       </ConnectedRouter>
     </Provider>
   </StoreProvider>,
-  document.querySelector("#root")
+  document.querySelector('#root'),
 );

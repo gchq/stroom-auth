@@ -262,7 +262,6 @@ export const fetchUser = userId => {
       .then(handleStatus)
       .then(getJsonBody)
       .then(getUser)
-      .then(modifyDataForDisplay)
       .then(user => {
         dispatch(showCreateLoader(false));
         dispatch(saveUserBeingEdited(user));

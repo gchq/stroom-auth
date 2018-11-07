@@ -14,132 +14,132 @@
  * limitations under the License.
  */
 
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { Field, reduxForm } from "redux-form";
-import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Snackbar from "material-ui/Snackbar";
-import CopyToClipboard from "react-copy-to-clipboard";
+import React, {useEffect, Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {Field, reduxForm} from 'redux-form';
+import {NavLink} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import Snackbar from 'material-ui/Snackbar';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import {useDispatch, useMappedState} from 'redux-react-hook';
 
-import "./TokenEdit.css";
-import { toggleEnabledState } from "../../../modules/token";
+import './TokenEdit.css';
+import {toggleEnabledState} from '../../../modules/token';
 import {
   saveChanges as onSubmit,
-  toggleAlertVisibility
-} from "../../../modules/user";
-import { renderField, renderCheckbox } from "../../../renderField";
+  toggleAlertVisibility,
+} from '../../../modules/user';
+import {renderField, renderCheckbox} from '../../../renderField';
+import {UpdatedCopy, LoginStatsCopy, CreatedCopy} from '../../auditCopy';
 
-export class TokenEditUi extends Component {
-  render() {
-    const {
-      handleSubmit,
-      alertText,
-      showAlert,
-      toggleAlertVisibility,
-      form,
-      token,
-      toggleEnabledState
-    } = this.props;
+const mapState = state => ({
+  token: state.token.lastReadToken,
+  showAlert: state.user.showAlert,
+  alertText: state.user.alertText,
+});
 
-    const jws = token !== undefined ? token.token : "";
+const TokenEditUi = props => {
+  const {token, showAlert, alertText} = useMappedState(mapState);
+  const {handleSubmit, toggleAlertVisibility, form, toggleEnabledState} = props;
 
+  if (token === undefined) {
+    return <div>Loading...</div>;
+  } else {
     return (
       <form onSubmit={handleSubmit}>
         <div className="header">
-          <CopyToClipboard text={jws}>
-            <button className="primary toolbar-button-small">
-              <FontAwesomeIcon icon="copy"/> Copy key
-            </button>
-          </CopyToClipboard>
           <NavLink to="/tokens">
-            <button className="primary toolbar-button-small">OK</button>
+              <button className="primary toolbar-button-small"><FontAwesomeIcon icon='arrow-left'/> Back</button>
           </NavLink>
         </div>
-        <div className="EditToken__content">
-          <div className="left-container">
-            <Field
-              disabled
-              className="TokenEditForm-field"
-              name="user_email"
-              label="Issued to"
-              type="text"
-              component={renderField}
-            />
-            <Field
-              disabled
-              className="TokenEditForm-field"
-              name="token"
-              label="API key"
-              type="textarea"
-              component={renderField}
-            />
-            <div className="field-container">
-              <div className="label-container">
-                <label>Enabled</label>
-              </div>
-              <div className="input-container">
+        <div className="container">
+          <div className="section">
+            <div className="section__title">
+              <h3>Details</h3>
+            </div>
+            <div className="section__fields">
+              <div className="section__fields__row">
                 <Field
+                  disabled
                   className="TokenEditForm-field"
-                  name="enabled"
-                  component={renderCheckbox}
-                  onChange={() => toggleEnabledState()}
+                  name="user_email"
+                  label="Issued to"
+                  type="text"
+                  component={renderField}
+                />
+                <Field
+                  disabled
+                  className="TokenEditForm-field"
+                  name="expires_on"
+                  component={renderField}
+                  type="text"
+                  label="Expires on"
                 />
               </div>
+              <div className="section__fields__row">
+                <div className="field-container--vertical">
+                  <div className="label-container">
+                    <label>Enabled</label>
+                  </div>
+                  <Field
+                    className="TokenEditForm-field"
+                    name="enabled"
+                    component={renderCheckbox}
+                    onChange={() => toggleEnabledState()}
+                  />
+                </div>
+                <div className="field-container--vertical">
+                  <label>Issued on</label>
+                  <Field disabled name="issued_on" component={renderField} />
+                </div>
+              </div>
             </div>
-            <Field
-              disabled
-              className="TokenEditForm-field"
-              name="expires_on"
-              component={renderField}
-              type="text"
-              label="Expires on"
-            />
           </div>
-          <div className="right-container">
-            <Field
-              disabled
-              className="TokenEditForm-field"
-              name="issued_on"
-              label="Issued on"
-              component={renderField}
-            />
-            <Field
-              disabled
-              className="TokenEditForm-field"
-              name="updated_on"
-              label="Updated on"
-              component={renderField}
-            />
-            <Field
-              disabled
-              className="TokenEditForm-field"
-              name="updated_by_user"
-              label="Updated by"
-              component={renderField}
-            />
+          <div className="section">
+            <div className="section__title">
+              <h3>Audit</h3>
+            </div>
+            <div className="section__fields">
+              <UpdatedCopy
+                updatedBy={token.updated_by_user}
+                updatedOn={token.updated_on}
+              />
+            </div>
+          </div>
+          <div className="section">
+            <div className="section__title">
+              <h3>API key</h3>
+              <div className="section__subtitle">
+                <CopyToClipboard text={token.token}>
+                  <button className="primary">
+                    <FontAwesomeIcon icon="copy" /> Copy key
+                  </button>
+                </CopyToClipboard>
+              </div>
+            </div>
+            <div className="section__fields--copy-only constrained">{token.token}</div>
           </div>
         </div>
         <Snackbar
           open={showAlert}
           message={alertText}
           autoHideDuration={4000}
-          onRequestClose={() => toggleAlertVisibility("")}
+          onRequestClose={() => toggleAlertVisibility('')}
         />
       </form>
     );
   }
-}
+};
 
 const ReduxTokenEditUi = reduxForm({
-  form: "TokenEditForm"
+  form: 'TokenEditForm',
 })(TokenEditUi);
 
 const mapStateToProps = state => ({
   token: state.token.lastReadToken,
   showAlert: state.user.showAlert,
-  alertText: state.user.alertText
+  alertText: state.user.alertText,
 });
 
 const mapDispatchToProps = dispatch =>
@@ -147,12 +147,12 @@ const mapDispatchToProps = dispatch =>
     {
       onSubmit,
       toggleAlertVisibility,
-      toggleEnabledState
+      toggleEnabledState,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ReduxTokenEditUi);

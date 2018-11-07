@@ -330,7 +330,8 @@ public class TokenResource {
                 "Read a token by the token ID.");
 
 
-        return tokenDao.readById(tokenId)
+        Optional<Token> optionalToken = tokenDao.readById(tokenId);
+        return optionalToken
                 .map(token -> Response.status(Response.Status.OK).entity(token).build())
                 .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
     }
