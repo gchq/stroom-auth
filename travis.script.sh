@@ -20,7 +20,7 @@ readonly AUTH_UI_REPO="gchq/stroom-auth-ui"
 readonly AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
 
 # This is a whitelist of branches to produce docker builds for
-readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^[0-9].*$)'
+readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^[0-9]+\.[0-9]+$)'
 
 # Tags matching this regex will trigger a bintray release
 readonly RELEASE_VERSION_REGEX='^v[0-9]+\.[0-9]+.*$'
@@ -145,15 +145,22 @@ release_to_docker_hub() {
         fi
     done
 
-    echo -e "Building and releasing a docker image to ${GREEN}${docker_repo}${NC} with tags: ${GREEN}${all_tag_args}${NC}"
+    echo -e "Building a docker image with tags: ${GREEN}${all_tag_args}${NC}"
     echo -e "docker_repo:  [${GREEN}${docker_repo}${NC}]"
     echo -e "context_root: [${GREEN}${context_root}${NC}]"
 
-    #The username and password are configured in the travis gui
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" >/dev/null 2>&1
-
     docker build ${all_tag_args} ${context_root}
-    docker push ${docker_repo} 
+
+    echo -e "Logging in to Docker"
+
+    #The username and password are configured in the travis gui
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin >/dev/null 2>&1
+
+    echo -e "Pushing the docker image to ${GREEN}${docker_repo}${NC} with tags: ${GREEN}${all_tag_args}${NC}"
+    docker push ${docker_repo} >/dev/null 2>&1
+
+    echo -e "Logging out of Docker"
+    docker logout >/dev/null 2>&1
 }
 
 main() {
