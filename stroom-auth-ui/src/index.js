@@ -31,13 +31,26 @@ import {
   faEdit,
   faCopy,
   faArrowLeft,
+  faCheck,
+  faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
+import Modal from 'react-modal';
 
 import './styles/index.css';
 import App from './containers/app';
 import store, {history} from './store';
 
-library.add(faSave, faTimes, faPlus, faTrash, faEdit, faCopy, faArrowLeft);
+library.add(
+  faSave,
+  faTimes,
+  faPlus,
+  faTrash,
+  faEdit,
+  faCopy,
+  faArrowLeft,
+  faCheck,
+  faExclamationTriangle,
+);
 
 const theme = getMuiTheme({
   palette: {
@@ -45,6 +58,10 @@ const theme = getMuiTheme({
     accent1Color: amber900,
   },
 });
+
+// We need to bind the modal to our app element 
+// see http://reactcommunity.org/react-modal/accessibility/
+Modal.setAppElement('#root');
 
 // TODO: The StoreProvider is required by redux-react-hooks.
 // When Redux publish their own hooks this will be obsolete.

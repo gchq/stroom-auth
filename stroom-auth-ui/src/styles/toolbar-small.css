@@ -23,6 +23,16 @@
   width:110px !important;
 }
 
+.toolbar-button-medium {
+    margin-left: 10px !important;
+    width:150px !important;
+}
+
+.toolbar-button-large {
+    margin-left: 10px !important;
+    width:200px !important;
+}
+
 /*
  * This makes a button small
  */

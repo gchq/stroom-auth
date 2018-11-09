@@ -35,7 +35,7 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 3px;
   font-family: sans-serif;
-  background-color: #f7f7f7;
+  background-color: white;
 }
 
 button {
@@ -68,6 +68,11 @@ button.primary:hover {
 
 button.primary:disabled {
   background-color: #7fb5e4;
+}
+
+button.warning {
+    background-color: #ff6f00;
+    color: white;
 }
 
 button.secondary {

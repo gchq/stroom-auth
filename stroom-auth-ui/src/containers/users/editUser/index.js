@@ -27,7 +27,11 @@ import {
   lifecycle,
   compose,
   renderComponent,
+  withState,
+  withHandlers,
 } from 'recompose';
+import BackConfirmation from '../BackConfirmation';
+import {push} from 'react-router-redux';
 
 import './EditUser.css';
 import UserFields from '../userFields';
@@ -59,6 +63,7 @@ const enhance = compose(
       clearUserBeingEdited,
       fetchUser,
       toggleAlertVisibility,
+      push,
     },
   ),
   lifecycle({
@@ -72,6 +77,16 @@ const enhance = compose(
     ({userBeingEdited}) => !userBeingEdited,
     renderComponent(() => <div>Loading data...</div>),
   ),
+  withState('showBackConfirmation', 'setShowBackConfirmation', false),
+  withHandlers({
+    handleBack: ({setShowBackConfirmation, push}) => isPristine => {
+      if (isPristine) {
+        push('/userSearch');
+      } else {
+        setShowBackConfirmation(true);
+      }
+    },
+  }),
   withProps(({userBeingEdited}) => {
     // Formik needs every field to have an initialValue, otherwise
     // the field won't be controlled and we'll get console errors.
@@ -96,6 +111,10 @@ const UserEditForm = ({
   idToken,
   authenticationServiceUrl,
   onSubmit,
+  handleBack,
+  showBackConfirmation,
+  setShowBackConfirmation,
+  push,
 }) => {
   return (
     <Formik
@@ -113,11 +132,12 @@ const UserEditForm = ({
         return (
           <Form>
             <div className="header">
-              <NavLink to="/userSearch">
-                <button className="primary toolbar-button-small">
-                  <FontAwesomeIcon icon="arrow-left" /> Back
-                </button>
-              </NavLink>
+              <button
+                type="button"
+                onClick={() => handleBack(isPristine)}
+                className="primary toolbar-button-small">
+                <FontAwesomeIcon icon="arrow-left" /> Back
+              </button>
             </div>
             <UserFields
               showCalculatedFields
@@ -138,6 +158,14 @@ const UserEditForm = ({
                 </button>
               </NavLink>
             </div>
+            <BackConfirmation
+              isOpen={showBackConfirmation}
+              onGoBack={() => {
+                setShowBackConfirmation(false);
+                  push('/userSearch');
+              }}
+              onContinueEditing={() => setShowBackConfirmation(false)}
+            />
           </Form>
         );
       }}

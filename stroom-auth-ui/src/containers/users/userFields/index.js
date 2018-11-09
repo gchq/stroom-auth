@@ -117,7 +117,7 @@ const UserFields = ({
           <Field
             className="section__fields__comments"
             name="comments"
-            type="textarea"
+            component="textarea"
           />
         </div>
       </div>

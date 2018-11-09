@@ -21,3 +21,24 @@
 .UserEditForm-header {
   padding: 5px;
 }
+
+.confirmation {
+  background-color: green;
+  position: absolute;
+  width: 450px;
+  height: 120px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  top: calc(50% - 100px);
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+}
+
+.confirmation h3 svg {
+  color: #ff6f00;
+}
