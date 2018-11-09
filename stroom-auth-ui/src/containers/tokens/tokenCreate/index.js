@@ -57,24 +57,37 @@ const TokenCreateForm = props => {
         render={props => (
           <form onSubmit={props.handleSubmit}>
             <div className="header">
-              <button className="toolbar-button-small primary" type="submit">
-                <FontAwesomeIcon icon="plus" /> Create
-              </button>
               <NavLink to="/tokens">
-                <button className="toolbar-button-small primary">
-                  <FontAwesomeIcon icon="times" /> Cancel
+                <button className="primary toolbar-button-small">
+                  <FontAwesomeIcon icon="arrow-left" /> Back
                 </button>
               </NavLink>
             </div>
-            <div className="left-container">
-              <div className="field-container">
-                <label>User's email</label>
-                <AsyncUserSelect onChange={props.setFieldValue} />
+            <div className="container">
+              <div className="section">
+                <div className="section__title">
+                  <h3>User's email</h3>
+                </div>
+                <div className="section__fields">
+                  <div className="section__fields__row">
+                    <div className="field-container">
+                      <div className="label-container">
+                        <label />
+                      </div>
+                      <AsyncUserSelect onChange={props.setFieldValue} />
+                    </div>
+                  </div>
+                  <div className="CreateTokenForm-errorMessage">
+                    {' '}
+                    {props.errorMessage}
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="CreateTokenForm-errorMessage">
-              {' '}
-              {props.errorMessage}
+            <div className="footer">
+              <button className="toolbar-button-small primary" type="submit">
+                <FontAwesomeIcon icon="plus" /> Create
+              </button>
             </div>
           </form>
         )}

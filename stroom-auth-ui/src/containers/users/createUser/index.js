@@ -67,6 +67,18 @@ const UserCreateForm = ({onSubmit, idToken, authenticationServiceUrl}) => {
         return (
           <Form>
             <div className="header">
+              <NavLink to="/userSearch">
+                <button className="primary toolbar-button-small">
+                  <FontAwesomeIcon icon="arrow-left" /> Back
+                </button>
+              </NavLink>
+            </div>
+            <UserFields
+              showCalculatedFields={false}
+              errors={errors}
+              touched={touched}
+            />
+            <div class="footer">
               <button
                 className="toolbar-button-small primary"
                 disabled={isPristine || hasErrors}
@@ -79,11 +91,6 @@ const UserCreateForm = ({onSubmit, idToken, authenticationServiceUrl}) => {
                 </button>
               </NavLink>
             </div>
-            <UserFields
-              showCalculatedFields={false}
-              errors={errors}
-              touched={touched}
-            />
           </Form>
         );
       }}

@@ -113,6 +113,19 @@ const UserEditForm = ({
         return (
           <Form>
             <div className="header">
+              <NavLink to="/userSearch">
+                <button className="primary toolbar-button-small">
+                  <FontAwesomeIcon icon="arrow-left" /> Back
+                </button>
+              </NavLink>
+            </div>
+            <UserFields
+              showCalculatedFields
+              userBeingEdited={userBeingEdited}
+              errors={errors}
+              touched={touched}
+            />
+            <div className="footer">
               <button
                 className="toolbar-button-small primary"
                 disabled={isPristine || hasErrors}
@@ -125,12 +138,6 @@ const UserEditForm = ({
                 </button>
               </NavLink>
             </div>
-            <UserFields
-              showCalculatedFields
-              userBeingEdited={userBeingEdited}
-              errors={errors}
-              touched={touched}
-            />
           </Form>
         );
       }}
