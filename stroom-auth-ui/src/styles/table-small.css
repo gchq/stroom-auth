@@ -52,3 +52,7 @@
   padding: 3px;
   font-size: 13px;
 }
+
+.rt-thead.-header {
+  box-shadow: 0 1px 0px 0 rgba(0, 0, 0, 0.15) !important;
+}

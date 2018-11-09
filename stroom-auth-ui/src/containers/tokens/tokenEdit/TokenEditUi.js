@@ -22,12 +22,7 @@ import Snackbar from 'material-ui/Snackbar';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
-import {
-  compose,
-  branch,
-  lifecycle,
-  renderComponent,
-} from 'recompose';
+import {compose, branch, lifecycle, renderComponent} from 'recompose';
 
 import './TokenEdit.css';
 import {toggleEnabledState} from '../../../modules/token';
@@ -109,16 +104,14 @@ const TokenEditUi = props => {
           <div className="section">
             <div className="section__title">
               <h3>API key</h3>
-              <div className="section__subtitle">
-                <CopyToClipboard text={token.token}>
-                  <button className="primary">
-                    <FontAwesomeIcon icon="copy" /> Copy key
-                  </button>
-                </CopyToClipboard>
-              </div>
             </div>
             <div className="section__fields--copy-only constrained">
-              {token.token}
+              <textarea value={token.token} disabled />
+              <CopyToClipboard text={token.token}>
+                <button className="primary">
+                  <FontAwesomeIcon icon="copy" /> Copy key
+                </button>
+              </CopyToClipboard>
             </div>
           </div>
         </div>
