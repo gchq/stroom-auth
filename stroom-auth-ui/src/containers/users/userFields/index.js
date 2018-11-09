@@ -17,7 +17,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Field, ErrorMessage} from 'formik';
-import * as moment from 'moment';
 
 import './UserFields.css';
 import {

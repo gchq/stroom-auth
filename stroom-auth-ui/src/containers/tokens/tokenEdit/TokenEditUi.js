@@ -14,41 +14,52 @@
  * limitations under the License.
  */
 
-import React, {useEffect, useCallback} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {Field, reduxForm} from 'redux-form';
 import {NavLink} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Snackbar from 'material-ui/Snackbar';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import {useDispatch, useMappedState} from 'redux-react-hook';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
+import {
+  compose,
+  branch,
+  lifecycle,
+  renderComponent,
+} from 'recompose';
 
 import './TokenEdit.css';
-import {toggleEnabledState, toggleState} from '../../../modules/token';
-import {
-  saveChanges as onSubmit,
-  toggleAlertVisibility,
-} from '../../../modules/user';
-import {renderField, renderCheckbox} from '../../../renderField';
+import {toggleEnabledState} from '../../../modules/token';
 import {OnCopy, ByCopy} from '../../auditCopy';
 
-const mapState = state => ({
-  token: state.token.lastReadToken,
-  showAlert: state.user.showAlert,
-  alertText: state.user.alertText,
-});
-let setEnabledState= undefined;
+const enhance = compose(
+  connect(
+    ({token: {lastReadToken}, user: {showAlert, alertText}}) => ({
+      token: lastReadToken,
+      showAlert,
+      alertText,
+    }),
+    {
+      toggleEnabledState,
+    },
+  ),
+  lifecycle({
+    componentDidMount() {},
+  }),
+  branch(({token}) => !token, renderComponent(() => <div>Loading...</div>)),
+);
+
 const TokenEditUi = props => {
-  const {token, showAlert, alertText} = useMappedState(mapState);
-  const dispatch = useDispatch();
-     setEnabledState = useCallback(() => {
-        console.log({dispatch});
-        dispatch(toggleState())
-    }, []);
-  const {handleSubmit, toggleAlertVisibility, form, toggleEnabledState} = props;
+  const {
+    token,
+    showAlert,
+    alertText,
+    handleSubmit,
+    toggleAlertVisibility,
+    form,
+    toggleEnabledState,
+  } = props;
 
   if (token === undefined) {
     return <div>Loading...</div>;
@@ -76,7 +87,7 @@ const TokenEditUi = props => {
                   <Checkbox
                     defaultChecked={token.enabled}
                     checked={token.enabled}
-                    onChange={() => dispatch(toggleEnabledState())}
+                    onChange={toggleEnabledState}
                   />
                 </div>
               </div>
@@ -122,27 +133,4 @@ const TokenEditUi = props => {
   }
 };
 
-const ReduxTokenEditUi = reduxForm({
-  form: 'TokenEditForm',
-})(TokenEditUi);
-
-const mapStateToProps = state => ({
-  token: state.token.lastReadToken,
-  showAlert: state.user.showAlert,
-  alertText: state.user.alertText,
-});
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      onSubmit,
-      toggleAlertVisibility,
-      toggleEnabledState,
-    },
-    dispatch,
-  );
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ReduxTokenEditUi);
+export default enhance(TokenEditUi);

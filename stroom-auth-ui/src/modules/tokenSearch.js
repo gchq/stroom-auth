@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { HttpError } from "../ErrorTypes";
-import { handleErrors, getJsonBody } from "./fetchFunctions";
-import { toggleAlertVisibility } from "./token";
+import {HttpError} from '../ErrorTypes';
+import {handleErrors, getJsonBody} from './fetchFunctions';
+import {toggleAlertVisibility} from './token';
 
-export const SHOW_SEARCH_LOADER = "tokenSearch/SHOW_SEARCH_LOADER";
-export const UPDATE_RESULTS = "tokenSearch/UPDATE_RESULTS";
-export const SELECT_ROW = "tokenSearch/SELECT_ROW";
-export const TOGGLE_ENABLED = "tokenSearch/TOGGLE_ENABLED";
+export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER';
+export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS';
+export const SELECT_ROW = 'tokenSearch/SELECT_ROW';
+export const TOGGLE_ENABLED = 'tokenSearch/TOGGLE_ENABLED';
 export const CHANGE_LAST_USED_PAGE_SIZE =
-  "tokenSearch/CHANGE_LAST_USED_PAGE_SIZE";
-export const CHANGE_LAST_USED_PAGE = "tokenSearch/CHANGE_LAST_USED_PAGE";
-export const CHANGE_LAST_USED_SORTED = "tokenSearch/CHANGE_LAST_USED_SORTED";
+  'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE';
+export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE';
+export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED';
 export const CHANGE_LAST_USED_FILTERED =
-  "tokenSearch/CHANGE_LAST_USED_FILTERED";
+  'tokenSearch/CHANGE_LAST_USED_FILTERED';
 
 const initialState = {
   tokens: [],
   showSearchLoader: false,
-  selectedTokenRowId: undefined
+  selectedTokenRowId: undefined,
 };
 
 export default (state = initialState, action) => {
@@ -39,24 +39,24 @@ export default (state = initialState, action) => {
     case SHOW_SEARCH_LOADER:
       return {
         ...state,
-        showSearchLoader: action.showSearchLoader
+        showSearchLoader: action.showSearchLoader,
       };
     case UPDATE_RESULTS:
       return {
         ...state,
         results: action.results,
-        totalPages: action.totalPages
+        totalPages: action.totalPages,
       };
     case SELECT_ROW:
       if (state.selectedTokenRowId === action.selectedTokenRowId) {
         return {
           ...state,
-          selectedTokenRowId: undefined
+          selectedTokenRowId: undefined,
         };
       } else {
         return {
           ...state,
-          selectedTokenRowId: action.selectedTokenRowId
+          selectedTokenRowId: action.selectedTokenRowId,
         };
       }
     case TOGGLE_ENABLED:
@@ -65,29 +65,29 @@ export default (state = initialState, action) => {
         results: state.results.map(
           (result, i) =>
             result.id === action.id
-              ? { ...result, enabled: !result.enabled }
-              : result
-        )
+              ? {...result, enabled: !result.enabled}
+              : result,
+        ),
       };
     case CHANGE_LAST_USED_PAGE_SIZE:
       return {
         ...state,
-        lastUsedPageSize: action.lastUsedPageSize
+        lastUsedPageSize: action.lastUsedPageSize,
       };
     case CHANGE_LAST_USED_PAGE:
       return {
         ...state,
-        lastUsedPage: action.lastUsedPage
+        lastUsedPage: action.lastUsedPage,
       };
     case CHANGE_LAST_USED_SORTED:
       return {
         ...state,
-        lastUsedSorted: action.lastUsedSorted
+        lastUsedSorted: action.lastUsedSorted,
       };
     case CHANGE_LAST_USED_FILTERED:
       return {
         ...state,
-        lastUsedFiltered: action.lastUsedFiltered
+        lastUsedFiltered: action.lastUsedFiltered,
       };
     default:
       return state;
@@ -98,21 +98,21 @@ function updateResults(data) {
   return {
     type: UPDATE_RESULTS,
     results: data.tokens,
-    totalPages: data.totalPages
+    totalPages: data.totalPages,
   };
 }
 
 export function showSearchLoader(showSearchLoader) {
   return {
     type: SHOW_SEARCH_LOADER,
-    showSearchLoader
+    showSearchLoader,
   };
 }
 
 export function toggleEnabled(id) {
   return {
     type: TOGGLE_ENABLED,
-    id
+    id,
   };
 }
 
@@ -121,7 +121,7 @@ export const performTokenSearch = (
   pageSize,
   page,
   sorted,
-  filtered
+  filtered,
 ) => {
   return (dispatch, getState) => {
     dispatch(showSearchLoader(true));
@@ -138,7 +138,7 @@ export const performTokenSearch = (
     pageSize = getRowsPerPage();
     dispatch({
       type: CHANGE_LAST_USED_PAGE_SIZE,
-      lastUsedPageSize: pageSize
+      lastUsedPageSize: pageSize,
     });
 
     if (page === undefined) {
@@ -146,7 +146,7 @@ export const performTokenSearch = (
     } else {
       dispatch({
         type: CHANGE_LAST_USED_PAGE,
-        lastUsedPage: page
+        lastUsedPage: page,
       });
     }
 
@@ -155,7 +155,7 @@ export const performTokenSearch = (
     } else {
       dispatch({
         type: CHANGE_LAST_USED_SORTED,
-        lastUsedSorted: sorted
+        lastUsedSorted: sorted,
       });
     }
 
@@ -164,17 +164,17 @@ export const performTokenSearch = (
     } else {
       dispatch({
         type: CHANGE_LAST_USED_FILTERED,
-        lastUsedFiltered: filtered
+        lastUsedFiltered: filtered,
       });
     }
 
     // Default ordering and direction
-    let orderBy = "issued_on";
-    let orderDirection = "desc";
+    let orderBy = 'issued_on';
+    let orderDirection = 'desc';
 
     if (sorted.length > 0) {
       orderBy = sorted[0].id;
-      orderDirection = sorted[0].desc ? "desc" : "asc";
+      orderDirection = sorted[0].desc ? 'desc' : 'asc';
     }
 
     let filters = {};
@@ -185,7 +185,7 @@ export const performTokenSearch = (
     }
 
     // We only want to see API keys, not user keys.
-    filters.token_type = "API";
+    filters.token_type = 'API';
 
     const body = filters
       ? JSON.stringify({
@@ -193,24 +193,24 @@ export const performTokenSearch = (
           limit: pageSize,
           orderBy,
           orderDirection,
-          filters
+          filters,
         })
       : JSON.stringify({
           page,
           limit: pageSize,
           orderBy,
-          orderDirection
+          orderDirection,
         });
 
     fetch(`${getState().config.tokenServiceUrl}/search`, {
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jwsToken
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwsToken,
       },
-      method: "post",
-      mode: "cors",
-      body
+      method: 'post',
+      mode: 'cors',
+      body,
     })
       .then(handleStatus)
       .then(getJsonBody)
@@ -227,7 +227,7 @@ function handleStatus(response) {
     return Promise.resolve(response);
   } else if (response.status === 409) {
     return Promise.reject(
-      new HttpError(response.status, "This token already exists.")
+      new HttpError(response.status, 'This token already exists.'),
     );
   } else {
     return Promise.reject(new HttpError(response.status, response.statusText));
@@ -238,19 +238,14 @@ export const changeSelectedRow = tokenId => {
   return dispatch => {
     dispatch({
       type: SELECT_ROW,
-      selectedTokenRowId: tokenId
+      selectedTokenRowId: tokenId,
     });
   };
 };
 
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
-      dispatch(toggleEnabled(tokenId));
-      persistStateChange(tokenId, isEnabled, getState, dispatch);
-  };
-};
-
-export const persistStateChange = (tokenId, isEnabled, getState, dispatch) => {
+    dispatch(toggleEnabled(tokenId));
     const securityToken = getState().authentication.idToken;
     fetch(
       `${
@@ -258,25 +253,26 @@ export const persistStateChange = (tokenId, isEnabled, getState, dispatch) => {
       }/${tokenId}/state/?enabled=${isEnabled}`,
       {
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + securityToken
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + securityToken,
         },
-        method: "get",
-        mode: "cors"
-      }
+        method: 'get',
+        mode: 'cors',
+      },
     )
       .then(handleStatus)
       .catch(() => {
         dispatch(
-          toggleAlertVisibility("Unable to change the state of this token!")
+          toggleAlertVisibility('Unable to change the state of this token!'),
         );
         // TODO Display snackbar with an error message
       });
-}
+  };
+};
 
 export const getRowsPerPage = () => {
-  const viewport = document.getElementById("User-content");
+  const viewport = document.getElementById('User-content');
   let rowsInViewport = 20;
   if (viewport) {
     const viewportHeight = viewport.offsetHeight;
