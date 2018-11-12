@@ -126,7 +126,7 @@ const UserEditForm = ({
         validateAsync(values, idToken, authenticationServiceUrl)
       }
       validationSchema={UserValidationSchema}>
-      {({errors, touched}) => {
+      {({errors, touched, submitForm}) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (
@@ -164,6 +164,8 @@ const UserEditForm = ({
                 setShowBackConfirmation(false);
                   push('/userSearch');
               }}
+              errors={errors}
+              onSaveAndGoBack={submitForm}
               onContinueEditing={() => setShowBackConfirmation(false)}
             />
           </Form>

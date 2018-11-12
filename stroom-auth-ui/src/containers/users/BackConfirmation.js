@@ -17,8 +17,17 @@
 import React from 'react';
 import ReactModal from 'react-modal';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {isEmpty} from 'ramda';
 
-export default  ({isOpen, onGoBack, onContinueEditing}) => {
+import './BackConfirmation.css';
+
+export default ({
+  isOpen,
+  onGoBack,
+  onContinueEditing,
+  onSaveAndGoBack,
+  errors,
+}) => {
   return (
     <ReactModal
       className="confirmation"
@@ -29,13 +38,35 @@ export default  ({isOpen, onGoBack, onContinueEditing}) => {
         changes!
       </h3>
       <p>Are you sure you want to go back?</p>
+        {!isEmpty(errors) ? (
+            <p className="warning">There are validation issues with this data and we can't save it.</p>
+        ) : (
+            undefined
+        )}
       <div className="confirmation__actions">
-        <button className="toolbar-button-large primary" type='button' onClick={onGoBack}>
-          <FontAwesomeIcon icon="times" /> Yes, discard changes
+
+        <button
+          className="toolbar-button-large primary"
+          type="button"
+          onClick={onGoBack}>
+          <FontAwesomeIcon icon="trash" /> Yes, discard changes
         </button>
-        <button className="toolbar-button-large secondary" type='button' onClick={onContinueEditing}>
-          <FontAwesomeIcon icon="check" /> No, continue editing
+
+          <button
+            className="toolbar-button-large primary"
+            type="button"
+            disabled={!isEmpty(errors)}
+            onClick={onSaveAndGoBack}>
+            <FontAwesomeIcon icon="save" /> Yes, save changes 
+          </button>
+
+        <button
+          className="toolbar-button-large primary"
+          type="button"
+          onClick={onContinueEditing}>
+          <FontAwesomeIcon icon="times" /> No, continue editing
         </button>
+
       </div>
     </ReactModal>
   );

@@ -1,0 +1,29 @@
+.confirmation {
+  background-color: green;
+  position: absolute;
+  width: 550px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  top: calc(50% - 100px);
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+}
+
+.confirmation h3 svg {
+  color: #ff6f00;
+}
+
+p {
+    font-size: 14px;
+    margin: 10px 0 10px 28px !important;
+    padding: 0px !important;
+}
+
+.warning {
+  color: #ff6f00;
+}
