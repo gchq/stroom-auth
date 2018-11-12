@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add colours to docker console logs
+
 ## [v1.0-beta.9]
 
 * Uplift service docker image base to openjdk:8u181-jdk-alpine3.8
