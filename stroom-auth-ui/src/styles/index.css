@@ -71,13 +71,14 @@ button.primary:disabled {
 }
 
 button.warning {
-    background-color: #ff6f00;
-    color: white;
+  background-color: #ff6f00;
+  color: white;
 }
 
 button.secondary {
   background-color: white;
   color: #4d5250;
+  border: 1px solid lightgray;
 }
 
 button.secondary:hover {
@@ -106,8 +107,7 @@ button.secondary:hover {
 }
 
 .section__title {
-  width: 33%;
-  padding-left: 5px;
+  width: 300px;
 }
 
 .section__subtitle {
@@ -115,13 +115,13 @@ button.secondary:hover {
 }
 
 .section__fields {
-  width: 66%;
+  width: 500px;
   display: flex;
   flex-direction: column;
 }
 
 .section__fields--copy-only {
-  width: 66%;
+  width: 500px;
   padding: 10px;
   /*background-color: #f9f9f9;*/
   border: none;
@@ -140,8 +140,8 @@ button.secondary:hover {
 }
 
 .section__fields--copy-only textarea {
-    width:600px;
-    height:120px;
+  width: 600px;
+  height: 120px;
 }
 
 .section__fields__row {
@@ -157,10 +157,13 @@ button.secondary:hover {
 }
 
 .section__fields__comments {
-  width: 500px;
+  width: 475px;
 }
 
 .footer {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;

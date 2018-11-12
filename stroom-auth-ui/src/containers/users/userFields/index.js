@@ -19,10 +19,7 @@ import PropTypes from 'prop-types';
 import {Field, ErrorMessage} from 'formik';
 
 import './UserFields.css';
-import {
-  AuditCopy,
-  LoginStatsCopy,
-} from '../../auditCopy';
+import {AuditCopy, LoginStatsCopy} from '../../auditCopy';
 
 const LoginFailureCopy = ({attemptCount}) => (
   <div className="copy">
@@ -47,6 +44,14 @@ const UserFields = ({
             <label>First name</label>
             <Field name="first_name" type="text" label="First name" />
           </div>
+          <div className="field-container__spacer" />
+          <div className="field-container vertical">
+            <label>Last name</label>
+            <Field name="last_name" type="text" label="Last name" />
+          </div>
+        </div>
+
+        <div className="section__fields__row">
           <div className="field-container vertical">
             <label>Email</label>
             <div className="field-container--with-validation">
@@ -57,13 +62,7 @@ const UserFields = ({
               />
             </div>
           </div>
-        </div>
-
-        <div className="section__fields__row">
-          <div className="field-container vertical">
-            <label>Last name</label>
-            <Field name="last_name" type="text" label="Last name" />
-          </div>
+          <div className="field-container__spacer" />
           <div className="field-container vertical">
             <label>Account status</label>
             <Field name="state" component="select">
@@ -95,6 +94,7 @@ const UserFields = ({
               />
             </div>
           </div>
+          <div className="field-container__spacer" />
           <div className="field-container vertical">
             <label>Verify password</label>
             <div className="field-container--with-validation">

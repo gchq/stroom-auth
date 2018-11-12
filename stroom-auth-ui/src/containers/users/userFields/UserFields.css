@@ -17,6 +17,9 @@
 .container {
   display: flex;
   flex-direction: column;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .left-container {
@@ -48,11 +51,11 @@
 
 .field-container input,
 textarea {
-  width: 180px;
+  width: 90%;
 }
 
 .field-container select {
-  width: 200px;
+  width: 235px;
 }
 
 .field-container button {
@@ -70,6 +73,10 @@ textarea {
   font-size: 11px;
   color: orange;
   padding-left: 5px;
+}
+
+.field-container__spacer {
+  width: 25px;
 }
 
 .field-container--with-validation {
