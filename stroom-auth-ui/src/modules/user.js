@@ -31,6 +31,7 @@ export const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE =
 export const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE =
   'user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE';
 export const CLEAR_USER_BEING_EDITED = 'user/CLEAR_USER_BEING_EDITED';
+export const TOGGLE_IS_SAVING = 'user/TOGGLE_IS_SAVING';
 
 const initialState = {
   user: '',
@@ -39,6 +40,7 @@ const initialState = {
   alertText: '',
   showAlert: false,
   changePasswordErrorMessage: [],
+  isSaving: false,
 };
 
 export default (state = initialState, action) => {
@@ -97,6 +99,12 @@ export default (state = initialState, action) => {
         changePasswordErrorMessage: [],
       };
 
+    case TOGGLE_IS_SAVING:
+      return {
+        ...state,
+        isSaving: !state.isSaving,
+      };
+
     default:
       return state;
   }
@@ -143,6 +151,10 @@ function saveUserBeingEdited(user) {
   };
 }
 
+function toggleIsSaving() {
+  return {type: TOGGLE_IS_SAVING};
+}
+
 export function clearUserBeingEdited() {
   return {
     type: CLEAR_USER_BEING_EDITED,
@@ -166,6 +178,7 @@ function handleStatus(response) {
 
 export const saveChanges = editedUser => {
   return (dispatch, getState) => {
+    dispatch(toggleIsSaving());
     const jwsToken = getState().authentication.idToken;
     const {
       id,
@@ -199,13 +212,18 @@ export const saveChanges = editedUser => {
         dispatch(saveUserBeingEdited(undefined));
         dispatch(push('/userSearch'));
         dispatch(toggleAlertVisibility('User has been updated'));
+        dispatch(toggleIsSaving());
       })
-      .catch(error => handleErrors(error, dispatch, jwsToken));
+      .catch(error => {
+        dispatch(toggleIsSaving());
+        handleErrors(error, dispatch, jwsToken);
+      });
   };
 };
 
 export const createUser = newUser => {
   return (dispatch, getState) => {
+    dispatch(toggleIsSaving());
     const jwsToken = getState().authentication.idToken;
     const {email, password, first_name, last_name, comments, state} = newUser;
 
@@ -234,8 +252,12 @@ export const createUser = newUser => {
         dispatch(showCreateLoader(false));
         dispatch(push('/userSearch'));
         dispatch(toggleAlertVisibility('User has been created'));
+        dispatch(toggleIsSaving());
       })
-      .catch(error => handleErrors(error, dispatch, jwsToken));
+      .catch(error => {
+        handleErrors(error, dispatch, jwsToken);
+        dispatch(toggleIsSaving());
+      });
   };
 };
 
@@ -389,4 +411,3 @@ function getUser(user) {
   // TODO check that there is a user and throw an error if there isn't one
   return user[0];
 }
-

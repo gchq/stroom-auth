@@ -53,3 +53,15 @@ stories.add('isLoading no icon - it changes size', () => (
   </div>
 ));
 
+stories.add('with toolbar-button-small', () => (
+  <div>
+    <Button className="primary toolbar-button-small" icon='times' disabled isLoading={true}>A loading button</Button>
+    <Button className="primary toolbar-button-small" >A loading button</Button>
+    <Button className="primary toolbar-button-small" icon="arrow-left">A loading button</Button>
+              <Button
+                className="primary toolbar-button-small" icon='arrow-left'>
+                 Back
+              </Button>
+  </div>
+));
+

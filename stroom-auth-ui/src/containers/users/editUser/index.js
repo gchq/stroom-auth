@@ -43,18 +43,20 @@ import {
 } from '../../../modules/user';
 import {hasAnyProps} from '../../../lang';
 import {UserValidationSchema, validateAsync} from '../validation';
+import Button from '../../Button';
 
 const enhance = compose(
   withRouter,
   connect(
     ({
-      user: {userBeingEdited, showAlert, alertText},
+      user: {userBeingEdited, isSaving, showAlert, alertText},
       authentication: {idToken},
       config: {authenticationServiceUrl},
     }) => ({
       userBeingEdited,
       showAlert,
       alertText,
+        isSaving,
       idToken,
       authenticationServiceUrl,
     }),
@@ -109,6 +111,7 @@ const UserEditForm = ({
   userBeingEdited,
   initialValues,
   idToken,
+    isSaving,
   authenticationServiceUrl,
   onSubmit,
   handleBack,
@@ -132,12 +135,11 @@ const UserEditForm = ({
         return (
           <Form>
             <div className="header">
-              <button
-                type="button"
+              <Button
                 onClick={() => handleBack(isPristine)}
-                className="primary toolbar-button-small">
-                <FontAwesomeIcon icon="arrow-left" /> Back
-              </button>
+                className="primary toolbar-button-small" icon='arrow-left'>
+                 Back
+              </Button>
             </div>
             <UserFields
               showCalculatedFields
@@ -146,16 +148,18 @@ const UserEditForm = ({
               touched={touched}
             />
             <div className="footer">
-              <button
+              <Button
+                  type='submit'
                 className="toolbar-button-small primary"
                 disabled={isPristine || hasErrors}
-                type="submit">
-                <FontAwesomeIcon icon="save" /> Save
-              </button>
+                icon="save"
+            isLoading={isSaving}>
+                 Save
+              </Button>
               <NavLink to="/userSearch">
-                <button className="toolbar-button-small secondary">
-                  <FontAwesomeIcon icon="times" /> Cancel
-                </button>
+                <Button className="toolbar-button-small secondary" icon="times">
+                  Cancel
+                </Button>
               </NavLink>
             </div>
             <BackConfirmation

@@ -27,12 +27,18 @@ import UserFields from '../userFields';
 import {createUser as onSubmit} from '../../../modules/user';
 import {hasAnyProps} from '../../../lang';
 import {UserValidationSchema, validateAsync} from '../validation';
+import Button from '../../Button';
 
 const enhance = compose(
   connect(
-    ({authentication: {idToken}, config: {authenticationServiceUrl}}) => ({
+    ({
+      authentication: {idToken},
+      user: {isSaving},
+      config: {authenticationServiceUrl},
+    }) => ({
       idToken,
       authenticationServiceUrl,
+      isSaving,
     }),
     {onSubmit},
   ),
@@ -50,7 +56,12 @@ const initialValues = {
   comments: '',
 };
 
-const UserCreateForm = ({onSubmit, idToken, authenticationServiceUrl}) => {
+const UserCreateForm = ({
+  onSubmit,
+  idToken,
+  authenticationServiceUrl,
+  isSaving,
+}) => {
   return (
     <Formik
       initialValues={initialValues}
@@ -68,9 +79,11 @@ const UserCreateForm = ({onSubmit, idToken, authenticationServiceUrl}) => {
           <Form>
             <div className="header">
               <NavLink to="/userSearch">
-                <button className="primary toolbar-button-small">
-                  <FontAwesomeIcon icon="arrow-left" /> Back
-                </button>
+                <Button
+                  className="primary toolbar-button-small"
+                  icon="arrow-left">
+                  Back
+                </Button>
               </NavLink>
             </div>
             <UserFields
@@ -78,17 +91,19 @@ const UserCreateForm = ({onSubmit, idToken, authenticationServiceUrl}) => {
               errors={errors}
               touched={touched}
             />
-            <div class="footer">
-              <button
+            <div className="footer">
+              <Button
                 className="toolbar-button-small primary"
                 disabled={isPristine || hasErrors}
-                type="submit">
-                <FontAwesomeIcon icon="save" /> Save
-              </button>
+                type="submit"
+                icon="save"
+                isLoading={isSaving}>
+                Save
+              </Button>
               <NavLink to="/userSearch">
-                <button className="toolbar-button-small secondary">
-                  <FontAwesomeIcon icon="times" /> Cancel
-                </button>
+                <Button className="toolbar-button-small secondary" icon="times">
+                  Cancel
+                </Button>
               </NavLink>
             </div>
           </Form>

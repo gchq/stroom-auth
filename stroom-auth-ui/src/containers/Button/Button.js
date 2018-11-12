@@ -22,21 +22,26 @@ import SpinnerIcon from './small_spinner.svg';
 import './Button.css';
 
 const enhance = compose(
-  withProps(({isLoading, icon, className}) => {
-    className = (icon || isLoading) ? className : 'no-icon ' + className;
+  withProps(({isLoading, icon, className, type}) => {
+    className = icon || isLoading ? className : 'no-icon ' + className;
     className = 'Button ' + (className || '');
+      //
+    // We're going to default to the button type being 'button' instead of 'submit'. That's more appropriate for an SPA.
+    type = type || 'button';
+
     // If isLoading is true then we don't want to be showing the icon
     icon = isLoading ? undefined : icon;
     return {
       icon,
       className,
+      type,
     };
   }),
 );
 
-const Button = ({icon, isLoading, ...rest}) => {
+const Button = ({icon, isLoading, type, className, disabled, children, ...rest}) => {
   return (
-    <button type="button" className={rest.className} disabled={rest.disabled}>
+    <button type={type} className={className} disabled={disabled} {...rest}>
       {/* Wrap in a span to get spacing between the icon and the other children. */}
       {icon ? (
         <span>
@@ -46,7 +51,7 @@ const Button = ({icon, isLoading, ...rest}) => {
         undefined
       )}
       {isLoading ? <img src={SpinnerIcon} /> : undefined}
-      <div className="Button__contents">{rest.children}</div>
+      <div className="Button__contents">{children}</div>
     </button>
   );
 };
