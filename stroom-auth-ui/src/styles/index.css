@@ -103,7 +103,7 @@ button.secondary:hover {
   flex-direction: row;
   width: 100%;
   border-top: solid 1px lightgrey;
-  padding: 5px 5px 15px 5px;
+  padding: 10px 5px 20px 5px;
 }
 
 .section__title {
@@ -140,8 +140,8 @@ button.secondary:hover {
 }
 
 .section__fields--copy-only textarea {
-  width: 600px;
-  height: 120px;
+  width: 97%;
+  height: 140px;
 }
 
 .section__fields__row {
