@@ -30,7 +30,7 @@ export default ({
 }) => {
   return (
     <ReactModal
-      className="confirmation"
+      className="BackConfirmation"
       isOpen={isOpen}
       contentLabel="Are you sure?">
       <h3>
@@ -43,7 +43,7 @@ export default ({
         ) : (
             undefined
         )}
-      <div className="confirmation__actions">
+      <div className="BackConfirmation__actions">
 
         <button
           className="toolbar-button-large primary"
