@@ -56,7 +56,7 @@ const enhance = compose(
       userBeingEdited,
       showAlert,
       alertText,
-        isSaving,
+      isSaving,
       idToken,
       authenticationServiceUrl,
     }),
@@ -111,7 +111,7 @@ const UserEditForm = ({
   userBeingEdited,
   initialValues,
   idToken,
-    isSaving,
+  isSaving,
   authenticationServiceUrl,
   onSubmit,
   handleBack,
@@ -137,8 +137,9 @@ const UserEditForm = ({
             <div className="header">
               <Button
                 onClick={() => handleBack(isPristine)}
-                className="primary toolbar-button-small" icon='arrow-left'>
-                 Back
+                className="primary toolbar-button-small"
+                icon="arrow-left">
+                Back
               </Button>
             </div>
             <UserFields
@@ -149,12 +150,12 @@ const UserEditForm = ({
             />
             <div className="footer">
               <Button
-                  type='submit'
+                type="submit"
                 className="toolbar-button-small primary"
                 disabled={isPristine || hasErrors}
                 icon="save"
-            isLoading={isSaving}>
-                 Save
+                isLoading={isSaving}>
+                Save
               </Button>
               <NavLink to="/userSearch">
                 <Button className="toolbar-button-small secondary" icon="times">
@@ -166,7 +167,7 @@ const UserEditForm = ({
               isOpen={showBackConfirmation}
               onGoBack={() => {
                 setShowBackConfirmation(false);
-                  push('/userSearch');
+                push('/userSearch');
               }}
               errors={errors}
               onSaveAndGoBack={submitForm}

@@ -25,7 +25,7 @@ const enhance = compose(
   withProps(({isLoading, icon, className, type}) => {
     className = icon || isLoading ? className : 'no-icon ' + className;
     className = 'Button ' + (className || '');
-      //
+    //
     // We're going to default to the button type being 'button' instead of 'submit'. That's more appropriate for an SPA.
     type = type || 'button';
 
@@ -39,7 +39,15 @@ const enhance = compose(
   }),
 );
 
-const Button = ({icon, isLoading, type, className, disabled, children, ...rest}) => {
+const Button = ({
+  icon,
+  isLoading,
+  type,
+  className,
+  disabled,
+  children,
+  ...rest
+}) => {
   return (
     <button type={type} className={className} disabled={disabled} {...rest}>
       {/* Wrap in a span to get spacing between the icon and the other children. */}
