@@ -21,52 +21,54 @@ const UserValidationSchema = Yup.object().shape({
 });
 
 const validateAsync = (values, idToken, url) => {
-  if (
-    values.email !== undefined &&
-    values.email !== '' &&
-    values.password !== undefined &&
-    values.password !== ''
-  ) {
-    if (
-      values.verifyPassword !== undefined &&
-      values.verifyPassword !== '' &&
-      values.password !== values.verifyPassword
-    ) {
-      return {verifyPassword: 'Passwords do not match'};
-    }
+  return fetch(`${url}/isPasswordValid`, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + idToken,
+    },
+    method: 'post',
+    mode: 'cors',
+    body: JSON.stringify({
+      email: values.email,
+      newPassword: values.password,
+    }),
+  })
+    .then(response => response.json())
+    .then(body => {
+      let errors = {};
 
-    return fetch(`${url}/isPasswordValid`, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-      method: 'post',
-      mode: 'cors',
-      body: JSON.stringify({
-        email: values.email,
-        newPassword: values.password,
-      }),
-    })
-      .then(response => response.json())
-      .then(body => {
-        let asyncErrors = [];
-        if (body.failedOn.length > 0) {
-          body.failedOn.map(failureType => {
-            if (failureType === 'LENGTH') {
-              asyncErrors.push('Not long enough');
-            } else if (failureType === 'COMPLEXITY') {
-              asyncErrors.push('Does not meet complexity requirements');
-            }
-            return null;
-          });
+      // First sort out async password checks
+      let passwordErrors = [];
+      if (body.failedOn.length > 0) {
+        body.failedOn.map(failureType => {
+          if (failureType === 'LENGTH') {
+            passwordErrors.push('Not long enough');
+          } else if (failureType === 'COMPLEXITY') {
+            passwordErrors.push('Does not meet complexity requirements');
+          }
+        });
+      }
+      if (passwordErrors.length > 0) {
+        errors.password = passwordErrors.join('\n');
+      }
+
+      // Do password checks
+      if (
+        values.password !== undefined &&
+        values.password !== ''
+      ) {
+        if (
+          values.verifyPassword !== undefined &&
+          values.verifyPassword !== '' &&
+          values.password !== values.verifyPassword
+        ) {
+          errors.verifyPassword = 'Passwords do not match';
         }
-        if (asyncErrors.length > 0) {
-          throw {password: asyncErrors.join('\n')};
-        }
-      });
-  } else {
-  }
+      }
+
+      throw errors;
+    });
 };
 
 export {UserValidationSchema, validateAsync};
