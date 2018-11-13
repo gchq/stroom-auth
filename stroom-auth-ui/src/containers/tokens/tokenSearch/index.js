@@ -131,7 +131,12 @@ const enhance = compose(
       selectedTokenRowId,
       pageSize: lastUsedPageSize,
     }),
-    {performTokenSearch, deleteSelectedToken, changeSelectedRow, setEnabledStateOnToken},
+    {
+      performTokenSearch,
+      deleteSelectedToken,
+      changeSelectedRow,
+      setEnabledStateOnToken,
+    },
   ),
   withState('isFilteringEnabled', 'toggleFiltering', false),
 );
@@ -199,11 +204,7 @@ const TokenSearch = ({
       </div>
       <div className="UserSearch-content">
         <div className="table-small-container">
-          <ReactTable
-            data={results}
-            pages={totalPages}
-            manual
-            className="-striped -highlight UserSearch-table"
+          <R
             columns={getColumnFormat(
               selectedTokenRowId,
               setEnabledStateOnToken,
