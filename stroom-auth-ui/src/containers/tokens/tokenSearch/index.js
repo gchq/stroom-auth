@@ -228,7 +228,7 @@ const TokenSearch = ({
               // We use 'calc' because we want full height but need
               // to account for the header. Obviously if the header height
               // changes this offset will need to change too.
-              height: 'calc(100vh - 40px)',
+              height: 'calc(100vh - 50px)',
             }}
             getTheadTrProps={() => {
               return {
