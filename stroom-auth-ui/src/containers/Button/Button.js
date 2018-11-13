@@ -61,7 +61,7 @@ const Button = ({
       ) : (
         undefined
       )}
-      {isLoading ? <img src={SpinnerIcon} /> : undefined}
+      {isLoading ? <img alt="Loading..." src={SpinnerIcon} /> : undefined}
       <div className="Button__contents">{children}</div>
     </button>
   );

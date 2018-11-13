@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
+import React from 'react';
 import {connect} from 'react-redux';
 import {NavLink} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -24,8 +23,7 @@ import 'rc-checkbox/assets/index.css';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
-import PropTypes from 'prop-types';
-import {compose, withProps, withState, lifecycle} from 'recompose';
+import {compose, withState} from 'recompose';
 
 import './TokenSearch.css';
 import '../../../styles/table-small.css';
@@ -133,156 +131,132 @@ const enhance = compose(
       selectedTokenRowId,
       pageSize: lastUsedPageSize,
     }),
-    {performTokenSearch, changeSelectedRow, setEnabledStateOnToken},
+    {performTokenSearch, deleteSelectedToken, changeSelectedRow, setEnabledStateOnToken},
   ),
-  lifecycle({
-    componentDidMount() {},
-  }),
-  withProps(({}) => {
-    return {};
-  }),
+  withState('isFilteringEnabled', 'toggleFiltering', false),
 );
 
-class TokenSearch extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isFilteringEnabled: false,
-    };
-  }
+const TokenSearch = ({
+  // vars
+  selectedTokenRowId,
+  results,
+  totalPages,
+  showSearchLoader,
+  pageSize,
+  isFilteringEnabled,
+  idToken,
+  //funcs
+  performTokenSearch,
+  setEnabledStateOnToken,
+  changeSelectedRow,
+  deleteSelectedToken,
+  toggleFiltering,
+}) => {
+  const noTokenSelected = !selectedTokenRowId;
+  return (
+    <div className="UserSearch-main">
+      <div className="header">
+        <NavLink to={'/token/newApiToken'}>
+          <button className="toolbar-button-small primary">
+            <FontAwesomeIcon icon="plus" /> Create
+          </button>
+        </NavLink>
 
-  deleteToken() {
-    this.context.store.dispatch(deleteSelectedToken());
-  }
-
-  toggleRow(id) {
-    // Tell the redux store so the control buttons get displayed correctly
-    this.props.changeSelectedRow(id);
-  }
-
-  fetchTokens(securityToken, state) {
-    this.props.performTokenSearch(
-      securityToken,
-      state.pageSize,
-      state.page,
-      state.sorted,
-      state.filtered,
-    );
-  }
-  toggleFiltering(event) {
-    const isFilteringEnabled = event.target.checked;
-    this.setState({isFilteringEnabled});
-  }
-
-  render() {
-    const {selectedTokenRowId} = this.props;
-    const noTokenSelected = !selectedTokenRowId;
-    const {isFilteringEnabled} = this.state;
-    return (
-      <div className="UserSearch-main">
-        <div className="header">
-          <NavLink to={'/token/newApiToken'}>
-            <button className="toolbar-button-small primary">
-              <FontAwesomeIcon icon="plus" /> Create
-            </button>
-          </NavLink>
-
-          {noTokenSelected ? (
-            <div>
-              <button
-                className="toolbar-button-small primary"
-                disabled={noTokenSelected}>
-                <FontAwesomeIcon icon="edit" /> View/edit
-              </button>
-            </div>
-          ) : (
-            <NavLink to={`/token/${selectedTokenRowId}`}>
-              <button
-                className="toolbar-button-small primary"
-                disabled={noTokenSelected}>
-                <FontAwesomeIcon icon="edit" /> View/edit
-              </button>
-            </NavLink>
-          )}
-
+        {noTokenSelected ? (
           <div>
             <button
-              disabled={noTokenSelected}
-              onClick={() => this.deleteToken()}
-              className="toolbar-button-small primary">
-              <FontAwesomeIcon icon="trash" /> Delete
+              className="toolbar-button-small primary"
+              disabled={noTokenSelected}>
+              <FontAwesomeIcon icon="edit" /> View/edit
             </button>
           </div>
+        ) : (
+          <NavLink to={`/token/${selectedTokenRowId}`}>
+            <button
+              className="toolbar-button-small primary"
+              disabled={noTokenSelected}>
+              <FontAwesomeIcon icon="edit" /> View/edit
+            </button>
+          </NavLink>
+        )}
 
-          <div className="UserSearch-filteringToggle">
-            <label>Show filtering</label>
-            <Checkbox
-              checked={isFilteringEnabled}
-              onChange={event => this.toggleFiltering(event)}
-            />
-          </div>
+        <div>
+          <button
+            disabled={noTokenSelected}
+            onClick={() => deleteSelectedToken()}
+            className="toolbar-button-small primary">
+            <FontAwesomeIcon icon="trash" /> Delete
+          </button>
         </div>
-        <div className="UserSearch-content">
-          <div className="table-small-container">
-            <ReactTable
-              data={this.props.results}
-              pages={this.props.totalPages}
-              manual
-              className="-striped -highlight UserSearch-table"
-              columns={getColumnFormat(
-                this.props.selectedTokenRowId,
-                this.props.setEnabledStateOnToken,
-              )}
-              filterable={isFilteringEnabled}
-              showPagination
-              showPageSizeOptions={false}
-              loading={this.props.showSearchLoader}
-              defaultPageSize={this.props.pageSize}
-              pageSize={this.props.pageSize}
-              style={{
-                // We use 'calc' because we want full height but need
-                // to account for the header. Obviously if the header height
-                // changes this offset will need to change too.
-                height: 'calc(100vh - 40px)',
-              }}
-              getTheadTrProps={() => {
-                return {
-                  className: 'table-header-small',
-                };
-              }}
-              getTrProps={(state, rowInfo) => {
-                let selected = false;
-                let enabled = true;
-                if (rowInfo) {
-                  selected = rowInfo.row.id === this.props.selectedTokenRowId;
-                  enabled = rowInfo.row.enabled;
-                }
 
-                let className = 'table-row-small';
-                className += selected ? ' table-row-selected' : '';
-                className += enabled ? '' : ' table-row-dimmed';
-                return {
-                  onClick: (target, event) => {
-                    this.toggleRow(rowInfo.row.id);
-                  },
-                  className,
-                };
-              }}
-              onFetchData={(state, instance) => {
-                // TODO call to show the loading state
-                this.fetchTokens(this.props.idToken, state);
-              }}
-            />
-          </div>
+        <div className="UserSearch-filteringToggle">
+          <label>Show filtering</label>
+          <Checkbox
+            checked={isFilteringEnabled}
+            onChange={event => toggleFiltering(event.target.checked)}
+          />
         </div>
       </div>
-    );
-  }
-}
+      <div className="UserSearch-content">
+        <div className="table-small-container">
+          <ReactTable
+            data={results}
+            pages={totalPages}
+            manual
+            className="-striped -highlight UserSearch-table"
+            columns={getColumnFormat(
+              selectedTokenRowId,
+              setEnabledStateOnToken,
+            )}
+            filterable={isFilteringEnabled}
+            showPagination
+            showPageSizeOptions={false}
+            loading={showSearchLoader}
+            defaultPageSize={pageSize}
+            pageSize={pageSize}
+            style={{
+              // We use 'calc' because we want full height but need
+              // to account for the header. Obviously if the header height
+              // changes this offset will need to change too.
+              height: 'calc(100vh - 40px)',
+            }}
+            getTheadTrProps={() => {
+              return {
+                className: 'table-header-small',
+              };
+            }}
+            getTrProps={(state, rowInfo) => {
+              let selected = false;
+              let enabled = true;
+              if (rowInfo) {
+                selected = rowInfo.row.id === selectedTokenRowId;
+                enabled = rowInfo.row.enabled;
+              }
 
-TokenSearch.contextTypes = {
-  store: PropTypes.object.isRequired,
+              let className = 'table-row-small';
+              className += selected ? ' table-row-selected' : '';
+              className += enabled ? '' : ' table-row-dimmed';
+              return {
+                onClick: (target, event) => {
+                  changeSelectedRow(rowInfo.row.id);
+                },
+                className,
+              };
+            }}
+            onFetchData={(state, instance) => {
+              performTokenSearch(
+                idToken,
+                state.pageSize,
+                state.page,
+                state.sorted,
+                state.filtered,
+              );
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default enhance(TokenSearch);
-

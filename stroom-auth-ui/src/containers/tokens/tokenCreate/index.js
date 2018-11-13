@@ -18,7 +18,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {NavLink} from 'react-router-dom';
 import {compose} from 'recompose';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Formik} from 'formik';
 
 import {AsyncUserSelect} from '../../users';
