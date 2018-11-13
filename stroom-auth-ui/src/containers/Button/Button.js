@@ -22,19 +22,22 @@ import SpinnerIcon from './small_spinner.svg';
 import './Button.css';
 
 const enhance = compose(
-  withProps(({isLoading, icon, className, type}) => {
+  withProps(({isLoading, icon, className, type, disabled}) => {
     className = icon || isLoading ? className : 'no-icon ' + className;
     className = 'Button ' + (className || '');
-    //
+    
     // We're going to default to the button type being 'button' instead of 'submit'. That's more appropriate for an SPA.
     type = type || 'button';
 
     // If isLoading is true then we don't want to be showing the icon
     icon = isLoading ? undefined : icon;
+    // If is Loading is true then we want the button disabled
+    disabled = isLoading ? true : disabled;
     return {
       icon,
       className,
       type,
+        disabled
     };
   }),
 );

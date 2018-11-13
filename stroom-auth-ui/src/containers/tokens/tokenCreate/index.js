@@ -20,6 +20,7 @@ import {NavLink} from 'react-router-dom';
 import {compose} from 'recompose';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {Formik} from 'formik';
+
 import {AsyncUserSelect} from '../../users';
 import './CreateTokenForm.css';
 import '../../Layout.css';
@@ -27,16 +28,18 @@ import {
   createToken as onSubmit,
   userAutoCompleteChange,
 } from '../../../modules/token';
+import Button from '../../Button';
 
 const enhance = compose(
   connect(
     ({
       authentication: {idToken},
-      token: {matchingAutoCompleteResults, errorMessage},
+      token: {matchingAutoCompleteResults, errorMessage, isCreating},
     }) => ({
       idToken,
       matchingAutoCompleteResults,
       errorMessage,
+      isCreating,
     }),
     {
       userAutoCompleteChange,
@@ -45,8 +48,7 @@ const enhance = compose(
   ),
 );
 
-const TokenCreateForm = props => {
-  const {onSubmit} = props;
+const TokenCreateForm = ({onSubmit, isCreating}) => {
   return (
     <div className="CreateTokenForm-card">
       <Formik
@@ -54,13 +56,15 @@ const TokenCreateForm = props => {
           onSubmit(values.user.label, actions.setSubmitting);
           actions.setSubmitting(false);
         }}
-        render={props => (
-          <form onSubmit={props.handleSubmit}>
+        render={({handleSubmit, setFieldValue, errorMessage}) => (
+          <form onSubmit={handleSubmit}>
             <div className="header">
               <NavLink to="/tokens">
-                <button className="primary toolbar-button-small">
-                  <FontAwesomeIcon icon="arrow-left" /> Back
-                </button>
+                <Button
+                  icon="arrow-left"
+                  className="primary toolbar-button-small">
+                  Back
+                </Button>
               </NavLink>
             </div>
             <div className="container">
@@ -74,20 +78,24 @@ const TokenCreateForm = props => {
                       <div className="label-container">
                         <label />
                       </div>
-                      <AsyncUserSelect onChange={props.setFieldValue} />
+                      <AsyncUserSelect onChange={setFieldValue} />
                     </div>
                   </div>
                   <div className="CreateTokenForm-errorMessage">
                     {' '}
-                    {props.errorMessage}
+                    {errorMessage}
                   </div>
                 </div>
               </div>
             </div>
             <div className="footer">
-              <button className="toolbar-button-small primary" type="submit">
-                <FontAwesomeIcon icon="plus" /> Create
-              </button>
+              <Button
+                className="toolbar-button-small primary"
+                icon="plus"
+                type="submit"
+                isLoading={isCreating}>
+                Create
+              </Button>
             </div>
           </form>
         )}

@@ -17,10 +17,7 @@ import {push} from 'react-router-redux';
 
 import {HttpError} from '../ErrorTypes';
 import {handleErrors, getBody, getJsonBody} from './fetchFunctions';
-import {
-  performTokenSearch,
-  changeSelectedRow,
-} from './tokenSearch';
+import {performTokenSearch, changeSelectedRow} from './tokenSearch';
 import {performUserSearch} from './userSearch';
 
 export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER';
@@ -31,12 +28,14 @@ export const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN';
 export const SHOW_ERROR_MESSAGE = 'token/SHOW_ERROR_MESSAGE';
 export const HIDE_ERROR_MESSAGE = 'token/HIDE_ERROR_MESSAGE';
 export const TOGGLE_STATE = 'token/TOGGLE_STATE';
+export const TOGGLE_IS_CREATING = 'token/TOGGLE_IS_CREATING';
 
 const initialState = {
   showAlert: false,
   alertText: '',
   matchingAutoCompleteResults: [],
   errorMessage: '',
+  isCreating: false,
 };
 
 export default (state = initialState, action) => {
@@ -86,6 +85,11 @@ export default (state = initialState, action) => {
           enabled: !state.lastReadToken.enabled,
         },
       };
+    case TOGGLE_IS_CREATING:
+      return {
+        ...state,
+        isCreating: !state.isCreating,
+      };
     default:
       return state;
   }
@@ -124,6 +128,12 @@ function toggleState() {
   };
 }
 
+function toggleIsCreating() {
+  return {
+    type: TOGGLE_IS_CREATING,
+  };
+}
+
 export const deleteSelectedToken = tokenId => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken;
@@ -150,6 +160,7 @@ export const deleteSelectedToken = tokenId => {
 
 export const createToken = (email, setSubmitting) => {
   return (dispatch, getState) => {
+    dispatch(toggleIsCreating());
     dispatch(hideCreateError());
     const jwsToken = getState().authentication.idToken;
 
@@ -170,10 +181,12 @@ export const createToken = (email, setSubmitting) => {
       .then(handleStatus)
       .then(getJsonBody)
       .then(newToken => {
+        dispatch(toggleIsCreating());
         dispatch(push(`/token/${newToken.id}`));
         setSubmitting(false);
       })
       .catch(error => {
+        dispatch(toggleIsCreating());
         handleErrors(error, dispatch, jwsToken);
         if (error.status === 400) {
           dispatch(
