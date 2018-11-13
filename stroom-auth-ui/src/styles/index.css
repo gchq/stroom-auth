@@ -37,6 +37,16 @@ textarea {
   font-family: sans-serif;
   background-color: white;
 }
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: 1px solid #1e88e5;
+}
+
+a:focus { 
+    outline: none;
+}
 
 button {
   border-radius: 3px;

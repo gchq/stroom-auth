@@ -16,7 +16,6 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
@@ -24,6 +23,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
 import {compose, withState} from 'recompose';
+import {push} from 'react-router-redux';
 
 import './TokenSearch.css';
 import '../../../styles/table-small.css';
@@ -136,6 +136,7 @@ const enhance = compose(
       deleteSelectedToken,
       changeSelectedRow,
       setEnabledStateOnToken,
+      push,
     },
   ),
   withState('isFilteringEnabled', 'toggleFiltering', false),
@@ -156,16 +157,17 @@ const TokenSearch = ({
   changeSelectedRow,
   deleteSelectedToken,
   toggleFiltering,
+  push,
 }) => {
   const noTokenSelected = !selectedTokenRowId;
   return (
     <div className="UserSearch-main">
       <div className="header">
-        <NavLink to={'/token/newApiToken'}>
-          <button className="toolbar-button-small primary">
-            <FontAwesomeIcon icon="plus" /> Create
-          </button>
-        </NavLink>
+        <button
+          className="toolbar-button-small primary"
+          onClick={() => push('/token/newApiToken')}>
+          <FontAwesomeIcon icon="plus" /> Create
+        </button>
 
         {noTokenSelected ? (
           <div>
@@ -176,13 +178,12 @@ const TokenSearch = ({
             </button>
           </div>
         ) : (
-          <NavLink to={`/token/${selectedTokenRowId}`}>
-            <button
-              className="toolbar-button-small primary"
-              disabled={noTokenSelected}>
-              <FontAwesomeIcon icon="edit" /> View/edit
-            </button>
-          </NavLink>
+          <button
+            className="toolbar-button-small primary"
+            disabled={noTokenSelected}
+            onClick={() => push(`/token/${selectedTokenRowId}`)}>
+            <FontAwesomeIcon icon="edit" /> View/edit
+          </button>
         )}
 
         <div>

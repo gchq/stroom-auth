@@ -16,7 +16,6 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
 import {withRouter} from 'react-router';
 import {Formik, Form} from 'formik';
 import PropTypes, {object} from 'prop-types';
@@ -158,13 +157,12 @@ const UserEditForm = ({
                   isLoading={isSaving}>
                   Save
                 </Button>
-                <NavLink to="/userSearch">
-                  <Button
-                    className="toolbar-button-small secondary"
-                    icon="times">
-                    Cancel
-                  </Button>
-                </NavLink>
+                <Button
+                  className="toolbar-button-small secondary"
+                  icon="times"
+                  onClick={() => push('/userSearch/')}>
+                  Cancel
+                </Button>
               </div>
               <BackConfirmation
                 isOpen={showBackConfirmation}

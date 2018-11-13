@@ -16,13 +16,13 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Snackbar from 'material-ui/Snackbar';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
 import {compose, lifecycle} from 'recompose';
+import {push} from 'react-router-redux';
 
 import Loader from '../../Loader';
 import './TokenEdit.css';
@@ -39,6 +39,7 @@ const enhance = compose(
     }),
     {
       toggleEnabledState,
+      push,
     },
   ),
   lifecycle({
@@ -56,16 +57,17 @@ const TokenEditUi = props => {
     toggleAlertVisibility,
     form,
     toggleEnabledState,
+    push,
   } = props;
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="header">
-        <NavLink to="/tokens">
-          <button className="primary toolbar-button-small">
-            <FontAwesomeIcon icon="arrow-left" /> Back
-          </button>
-        </NavLink>
+        <button
+          className="primary toolbar-button-small"
+          onClick={() => push('/tokens')}>
+          <FontAwesomeIcon icon="arrow-left" /> Back
+        </button>
       </div>
       {token === undefined ? (
         <div className="loader-container">

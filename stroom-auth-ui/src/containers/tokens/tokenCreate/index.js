@@ -16,9 +16,9 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
 import {compose} from 'recompose';
 import {Formik} from 'formik';
+import {push} from 'react-router-redux';
 
 import {AsyncUserSelect} from '../../users';
 import '../../../styles/form.css';
@@ -44,11 +44,12 @@ const enhance = compose(
     {
       userAutoCompleteChange,
       onSubmit,
+        push,
     },
   ),
 );
 
-const TokenCreateForm = ({onSubmit, isCreating}) => {
+const TokenCreateForm = ({onSubmit, isCreating, push}) => {
   return (
     <div className="CreateTokenForm-card">
       <Formik
@@ -59,13 +60,12 @@ const TokenCreateForm = ({onSubmit, isCreating}) => {
         render={({handleSubmit, setFieldValue, errorMessage}) => (
           <form onSubmit={handleSubmit}>
             <div className="header">
-              <NavLink to="/tokens">
                 <Button
                   icon="arrow-left"
-                  className="primary toolbar-button-small">
+                  className="primary toolbar-button-small"
+                  onClick={() => push('/tokens')}>
                   Back
                 </Button>
-              </NavLink>
             </div>
             <div className="container">
               <div className="section">

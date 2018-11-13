@@ -16,9 +16,9 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
 import {Formik, Form} from 'formik';
 import {compose} from 'recompose';
+import {push} from 'react-router-redux';
 
 import './CreateUserForm.css';
 import '../../Layout.css';
@@ -39,7 +39,7 @@ const enhance = compose(
       authenticationServiceUrl,
       isSaving,
     }),
-    {onSubmit},
+    {onSubmit, push},
   ),
 );
 
@@ -60,6 +60,7 @@ const UserCreateForm = ({
   idToken,
   authenticationServiceUrl,
   isSaving,
+  push,
 }) => {
   return (
     <Formik
@@ -77,13 +78,12 @@ const UserCreateForm = ({
         return (
           <Form>
             <div className="header">
-              <NavLink to="/userSearch">
-                <Button
-                  className="primary toolbar-button-small"
-                  icon="arrow-left">
-                  Back
-                </Button>
-              </NavLink>
+              <Button
+                className="primary toolbar-button-small"
+                icon="arrow-left"
+                onClick={() => push('/userSearch')}>
+                Back
+              </Button>
             </div>
             <UserFields
               showCalculatedFields={false}
@@ -99,11 +99,12 @@ const UserCreateForm = ({
                 isLoading={isSaving}>
                 Save
               </Button>
-              <NavLink to="/userSearch">
-                <Button className="toolbar-button-small secondary" icon="times">
-                  Cancel
-                </Button>
-              </NavLink>
+              <Button
+                className="toolbar-button-small secondary"
+                icon="times"
+                onClick={() => push('/userSearch')}>
+                Cancel
+              </Button>
             </div>
           </Form>
         );

@@ -16,7 +16,6 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
@@ -24,6 +23,7 @@ import {compose, withProps, withState, lifecycle} from 'recompose';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
+import {push} from 'react-router-redux';
 
 import './UserSearch.css';
 import '../../../styles/table-small.css';
@@ -148,7 +148,7 @@ const enhance = compose(
       errorStatus,
       errorText,
     }),
-    {deleteSelectedUser, performUserSearch, changeSelectedRow},
+    {deleteSelectedUser, performUserSearch, changeSelectedRow, push},
   ),
   lifecycle({
     componentDidMount() {
@@ -173,15 +173,16 @@ const UserSearch = ({
   results,
   showSearchLoader,
   deleteButtonDisabled,
+  push,
 }) => {
   return (
     <div className="UserSearch-main">
       <div className="header">
-        <NavLink to={'/newUser'}>
-          <button className="toolbar-button-small primary">
-            <FontAwesomeIcon icon="plus" /> Create
-          </button>
-        </NavLink>
+        <button
+          className="toolbar-button-small primary"
+          onClick={() => '/newUser'}>
+          <FontAwesomeIcon icon="plus" /> Create
+        </button>
         {deleteButtonDisabled ? (
           <div>
             <button className="toolbar-button-small primary" disabled>
@@ -189,11 +190,11 @@ const UserSearch = ({
             </button>
           </div>
         ) : (
-          <NavLink to={`/user/${selectedUserRowId}`}>
-            <button className="toolbar-button-small primary">
-              <FontAwesomeIcon icon="edit" /> View/edit
-            </button>
-          </NavLink>
+          <button
+            className="toolbar-button-small primary"
+            onClick={() => `/user/${selectedUserRowId}`}>
+            <FontAwesomeIcon icon="edit" /> View/edit
+          </button>
         )}
 
         <div>
@@ -266,4 +267,3 @@ const UserSearch = ({
 };
 
 export default enhance(UserSearch);
-
