@@ -26,6 +26,7 @@ import {compose, lifecycle} from 'recompose';
 
 import Loader from '../../Loader';
 import './TokenEdit.css';
+import '../../../styles/form.css';
 import {toggleEnabledState} from '../../../modules/token';
 import {OnCopy, ByCopy} from '../../auditCopy';
 

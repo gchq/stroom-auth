@@ -21,6 +21,7 @@ import {compose} from 'recompose';
 import {Formik} from 'formik';
 
 import {AsyncUserSelect} from '../../users';
+import '../../../styles/form.css';
 import './CreateTokenForm.css';
 import '../../Layout.css';
 import {

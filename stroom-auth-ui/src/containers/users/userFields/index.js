@@ -18,7 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Field, ErrorMessage} from 'formik';
 
-import './UserFields.css';
+import '../../../styles/form.css';
 import {AuditCopy, LoginStatsCopy} from '../../auditCopy';
 
 const LoginFailureCopy = ({attemptCount}) => (
