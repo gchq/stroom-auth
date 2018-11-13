@@ -22,8 +22,9 @@ import Snackbar from 'material-ui/Snackbar';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
-import {compose, branch, lifecycle, renderComponent} from 'recompose';
+import {compose, lifecycle} from 'recompose';
 
+import Loader from '../../Loader';
 import './TokenEdit.css';
 import {toggleEnabledState} from '../../../modules/token';
 import {OnCopy, ByCopy} from '../../auditCopy';
@@ -42,7 +43,7 @@ const enhance = compose(
   lifecycle({
     componentDidMount() {},
   }),
-  branch(({token}) => !token, renderComponent(() => <div>Loading...</div>)),
+  //  branch(({token}) => !token, renderComponent(() => <div>Loading...</div>)),
 );
 
 const TokenEditUi = props => {
@@ -56,18 +57,20 @@ const TokenEditUi = props => {
     toggleEnabledState,
   } = props;
 
-  if (token === undefined) {
-    return <div>Loading...</div>;
-  } else {
-    return (
-      <form onSubmit={handleSubmit}>
-        <div className="header">
-          <NavLink to="/tokens">
-            <button className="primary toolbar-button-small">
-              <FontAwesomeIcon icon="arrow-left" /> Back
-            </button>
-          </NavLink>
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="header">
+        <NavLink to="/tokens">
+          <button className="primary toolbar-button-small">
+            <FontAwesomeIcon icon="arrow-left" /> Back
+          </button>
+        </NavLink>
+      </div>
+      {token === undefined ? (
+        <div className="loader-container">
+          <Loader />
         </div>
+      ) : (
         <div className="container">
           <div className="section">
             <div className="section__title">
@@ -115,15 +118,15 @@ const TokenEditUi = props => {
             </div>
           </div>
         </div>
-        <Snackbar
-          open={showAlert}
-          message={alertText}
-          autoHideDuration={4000}
-          onRequestClose={() => toggleAlertVisibility('')}
-        />
-      </form>
-    );
-  }
+      )}
+      <Snackbar
+        open={showAlert}
+        message={alertText}
+        autoHideDuration={4000}
+        onRequestClose={() => toggleAlertVisibility('')}
+      />
+    </form>
+  );
 };
 
 export default enhance(TokenEditUi);

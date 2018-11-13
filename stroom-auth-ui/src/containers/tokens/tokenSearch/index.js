@@ -205,6 +205,10 @@ const TokenSearch = ({
       <div className="UserSearch-content">
         <div className="table-small-container">
           <ReactTable
+            data={results}
+            pages={totalPages}
+            manual
+            className="-striped -highlight UserSearch-table"
             columns={getColumnFormat(
               selectedTokenRowId,
               setEnabledStateOnToken,
