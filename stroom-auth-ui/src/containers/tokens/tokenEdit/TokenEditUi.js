@@ -24,6 +24,7 @@ import 'rc-checkbox/assets/index.css';
 import {compose, lifecycle} from 'recompose';
 import {push} from 'react-router-redux';
 
+import Button from '../../Button';
 import Loader from '../../Loader';
 import './TokenEdit.css';
 import '../../../styles/form.css';
@@ -114,9 +115,9 @@ const TokenEditUi = props => {
             <div className="section__fields--copy-only constrained">
               <textarea value={token.token} disabled />
               <CopyToClipboard text={token.token}>
-                <button className="primary">
-                  <FontAwesomeIcon icon="copy" /> Copy key
-                </button>
+                <Button className="primary" icon="copy">
+                  Copy key
+                </Button>
               </CopyToClipboard>
             </div>
           </div>
