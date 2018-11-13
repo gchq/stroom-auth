@@ -45,9 +45,7 @@ function getColumnFormat(selectedTokenRowId, setEnabledStateOnToken) {
       accessor: 'id',
       Cell: row => (
         <div>
-          {selectedTokenRowId === row.value
-            ? 'selected'
-            : 'unselected'}
+          {selectedTokenRowId === row.value ? 'selected' : 'unselected'}
         </div>
       ),
       filterable: false,
@@ -63,8 +61,7 @@ function getColumnFormat(selectedTokenRowId, setEnabledStateOnToken) {
       accessor: 'enabled',
       maxWidth: 80,
       Cell: row => getEnabledCellRenderer(row, setEnabledStateOnToken),
-      Filter: ({filter, onChange}) =>
-        getEnabledCellFilter(filter, onChange),
+      Filter: ({filter, onChange}) => getEnabledCellFilter(filter, onChange),
     },
     {
       Header: 'Expires on',
@@ -84,34 +81,67 @@ function getColumnFormat(selectedTokenRowId, setEnabledStateOnToken) {
 }
 
 function getEnabledCellRenderer(row, setEnabledStateOnToken) {
-    const state = row.value ? 1 : 0;
-    const tokenId = row.original.id;
-    return (
-      <div
-        className="TokenSearch__table__checkbox"
-        onClick={() => setEnabledStateOnToken(tokenId, !state)}>
-        <Checkbox defaultChecked={state} checked={state} />
-      </div>
-    );
-  }
+  const state = row.value ? 1 : 0;
+  const tokenId = row.original.id;
+  return (
+    <div
+      className="TokenSearch__table__checkbox"
+      onClick={() => setEnabledStateOnToken(tokenId, !state)}>
+      <Checkbox defaultChecked={state} checked={state} />
+    </div>
+  );
+}
 
-  function getEnabledCellFilter(filter, onChange) {
-    return (
-      <select
-        onChange={event => onChange(event.target.value)}
-        style={{width: '100%'}}
-        value={filter ? filter.value : 'all'}>
-        <option value="">Show all</option>
-        <option value="true">Enabled only</option>
-        <option value="false">Disabled only</option>
-      </select>
-    );
-  }
+function getEnabledCellFilter(filter, onChange) {
+  return (
+    <select
+      onChange={event => onChange(event.target.value)}
+      style={{width: '100%'}}
+      value={filter ? filter.value : 'all'}>
+      <option value="">Show all</option>
+      <option value="true">Enabled only</option>
+      <option value="false">Disabled only</option>
+    </select>
+  );
+}
 
-  function formatDate(dateString) {
-    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
-    return dateString ? dateFormat(dateString, dateFormatString) : '';
-  }
+function formatDate(dateString) {
+  const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
+  return dateString ? dateFormat(dateString, dateFormatString) : '';
+}
+
+const enhance = compose(
+  connect(
+    ({
+      authentication: {idToken},
+      tokenSearch: {
+        showSearchLoader,
+        results,
+        totalPages,
+        errorStatus,
+        errorText,
+        selectedTokenRowId,
+        lastUsedPageSize,
+      },
+    }) => ({
+      idToken,
+      showSearchLoader,
+      results,
+      totalPages,
+      errorStatus,
+      errorText,
+      selectedTokenRowId,
+      pageSize: lastUsedPageSize,
+    }),
+    {performTokenSearch, changeSelectedRow, setEnabledStateOnToken},
+  ),
+  lifecycle({
+    componentDidMount() {},
+  }),
+  withProps(({}) => {
+    return {};
+  }),
+);
 
 class TokenSearch extends Component {
   constructor() {
@@ -143,9 +173,6 @@ class TokenSearch extends Component {
     const isFilteringEnabled = event.target.checked;
     this.setState({isFilteringEnabled});
   }
-
-
-
 
   render() {
     const {selectedTokenRowId} = this.props;
@@ -202,7 +229,10 @@ class TokenSearch extends Component {
               pages={this.props.totalPages}
               manual
               className="-striped -highlight UserSearch-table"
-              columns={getColumnFormat(this.props.selectedTokenRowId, this.props.setEnabledStateOnToken)}
+              columns={getColumnFormat(
+                this.props.selectedTokenRowId,
+                this.props.setEnabledStateOnToken,
+              )}
               filterable={isFilteringEnabled}
               showPagination
               showPageSizeOptions={false}
@@ -254,29 +284,5 @@ TokenSearch.contextTypes = {
   store: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  idToken: state.authentication.idToken,
-  showSearchLoader: state.tokenSearch.showSearchLoader,
-  results: state.tokenSearch.results,
-  totalPages: state.tokenSearch.totalPages,
-  pages: state.tokenSearch.totalPages,
-  errorStatus: state.token.errorStatus,
-  errorText: state.token.errorText,
-  selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
-  pageSize: state.tokenSearch.lastUsedPageSize,
-});
+export default enhance(TokenSearch);
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      performTokenSearch,
-      changeSelectedRow,
-      setEnabledStateOnToken,
-    },
-    dispatch,
-  );
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TokenSearch);
