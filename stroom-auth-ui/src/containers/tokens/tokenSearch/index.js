@@ -204,7 +204,7 @@ const TokenSearch = ({
       </div>
       <div className="UserSearch-content">
         <div className="table-small-container">
-          <R
+          <ReactTable
             columns={getColumnFormat(
               selectedTokenRowId,
               setEnabledStateOnToken,
