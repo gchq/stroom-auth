@@ -25,6 +25,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
 import PropTypes from 'prop-types';
+import {compose, withProps, withState, lifecycle} from 'recompose';
 
 import './TokenSearch.css';
 import '../../../styles/table-small.css';
@@ -37,7 +38,81 @@ import {
 
 import {deleteSelectedToken} from '../../../modules/token';
 
-// TODO change the CSS references from 'User' - maybe make the CSS common?
+function getColumnFormat(selectedTokenRowId, setEnabledStateOnToken) {
+  return [
+    {
+      Header: '',
+      accessor: 'id',
+      Cell: row => (
+        <div>
+          {selectedTokenRowId === row.value
+            ? 'selected'
+            : 'unselected'}
+        </div>
+      ),
+      filterable: false,
+      show: false,
+    },
+    {
+      Header: 'User',
+      accessor: 'user_email',
+      maxWidth: 190,
+    },
+    {
+      Header: 'Enabled',
+      accessor: 'enabled',
+      maxWidth: 80,
+      Cell: row => getEnabledCellRenderer(row, setEnabledStateOnToken),
+      Filter: ({filter, onChange}) =>
+        getEnabledCellFilter(filter, onChange),
+    },
+    {
+      Header: 'Expires on',
+      accessor: 'expires_on',
+      Cell: row => formatDate(row.value),
+      Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+      maxWidth: 165,
+    },
+    {
+      Header: 'Issued on',
+      accessor: 'issued_on',
+      Cell: row => formatDate(row.value),
+      Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+      maxWidth: 165,
+    },
+  ];
+}
+
+function getEnabledCellRenderer(row, setEnabledStateOnToken) {
+    const state = row.value ? 1 : 0;
+    const tokenId = row.original.id;
+    return (
+      <div
+        className="TokenSearch__table__checkbox"
+        onClick={() => setEnabledStateOnToken(tokenId, !state)}>
+        <Checkbox defaultChecked={state} checked={state} />
+      </div>
+    );
+  }
+
+  function getEnabledCellFilter(filter, onChange) {
+    return (
+      <select
+        onChange={event => onChange(event.target.value)}
+        style={{width: '100%'}}
+        value={filter ? filter.value : 'all'}>
+        <option value="">Show all</option>
+        <option value="true">Enabled only</option>
+        <option value="false">Disabled only</option>
+      </select>
+    );
+  }
+
+  function formatDate(dateString) {
+    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
+    return dateString ? dateFormat(dateString, dateFormatString) : '';
+  }
+
 class TokenSearch extends Component {
   constructor() {
     super();
@@ -69,80 +144,8 @@ class TokenSearch extends Component {
     this.setState({isFilteringEnabled});
   }
 
-  getEnabledCellRenderer(row) {
-    const state = row.value ? 1 : 0;
-    const tokenId = row.original.id;
-    return (
-      <div
-        className="TokenSearch__table__checkbox"
-        onClick={() => this.props.setEnabledStateOnToken(tokenId, !state)}>
-        <Checkbox defaultChecked={state} checked={state} />
-      </div>
-    );
-  }
 
-  getEnabledCellFilter(filter, onChange) {
-    return (
-      <select
-        onChange={event => onChange(event.target.value)}
-        style={{width: '100%'}}
-        value={filter ? filter.value : 'all'}>
-        <option value="">Show all</option>
-        <option value="true">Enabled only</option>
-        <option value="false">Disabled only</option>
-      </select>
-    );
-  }
 
-  formatDate(dateString) {
-    const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
-    return dateString ? dateFormat(dateString, dateFormatString) : '';
-  }
-
-  getColumnFormat() {
-    return [
-      {
-        Header: '',
-        accessor: 'id',
-        Cell: row => (
-          <div>
-            {this.props.selectedTokenRowId === row.value
-              ? 'selected'
-              : 'unselected'}
-          </div>
-        ),
-        filterable: false,
-        show: false,
-      },
-      {
-        Header: 'User',
-        accessor: 'user_email',
-        maxWidth: 190,
-      },
-      {
-        Header: 'Enabled',
-        accessor: 'enabled',
-        maxWidth: 80,
-        Cell: row => this.getEnabledCellRenderer(row),
-        Filter: ({filter, onChange}) =>
-          this.getEnabledCellFilter(filter, onChange),
-      },
-      {
-        Header: 'Expires on',
-        accessor: 'expires_on',
-        Cell: row => this.formatDate(row.value),
-        Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
-        maxWidth: 165,
-      },
-      {
-        Header: 'Issued on',
-        accessor: 'issued_on',
-        Cell: row => this.formatDate(row.value),
-        Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
-        maxWidth: 165,
-      },
-    ];
-  }
 
   render() {
     const {selectedTokenRowId} = this.props;
@@ -199,7 +202,7 @@ class TokenSearch extends Component {
               pages={this.props.totalPages}
               manual
               className="-striped -highlight UserSearch-table"
-              columns={this.getColumnFormat()}
+              columns={getColumnFormat(this.props.selectedTokenRowId, this.props.setEnabledStateOnToken)}
               filterable={isFilteringEnabled}
               showPagination
               showPageSizeOptions={false}
