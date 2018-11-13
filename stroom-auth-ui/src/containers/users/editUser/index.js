@@ -43,6 +43,7 @@ import {
 import {hasAnyProps} from '../../../lang';
 import {UserValidationSchema, validateAsync} from '../validation';
 import Button from '../../Button';
+import Loader from '../../Loader';
 
 const enhance = compose(
   withRouter,
@@ -74,10 +75,6 @@ const enhance = compose(
       this.props.fetchUser(userId);
     },
   }),
-  branch(
-    ({userBeingEdited}) => !userBeingEdited,
-    renderComponent(() => <div>Loading data...</div>),
-  ),
   withState('showBackConfirmation', 'setShowBackConfirmation', false),
   withHandlers({
     handleBack: ({setShowBackConfirmation, push}) => isPristine => {
@@ -91,18 +88,22 @@ const enhance = compose(
   withProps(({userBeingEdited}) => {
     // Formik needs every field to have an initialValue, otherwise
     // the field won't be controlled and we'll get console errors.
-    return {
-      initialValues: {
-        ...userBeingEdited,
-        email: userBeingEdited.email || '',
-        first_name: userBeingEdited.first_name || '',
-        last_name: userBeingEdited.last_name || '',
-        state: userBeingEdited.state || 'enabled',
-        password: '',
-        verifyPassword: '',
-        comments: userBeingEdited.comments || '',
-      },
-    };
+    if (userBeingEdited) {
+      return {
+        initialValues: {
+          ...userBeingEdited,
+          email: userBeingEdited.email || '',
+          first_name: userBeingEdited.first_name || '',
+          last_name: userBeingEdited.last_name || '',
+          state: userBeingEdited.state || 'enabled',
+          password: '',
+          verifyPassword: '',
+          comments: userBeingEdited.comments || '',
+        },
+      };
+    } else {
+      return {initialValues: {}};
+    }
   }),
 );
 
@@ -141,37 +142,45 @@ const UserEditForm = ({
                 Back
               </Button>
             </div>
-            <UserFields
-              showCalculatedFields
-              userBeingEdited={userBeingEdited}
-              errors={errors}
-              touched={touched}
-            />
-            <div className="footer">
-              <Button
-                type="submit"
-                className="toolbar-button-small primary"
-                disabled={isPristine || hasErrors}
-                icon="save"
-                isLoading={isSaving}>
-                Save
-              </Button>
-              <NavLink to="/userSearch">
-                <Button className="toolbar-button-small secondary" icon="times">
-                  Cancel
-                </Button>
-              </NavLink>
-            </div>
-            <BackConfirmation
-              isOpen={showBackConfirmation}
-              onGoBack={() => {
-                setShowBackConfirmation(false);
-                push('/userSearch');
-              }}
-              errors={errors}
-              onSaveAndGoBack={submitForm}
-              onContinueEditing={() => setShowBackConfirmation(false)}
-            />
+            {userBeingEdited === undefined ? (
+              <Loader />
+            ) : (
+              <div>
+                <UserFields
+                  showCalculatedFields
+                  userBeingEdited={userBeingEdited}
+                  errors={errors}
+                  touched={touched}
+                />
+                <div className="footer">
+                  <Button
+                    type="submit"
+                    className="toolbar-button-small primary"
+                    disabled={isPristine || hasErrors}
+                    icon="save"
+                    isLoading={isSaving}>
+                    Save
+                  </Button>
+                  <NavLink to="/userSearch">
+                    <Button
+                      className="toolbar-button-small secondary"
+                      icon="times">
+                      Cancel
+                    </Button>
+                  </NavLink>
+                </div>
+                <BackConfirmation
+                  isOpen={showBackConfirmation}
+                  onGoBack={() => {
+                    setShowBackConfirmation(false);
+                    push('/userSearch');
+                  }}
+                  errors={errors}
+                  onSaveAndGoBack={submitForm}
+                  onContinueEditing={() => setShowBackConfirmation(false)}
+                />
+              </div>
+            )}
           </Form>
         );
       }}
