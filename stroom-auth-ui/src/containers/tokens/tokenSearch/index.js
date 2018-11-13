@@ -16,7 +16,6 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
 import ReactTable from 'react-table';
@@ -25,6 +24,7 @@ import dateFormat from 'dateformat';
 import {compose, withState} from 'recompose';
 import {push} from 'react-router-redux';
 
+import Button from '../../Button';
 import './TokenSearch.css';
 import '../../../styles/table-small.css';
 import '../../../styles/toggle-small.css';
@@ -163,36 +163,40 @@ const TokenSearch = ({
   return (
     <div className="UserSearch-main">
       <div className="header">
-        <button
+        <Button
           className="toolbar-button-small primary"
-          onClick={() => push('/token/newApiToken')}>
-          <FontAwesomeIcon icon="plus" /> Create
-        </button>
+          onClick={() => push('/token/newApiToken')}
+          icon="plus">
+          Create
+        </Button>
 
         {noTokenSelected ? (
           <div>
-            <button
+            <Button
               className="toolbar-button-small primary"
-              disabled={noTokenSelected}>
-              <FontAwesomeIcon icon="edit" /> View/edit
-            </button>
+              disabled={noTokenSelected}
+              icon="edit">
+              View/edit
+            </Button>
           </div>
         ) : (
-          <button
+          <Button
             className="toolbar-button-small primary"
             disabled={noTokenSelected}
-            onClick={() => push(`/token/${selectedTokenRowId}`)}>
-            <FontAwesomeIcon icon="edit" /> View/edit
-          </button>
+            onClick={() => push(`/token/${selectedTokenRowId}`)}
+            icon="edit">
+            View/edit
+          </Button>
         )}
 
         <div>
-          <button
+          <Button
             disabled={noTokenSelected}
             onClick={() => deleteSelectedToken()}
-            className="toolbar-button-small primary">
-            <FontAwesomeIcon icon="trash" /> Delete
-          </button>
+            className="toolbar-button-small primary"
+            icon="trash">
+            Delete
+          </Button>
         </div>
 
         <div className="UserSearch-filteringToggle">

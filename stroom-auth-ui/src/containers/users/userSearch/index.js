@@ -25,6 +25,7 @@ import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
 import {push} from 'react-router-redux';
 
+import Button from '../../Button';
 import './UserSearch.css';
 import '../../../styles/table-small.css';
 import {deleteSelectedUser} from '../../../modules/user';
@@ -178,32 +179,38 @@ const UserSearch = ({
   return (
     <div className="UserSearch-main">
       <div className="header">
-        <button
+        <Button
           className="toolbar-button-small primary"
-          onClick={() => '/newUser'}>
-          <FontAwesomeIcon icon="plus" /> Create
-        </button>
+          onClick={() => push('/newUser')}
+          icon="plus">
+          Create
+        </Button>
         {deleteButtonDisabled ? (
           <div>
-            <button className="toolbar-button-small primary" disabled>
-              <FontAwesomeIcon icon="edit" /> View/edit
-            </button>
+            <Button
+              className="toolbar-button-small primary"
+              disabled
+              icon="edit">
+              View/edit
+            </Button>
           </div>
         ) : (
-          <button
+          <Button
             className="toolbar-button-small primary"
-            onClick={() => `/user/${selectedUserRowId}`}>
-            <FontAwesomeIcon icon="edit" /> View/edit
-          </button>
+            onClick={() => push(`/user/${selectedUserRowId}`)}
+            icon="edit">
+            View/edit
+          </Button>
         )}
 
         <div>
-          <button
+          <Button
             disabled={deleteButtonDisabled}
             onClick={() => deleteSelectedUser()}
-            className="toolbar-button-small primary">
-            <FontAwesomeIcon icon="trash" /> Delete
-          </button>
+            className="toolbar-button-small primary"
+            icon="trash">
+            Delete
+          </Button>
         </div>
         <div className="UserSearch-filteringToggle">
           <label>Show filtering</label>
