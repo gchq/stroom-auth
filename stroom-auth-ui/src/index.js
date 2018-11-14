@@ -14,40 +14,42 @@
  * limitations under the License.
  */
 
-import React from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
-import injectTapEventPlugin from 'react-tap-event-plugin'
+import React from 'react';
+import {render} from 'react-dom';
+import {Provider} from 'react-redux';
+import {StoreProvider} from 'redux-react-hook';
+import {ConnectedRouter} from 'react-router-redux';
+import {blue600, amber900} from 'material-ui/styles/colors';
+import {MuiThemeProvider} from 'material-ui/styles';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import Modal from 'react-modal';
 
-import {blue600, amber900} from 'material-ui/styles/colors'
-import { MuiThemeProvider } from 'material-ui/styles'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-
-import './styles/index.css'
-import App from './containers/app'
-import store, { history } from './store'
-
+import './styles/index.css';
+import App from './containers/app';
+import store, {history} from './store';
+import './startup/icons'
 const theme = getMuiTheme({
   palette: {
     primary1Color: blue600,
-    accent1Color: amber900
-  }
-})
+    accent1Color: amber900,
+  },
+});
 
-// Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
-injectTapEventPlugin()
+// We need to bind the modal to our app element 
+// see http://reactcommunity.org/react-modal/accessibility/
+Modal.setAppElement('#root');
 
-const target = document.querySelector('#root')
-
+// TODO: The StoreProvider is required by redux-react-hooks.
+// When Redux publish their own hooks this will be obsolete.
 render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <MuiThemeProvider muiTheme={theme}>
-        <App />
-      </MuiThemeProvider>
-    </ConnectedRouter>
-  </Provider>,
-  target
-)
+  <StoreProvider value={store}>
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <MuiThemeProvider muiTheme={theme}>
+          <App />
+        </MuiThemeProvider>
+      </ConnectedRouter>
+    </Provider>
+  </StoreProvider>,
+  document.querySelector('#root'),
+);

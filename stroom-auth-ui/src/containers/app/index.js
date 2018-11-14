@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react'
 import PropTypes, { object } from 'prop-types'
-import {Route, withRouter, Switch, BrowserRouter} from 'react-router-dom'
+import { Route, withRouter, Switch, BrowserRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -27,9 +27,8 @@ import './App.css'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
 import LoggedOut from '../../containers/loggedOut'
-import {UserCreate, UserEdit, UserSearch} from '../../containers/user'
-import {TokenCreate, TokenSearch, TokenEdit} from '../../containers/token'
-import NewUser from '../../containers/newUser'
+import { UserCreate, UserEdit, UserSearch, NewUser } from '../../containers/users'
+import { TokenCreate, TokenSearch, TokenEdit } from '../../containers/tokens'
 import PathNotFound from '../../containers/pathNotFound'
 import ResetPassword from '../../containers/resetPassword'
 import ChangePassword from '../../containers/changePassword'
@@ -37,7 +36,8 @@ import ResetPasswordRequest from '../../containers/resetPasswordRequest'
 import ConfirmPasswordResetEmail from '../../containers/confirmPasswordResetEmail'
 import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
-import { AuthenticationRequest, HandleAuthenticationResponse } from 'stroom-js'
+import AuthenticationRequest from '../../startup/authentication/AuthenticationRequest'
+import HandleAuthenticationResponse from '../../startup/authentication/HandleAuthenticationResponse'
 import { handleSessionTimeout } from '../../modules/login'
 
 class App extends Component {
@@ -53,11 +53,13 @@ class App extends Component {
             <BrowserRouter basename={'/'} />
             <Switch>
               {/* Authentication routes */}
-              <Route exact path={'/handleAuthentication'} render={() => (<HandleAuthenticationResponse
+              <Route exact path={'/handleAuthentication'} 
+                render={() => (<HandleAuthenticationResponse
                 authenticationServiceUrl={this.props.authenticationServiceUrl}
                 authorisationServiceUrl={this.props.authorisationServiceUrl} />
               )} />
-              <Route exact path={'/handleAuthenticationResponse'} render={() => (<HandleAuthenticationResponse
+              <Route exact path={'/handleAuthenticationResponse'} 
+                render={() => (<HandleAuthenticationResponse
                 authenticationServiceUrl={this.props.authenticationServiceUrl}
                 authorisationServiceUrl={this.props.authorisationServiceUrl} />
               )} />
@@ -143,7 +145,7 @@ class App extends Component {
             <FlatButton
               label='Log in again'
               primary
-              onTouchTap={this.props.handleSessionTimeout}
+              onClick={this.props.handleSessionTimeout}
             />
           ]}
           modal

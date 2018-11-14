@@ -15,28 +15,28 @@
  */
 
 .content-floating-without-appbar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .content-floating-with-appbar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85vh;
 }
 
 .content-fullHeight {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /*height: 100vh;*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*height: 100vh;*/
 }
 
 .content-expandableHeight {
-    display: flex;
-    align-items: center;
-    /*justify-content: center;*/
+  display: flex;
+  align-items: center;
+  /*justify-content: center;*/
 }
