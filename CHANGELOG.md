@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Stop truncation of `logger` in logback console logs
+
 * Add colours to docker console logs
 
 ## [v1.0-beta.9]
