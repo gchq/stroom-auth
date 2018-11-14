@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.10]
+
+* Issue **gchq/stroom#874** : Added configurable password complexity.
+
+* Removed Material-UI from the User and API Key areas.
+
+* Refactored classes into stateless functional components.
+
+* Added loading spinners to buttons and edit pages.
+
+* Improved validation messages
+
+* Many UI and UX improvements
+
 ## [v1.0-beta.7]
 
 * Fix bintray upload
