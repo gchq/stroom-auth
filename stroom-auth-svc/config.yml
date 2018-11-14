@@ -99,7 +99,6 @@ certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The 
 loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5000/login}
 changePasswordUrl: ${CHANGE_PASSWORD_URL:-http://<IP_ADDRESS>:5000/changepassword}
 stroomUrl: ${STROOM_UI:- http://<IP_ADDRESS>:8099}
-resetPasswordUrl: ${RESET_PASSWORD_URL:- 'http://<IP_ADDRESS>/resetPassword/?token=%s'}
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://<IP_ADDRESS>}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 month
@@ -118,6 +117,7 @@ email:
   fromName: ${EMAIL_FROM_NAME:- Stroom User Accounts}
   passwordResetSubject: ${EMAIL_RESET_SUBJECT:- Password reset for Stroom}
   passwordResetText: ${EMAIL_RESET_TEXT:- 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'}
+  passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>/resetPassword/?token=%s'}
   passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 60}
   smtp:
     host: ${EMAIL_SMTP_HOST:- localhost}

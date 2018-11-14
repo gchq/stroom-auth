@@ -63,7 +63,7 @@ public class EmailSender {
     public void send(User user, String resetToken) {
         var emailConfig = config.getEmailConfig();
         var resetName = user.getFirst_name() + "" + user.getLast_name();
-        var resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
+        var resetUrl = String.format(config.getEmailConfig().getPasswordResetUrl(), resetToken);
         var passwordResetEmailText = String.format(emailConfig.getPasswordResetText(), resetUrl);
 
         var email = new Email();
