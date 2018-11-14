@@ -249,9 +249,7 @@ export const createUser = newUser => {
       .then(handleStatus)
       .then(getBody)
       .then(newUserId => {
-        dispatch(showCreateLoader(false));
-        dispatch(push('/userSearch'));
-        dispatch(toggleAlertVisibility('User has been created'));
+        dispatch(createAuthorisationUser(email, dispatch));
         dispatch(toggleIsSaving());
       })
       .catch(error => {
@@ -261,11 +259,43 @@ export const createUser = newUser => {
   };
 };
 
+/**
+ * This function creates a user within Stroom. This avoids the problem of creating 
+ * a user here but that user having to log into Stroom before permissions
+ * can be assigned to them. 
+ */
+const createAuthorisationUser = email => {
+  return (dispatch, getState) => {
+    dispatch(toggleIsSaving());
+    const jwsToken = getState().authentication.idToken;
+    fetch(
+      `${getState().config.authorisationServiceUrl}/createUser?id=${email}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + jwsToken,
+        },
+        method: 'post',
+        mode: 'cors',
+      },
+    )
+      .then(handleStatus)
+      .then(newUserId => {
+        dispatch(showCreateLoader(false));
+        dispatch(push('/userSearch'));
+        dispatch(toggleAlertVisibility('User has been created'));
+        dispatch(toggleIsSaving());
+      })
+      .catch(error => {
+        handleErrors(error, dispatch, jwsToken);
+      });
+  };
+};
+
 export const fetchUser = userId => {
   return (dispatch, getState) => {
     const jwsToken = getState().authentication.idToken;
-    // TODO: remove any errors
-    // TODO: show loading spinner
     fetch(`${getState().config.userServiceUrl}/${userId}`, {
       headers: {
         Accept: 'application/json',
