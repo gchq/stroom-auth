@@ -92,3 +92,9 @@ RUN apk add --no-cache \
 COPY --from=build /root/app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Label the image so we can see what commit/tag it came from
+ARG GIT_COMMIT=unspecified
+ARG GIT_TAG=unspecified
+LABEL \
+    git_commit="$GIT_COMMIT" \
+    git_tag="$GIT_TAG"

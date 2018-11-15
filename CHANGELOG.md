@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add git_tag and git_commit labels to docker images
+
 * Add colours to docker console logs
 
 ## [v1.0-beta.9]

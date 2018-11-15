@@ -84,3 +84,9 @@ COPY --chown=auth:auth ./docker-entrypoint.sh /stroom-auth-service/
 COPY --chown=auth:auth ./build/config.yml /stroom-auth-service/
 COPY --chown=auth:auth ./build/stroom-auth-service-all.jar /stroom-auth-service/
 
+# Label the image so we can see what commit/tag it came from
+ARG GIT_COMMIT=unspecified
+ARG GIT_TAG=unspecified
+LABEL \
+    git_commit="$GIT_COMMIT" \
+    git_tag="$GIT_TAG"

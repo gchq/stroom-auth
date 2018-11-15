@@ -29,13 +29,26 @@ build_service() {
     prep_service_build
     echo "--${TAG}--"
     echo "--${SERVICE_DOCKER_DIR}--"
-    docker build --tag gchq/stroom-auth-service:$TAG ${SERVICE_DOCKER_DIR}/.
+    docker build \
+        --tag gchq/stroom-auth-service:$TAG \
+        --build-arg GIT_COMMIT=$(git rev-parse HEAD) \
+        ${SERVICE_DOCKER_DIR}/.
 }
 
 push_ui() {
-    docker push gchq/stroom-auth-ui:$TAG
+    if [[ "$TAG" =~ ^local.* ]]; then
+        echo "ERROR - Can't push 'local' tags to Dockerhub"
+        exit 1
+    else
+        docker push gchq/stroom-auth-ui:$TAG
+    fi
 }
 
 push_service() {
-    docker push gchq/stroom-auth-service:$TAG
+    if [[ "$TAG" =~ ^local.* ]]; then
+        echo "ERROR - Can't push 'local' tags to Dockerhub"
+        exit 1
+    else
+        docker push gchq/stroom-auth-service:$TAG
+    fi
 }
