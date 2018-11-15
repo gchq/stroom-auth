@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Add colours to docker console logs
 
+## [v1.0-beta.10]
+
+* Issue **gchq/stroom#874** : Added configurable password complexity.
+
+* Removed Material-UI from the User and API Key areas.
+
+* Refactored classes into stateless functional components.
+
+* Added loading spinners to buttons and edit pages.
+
+* Improved validation messages
+
+* Many UI and UX improvements
+
 ## [v1.0-beta.9]
 
 * Uplift service docker image base to openjdk:8u181-jdk-alpine3.8
@@ -69,9 +83,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
+<<<<<<< HEAD
 [Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.9...master
 [v1.0-beta.9]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.8...v0.1-beta.9
 [v1.0-beta.8]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.7...v0.1-beta.8
+=======
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.10...master
+[v1.0-beta.10]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.7...v0.1-beta.10
+>>>>>>> master
 [v1.0-beta.7]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.6...v0.1-beta.7
 [v1.0-beta.6]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.5...v0.1-beta.6
 [v1.0-beta.5]: https://github.com/gchq/stroom-auth/compare/v0.1-beta.4...v0.1-beta.5

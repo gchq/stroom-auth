@@ -17,23 +17,14 @@ public class ChangePasswordValidator {
         if(loginResult == LoginResult.BAD_CREDENTIALS
                 || loginResult == LoginResult.DISABLED_BAD_CREDENTIALS
                 || loginResult == LoginResult.LOCKED_BAD_CREDENTIALS){
-            responseBuilder.withFailedOn(ChangePasswordResponse.FailTypes.BAD_OLD_PASSWORD);
+            responseBuilder.withFailedOn(PasswordValidationFailureType.BAD_OLD_PASSWORD);
         }
 
         if(oldPassword.equalsIgnoreCase(newPassword)){
-            responseBuilder.withFailedOn(ChangePasswordResponse.FailTypes.REUSE);
+            responseBuilder.withFailedOn(PasswordValidationFailureType.REUSE);
         }
 
-        if(newPassword.length()
-                < config.getMinimumPasswordLength()){
-            responseBuilder.withFailedOn(ChangePasswordResponse.FailTypes.LENGTH);
-        }
-
-        boolean isPasswordComplexEnough = newPassword.matches(config.getPasswordComplexityRegex());
-
-        if(!isPasswordComplexEnough){
-            responseBuilder.withFailedOn(ChangePasswordResponse.FailTypes.COMPLEXITY);
-        }
+        responseBuilder.withFailedOn(PasswordValidator.validate(config, newPassword));
 
         return responseBuilder;
     }

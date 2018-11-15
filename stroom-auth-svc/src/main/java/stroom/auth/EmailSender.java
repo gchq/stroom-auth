@@ -71,7 +71,7 @@ public class EmailSender {
 
         final EmailConfig emailConfig = config.getEmailConfig();
         final String resetName = user.getFirst_name() + "" + user.getLast_name();
-        final String resetUrl = String.format(config.getResetPasswordUrl(), resetToken);
+        final String resetUrl = String.format(emailConfig.getPasswordResetUrl(), resetToken);
         final String passwordResetEmailText = String.format(emailConfig.getPasswordResetText(), resetUrl);
 
         final Email email = new Email();
