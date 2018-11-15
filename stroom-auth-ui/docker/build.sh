@@ -31,4 +31,12 @@ cp ../package.json work/
 cp -r ../src work/
 cp -r ../public work/
 
-docker build --tag gchq/stroom-auth-ui:${ver} .
+readonly CURRENT_GIT_COMMIT="$(git rev-parse HEAD)"
+echo "--${ver}--"
+echo "--${CURRENT_GIT_COMMIT}--"
+
+docker build \
+    --tag gchq/stroom-auth-ui:${ver} \
+    --build-arg GIT_COMMIT=${CURRENT_GIT_COMMIT} \
+    --build-arg GIT_TAG=${ver} \
+    .
