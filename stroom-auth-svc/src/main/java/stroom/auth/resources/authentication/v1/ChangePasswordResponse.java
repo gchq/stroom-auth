@@ -16,26 +16,19 @@ public class ChangePasswordResponse {
 
     @NotNull
     @ApiModelProperty(value = "If the request has failed, how has it failed?", required = true)
-    private FailTypes[] failedOn;
+    private PasswordValidationFailureType[] failedOn;
 
     public boolean isChangeSucceeded() {
         return changeSucceeded;
     }
 
-    public FailTypes[] getFailedOn() {
+    public PasswordValidationFailureType[] getFailedOn() {
         return failedOn;
-    }
-
-    enum FailTypes {
-        REUSE,
-        LENGTH,
-        COMPLEXITY,
-        BAD_OLD_PASSWORD
     }
 
     public static final class ChangePasswordResponseBuilder {
         private boolean changeSucceeded;
-        List<FailTypes> failedOn = new ArrayList<>();
+        List<PasswordValidationFailureType> failedOn = new ArrayList<>();
 
         private ChangePasswordResponseBuilder() {
         }
@@ -49,7 +42,7 @@ public class ChangePasswordResponse {
             return this;
         }
 
-        public ChangePasswordResponseBuilder withFailedOn(FailTypes ...failedOn) {
+        public ChangePasswordResponseBuilder withFailedOn(PasswordValidationFailureType ...failedOn) {
             this.failedOn.addAll(Arrays.asList(failedOn));
             this.changeSucceeded = false;
             return this;
@@ -57,7 +50,7 @@ public class ChangePasswordResponse {
 
         public ChangePasswordResponse build() {
             ChangePasswordResponse changePasswordResponse = new ChangePasswordResponse();
-            changePasswordResponse.failedOn = this.failedOn.toArray(new FailTypes[this.failedOn.size()]);
+            changePasswordResponse.failedOn = this.failedOn.toArray(new PasswordValidationFailureType[this.failedOn.size()]);
             changePasswordResponse.changeSucceeded = this.changeSucceeded;
             return changePasswordResponse;
         }

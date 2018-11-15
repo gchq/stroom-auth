@@ -23,6 +23,16 @@
   width:110px !important;
 }
 
+.toolbar-button-medium {
+    margin-left: 10px !important;
+    width:150px !important;
+}
+
+.toolbar-button-large {
+    margin-left: 10px !important;
+    width:170px !important;
+}
+
 /*
  * This makes a button small
  */
@@ -46,10 +56,10 @@
  * If the icons aren't left-aligned it might not work properly. 
  * If there's no icon this won't have any effect. 
  */
-.toolbar-button-small svg {
+/*.toolbar-button-small svg {
   margin-left: 4px !important;
   height: 18px !important;
-}
+}*/
 
 /****************************************
  * SMALL TOOLBAR BUTTON END

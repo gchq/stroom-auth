@@ -21,6 +21,11 @@ You can use this token to make requests to secured endpoints. The default email 
 ```
 $ http POST localhost:8099/authentication/login email=admin password=admin 
 ```
+If you install httpie-jwt-auth then yout httpie requests will be a little simpler. For example:
+
+```
+$ http --auth-type=jwt --auth="<TOKEN>" post http://192.168.1.4:8099/authentication/v1/isPasswordValid email=admin newPassword=bad_pwd
+```
 
 #### Getting all users
 In the below you'd have to paste your JWS token.

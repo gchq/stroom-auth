@@ -13,92 +13,118 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { HttpError } from '../ErrorTypes'
-import { handleErrors, getJsonBody } from './fetchFunctions'
-import { toggleAlertVisibility } from './token'
+import {HttpError} from '../ErrorTypes';
+import {handleErrors, getJsonBody} from './fetchFunctions';
+import {toggleAlertVisibility} from './token';
 
-export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER'
-export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS'
-export const SELECT_ROW = 'tokenSearch/SELECT_ROW'
-export const CHANGE_LAST_USED_PAGE_SIZE = 'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE'
-export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE'
-export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED'
-export const CHANGE_LAST_USED_FILTERED = 'tokenSearch/CHANGE_LAST_USED_FILTERED'
+export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER';
+export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS';
+export const SELECT_ROW = 'tokenSearch/SELECT_ROW';
+export const TOGGLE_ENABLED = 'tokenSearch/TOGGLE_ENABLED';
+export const CHANGE_LAST_USED_PAGE_SIZE =
+  'tokenSearch/CHANGE_LAST_USED_PAGE_SIZE';
+export const CHANGE_LAST_USED_PAGE = 'tokenSearch/CHANGE_LAST_USED_PAGE';
+export const CHANGE_LAST_USED_SORTED = 'tokenSearch/CHANGE_LAST_USED_SORTED';
+export const CHANGE_LAST_USED_FILTERED =
+  'tokenSearch/CHANGE_LAST_USED_FILTERED';
 
 const initialState = {
   tokens: [],
   showSearchLoader: false,
-  selectedTokenRowId: undefined
-}
+  selectedTokenRowId: undefined,
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SHOW_SEARCH_LOADER:
       return {
         ...state,
-        showSearchLoader: action.showSearchLoader
-      }
+        showSearchLoader: action.showSearchLoader,
+      };
     case UPDATE_RESULTS:
       return {
         ...state,
         results: action.results,
-        totalPages: action.totalPages
-      }
+        totalPages: action.totalPages,
+      };
     case SELECT_ROW:
       if (state.selectedTokenRowId === action.selectedTokenRowId) {
         return {
           ...state,
-          selectedTokenRowId: undefined
-        }
+          selectedTokenRowId: undefined,
+        };
       } else {
         return {
           ...state,
-          selectedTokenRowId: action.selectedTokenRowId
-        }
+          selectedTokenRowId: action.selectedTokenRowId,
+        };
       }
+    case TOGGLE_ENABLED:
+      return {
+        ...state,
+        results: state.results.map(
+          (result, i) =>
+            result.id === action.id
+              ? {...result, enabled: !result.enabled}
+              : result,
+        ),
+      };
     case CHANGE_LAST_USED_PAGE_SIZE:
       return {
         ...state,
-        lastUsedPageSize: action.lastUsedPageSize
-      }
+        lastUsedPageSize: action.lastUsedPageSize,
+      };
     case CHANGE_LAST_USED_PAGE:
       return {
         ...state,
-        lastUsedPage: action.lastUsedPage
-      }
+        lastUsedPage: action.lastUsedPage,
+      };
     case CHANGE_LAST_USED_SORTED:
       return {
         ...state,
-        lastUsedSorted: action.lastUsedSorted
-      }
+        lastUsedSorted: action.lastUsedSorted,
+      };
     case CHANGE_LAST_USED_FILTERED:
       return {
         ...state,
-        lastUsedFiltered: action.lastUsedFiltered
-      }
+        lastUsedFiltered: action.lastUsedFiltered,
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-function updateResults (data) {
+function updateResults(data) {
   return {
     type: UPDATE_RESULTS,
     results: data.tokens,
-    totalPages: data.totalPages
-  }
+    totalPages: data.totalPages,
+  };
 }
 
-export function showSearchLoader (showSearchLoader) {
+export function showSearchLoader(showSearchLoader) {
   return {
     type: SHOW_SEARCH_LOADER,
-    showSearchLoader
-  }
+    showSearchLoader,
+  };
 }
 
-export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) => {
+export function toggleEnabled(id) {
+  return {
+    type: TOGGLE_ENABLED,
+    id,
+  };
+}
+
+export const performTokenSearch = (
+  jwsToken,
+  pageSize,
+  page,
+  sorted,
+  filtered,
+) => {
   return (dispatch, getState) => {
-    dispatch(showSearchLoader(true))
+    dispatch(showSearchLoader(true));
 
     // if (pageSize === undefined) {
     //   pageSize = getState().tokenSearch.lastUsedPageSize
@@ -109,139 +135,149 @@ export const performTokenSearch = (jwsToken, pageSize, page, sorted, filtered) =
     //   })
     // }
 
-    pageSize = getRowsPerPage()
+    pageSize = getRowsPerPage();
     dispatch({
       type: CHANGE_LAST_USED_PAGE_SIZE,
-      lastUsedPageSize: pageSize
-    })
+      lastUsedPageSize: pageSize,
+    });
 
     if (page === undefined) {
-      page = getState().tokenSearch.lastUsedPage
+      page = getState().tokenSearch.lastUsedPage;
     } else {
       dispatch({
         type: CHANGE_LAST_USED_PAGE,
-        lastUsedPage: page
-      })
+        lastUsedPage: page,
+      });
     }
 
     if (sorted === undefined) {
-      sorted = getState().tokenSearch.lastUsedSorted
+      sorted = getState().tokenSearch.lastUsedSorted;
     } else {
       dispatch({
         type: CHANGE_LAST_USED_SORTED,
-        lastUsedSorted: sorted
-      })
+        lastUsedSorted: sorted,
+      });
     }
 
     if (filtered === undefined) {
-      filtered = getState().tokenSearch.lastUsedFiltered
+      filtered = getState().tokenSearch.lastUsedFiltered;
     } else {
       dispatch({
         type: CHANGE_LAST_USED_FILTERED,
-        lastUsedFiltered: filtered
-      })
+        lastUsedFiltered: filtered,
+      });
     }
 
     // Default ordering and direction
-    let orderBy = 'issued_on'
-    let orderDirection = 'desc'
+    let orderBy = 'issued_on';
+    let orderDirection = 'desc';
 
     if (sorted.length > 0) {
-      orderBy = sorted[0].id
-      orderDirection = sorted[0].desc ? 'desc' : 'asc'
+      orderBy = sorted[0].id;
+      orderDirection = sorted[0].desc ? 'desc' : 'asc';
     }
 
-    let filters = {}
+    let filters = {};
     if (filtered.length > 0) {
       filtered.forEach(filter => {
-        filters[filter.id] = filter.value
-      })
+        filters[filter.id] = filter.value;
+      });
     }
 
     // We only want to see API keys, not user keys.
-    filters.token_type = 'API'
+    filters.token_type = 'API';
 
     const body = filters
-        ? JSON.stringify({
+      ? JSON.stringify({
           page,
           limit: pageSize,
           orderBy,
           orderDirection,
-          filters
+          filters,
         })
-        : JSON.stringify({
+      : JSON.stringify({
           page,
           limit: pageSize,
           orderBy,
-          orderDirection
-        })
+          orderDirection,
+        });
 
     fetch(`${getState().config.tokenServiceUrl}/search`, {
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwsToken
+        Authorization: 'Bearer ' + jwsToken,
       },
       method: 'post',
       mode: 'cors',
-      body
+      body,
     })
-    .then(handleStatus)
-    .then(getJsonBody)
-    .then(data => {
-      dispatch(showSearchLoader(false))
-      dispatch(updateResults(data))
-    })
-    .catch(error => handleErrors(error, dispatch, jwsToken))
-  }
-}
+      .then(handleStatus)
+      .then(getJsonBody)
+      .then(data => {
+        dispatch(showSearchLoader(false));
+        dispatch(updateResults(data));
+      })
+      .catch(error => handleErrors(error, dispatch, jwsToken));
+  };
+};
 
-function handleStatus (response) {
+function handleStatus(response) {
   if (response.status === 200) {
-    return Promise.resolve(response)
+    return Promise.resolve(response);
   } else if (response.status === 409) {
-    return Promise.reject(new HttpError(response.status, 'This token already exists.'))
+    return Promise.reject(
+      new HttpError(response.status, 'This token already exists.'),
+    );
   } else {
-    return Promise.reject(new HttpError(response.status, response.statusText))
+    return Promise.reject(new HttpError(response.status, response.statusText));
   }
 }
 
-export const changeSelectedRow = (tokenId) => {
+export const changeSelectedRow = tokenId => {
   return dispatch => {
     dispatch({
       type: SELECT_ROW,
-      selectedTokenRowId: tokenId
-    })
-  }
-}
+      selectedTokenRowId: tokenId,
+    });
+  };
+};
 
 export const setEnabledStateOnToken = (tokenId, isEnabled) => {
   return (dispatch, getState) => {
-    const securityToken = getState().authentication.idToken
-    fetch(`${getState().config.tokenServiceUrl}/${tokenId}/state/?enabled=${isEnabled}`, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + securityToken
+    dispatch(toggleEnabled(tokenId));
+    const securityToken = getState().authentication.idToken;
+    fetch(
+      `${
+        getState().config.tokenServiceUrl
+      }/${tokenId}/state/?enabled=${isEnabled}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + securityToken,
+        },
+        method: 'get',
+        mode: 'cors',
       },
-      method: 'get',
-      mode: 'cors'
-    })
-    .then(handleStatus)
-    .catch(() => {
-      dispatch(toggleAlertVisibility('Unable to change the state of this token!'))
-      // TODO Display snackbar with an error message
-    })
-  }
-}
+    )
+      .then(handleStatus)
+      .catch(() => {
+        dispatch(
+          toggleAlertVisibility('Unable to change the state of this token!'),
+        );
+        // TODO Display snackbar with an error message
+      });
+  };
+};
 
 export const getRowsPerPage = () => {
-  const viewport = document.getElementById('User-content')
-  let rowsInViewport = 20
-  if(viewport){
-    const viewportHeight = viewport.offsetHeight
-    const rowsHeight = viewportHeight - 60
-    rowsInViewport = Math.floor(rowsHeight / 26)
+  const viewport = document.getElementById('User-content');
+  let rowsInViewport = 20;
+  if (viewport) {
+    const viewportHeight = viewport.offsetHeight;
+    const rowsHeight = viewportHeight - 60;
+    rowsInViewport = Math.floor(rowsHeight / 26);
   }
-  return rowsInViewport
-}
+  return rowsInViewport;
+};

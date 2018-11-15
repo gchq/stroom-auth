@@ -33,6 +33,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.JSONFormat;
 import org.jooq.Record;
+import org.jooq.Record13;
 import org.jooq.Result;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -56,8 +57,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 
 import static stroom.db.auth.Tables.USERS;
@@ -234,6 +237,76 @@ public final class UserResource {
         Response response = Response.status(Response.Status.OK).entity(foundUserJson).build();
         return response;
     }
+
+
+    @ApiOperation(
+            value = "Search for a user by email.",
+            response = String.class,
+            tags = {"User"})
+    @GET
+    @Path("search")
+    @Timed
+    @NotNull
+    public final Response searchUsers(
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @Auth @NotNull ServiceUser authenticatedServiceUser,
+            @Context @NotNull DSLContext database,
+            @QueryParam("email") String email) {
+        // Validate
+        Preconditions.checkNotNull(authenticatedServiceUser);
+        Preconditions.checkNotNull(database);
+
+        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+        }
+
+        // Get the users
+        Result<Record13<Integer, String, String, String, String, String, Integer, Integer, Timestamp, Timestamp, String, Timestamp, String>> foundUserRecord = database
+                .select(USERS.ID,
+                        USERS.EMAIL,
+                        USERS.FIRST_NAME,
+                        USERS.LAST_NAME,
+                        USERS.COMMENTS,
+                        USERS.STATE,
+                        USERS.LOGIN_FAILURES,
+                        USERS.LOGIN_COUNT,
+                        USERS.LAST_LOGIN,
+                        USERS.UPDATED_ON,
+                        USERS.UPDATED_BY_USER,
+                        USERS.CREATED_ON,
+                        USERS.CREATED_BY_USER)
+                .from(USERS)
+                .where(new Condition[]{USERS.EMAIL.contains(email)})
+                .fetch();
+
+        Response response;
+        if (foundUserRecord == null) {
+            response = Response.status(Response.Status.NOT_FOUND).build();
+            return response;
+        } else {
+            String users = foundUserRecord.formatJSON((new JSONFormat())
+                    .header(false)
+                    .recordFormat(JSONFormat.RecordFormat.OBJECT));
+
+            event.logging.User user = new event.logging.User();
+            user.setId(email);
+            ObjectOutcome objectOutcome = new ObjectOutcome();
+            objectOutcome.getObjects().add(user);
+            stroomEventLoggingService.view(
+                    "SearchUser",
+                    httpServletRequest,
+                    authenticatedServiceUser.getName(),
+                    objectOutcome,
+                    "Search for a user.");
+
+            response = Response.status(Response.Status.OK).entity(users).build();
+            return response;
+        }
+    }
+
+
 
     @ApiOperation(
             value = "Get a user by ID.",
