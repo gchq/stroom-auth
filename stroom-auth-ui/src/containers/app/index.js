@@ -31,7 +31,7 @@ import { UserCreate, UserEdit, UserSearch, NewUser } from '../../containers/user
 import { TokenCreate, TokenSearch, TokenEdit } from '../../containers/tokens'
 import PathNotFound from '../../containers/pathNotFound'
 import ResetPassword from '../../containers/resetPassword'
-import ChangePassword from '../../containers/changePassword'
+import ChangePassword from '../../containers/password/changePassword'
 import ResetPasswordRequest from '../../containers/resetPasswordRequest'
 import ConfirmPasswordResetEmail from '../../containers/confirmPasswordResetEmail'
 import Home from '../../containers/home'

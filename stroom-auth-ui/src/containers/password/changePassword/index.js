@@ -30,9 +30,9 @@ import Cookies from "cookies-js";
 import queryString from "query-string";
 
 import "./ChangePassword.css";
-import "../Layout.css";
-import { required } from "../../validations";
-import { changePassword as onSubmit } from "../../modules/user";
+import "../../Layout.css";
+import { required } from "../../../validations";
+import { changePassword as onSubmit } from "../../../modules/user";
 
 class ChangePassword extends Component {
   componentDidMount() {
