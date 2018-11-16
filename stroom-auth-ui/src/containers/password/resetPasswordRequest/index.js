@@ -26,9 +26,9 @@ import Card from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import './ResetPasswordRequest.css'
-import '../Layout.css'
-import { required } from '../../validations'
-import { submitPasswordChangeRequest as onSubmit } from '../../modules/user'
+import '../../Layout.css'
+import { required } from '../../../validations'
+import { submitPasswordChangeRequest as onSubmit } from '../../../modules/user'
 
 const ResetPasswordRequest = props => {
   const { handleSubmit, pristine, submitting } = props

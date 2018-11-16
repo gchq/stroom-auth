@@ -23,7 +23,7 @@ import { push } from 'react-router-redux'
 import queryString from 'query-string'
 import jwtDecode from 'jwt-decode'
 
-import { changeToken } from '../../modules/login'
+import { changeToken } from '../../../modules/login'
 
 class ResetPassword extends Component {
   constructor () {
