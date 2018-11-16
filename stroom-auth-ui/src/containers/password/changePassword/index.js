@@ -43,6 +43,9 @@ const enhance = compose(
     }),
     {onSubmit},
   ),
+  reduxForm({
+    form: 'ChangePasswordForm',
+  }),
 );
 
 class ChangePassword extends Component {
@@ -239,8 +242,4 @@ ChangePassword.contextTypes = {
   }),
 };
 
-const ReduxChangePassword = reduxForm({
-  form: 'ChangePasswordForm',
-})(ChangePassword);
-
-export default enhance(ReduxChangePassword);
+export default enhance(ChangePassword);
