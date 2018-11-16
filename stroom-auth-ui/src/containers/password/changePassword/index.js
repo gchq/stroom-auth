@@ -14,25 +14,36 @@
  * limitations under the License.
  */
 
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes, { object } from "prop-types";
-import { bindActionCreators } from "redux";
-import { reduxForm, Field } from "redux-form";
-import { TextField } from "redux-form-material-ui";
-import Countdown from "react-countdown-now";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import PropTypes, {object} from 'prop-types';
+import {bindActionCreators} from 'redux';
+import {reduxForm, Field} from 'redux-form';
+import {TextField} from 'redux-form-material-ui';
+import Countdown from 'react-countdown-now';
+import {compose, lifecycle} from 'recompose';
 
-import { Card, CardTitle } from "material-ui/Card";
-import RaisedButton from "material-ui/RaisedButton";
+import {Card, CardTitle} from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
 
-import Cookies from "cookies-js";
+import Cookies from 'cookies-js';
 
-import queryString from "query-string";
+import queryString from 'query-string';
 
-import "./ChangePassword.css";
-import "../../Layout.css";
-import { required } from "../../../validations";
-import { changePassword as onSubmit } from "../../../modules/user";
+import './ChangePassword.css';
+import '../../Layout.css';
+import {required} from '../../../validations';
+import {changePassword as onSubmit} from '../../../modules/user';
+
+const enhance = compose(
+  connect(
+    ({user: {showAlert, changePasswordErrorMessage}}) => ({
+      showAlert,
+      changePasswordErrorMessage,
+    }),
+    {onSubmit},
+  ),
+);
 
 class ChangePassword extends Component {
   componentDidMount() {
@@ -40,11 +51,11 @@ class ChangePassword extends Component {
 
     if (query.redirect_url) {
       const redirectUrl = decodeURIComponent(query.redirect_url);
-      this.props.change("redirectUrl", redirectUrl);
+      this.props.change('redirectUrl', redirectUrl);
     }
 
-    const username = Cookies.get("username");
-    this.props.change("email", username);
+    const username = Cookies.get('username');
+    this.props.change('email', username);
   }
 
   render() {
@@ -53,12 +64,12 @@ class ChangePassword extends Component {
       pristine,
       submitting,
       showAlert,
-      changePasswordErrorMessage
+      changePasswordErrorMessage,
     } = this.props;
 
-    let title = "Change your password";
+    let title = 'Change your password';
     if (showAlert && this.redirectUrl) {
-      title = "Your password has been changed";
+      title = 'Your password has been changed';
     }
 
     return (
@@ -68,7 +79,7 @@ class ChangePassword extends Component {
           <div className="ChangePassword-contents">
             {!showAlert ? (
               <form onSubmit={handleSubmit} className="ChangePassword-form">
-                <div style={{ display: "none" }}>
+                <div style={{display: 'none'}}>
                   <div className="left-container">
                     <div className="redirectUrl-field-container">
                       <div className="redirectUrl-label-container">
@@ -199,7 +210,7 @@ class ChangePassword extends Component {
                   in&nbsp;
                   <Countdown
                     date={Date.now() + 5000}
-                    renderer={({ hours, minutes, seconds, completed }) => (
+                    renderer={({hours, minutes, seconds, completed}) => (
                       <span className="ChangePassword-countdown">
                         {seconds}
                       </span>
@@ -208,7 +219,7 @@ class ChangePassword extends Component {
                       window.location.href = this.redirectUrl;
                     }}
                   />
-                  &nbsp;seconds, or you can{" "}
+                  &nbsp;seconds, or you can{' '}
                   <a href={this.redirectUrl}>go there now.</a>
                 </p>
               </div>
@@ -224,28 +235,12 @@ class ChangePassword extends Component {
 
 ChangePassword.contextTypes = {
   router: PropTypes.shape({
-    history: object.isRequired
-  })
+    history: object.isRequired,
+  }),
 };
 
 const ReduxChangePassword = reduxForm({
-  form: "ChangePasswordForm"
+  form: 'ChangePasswordForm',
 })(ChangePassword);
 
-const mapStateToProps = state => ({
-  showAlert: state.user.showAlert,
-  changePasswordErrorMessage: state.user.changePasswordErrorMessage
-});
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      onSubmit
-    },
-    dispatch
-  );
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReduxChangePassword);
+export default enhance(ReduxChangePassword);
