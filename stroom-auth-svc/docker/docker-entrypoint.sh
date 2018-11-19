@@ -11,14 +11,6 @@ if [ "$(id -u)" = '0' ]; then
     # sync ensures all disk writes are persisted
     sync
 
-    # Build the crontab file to send logs to stroom
-    echo "Creating the crontab file"
-    ./create_crontab.sh
-
-    # Start the cron daemon
-    echo "Starting cron in the background"
-    crond
-
     echo "Switching to user 'auth'"
     #su-exec is the alpine equivalent of gosu
     #runs all args as user proxy, rather than as root

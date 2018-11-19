@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Remove log sending process from service docker image
+
 * Add git_tag and git_commit labels to docker images
 
 ## [v1.0-beta.11]
