@@ -7,6 +7,10 @@ import javax.validation.constraints.NotNull;
 
 @ApiModel(description = "A request to validate a user's password.")
 public class PasswordValidationRequest {
+
+    @ApiModelProperty(value ="THe user's old password", required = false)
+    private String oldPassword;
+
     @NotNull
     @ApiModelProperty(value = "The user's email address.", required = true)
     private String email;
@@ -21,5 +25,9 @@ public class PasswordValidationRequest {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
     }
 }

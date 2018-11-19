@@ -69,7 +69,9 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,6 +79,10 @@ import java.util.regex.Pattern;
 import static javax.ws.rs.core.Response.ResponseBuilder;
 import static javax.ws.rs.core.Response.seeOther;
 import static javax.ws.rs.core.Response.status;
+import static stroom.auth.resources.authentication.v1.PasswordValidator.validateAuthenticity;
+import static stroom.auth.resources.authentication.v1.PasswordValidator.validateComplexity;
+import static stroom.auth.resources.authentication.v1.PasswordValidator.validateLength;
+import static stroom.auth.resources.authentication.v1.PasswordValidator.validateReuse;
 
 @Singleton
 @Path("/authentication/v1")
@@ -416,13 +422,16 @@ public final class AuthenticationResource {
             //TODO: Delete this parameter
             @PathParam("id") int userId) {
 
+        List<PasswordValidationFailureType> failedOn = new ArrayList<>();
+
         final UserDao.LoginResult loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
 
-        final ChangePasswordResponse.ChangePasswordResponseBuilder responseBuilder = ChangePasswordValidator.validateNewPassword(
-                this.config.getPasswordIntegrityChecksConfig(),
-                loginResult,
-                changePasswordRequest.getNewPassword(),
-                changePasswordRequest.getOldPassword());
+        validateAuthenticity(loginResult).ifPresent(failedOn::add);
+        validateReuse(changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword()).ifPresent(failedOn::add);
+        validateLength(changePasswordRequest.getNewPassword(), config.getPasswordIntegrityChecksConfig().getMinimumPasswordLength()).ifPresent(failedOn::add);
+        validateComplexity(changePasswordRequest.getNewPassword(), config.getPasswordIntegrityChecksConfig().getPasswordComplexityRegex()).ifPresent(failedOn::add);
+
+        final ChangePasswordResponse.ChangePasswordResponseBuilder responseBuilder = ChangePasswordResponse.ChangePasswordResponseBuilder.aChangePasswordResponse();
 
         if (responseBuilder.failedOn.size() == 0) {
             responseBuilder.withSuccess();
@@ -456,12 +465,21 @@ public final class AuthenticationResource {
             @Context @NotNull HttpServletRequest httpServletRequest,
             @ApiParam("passwordValidationRequest") @NotNull PasswordValidationRequest passwordValidationRequest) {
 
-        PasswordValidationFailureType[] failedOn = PasswordValidator
-                .validate(config.getPasswordIntegrityChecksConfig(), passwordValidationRequest.getNewPassword());
+        List<PasswordValidationFailureType> failedOn = new ArrayList<>();
+
+        if (!Strings.isNullOrEmpty(passwordValidationRequest.getOldPassword())) {
+            final UserDao.LoginResult loginResult = userDao.areCredentialsValid(passwordValidationRequest.getEmail(), passwordValidationRequest.getOldPassword());
+            validateAuthenticity(loginResult).ifPresent(failedOn::add);
+            validateReuse(passwordValidationRequest.getOldPassword(), passwordValidationRequest.getNewPassword()).ifPresent(failedOn::add);
+        }
+
+        validateLength(passwordValidationRequest.getNewPassword(), config.getPasswordIntegrityChecksConfig().getMinimumPasswordLength()).ifPresent(failedOn::add);
+        validateComplexity(passwordValidationRequest.getNewPassword(), config.getPasswordIntegrityChecksConfig().getPasswordComplexityRegex()).ifPresent(failedOn::add);
+
 
         PasswordValidationResponse response = PasswordValidationResponse.PasswordValidationResponseBuilder
                 .aPasswordValidationResponse()
-                .withFailedOn(failedOn)
+                .withFailedOn(failedOn.toArray(new PasswordValidationFailureType[0]))
                 .build();
 
         return Response.status(Status.OK).entity(response).build();

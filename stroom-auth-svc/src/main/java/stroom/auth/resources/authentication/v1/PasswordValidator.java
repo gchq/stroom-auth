@@ -1,29 +1,35 @@
 package stroom.auth.resources.authentication.v1;
 
-import stroom.auth.config.PasswordIntegrityChecksConfig;
+import stroom.auth.daos.UserDao.LoginResult;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
+
+import static stroom.auth.daos.UserDao.LoginResult.*;
+import static stroom.auth.resources.authentication.v1.PasswordValidationFailureType.*;
 
 public class PasswordValidator {
 
-    static PasswordValidationFailureType[] validate(
-            PasswordIntegrityChecksConfig config,
-            final String newPassword) {
+    static Optional<PasswordValidationFailureType> validateLength(String newPassword, int minimumLength){
+        boolean isLengthValid = newPassword != null &&  (newPassword.length() >= minimumLength);
+        return isLengthValid ? Optional.empty() : Optional.of(LENGTH);
+    }
 
-        List<PasswordValidationFailureType> failedOn = new ArrayList<>();
+    static Optional<PasswordValidationFailureType> validateComplexity(String newPassword, String complexityRegex){
+        boolean isPasswordComplexEnough = newPassword.matches(complexityRegex);
+        return isPasswordComplexEnough ? Optional.empty() : Optional.of(COMPLEXITY);
+    }
 
-        if (newPassword != null &&
-                (newPassword.length() < config.getMinimumPasswordLength())) {
-            failedOn.add(PasswordValidationFailureType.LENGTH);
-        }
 
-        boolean isPasswordComplexEnough = newPassword.matches(config.getPasswordComplexityRegex());
+    static Optional<PasswordValidationFailureType> validateAuthenticity(LoginResult loginResult) {
+        boolean isPasswordValid = loginResult != BAD_CREDENTIALS
+                && loginResult != DISABLED_BAD_CREDENTIALS
+                && loginResult != LOCKED_BAD_CREDENTIALS
+                && loginResult != USER_DOES_NOT_EXIST;
+        return isPasswordValid ? Optional.empty() : Optional.of(BAD_OLD_PASSWORD);
+    }
 
-        if (!isPasswordComplexEnough) {
-            failedOn.add(PasswordValidationFailureType.COMPLEXITY);
-        }
-
-        return failedOn.toArray(new PasswordValidationFailureType[0]);
+    static Optional<PasswordValidationFailureType> validateReuse(String oldPassword, String newPassword){
+        boolean isPasswordReused = oldPassword.equalsIgnoreCase(newPassword);
+        return isPasswordReused ? Optional.of(REUSE) : Optional.empty();
     }
 }
