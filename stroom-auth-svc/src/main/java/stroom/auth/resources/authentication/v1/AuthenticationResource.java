@@ -19,6 +19,7 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +37,7 @@ import stroom.auth.TokenBuilder;
 import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
+import stroom.auth.config.PasswordIntegrityChecksConfig;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
 import stroom.auth.exceptions.NoSuchUserException;
@@ -43,6 +45,7 @@ import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.resources.token.v1.Token;
 import stroom.auth.resources.user.v1.User;
 import stroom.auth.service.eventlogging.StroomEventLoggingService;
+import stroom.auth.service.security.ServiceUser;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -437,6 +440,33 @@ public final class AuthenticationResource {
             responseBuilder.withSuccess();
             stroomEventLoggingService.changePassword(httpServletRequest, changePasswordRequest.getEmail());
             userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
+        }
+
+        return Response.status(Status.OK).entity(responseBuilder.build()).build();
+    }
+
+    @POST
+    @Path("resetPassword")
+    @Timed
+    @NotNull
+    @ApiOperation(value = "Reset an authenticated user's password.",
+            response = String.class, tags = {"Authentication"})
+    public final Response resetPassword(
+            @Auth @NotNull ServiceUser user,
+            @Context @NotNull HttpServletRequest httpServletRequest,
+            @ApiParam("changePasswordRequest") @NotNull ResetPasswordRequest req) {
+        List<PasswordValidationFailureType> failedOn = new ArrayList<>();
+        PasswordIntegrityChecksConfig conf = config.getPasswordIntegrityChecksConfig();
+
+        validateLength(req.getNewPassword(), conf.getMinimumPasswordLength()).ifPresent(failedOn::add);
+        validateComplexity(req.getNewPassword(), conf.getPasswordComplexityRegex()).ifPresent(failedOn::add);
+
+        final ChangePasswordResponse.ChangePasswordResponseBuilder responseBuilder = ChangePasswordResponse.ChangePasswordResponseBuilder.aChangePasswordResponse();
+
+        if (responseBuilder.failedOn.size() == 0) {
+            responseBuilder.withSuccess();
+            stroomEventLoggingService.changePassword(httpServletRequest, user.getName());
+            userDao.changePassword(user.getName(), req.getNewPassword());
         }
 
         return Response.status(Status.OK).entity(responseBuilder.build()).build();

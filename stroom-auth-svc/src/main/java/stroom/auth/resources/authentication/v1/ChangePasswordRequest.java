@@ -24,28 +24,21 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
 
 @ApiModel(description = "A request to change a user's password.")
-public class ChangePasswordRequest {
-    @NotNull
-    @ApiModelProperty(value = "The email address of the user we're changing the password for.", required = true)
-    private String email;
+public class ChangePasswordRequest extends ResetPasswordRequest {
 
     @NotNull
     @ApiModelProperty(value = "The old password.", required = true)
     private String oldPassword;
 
     @NotNull
-    @ApiModelProperty(value = "The new password.", required = true)
-    private String newPassword;
-
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
+    @ApiModelProperty(value = "The email address of the user we're changing the password for.", required = true)
+    private String email;
 
     public String getEmail() {
         return email;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
     }
 }
