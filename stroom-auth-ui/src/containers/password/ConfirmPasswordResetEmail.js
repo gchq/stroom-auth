@@ -14,38 +14,33 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { NavLink } from 'react-router-dom';
-import RaisedButton from 'material-ui/RaisedButton';
+import React from 'react';
+import {connect} from 'react-redux';
+import {compose} from 'recompose';
+import {push} from 'react-router-redux';
 
-import Card from 'material-ui/Card'
+import Button from '../Button';
+import '../Layout.css';
 
-import './ConfirmPasswordResetEmail.css'
-import '../Layout.css'
+const enhance = compose(
+  connect(
+    () => ({}),
+    {push},
+  ),
+);
 
-class ConfirmPasswordResetEmail extends Component {
-  render () {
-    return (
-      <div className='content-floating-without-appbar'>
-        <Card className='ConfirmPasswordResetEmail-card'>
-          <h3>Password reset</h3>
-          <p>Please check your email. <em>If the email address is registered</em> you should receive a message with a link that will let you change your password. This link will be valid for 60 minutes.</p>
-          <NavLink to='/login'> <RaisedButton label='Back to login'/> </NavLink>
-        </Card>
-      </div>
-    )
-  }
-}
+const ConfirmPasswordResetEmail = ({push}) => {
+  return (
+    <div className="container">
+      <h3>Password reset</h3>
+      <p>Please check your email. </p>
+      <p>
+        <strong>If the email address is registered</strong> you should shortly
+        receive a message with a link that will let you change your password.
+      </p>
+      <Button className='secondary' onClick={() => push('/login')}>Back to login</Button>
+    </div>
+  );
+};
 
-const mapStateToProps = state => ({
-})
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-}, dispatch)
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConfirmPasswordResetEmail)
+export default enhance(ConfirmPasswordResetEmail);
