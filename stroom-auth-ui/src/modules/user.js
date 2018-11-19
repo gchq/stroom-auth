@@ -260,9 +260,9 @@ export const createUser = newUser => {
 };
 
 /**
- * This function creates a user within Stroom. This avoids the problem of creating 
+ * This function creates a user within Stroom. This avoids the problem of creating
  * a user here but that user having to log into Stroom before permissions
- * can be assigned to them. 
+ * can be assigned to them.
  */
 const createAuthorisationUser = email => {
   return (dispatch, getState) => {
@@ -359,61 +359,54 @@ export const changePasswordForCurrentUser = () => {
   };
 };
 
-export const changePassword = () => {
+export const changePassword = (values) => {
   return (dispatch, getState) => {
     dispatch(hideChangePasswordErrorMessage());
 
-    const form = getState().form.ChangePasswordForm;
-    const email = form.values.email;
-    const oldPassword = form.values.oldPassword;
-    const newPassword = form.values.newPassword;
-    const newPasswordConfirmation = form.values.newPasswordConfirmation;
-    const redirectUrl = form.values.redirectUrl;
+    const email = values.email;
+    const oldPassword = values.oldPassword;
+    const newPassword = values.password;
+    const newPasswordConfirmation = values.newPasswordConfirmation;
+    const redirectUrl = values.redirectUrl;
 
-    if (newPassword !== newPasswordConfirmation) {
-      dispatch(
-        showChangePasswordErrorMessage(['The new passwords do not match']),
-      );
-    } else {
-      fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        method: 'post',
-        mode: 'cors',
-        body: JSON.stringify({newPassword, oldPassword, email}),
-      })
-        .then(getJsonBody)
-        .then(response => {
-          if (response.changeSucceeded) {
-            // We'll redirect if we have a redirect URL. Otherwise we'll show a message confirming the password has been changed
-            if (redirectUrl) {
-              // TODO: Maybe show a message with a delay.
-              window.location.href = redirectUrl;
-            } else {
-              dispatch(toggleAlertVisibility('Your password has been changed'));
-            }
+    fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+      mode: 'cors',
+      body: JSON.stringify({newPassword, oldPassword, email}),
+    })
+      .then(getJsonBody)
+      .then(response => {
+        if (response.changeSucceeded) {
+          // We'll redirect if we have a redirect URL. Otherwise we'll show a message confirming the password has been changed
+          if (redirectUrl) {
+            // TODO: Maybe show a message with a delay.
+            window.location.href = redirectUrl;
           } else {
-            let errorMessage = [];
-            if (response.failedOn.includes('BAD_OLD_PASSWORD')) {
-              errorMessage.push('Your new old password is not correct');
-            }
-            if (response.failedOn.includes('COMPLEXITY')) {
-              errorMessage.push(
-                'Your new password does not meet the complexity requirements',
-              );
-            }
-            if (response.failedOn.includes('REUSE')) {
-              errorMessage.push('You may not reuse your previous password');
-            }
-            if (response.failedOn.includes('LENGTH')) {
-              errorMessage.push('Your new password is too short');
-            }
-            dispatch(showChangePasswordErrorMessage(errorMessage));
+            dispatch(toggleAlertVisibility('Your password has been changed'));
           }
-        });
-    }
+        } else {
+          let errorMessage = [];
+          if (response.failedOn.includes('BAD_OLD_PASSWORD')) {
+            errorMessage.push('Your new old password is not correct');
+          }
+          if (response.failedOn.includes('COMPLEXITY')) {
+            errorMessage.push(
+              'Your new password does not meet the complexity requirements',
+            );
+          }
+          if (response.failedOn.includes('REUSE')) {
+            errorMessage.push('You may not reuse your previous password');
+          }
+          if (response.failedOn.includes('LENGTH')) {
+            errorMessage.push('Your new password is too short');
+          }
+          dispatch(showChangePasswordErrorMessage(errorMessage));
+        }
+      });
   };
 };
 

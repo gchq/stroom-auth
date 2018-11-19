@@ -16,59 +16,73 @@
 
 import * as Yup from 'yup';
 
+import {hasAnyProps} from '../../lang';
+
 const UserValidationSchema = Yup.object().shape({
   email: Yup.string().required('Required'),
 });
 
 const validateAsync = (values, idToken, url) => {
-  return fetch(`${url}/isPasswordValid`, {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + idToken,
-    },
-    method: 'post',
-    mode: 'cors',
-    body: JSON.stringify({
-      email: values.email,
-      newPassword: values.password,
-    }),
-  })
-    .then(response => response.json())
-    .then(body => {
-      let errors = {};
+  if (values.password) {
+    return fetch(`${url}/isPasswordValid`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + idToken,
+      },
+      method: 'post',
+      mode: 'cors',
+      body: JSON.stringify({
+        email: values.email,
+        newPassword: values.password,
+        oldPassword: values.oldPassword,
+      }),
+    })
+      .then(response => response.json())
+      .then(body => {
+        let errors = {};
 
-      // First sort out async password checks
-      let passwordErrors = [];
-      if (body.failedOn.length > 0) {
-        body.failedOn.map(failureType => {
-          if (failureType === 'LENGTH') {
-            passwordErrors.push('Not long enough');
-          } else if (failureType === 'COMPLEXITY') {
-            passwordErrors.push('Does not meet complexity requirements');
-          }
-        });
-      }
-      if (passwordErrors.length > 0) {
-        errors.password = passwordErrors.join('\n');
-      }
-
-      // Do password checks
-      if (
-        values.password !== undefined &&
-        values.password !== ''
-      ) {
-        if (
-          values.verifyPassword !== undefined &&
-          values.verifyPassword !== '' &&
-          values.password !== values.verifyPassword
-        ) {
-          errors.verifyPassword = 'Passwords do not match';
+        // First sort out async password checks
+        let passwordErrors = [];
+        if (body.failedOn.length > 0) {
+          body.failedOn.map(failureType => {
+            if (failureType === 'LENGTH') {
+              passwordErrors.push('Your new password is not long enough.');
+            } else if (failureType === 'COMPLEXITY') {
+              passwordErrors.push(
+                'Your new password not meet the password complexity requirements.',
+              );
+            } else if (failureType === 'BAD_OLD_PASSWORD') {
+              passwordErrors.push('Your old password is not correct.');
+            } else if (failureType === 'REUSE') {
+              passwordErrors.push('You may not reuse your old password.');
+            } else {
+              passwordErrors.push(
+                'There is a problem with changing your password, please contact an administrator',
+              );
+            }
+          });
         }
-      }
+        if (passwordErrors.length > 0) {
+          errors.password = passwordErrors.join('\n');
+        }
 
-      throw errors;
-    });
+        // Do password checks
+        if (values.password !== undefined && values.password !== '') {
+          if (
+            values.verifyPassword !== undefined &&
+            values.verifyPassword !== '' &&
+            values.password !== values.verifyPassword
+          ) {
+            errors.verifyPassword = 'Passwords do not match';
+          }
+        }
+
+        if (hasAnyProps(errors)) {
+          throw errors;
+        }
+      });
+  }
 };
 
 export {UserValidationSchema, validateAsync};
