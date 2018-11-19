@@ -144,11 +144,23 @@ const ChangePassword = ({
                       <div className="field-container vertical">
                         <label>Old password</label>
                         <Field name="oldPassword" type="password" autoFocus />
+                        <ErrorMessage
+                          name="oldPassword"
+                          render={msg => (
+                            <div className="validation-error">{msg}</div>
+                          )}
+                        />
                       </div>
                       <div className="field-container__spacer" />
                       <div className="field-container vertical">
                         <label>New password</label>
                         <Field name="password" type="password" />
+                        <ErrorMessage
+                          name="password"
+                          render={msg => (
+                            <div className="validation-error">{msg}</div>
+                          )}
+                        />
                       </div>
                     </div>
                     <div className="section__fields__row">
@@ -157,28 +169,16 @@ const ChangePassword = ({
                       <div className="field-container vertical">
                         <label>New password again</label>
                         <Field name="verifyPassword" type="password" />
-                      </div>
-                    </div>
-                    <div className="ChangePassword-controls">
-                      <div>
-                        <ErrorMessage
-                          name="oldPassword"
-                          render={msg => (
-                            <div className="validation-error">{msg}</div>
-                          )}
-                        />
-                        <ErrorMessage
-                          name="password"
-                          render={msg => (
-                            <div className="validation-error">{msg}</div>
-                          )}
-                        />
                         <ErrorMessage
                           name="verifyPassword"
                           render={msg => (
                             <div className="validation-error">{msg}</div>
                           )}
                         />
+                      </div>
+                    </div>
+                    <div className="ChangePassword-controls">
+                      <div>
                         {changePasswordErrorMessage.map((error, index) => (
                           <p
                             key={index}

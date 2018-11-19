@@ -44,6 +44,7 @@ const validateAsync = (values, idToken, url) => {
 
         // First sort out async password checks
         let passwordErrors = [];
+        let oldPasswordErrors = [];
         if (body.failedOn.length > 0) {
           body.failedOn.map(failureType => {
             if (failureType === 'LENGTH') {
@@ -53,7 +54,7 @@ const validateAsync = (values, idToken, url) => {
                 'Your new password not meet the password complexity requirements.',
               );
             } else if (failureType === 'BAD_OLD_PASSWORD') {
-              passwordErrors.push('Your old password is not correct.');
+              oldPasswordErrors.push('Your old password is not correct.');
             } else if (failureType === 'REUSE') {
               passwordErrors.push('You may not reuse your old password.');
             } else {
@@ -65,6 +66,10 @@ const validateAsync = (values, idToken, url) => {
         }
         if (passwordErrors.length > 0) {
           errors.password = passwordErrors.join('\n');
+        }
+
+        if (oldPasswordErrors.length > 0) {
+          errors.oldPassword = oldPasswordErrors.join('\n');
         }
 
         // Do password checks

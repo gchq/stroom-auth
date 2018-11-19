@@ -359,7 +359,7 @@ export const changePasswordForCurrentUser = () => {
   };
 };
 
-export const changePassword = (values) => {
+export const changePassword = values => {
   return (dispatch, getState) => {
     dispatch(hideChangePasswordErrorMessage());
 
@@ -381,13 +381,7 @@ export const changePassword = (values) => {
       .then(getJsonBody)
       .then(response => {
         if (response.changeSucceeded) {
-          // We'll redirect if we have a redirect URL. Otherwise we'll show a message confirming the password has been changed
-          if (redirectUrl) {
-            // TODO: Maybe show a message with a delay.
-            window.location.href = redirectUrl;
-          } else {
-            dispatch(toggleAlertVisibility('Your password has been changed'));
-          }
+          dispatch(toggleAlertVisibility('Your password has been changed'));
         } else {
           let errorMessage = [];
           if (response.failedOn.includes('BAD_OLD_PASSWORD')) {
