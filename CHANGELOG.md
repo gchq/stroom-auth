@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.11]
+
 * Remove log sending process from service docker image
 
 * Add git_tag and git_commit labels to docker images
@@ -88,7 +90,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.11...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.12...master
+[v1.0-beta.12]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.11...v1.0-beta.12
 [v1.0-beta.11]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.10...v1.0-beta.11
 [v1.0-beta.10]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.9...v1.0-beta.10
 [v1.0-beta.9]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.8...v1.0-beta.9
