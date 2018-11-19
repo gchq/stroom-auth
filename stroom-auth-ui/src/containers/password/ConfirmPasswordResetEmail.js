@@ -23,7 +23,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Card from 'material-ui/Card'
 
 import './ConfirmPasswordResetEmail.css'
-import '../../Layout.css'
+import '../Layout.css'
 
 class ConfirmPasswordResetEmail extends Component {
   render () {

@@ -404,6 +404,44 @@ export const changePassword = values => {
   };
 };
 
+export const resetPassword = values => {
+  return (dispatch, getState) => {
+    const oldPassword = values.oldPassword;
+    const newPassword = values.password;
+    const newPasswordConfirmation = values.newPasswordConfirmation;
+
+    const jwsToken = getState().login.token;
+
+    fetch(`${getState().config.authenticationServiceUrl}/resetPassword/`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + jwsToken,
+      },
+      method: 'post',
+      mode: 'cors',
+      body: JSON.stringify({newPassword, oldPassword}),
+    })
+      .then(getJsonBody)
+      .then(response => {
+        if (response.changeSucceeded) {
+          dispatch(toggleAlertVisibility('Your password has been changed'));
+        } else {
+          let errorMessage = [];
+          if (response.failedOn.includes('COMPLEXITY')) {
+            errorMessage.push(
+              'Your new password does not meet the complexity requirements',
+            );
+          }
+          if (response.failedOn.includes('LENGTH')) {
+            errorMessage.push('Your new password is too short');
+          }
+          dispatch(showChangePasswordErrorMessage(errorMessage));
+        }
+      });
+  };
+};
+
 export const submitPasswordChangeRequest = formData => {
   return (dispatch, getState) => {
     const authenticationServiceUrl = `${

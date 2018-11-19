@@ -30,10 +30,7 @@ import LoggedOut from '../../containers/loggedOut'
 import { UserCreate, UserEdit, UserSearch, NewUser } from '../../containers/users'
 import { TokenCreate, TokenSearch, TokenEdit } from '../../containers/tokens'
 import PathNotFound from '../../containers/pathNotFound'
-import ResetPassword from '../../containers/password/resetPassword'
-import ChangePassword from '../../containers/password/changePassword'
-import ResetPasswordRequest from '../../containers/password/resetPasswordRequest'
-import ConfirmPasswordResetEmail from '../../containers/password/confirmPasswordResetEmail'
+import {ResetPassword, ChangePassword, ConfirmPasswordResetEmail, ResetPasswordRequest} from '../../containers/password'
 import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
 import AuthenticationRequest from '../../startup/authentication/AuthenticationRequest'
@@ -70,6 +67,8 @@ class App extends Component {
               <Route exact path={'/loggedOut'} component={LoggedOut} />
               <Route exact path={'/newUser'} component={NewUser} />
               <Route exact path={'/resetPassword'} component={ResetPassword} />
+              <Route exact path={'/resetpassword'} component={ResetPassword} />
+              <Route exact path={'/changepassword'} component={ChangePassword} />
               <Route exact path={'/confirmPasswordResetEmail'} component={ConfirmPasswordResetEmail} />
               <Route exact path={'/resetPasswordRequest'} component={ResetPasswordRequest} />
               <Route exact path={'/Unauthorised'} component={Unauthorised} />
@@ -90,8 +89,6 @@ class App extends Component {
                   appClientId={this.props.appClientId}
                   authenticationServiceUrl={this.props.authenticationServiceUrl} />
               )} />
-
-              <Route exact path={'/changepassword'} component={ChangePassword} />
 
               <Route exact path={'/user'} render={() => (
                 this.isLoggedIn() ? <UserCreate /> : <AuthenticationRequest

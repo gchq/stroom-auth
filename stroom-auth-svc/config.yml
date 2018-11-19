@@ -117,14 +117,14 @@ email:
   fromName: ${EMAIL_FROM_NAME:- Stroom User Accounts}
   passwordResetSubject: ${EMAIL_RESET_SUBJECT:- Password reset for Stroom}
   passwordResetText: ${EMAIL_RESET_TEXT:- 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'}
-  passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>/resetPassword/?token=%s'}
-  passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 60}
+  passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>:5000/resetPassword/?token=%s'}
+  passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 600}
   smtp:
-    host: ${EMAIL_SMTP_HOST:- localhost}
-    port: ${EMAIL_SMTP_PORT:- 2525}
+    host: ${EMAIL_SMTP_HOST:- smtp.gmail.com}
+    port: ${EMAIL_SMTP_PORT:- 587}
     transport: ${EMAIL_SMTP_TRANSPORT:- TLS} # Possible values: TLS, SSL, plain. Defaults to plain if unspecified.
-    username: ${EMAIL_SMTP_USERNAME:- }
-    password: ${EMAIL_SMTP_PASSWORD:- }
+    username: ${EMAIL_SMTP_USERNAME:-jc064522@gmail.com}
+    password: ${EMAIL_SMTP_PASSWORD:-lrklndknnxdefhpv}
 
 passwordIntegrityChecks:
   disableInactiveNewAccountAfterXDays: ${DISABLE_INACTIVE_NEW_ACCOUNT_AFTER_X_DAYS:- 30}
