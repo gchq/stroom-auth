@@ -104,168 +104,123 @@ const ChangePassword = ({
   }
 
   return (
-    <div className="content-floating-with-appbar">
-      <Card className="ChangePassword-main">
-        <CardTitle className="ChangePassword-title" title={title} />
-        <div className="ChangePassword-contents">
-          {!showAlert ? (
-            <Formik
-              enableReinitialize={true}
-              initialValues={{
-                oldPassword: '',
-                password: '',
-                verifyPassword: '',
-                email: email || '',
-                redirectUrl: redirectUrl || '',
-              }}
-              onSubmit={(values, actions) => {
-                onSubmit(values);
-              }}
-              validate={values =>
-                validateAsync(values, idToken, authenticationServiceUrl)
-              }>
-              {({errors, touched, submitForm}) => {
-                const isPristine = !hasAnyProps(touched);
-                const hasErrors = hasAnyProps(errors);
-                return (
-                  <Form className="ChangePassword-form">
-                    <div style={{display: 'none'}}>
-                      <div className="left-container">
-                        <div className="redirectUrl-field-container">
-                          <div className="redirectUrl-label-container">
-                            <label className="redirectUrl-label">
-                              Redirect URL
-                            </label>
-                          </div>
-                          <div className="input-container">
-                            <Field
-                              className="redirectUrl-field"
-                              name="redirectUrl"
-                              type="hidden"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="left-container">
-                        <div className="email-field-container">
-                          <div className="email-label-container">
-                            <label className="email-label">Email</label>
-                          </div>
-                          <div className="input-container">
-                            <Field
-                              className="email-field"
-                              name="email"
-                              type="hidden"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="ChangePassword-fields">
-                      <div className="left-container">
-                        <div className="ChangePassword-field-container">
-                          <div className="ChangePassword-label-container">
-                            <label className="ChangePassword-label">
-                              Old password
-                            </label>
-                          </div>
-                          <div className="input-container">
-                            <Field
-                              name="oldPassword"
-                              type="password"
-                              autoFocus
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="left-container">
-                        <div className="ChangePassword-field-container">
-                          <div className="ChangePassword-label-container">
-                            <label className="ChangePassword-label">
-                              New password
-                            </label>
-                          </div>
-                          <div className="input-container">
-                            <Field name="password" type="password" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="left-container">
-                        <div className="ChangePassword-field-container">
-                          <div className="ChangePassword-label-container">
-                            <label className="ChangePassword-label">
-                              New password again
-                            </label>
-                          </div>
-                          <div className="input-container">
-                            <Field name="verifyPassword" type="password" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="ChangePassword-controls">
-                        <div>
-                          <ErrorMessage
-                            name="oldPassword"
-                            render={msg => (
-                              <div className="validation-error">{msg}</div>
-                            )}
-                          />
-                          <ErrorMessage
-                            name="password"
-                            render={msg => (
-                              <div className="validation-error">{msg}</div>
-                            )}
-                          />
-                          <ErrorMessage
-                            name="verifyPassword"
-                            render={msg => (
-                              <div className="validation-error">{msg}</div>
-                            )}
-                          />
-                          {changePasswordErrorMessage.map((error, index) => (
-                            <p
-                              key={index}
-                              className="ChangePassword-errorMessage">
-                              {error}
-                            </p>
-                          ))}
-                        </div>
-                        <br />
-
-                        <div className="ChangePassword-actions">
-                          <Button
-                            className="ChangePassword-button primary"
-                            disabled={isPristine || hasErrors}
-                            type="submit"
-                            label=""
-                            icon="save">
-                            Change password
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </Form>
-                );
-              }}
-            </Formik>
-          ) : (
-            undefined
-          )}
-
-          {showAlert && !redirectUrl ? (
-            <p>Your password has been changed.</p>
-          ) : (
-            undefined
-          )}
-
-          {showAlert && redirectUrl ? (
-            <PostChangeRedirect redirectUrl={redirectUrl} />
-          ) : (
-            undefined
-          )}
+    <div className="container">
+      <div className="section">
+        <div className="section__title">
+          <h3>{title}</h3>
         </div>
-      </Card>
+        {!showAlert ? (
+          <Formik
+            enableReinitialize={true}
+            initialValues={{
+              oldPassword: '',
+              password: '',
+              verifyPassword: '',
+              email: email || '',
+              redirectUrl: redirectUrl || '',
+            }}
+            onSubmit={(values, actions) => {
+              onSubmit(values);
+            }}
+            validate={values =>
+              validateAsync(values, idToken, authenticationServiceUrl)
+            }>
+            {({errors, touched, submitForm}) => {
+              const isPristine = !hasAnyProps(touched);
+              const hasErrors = hasAnyProps(errors);
+              return (
+                <Form className="ChangePassword-form">
+                  <div style={{display: 'none'}}>
+                    <Field
+                      className="redirectUrl-field"
+                      name="redirectUrl"
+                      type="hidden"
+                    />
+                    <Field className="email-field" name="email" type="hidden" />
+                  </div>
+
+                  <div className="section__fields">
+                    <div className="section__fields__row">
+                      <div className="field-container vertical">
+                        <label>Old password</label>
+                        <Field name="oldPassword" type="password" autoFocus />
+                      </div>
+                      <div className="field-container__spacer" />
+                      <div className="field-container vertical">
+                        <label>New password</label>
+                        <Field name="password" type="password" />
+                      </div>
+                    </div>
+                    <div className="section__fields__row">
+                      <div className="field-container vertical" />
+                      <div className="field-container__spacer" />
+                      <div className="field-container vertical">
+                        <label>New password again</label>
+                        <Field name="verifyPassword" type="password" />
+                      </div>
+                    </div>
+                    <div className="ChangePassword-controls">
+                      <div>
+                        <ErrorMessage
+                          name="oldPassword"
+                          render={msg => (
+                            <div className="validation-error">{msg}</div>
+                          )}
+                        />
+                        <ErrorMessage
+                          name="password"
+                          render={msg => (
+                            <div className="validation-error">{msg}</div>
+                          )}
+                        />
+                        <ErrorMessage
+                          name="verifyPassword"
+                          render={msg => (
+                            <div className="validation-error">{msg}</div>
+                          )}
+                        />
+                        {changePasswordErrorMessage.map((error, index) => (
+                          <p
+                            key={index}
+                            className="ChangePassword-errorMessage">
+                            {error}
+                          </p>
+                        ))}
+                      </div>
+                      <br />
+
+                      <div className="ChangePassword-actions">
+                        <Button
+                          className="ChangePassword-button primary"
+                          disabled={isPristine || hasErrors}
+                          type="submit"
+                          label=""
+                          icon="save">
+                          Change password
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </Form>
+              );
+            }}
+          </Formik>
+        ) : (
+          undefined
+        )}
+
+        {showAlert && !redirectUrl ? (
+          <p>Your password has been changed.</p>
+        ) : (
+          undefined
+        )}
+
+        {showAlert && redirectUrl ? (
+          <PostChangeRedirect redirectUrl={redirectUrl} />
+        ) : (
+          undefined
+        )}
+      </div>
     </div>
   );
 };
