@@ -64,7 +64,7 @@ const customStyles = {
 
 function AsyncUserSelect(props) {
   const {onChange} = props;
-  const [setInputValue] = useState('');
+  const [_, setInputValue] = useState('');
   const {idToken, url} = useMappedState(mapState);
 
   return (

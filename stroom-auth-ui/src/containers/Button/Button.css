@@ -1,23 +1,73 @@
 .Button {
-    display: flex;
-    justify-content: center;
-    padding: 0 10px 0px 0px;
+  display: flex;
+  justify-content: center;
+  padding: 0 10px 0px 0px;
 }
 
 .Button.no-icon {
-    padding: 0px 10px 0px 10px;
+  padding: 0px 10px 0px 10px;
 }
 
 .Button span {
-    padding: 0px 5px 0px 10px;
-
+  padding: 0px 5px 0px 10px;
 }
 
 .Button img {
-    height: 25px;
+  height: 25px;
 }
 
 .Button__contents {
-    align-self: center;
+  align-self: center;
 }
 
+button {
+  border-radius: 3px;
+  height: 30px;
+  border: none;
+  background-color: #e4e4e4;
+  color: #4d5250;
+  padding: 0 10px 0 10px;
+}
+
+button:focus {
+  outline: 1px solid #1e88e5;
+}
+
+button:hover {
+  background-color: #a8a8a8;
+  color: black;
+}
+
+button:disabled {
+  background-color: rgb(244, 244, 244);
+  color: rgb(0, 0, 0, 0.3);
+}
+
+button.primary {
+  background-color: #1e88e5;
+  color: white;
+}
+
+button.primary:hover {
+  background-color: #007be6;
+}
+
+button.primary:disabled {
+  background-color: #7fb5e4;
+}
+
+button.warning {
+  background-color: #ff6f00;
+  color: white;
+}
+
+button.secondary {
+  background-color: white;
+  color: #4d5250;
+  border: 1px solid lightgray;
+}
+
+button.secondary:hover {
+  background-color: #1e88e5;
+  color: white;
+}

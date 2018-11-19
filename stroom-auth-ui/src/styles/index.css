@@ -37,63 +37,15 @@ textarea {
   font-family: sans-serif;
   background-color: white;
 }
+
 input:focus,
 select:focus,
-textarea:focus,
-button:focus {
-    outline: 1px solid #1e88e5;
+textarea:focus {
+  outline: 1px solid #1e88e5;
 }
 
-a:focus { 
-    outline: none;
-}
-
-button {
-  border-radius: 3px;
-  height: 30px;
-  border: none;
-  background-color: #e4e4e4;
-  color: #4d5250;
-  padding: 0 10px 0 10px;
-}
-
-button:hover {
-  background-color: #a8a8a8;
-  color: black;
-}
-
-button:disabled {
-  background-color: rgb(244, 244, 244);
-  color: rgb(0, 0, 0, 0.3);
-}
-
-button.primary {
-  background-color: #1e88e5;
-  color: white;
-}
-
-button.primary:hover {
-  background-color: #007be6;
-}
-
-button.primary:disabled {
-  background-color: #7fb5e4;
-}
-
-button.warning {
-  background-color: #ff6f00;
-  color: white;
-}
-
-button.secondary {
-  background-color: white;
-  color: #4d5250;
-  border: 1px solid lightgray;
-}
-
-button.secondary:hover {
-  background-color: #1e88e5;
-  color: white;
+a:focus {
+  outline: none;
 }
 
 .header {

@@ -14,71 +14,87 @@
  * limitations under the License.
  */
 
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { reduxForm, Field } from 'redux-form'
-import { NavLink } from 'react-router-dom';
+import React from 'react';
+import {connect} from 'react-redux';
+import {Formik, Form, Field, ErrorMessage} from 'formik';
+import {compose} from 'recompose';
+import {push} from 'react-router-redux';
+import * as Yup from 'yup';
 
-import { TextField } from 'redux-form-material-ui'
+import Button from '../Button';
+import '../Layout.css';
+import {required} from '../../validations';
+import {submitPasswordChangeRequest as onSubmit} from '../../modules/user';
+import {hasAnyProps} from '../../lang';
+import '../../styles/index.css';
 
-import Card from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
+const ValidationSchema = Yup.object().shape({
+  email: Yup.string().required('Required'),
+});
 
-import './ResetPasswordRequest.css'
-import '../Layout.css'
-import { required } from '../../validations'
-import { submitPasswordChangeRequest as onSubmit } from '../../modules/user'
+const enhance = compose(
+  connect(
+    ({password:{isSubmitting}}) => ({isSubmitting}),
+    {push, onSubmit},
+  ),
+);
 
-const ResetPasswordRequest = props => {
-  const { handleSubmit, pristine, submitting } = props
+const ResetPasswordRequest = ({isSubmitting, onSubmit, push}) => {
   return (
-    <div className='content-floating-without-appbar'>
-      <Card className='ResetPasswordRequest-main'>
-        <div>
-          <p>Please enter your email address below.</p>
-          <form onSubmit={handleSubmit}>
-
-            <Field
-              className='ResetPasswordRequest-field'
-              name='emailAddress'
-              component={TextField}
-              validate={[required]} />
-            <br />
-            <div className="ResetPasswordRequest-actions">
-              <RaisedButton
-                className='ResetPasswordRequest-button'
-                primary
-                disabled={pristine || submitting}
-                type='submit'
-                label='Send' />
-              <NavLink to='/login' className='ResetPasswordRequest-cancel'>
-                <RaisedButton
-                  className='ResetPasswordRequest-cancel-button'
-                  type='button'
-                  label='Back to login' 
-                  to='/login'/> 
-              </NavLink>
+    <Formik
+      enableReinitialize={true}
+      initialValues={{
+        email: '',
+      }}
+      onSubmit={(values, actions) => {
+        onSubmit(values);
+      }}
+      validationSchema={ValidationSchema}>
+      {({errors, touched, submitForm}) => {
+        const isPristine = !hasAnyProps(touched);
+        const hasErrors = hasAnyProps(errors);
+        return (
+          <Form>
+            <div className="container">
+              <div className="section">
+                <div className="section__title">
+                  <h3>Request a password reset</h3>
+                </div>
+                <div className="section__fields">
+                  <div className="section__fields_row">
+                    <div className="field-container vertical">
+                      <label>Your registered email address</label>
+                      <Field name="email" type="text" />
+                      <ErrorMessage
+                        name="email"
+                        render={msg => (
+                          <div className="validation-error">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="footer">
+                <Button
+                  className="toolbar-button-small primary"
+                  type="submit"
+                  disabled={isPristine || hasErrors}
+                isLoading={isSubmitting}>
+                  Send
+                </Button>
+                <Button
+                  className="toolbar-button-small secondary"
+                  onClick={() => push('/login')}>
+                  Back to login
+                </Button>
+              </div>
             </div>
-          </form>
-        </div>
-      </Card>
-    </div>
-  )
-}
+          </Form>
+        );
+      }}
+    </Formik>
+  );
+};
 
-const ReduxResetPasswordRequestForm = reduxForm({
-  form: 'ResetPasswordRequestForm'
-})(ResetPasswordRequest)
-
-const mapStateToProps = state => ({
-})
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-  onSubmit
-}, dispatch)
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReduxResetPasswordRequestForm)
+export default enhance(ResetPasswordRequest);
