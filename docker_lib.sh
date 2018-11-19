@@ -5,6 +5,7 @@
 readonly SERVICE_SOURCE_DIR="stroom-auth-svc"
 readonly SERVICE_DOCKER_DIR="${SERVICE_SOURCE_DIR}/docker"
 readonly SERVICE_BUILD_DIR="${SERVICE_DOCKER_DIR}/build"
+readonly CURRENT_GIT_COMMIT="$(git rev-parse HEAD)"
 
 build_ui(){
     cd stroom-auth-ui/docker
@@ -29,13 +30,28 @@ build_service() {
     prep_service_build
     echo "--${TAG}--"
     echo "--${SERVICE_DOCKER_DIR}--"
-    docker build --tag gchq/stroom-auth-service:$TAG ${SERVICE_DOCKER_DIR}/.
+    echo "--${CURRENT_GIT_COMMIT}--"
+    docker build \
+        --tag gchq/stroom-auth-service:$TAG \
+        --build-arg GIT_COMMIT=${CURRENT_GIT_COMMIT} \
+        --build-arg GIT_TAG=${TAG} \
+        ${SERVICE_DOCKER_DIR}/.
 }
 
 push_ui() {
-    docker push gchq/stroom-auth-ui:$TAG
+    if [[ "$TAG" =~ ^local.* ]]; then
+        echo "ERROR - Can't push 'local' tags to Dockerhub"
+        exit 1
+    else
+        docker push gchq/stroom-auth-ui:$TAG
+    fi
 }
 
 push_service() {
-    docker push gchq/stroom-auth-service:$TAG
+    if [[ "$TAG" =~ ^local.* ]]; then
+        echo "ERROR - Can't push 'local' tags to Dockerhub"
+        exit 1
+    else
+        docker push gchq/stroom-auth-service:$TAG
+    fi
 }
