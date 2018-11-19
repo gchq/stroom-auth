@@ -115,8 +115,8 @@ const ChangePassword = ({
                 oldPassword: '',
                 password: '',
                 verifyPassword: '',
-                email,
-                redirectUrl,
+                email: email || '',
+                redirectUrl: redirectUrl || '',
               }}
               onSubmit={(values, actions) => {
                 onSubmit(values);
