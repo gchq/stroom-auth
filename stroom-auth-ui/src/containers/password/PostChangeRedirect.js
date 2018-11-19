@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React from 'react';
 import Countdown from 'react-countdown-now';
 import {compose, withState, lifecycle} from 'recompose';
 import {withRouter} from 'react-router';
@@ -23,14 +22,10 @@ import queryString from 'query-string';
 
 const enhance = compose(
   withRouter,
-  connect(
-    ({}) => ({}),
-    {},
-  ),
   withState('redirectUrl', 'setRedirectUrl', undefined),
   lifecycle({
     componentDidMount() {
-      const {setRedirectUrl, setEmail} = this.props;
+      const {setRedirectUrl} = this.props;
       const query = queryString.parse(this.props.location.search);
       if (query.redirect_url) {
         const redirectUrl = decodeURIComponent(query.redirect_url);

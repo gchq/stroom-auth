@@ -366,8 +366,6 @@ export const changePassword = values => {
     const email = values.email;
     const oldPassword = values.oldPassword;
     const newPassword = values.password;
-    const newPasswordConfirmation = values.newPasswordConfirmation;
-    const redirectUrl = values.redirectUrl;
 
     fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
       headers: {
@@ -408,8 +406,6 @@ export const resetPassword = values => {
   return (dispatch, getState) => {
     const oldPassword = values.oldPassword;
     const newPassword = values.password;
-    const newPasswordConfirmation = values.newPasswordConfirmation;
-
     const jwsToken = getState().login.token;
 
     fetch(`${getState().config.authenticationServiceUrl}/resetPassword/`, {

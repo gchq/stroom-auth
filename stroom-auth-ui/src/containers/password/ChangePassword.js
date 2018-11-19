@@ -14,29 +14,17 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
-import PropTypes, {object} from 'prop-types';
-import {bindActionCreators} from 'redux';
-import {reduxForm} from 'redux-form';
-import {TextField} from 'redux-form-material-ui';
-import Countdown from 'react-countdown-now';
 import {compose, withState, lifecycle} from 'recompose';
 import {withRouter} from 'react-router';
-import {Formik, Form, Field, ErrorMessage} from 'formik';
-import {Card, CardTitle} from 'material-ui/Card';
 import Cookies from 'cookies-js';
 import queryString from 'query-string';
 
 import PostChangeRedirect from './PostChangeRedirect';
-import Button from '../Button';
-import {validateAsync} from '../users/validation';
-import {changePasswordValidationSchema} from './validation';
 import './ChangePassword.css';
 import '../Layout.css';
-import {required} from '../../validations';
 import {changePassword as onSubmit} from '../../modules/user';
-import {hasAnyProps} from '../../lang';
 import ChangePasswordFields from './ChangePasswordFields';
 
 const enhance = compose(
@@ -82,9 +70,6 @@ const enhance = compose(
       }
     },
   }),
-  reduxForm({
-    form: 'ChangePasswordForm',
-  }),
 );
 
 const ChangePassword = ({
@@ -111,7 +96,12 @@ const ChangePassword = ({
           <h3>{title}</h3>
         </div>
         {!showAlert ? (
-            <ChangePasswordFields email={email} redirectUrl={redirectUrl} showOldPasswordField={true} onSubmit={onSubmit}/>
+          <ChangePasswordFields
+            email={email}
+            redirectUrl={redirectUrl}
+            showOldPasswordField={true}
+            onSubmit={onSubmit}
+          />
         ) : (
           undefined
         )}

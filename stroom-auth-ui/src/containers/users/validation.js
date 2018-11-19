@@ -46,7 +46,7 @@ const validateAsync = (values, idToken, url) => {
         let passwordErrors = [];
         let oldPasswordErrors = [];
         if (body.failedOn.length > 0) {
-          body.failedOn.map(failureType => {
+          body.failedOn.forEach(failureType => {
             if (failureType === 'LENGTH') {
               passwordErrors.push('Your new password is not long enough.');
             } else if (failureType === 'COMPLEXITY') {

@@ -16,7 +16,6 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
 import {compose, withProps, withState, lifecycle} from 'recompose';

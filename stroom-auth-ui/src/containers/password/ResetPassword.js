@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react';
-import PropTypes, {object} from 'prop-types';
-import {bindActionCreators} from 'redux';
+import React from 'react';
 import {connect} from 'react-redux';
 import {push} from 'react-router-redux';
 import {withRouter} from 'react-router';
@@ -36,7 +34,7 @@ const enhance = compose(
     {
       changeToken,
       onSubmit,
-        push,
+      push,
     },
   ),
   withState('missingToken', 'setMissingToken', false),
@@ -74,8 +72,9 @@ const enhance = compose(
       setExpiredToken(expiredToken);
 
       if (!missingToken && !invalidToken && !expiredToken) {
+        // If we have a valid token we're going to save it, so we can easily
+        // use it with getState when requesting the change.
         changeToken(token);
-        //        this.context.store.dispatch(push('/resetpassword'));
       }
     },
   }),
@@ -87,7 +86,7 @@ const ResetPassword = ({
   invalidToken,
   expiredToken,
   showAlert,
-    push,
+  push,
 }) => {
   const failure = (
     <div>
@@ -107,17 +106,18 @@ const ResetPassword = ({
 
   const confirmation = (
     <p>
-      You password has been changed. We're going to send you to the login page in&nbsp;
+      You password has been changed. We're going to send you to the login page
+      in&nbsp;
       <Countdown
         date={Date.now() + 5000}
         renderer={({hours, minutes, seconds, completed}) => (
           <span className="ChangePassword-countdown">{seconds}</span>
         )}
         onComplete={() => {
-            push('/login');
+          push('/login');
         }}
       />
-      &nbsp;seconds, or you can <a href='/login'>go there now.</a>
+      &nbsp;seconds, or you can <a href="/login">go there now.</a>
     </p>
   );
 

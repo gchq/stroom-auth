@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
-import PropTypes, {object} from 'prop-types';
-import {bindActionCreators} from 'redux';
-import {reduxForm} from 'redux-form';
-import {TextField} from 'redux-form-material-ui';
-import Countdown from 'react-countdown-now';
-import {compose, withState, lifecycle} from 'recompose';
+import {compose} from 'recompose';
 import {withRouter} from 'react-router';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
-import {Card, CardTitle} from 'material-ui/Card';
-import Cookies from 'cookies-js';
-import queryString from 'query-string';
 
-import PostChangeRedirect from './PostChangeRedirect';
 import Button from '../Button';
 import {validateAsync} from '../users/validation';
-import {changePasswordValidationSchema} from './validation';
 import '../Layout.css';
-import {required} from '../../validations';
 import {hasAnyProps} from '../../lang';
 
 const enhance = compose(
