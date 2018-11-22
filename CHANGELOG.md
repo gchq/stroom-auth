@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add curl back into the service docker image
+
 ## [v1.0-beta.12]
 
 * Remove log sending process from service docker image
