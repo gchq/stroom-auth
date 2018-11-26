@@ -17,19 +17,18 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
-import {push} from 'react-router-redux';
 
 import Button from '../Button';
 import '../Layout.css';
 
 const enhance = compose(
   connect(
-    () => ({}),
-    {push},
+    ({config: {stroomUiUrl}}) => ({stroomUiUrl}),
+    {},
   ),
 );
 
-const ConfirmPasswordResetEmail = ({push}) => {
+const ConfirmPasswordResetEmail = ({stroomUiUrl}) => {
   return (
     <div className="container">
       <h3>Password reset</h3>
@@ -38,7 +37,13 @@ const ConfirmPasswordResetEmail = ({push}) => {
         <strong>If the email address is registered</strong> you should shortly
         receive a message with a link that will let you change your password.
       </p>
-      <Button className='secondary' onClick={() => push('/login')}>Back to login</Button>
+      <div className="footer">
+        <Button
+          className="toolbar-button-medium primary"
+          onClick={() => (window.location.href = stroomUiUrl)}>
+          Back to Stroom
+        </Button>
+      </div>
     </div>
   );
 };
