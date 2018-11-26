@@ -34,12 +34,15 @@ const ValidationSchema = Yup.object().shape({
 
 const enhance = compose(
   connect(
-    ({password: {isSubmitting}}) => ({isSubmitting}),
+    ({password: {isSubmitting}, config: {stroomUiUrl}}) => ({
+      isSubmitting,
+      stroomUiUrl,
+    }),
     {push, onSubmit},
   ),
 );
 
-const ResetPasswordRequest = ({isSubmitting, onSubmit, push}) => {
+const ResetPasswordRequest = ({isSubmitting, onSubmit, stroomUiUrl}) => {
   return (
     <Formik
       enableReinitialize={true}
@@ -84,9 +87,9 @@ const ResetPasswordRequest = ({isSubmitting, onSubmit, push}) => {
                   Send
                 </Button>
                 <Button
-                  className="toolbar-button-small secondary"
-                  onClick={() => push('/login')}>
-                  Back to login
+                  className="toolbar-button-medium secondary"
+                  onClick={() => (window.location.href = stroomUiUrl)}>
+                  Back to Stroom
                 </Button>
               </div>
             </div>
