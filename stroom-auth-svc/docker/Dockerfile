@@ -37,6 +37,7 @@ ENTRYPOINT ["/sbin/tini", "--", "/stroom-auth-service/docker-entrypoint.sh"]
 # Run the app
 CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar stroom-auth-service-all.jar server config.yml"]
 
+# curl is required for the docker healthcheck
 # su-exec required for running stroom as not-root user
 # tini required for process control in the entrypoint
 # add auth:auth user:group. Use id 1000 (for want of an id to use) as this is
@@ -45,6 +46,7 @@ CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar str
 # Ensure we have all the dirs we need
 # Chown everything to the auth user
 RUN apk add --no-cache \
+        curl \
         su-exec \
         tini && \
     addgroup -g 1000 -S auth && \
