@@ -123,8 +123,8 @@ email:
     host: ${EMAIL_SMTP_HOST:- smtp.gmail.com}
     port: ${EMAIL_SMTP_PORT:- 587}
     transport: ${EMAIL_SMTP_TRANSPORT:- TLS} # Possible values: TLS, SSL, plain. Defaults to plain if unspecified.
-    username: ${EMAIL_SMTP_USERNAME:-jc064522@gmail.com}
-    password: ${EMAIL_SMTP_PASSWORD:-lrklndknnxdefhpv}
+    username: ${EMAIL_SMTP_USERNAME:-<email username>}
+    password: ${EMAIL_SMTP_PASSWORD:-<email password>}
 
 passwordIntegrityChecks:
   disableInactiveNewAccountAfterXDays: ${DISABLE_INACTIVE_NEW_ACCOUNT_AFTER_X_DAYS:- 30}

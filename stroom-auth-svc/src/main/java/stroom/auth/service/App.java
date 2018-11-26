@@ -39,6 +39,7 @@ import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.Configuration;
 import org.jose4j.jwt.consumer.JwtConsumer;
+import stroom.auth.EmailSender;
 import stroom.auth.PasswordIntegrityCheckTask;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
@@ -115,7 +116,7 @@ public final class App extends Application<Config> {
         // Now we can configure everything else
         registerResources(environment);
         registerExceptionMappers(environment);
-        registerHealthChecks(environment);
+        registerHealthChecks(environment, injector.getInstance(EmailSender.class));
         configureSessionHandling(environment);
         configureCors(environment);
         schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
@@ -169,8 +170,9 @@ public final class App extends Application<Config> {
         environment.jersey().register(injector.getInstance(NoSuchUserExceptionMapper.class));
     }
 
-    private void registerHealthChecks(Environment environment) {
+    private void registerHealthChecks(Environment environment, EmailSender emailSender){
         environment.healthChecks().register(LogLevelInspector.class.getName(), new LogLevelInspector());
+        environment.healthChecks().register(EmailHealthCheck.class.getName(), new EmailHealthCheck(emailSender));
     }
 
     private static void configureAuthentication(JwtConsumer jwtConsumer, Environment environment) {
