@@ -405,7 +405,6 @@ export const changePassword = values => {
 
 export const resetPassword = values => {
   return (dispatch, getState) => {
-    const oldPassword = values.oldPassword;
     const newPassword = values.password;
     const jwsToken = getState().login.token;
 
@@ -417,7 +416,7 @@ export const resetPassword = values => {
       },
       method: 'post',
       mode: 'cors',
-      body: JSON.stringify({newPassword, oldPassword}),
+      body: JSON.stringify({newPassword}),
     })
       .then(getJsonBody)
       .then(response => {

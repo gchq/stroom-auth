@@ -34,7 +34,7 @@ const ValidationSchema = Yup.object().shape({
 
 const enhance = compose(
   connect(
-    ({password:{isSubmitting}}) => ({isSubmitting}),
+    ({password: {isSubmitting}}) => ({isSubmitting}),
     {push, onSubmit},
   ),
 );
@@ -80,7 +80,7 @@ const ResetPasswordRequest = ({isSubmitting, onSubmit, push}) => {
                   className="toolbar-button-small primary"
                   type="submit"
                   disabled={isPristine || hasErrors}
-                isLoading={isSubmitting}>
+                  isLoading={isSubmitting}>
                   Send
                 </Button>
                 <Button
