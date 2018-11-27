@@ -14,91 +14,106 @@
  * limitations under the License.
  */
 
-import React from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { NavLink } from 'react-router-dom'
+import React from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {NavLink} from 'react-router-dom';
+import {compose} from 'recompose';
+import Card from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
+import Avatar from 'material-ui/Avatar';
+import {Formik, Form, Field, ErrorMessage} from 'formik';
+import {TextField} from 'redux-form-material-ui';
+import * as Yup from 'yup';
 
-import Card from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-import Avatar from 'material-ui/Avatar'
+import Button from '../Button';
+import {hasAnyProps} from '../../lang';
+import './Login.css';
+import '../Layout.css';
+import icon from '../../icon.png';
+import {required} from '../../validations';
+import {login as onSubmit} from '../../modules/login';
 
-import { Field, reduxForm } from 'redux-form'
-import { TextField } from 'redux-form-material-ui'
+const LoginValidationSchema = Yup.object().shape({
+  email: Yup.string().required('Required'),
+  password: Yup.string().required('Required'),
+});
 
-import './Login.css'
-import '../Layout.css'
-import icon from '../../icon.png'
-import { required } from '../../validations'
-import { login as onSubmit } from '../../modules/login'
+const enhance = compose(
+  connect(
+    ({config: {allowPasswordResets}}) => ({allowPasswordResets}),
+    {onSubmit},
+  ),
+);
 
-class LoginForm extends React.Component {
-
-  render() {
-    const { handleSubmit, pristine, submitting, allowPasswordResets } = this.props
-    return (
-      <div className='content-floating-without-appbar'>
-        <Card className='Login-card'>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <div className='LoginForm-iconContainer'>
-                <Avatar
-                  className='LoginForm-icon'
-                  src={icon}
-                  size={100}
+const LoginForm = ({
+  handleSubmit,
+  pristine,
+  submitting,
+  allowPasswordResets,
+  onSubmit,
+}) => {
+  return (
+    <Formik
+      onSubmit={onSubmit}
+      initialValues={{email: '', password: ''}}
+      validationSchema={LoginValidationSchema}>
+      {({errors, touched, submitForm, isSubmitting, status}) => {
+        const isPristine = !hasAnyProps(touched);
+        const hasErrors = hasAnyProps(errors);
+        return (
+          <div className="content-floating-without-appbar">
+            <Card className="Login-card">
+              <Form>
+                <div>
+                  <div className="LoginForm-iconContainer">
+                    <Avatar className="LoginForm-icon" src={icon} size={100} />
+                  </div>
+                  <div>
+                    <label>Email</label>
+                    <Field name="email" autoFocus />
+                    <ErrorMessage
+                      name="email"
+                      render={msg => (
+                        <div className="validation-error">{msg}</div>
+                      )}
+                    />
+                  </div>
+                  <label>Password</label>
+                  <Field name="password" type="password" />
+                  <ErrorMessage
+                    name="password"
+                    render={msg => (
+                      <div className="validation-error">{msg}</div>
+                    )}
                   />
-              </div>
-              <div>
-                <Field
-                  name='email'
-                  component={TextField}
-                  hintText='Email'
-                  validate={[required]}
-                  className='LoginForm-input'
-                  autoFocus
-                />
-              </div>
-              <Field
-                name='password'
-                component={TextField}
-                hintText='Password'
-                validate={[required]}
-                className='LoginForm-input'
-                type='password'
-                />
-              <br />
-              <RaisedButton
-                primary
-                disabled={pristine || submitting}
-                type='submit'
-                fullWidth
-                label='Sign in' />
-              <br />
-              { allowPasswordResets ? (
-                <NavLink to={'/resetPasswordRequest'}><p className='LoginForm-resetPasswordText'>Reset password?</p></NavLink>
-                ) : (undefined)
-              }
-            </div>
-          </form>
-        </Card>
-      </div>
-    )
-  }
-}
+                  <br />
+                  <Button
+                    className="toolbar-button-large primary"
+                    disabled={isPristine || hasErrors}
+                    type="submit"
+                  isLoading={isSubmitting}>
+                    Sign in
+                  </Button>
+                  <p>{status}</p>
+                  <br />
+                  {allowPasswordResets ? (
+                    <NavLink to={'/resetPasswordRequest'}>
+                      <p className="LoginForm-resetPasswordText">
+                        Reset password?
+                      </p>
+                    </NavLink>
+                  ) : (
+                    undefined
+                  )}
+                </div>
+              </Form>
+            </Card>
+          </div>
+        );
+      }}
+    </Formik>
+  );
+};
 
-const ReduxLoginForm = reduxForm({
-  form: 'LoginForm'
-})(LoginForm)
-
-const mapStateToProps = state => ({
-    allowPasswordResets: state.config.allowPasswordResets
-})
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-  onSubmit
-}, dispatch)
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReduxLoginForm)
+export default enhance(LoginForm);

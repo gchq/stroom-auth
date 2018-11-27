@@ -14,58 +14,45 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {compose, withProps, lifecycle, withState} from 'recompose';
+import queryString from 'query-string';
 
-import queryString from 'query-string'
+import LoginUI from './LoginUI';
+import {
+  changeRedirectUrl,
+  changeClientIdUrl,
+  changeSessionId,
+} from '../../modules/login';
 
-import LoginUI from './LoginUI'
-import { changeRedirectUrl, changeClientIdUrl, changeSessionId } from '../../modules/login'
+const enhance = compose(
+  connect(
+    ({authentication: {idToken}}) => ({idToken}),
+    {changeRedirectUrl, changeClientIdUrl, changeSessionId},
+  ),
+  lifecycle({
+    componentWillMount() {
+      const {changeRedirectUrl, changeClientIdUrl, changeSessionId} = this.props;
+      const {location} = this.props;
 
-class Login extends Component {
-  componentWillMount () {
-    const queryParams = queryString.parse(this.props.location.search)
-    const redirectUrl = queryParams['redirectUrl']
-    const clientId = queryParams['clientId']
-    const sessionId = queryParams['sessionId']
-    this.context.store.dispatch(changeRedirectUrl(redirectUrl))
-    this.context.store.dispatch(changeClientIdUrl(clientId))
-    this.context.store.dispatch(changeSessionId(sessionId))
-  }
+      const queryParams = queryString.parse(location.search);
+      const redirectUrl = queryParams['redirectUrl'];
+      const clientId = queryParams['clientId'];
+      const sessionId = queryParams['sessionId'];
 
-  render () {
-    const { idToken } = this.props
-    return (
-      <div>
-        {idToken ? (
-          <Redirect to={'/login'} />
-        ) : (
-          <LoginUI />
-        )}
-      </div>
-    )
-  }
-}
+      changeRedirectUrl(redirectUrl);
+      changeClientIdUrl(clientId);
+      changeSessionId(sessionId);
+    },
+  }),
+);
 
-Login.PropTypes = {
-  token: PropTypes.string.isRequired
-}
+const Login = ({idToken}) => {
+  return <div>{idToken ? <Redirect to={'/login'} /> : <LoginUI />}</div>;
+};
 
-Login.contextTypes = {
-  store: PropTypes.object.isRequired
-}
-
-const mapStateToProps = state => ({
-  idToken: state.authentication.idToken
-})
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-}, dispatch)
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login)
+export default enhance(Login);
