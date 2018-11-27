@@ -23,7 +23,6 @@ import * as Yup from 'yup';
 
 import Button from '../Button';
 import '../Layout.css';
-import {required} from '../../validations';
 import {submitPasswordChangeRequest as onSubmit} from '../../modules/user';
 import {hasAnyProps} from '../../lang';
 import '../../styles/index.css';

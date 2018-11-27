@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {SubmissionError} from 'redux-form';
 import Cookies from 'cookies-js';
 
 export const EMAIL_CHANGE = 'login/EMAIL_CHANGE';

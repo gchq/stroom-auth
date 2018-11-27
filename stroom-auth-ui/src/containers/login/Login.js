@@ -15,15 +15,11 @@
  */
 
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {NavLink} from 'react-router-dom';
 import {compose, lifecycle} from 'recompose';
-import Card from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
 import Avatar from 'material-ui/Avatar';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
-import {TextField} from 'redux-form-material-ui';
 import * as Yup from 'yup';
 import queryString from 'query-string';
 
@@ -32,7 +28,6 @@ import {hasAnyProps} from '../../lang';
 import './Login.css';
 import '../Layout.css';
 import icon from '../../icon.png';
-import {required} from '../../validations';
 import {login as onSubmit} from '../../modules/login';
 
 import {
