@@ -33,26 +33,23 @@ const ValidationSchema = Yup.object().shape({
 
 const enhance = compose(
   connect(
-    ({password: {isSubmitting}, config: {stroomUiUrl}}) => ({
-      isSubmitting,
+    ({config: {stroomUiUrl}}) => ({
       stroomUiUrl,
     }),
     {push, onSubmit},
   ),
 );
 
-const ResetPasswordRequest = ({isSubmitting, onSubmit, stroomUiUrl}) => {
+const ResetPasswordRequest = ({onSubmit, stroomUiUrl}) => {
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
         email: '',
       }}
-      onSubmit={(values, actions) => {
-        onSubmit(values);
-      }}
+      onSubmit={onSubmit}
       validationSchema={ValidationSchema}>
-      {({errors, touched, submitForm}) => {
+      {({errors, touched, submitForm, isSubmitting}) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (

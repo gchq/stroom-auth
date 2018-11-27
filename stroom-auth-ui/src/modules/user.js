@@ -19,7 +19,6 @@ import {push} from 'react-router-redux';
 import {HttpError} from '../ErrorTypes';
 import {handleErrors, getBody, getJsonBody} from './fetchFunctions';
 import {performUserSearch, changeSelectedRow} from './userSearch';
-import {toggleResetIsSubmitting} from './password';
 
 export const CREATE_REQUEST = 'user/CREATE_REQUEST';
 export const CREATE_RESPONSE = 'user/CREATE_RESPONSE';
@@ -438,9 +437,8 @@ export const resetPassword = values => {
   };
 };
 
-export const submitPasswordChangeRequest = formData => {
+export const submitPasswordChangeRequest = (formData, {setSubmitting}) => {
   return (dispatch, getState) => {
-      dispatch(toggleResetIsSubmitting());
     const authenticationServiceUrl = `${
       getState().config.authenticationServiceUrl
     }/reset/${formData.email}`;
@@ -454,7 +452,7 @@ export const submitPasswordChangeRequest = formData => {
       method: 'get',
       mode: 'cors',
     }).then(() => {
-        dispatch(toggleResetIsSubmitting());
+      setSubmitting(false);
       dispatch(push('/confirmPasswordResetEmail'));
     });
   };

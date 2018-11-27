@@ -28,7 +28,6 @@ import userSearch from './userSearch';
 import token from './token';
 import tokenSearch from './tokenSearch';
 import config from './config';
-import password from './password';
 
 export default combineReducers({
   routing: routerReducer,
@@ -40,6 +39,5 @@ export default combineReducers({
   authentication,
   authorisation,
   config,
-  password,
   form: formReducer,
 });
