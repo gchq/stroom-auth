@@ -295,35 +295,42 @@ public final class AuthenticationResource {
                 LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
                 userDao.incrementLoginFailures(credentials.getEmail());
                 stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
-                throw new UnauthorisedException("Invalid credentials");
+
+                return status(Status.OK)
+                        .entity(new LoginResponse(false, "Invalid credentials", null)).build();
             case GOOD_CREDENTIALS:
                 String redirectionUrl = processSuccessfulLogin(session, credentials, sessionId);
                 stroomEventLoggingService.successfulLogin(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
-                        .entity(redirectionUrl)
+                        .entity(new LoginResponse(true, "", redirectionUrl))
                         .build();
             case USER_DOES_NOT_EXIST:
                 // We don't want to let the user know the account they tried to log in with doesn't exist.
                 // If we did we'd be revealing the presence or absence of an account or email address and
                 // we don't want to do this.
                 stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
-                throw new UnauthorisedException("Invalid credentials");
+                return status(Status.OK)
+                        .entity(new LoginResponse(false, "Invalid credentials", null)).build();
             case LOCKED_BAD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
-                throw new UnauthorisedException("Invalid credentials");
+                return status(Status.OK)
+                        .entity(new LoginResponse(false, "Invalid credentials", null)).build();
             case LOCKED_GOOD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
-                throw new UnauthorisedException("This account is locked. Please contact your administrator.");
+                return status(Status.OK)
+                        .entity(new LoginResponse(false, "This account is locked. Please contact your administrator.", null)).build();
             case DISABLED_BAD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
-                throw new UnauthorisedException("Invalid credentials");
+                return status(Status.OK)
+                        .entity(new LoginResponse(false, "Invalid credentials", null)).build();
             case DISABLED_GOOD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
-                throw new UnauthorisedException("This account is disabled. Please contact your administrator.");
+                return status(Status.OK)
+                        .entity(new LoginResponse(false, "This account is disabled. Please contact your administrator.", null)).build();
             default:
                 String errorMessage = String.format("%s does not support a LoginResult of %s",
                         this.getClass().getSimpleName(), loginResult.toString());
