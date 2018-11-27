@@ -14,8 +14,23 @@
  * limitations under the License.
  */
 
-.Unauthorised {
-    width: 400px;
-    padding: 15px;
-    border: 1px solid lightgrey;
-}
+import React from 'react';
+
+import './Unauthorised.css';
+import '../Layout.css';
+
+const Unauthorised = () => {
+  return (
+    <div className="content-floating-without-appbar">
+      <div className="Unauthorised">
+        <h3>Unauthorised!</h3>
+        <p>
+          I'm afraid you're not authorised to see this page. If you think you
+          should be able to please contact an administrator.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Unauthorised;

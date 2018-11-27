@@ -18,7 +18,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {NavLink} from 'react-router-dom';
 import {compose, lifecycle} from 'recompose';
-import Avatar from 'material-ui/Avatar';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
 import queryString from 'query-string';
@@ -91,7 +90,7 @@ const LoginForm = ({
               <Form>
                 <div className="Login__content">
                   <div className="Login__icon-container">
-                    <Avatar src={icon} size={100} />
+                    <img src={icon} title="Stroom logo" />
                   </div>
                   <div className="field-container vertical">
                     <div className="horizontal-label-and-validation-container">

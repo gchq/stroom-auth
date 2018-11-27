@@ -31,6 +31,12 @@
   margin-bottom: 15px;
 }
 
+.Login__icon-container img {
+  width: 125px;
+  height: 125px;
+  border-radius: 75px;
+}
+
 .Login__reset-password {
   font-size: 9pt;
 }
@@ -56,3 +62,4 @@
 .Login__status-container a {
   align-self: flex-end;
 }
+
