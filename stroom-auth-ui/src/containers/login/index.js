@@ -13,46 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Login from './Login';
 
-import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
-import PropTypes from 'prop-types';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {compose, withProps, lifecycle, withState} from 'recompose';
-import queryString from 'query-string';
-
-import LoginUI from './LoginUI';
-import {
-  changeRedirectUrl,
-  changeClientIdUrl,
-  changeSessionId,
-} from '../../modules/login';
-
-const enhance = compose(
-  connect(
-    ({authentication: {idToken}}) => ({idToken}),
-    {changeRedirectUrl, changeClientIdUrl, changeSessionId},
-  ),
-  lifecycle({
-    componentWillMount() {
-      const {changeRedirectUrl, changeClientIdUrl, changeSessionId} = this.props;
-      const {location} = this.props;
-
-      const queryParams = queryString.parse(location.search);
-      const redirectUrl = queryParams['redirectUrl'];
-      const clientId = queryParams['clientId'];
-      const sessionId = queryParams['sessionId'];
-
-      changeRedirectUrl(redirectUrl);
-      changeClientIdUrl(clientId);
-      changeSessionId(sessionId);
-    },
-  }),
-);
-
-const Login = ({idToken}) => {
-  return <div>{idToken ? <Redirect to={'/login'} /> : <LoginUI />}</div>;
-};
-
-export default enhance(Login);
+export default Login;

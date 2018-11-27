@@ -14,28 +14,45 @@
  * limitations under the License.
  */
 
-.Login-card {
-    width: 300px;
-    padding: 15px;
-}
-
-h4 {
-    text-align: center;
+.Login__container {
+  width: 300px;
+  padding: 15px;
+  border: 1px solid lightgrey;
 }
 
 /* We need to force the width on the input otherwise it'll be a bit short */
 .LoginForm-input {
-    width: 100% !important;
+  width: 100% !important;
 }
 
-/* Use Flex to center the avatar icon */
-.LoginForm-iconContainer {
-	display: flex;
-}
-.LoginForm-icon {
-    margin: auto;
+.Login__icon-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
 }
 
-.LoginForm-resetPasswordText {
-    font-size:9pt;
+.Login__reset-password {
+  font-size: 9pt;
+}
+
+.Login__content .field-container {
+  width: 100% !important;
+}
+
+.Login__content .field-container input {
+  width: auto; 
+}
+
+.Login__actions {
+  width: 100%;
+  padding: 15px 0 2px 0;
+}
+
+.Login__status-container {
+  display:flex;
+  justify-content: space-between;
+}
+
+.Login__status-container a {
+  align-self: flex-end;
 }

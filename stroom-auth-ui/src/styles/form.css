@@ -96,6 +96,11 @@ textarea {
   margin: 5px;
 }
 
+.horizontal-label-and-validation-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .label-container {
   /* A bit of padding here helps align the label with the input. */
   padding-bottom: 10px;
