@@ -21,7 +21,6 @@ import {compose} from 'recompose';
 
 import './App.css';
 import Login from '../../containers/login';
-import Logout from '../../containers/logout';
 import LoggedOut from '../../containers/loggedOut';
 import {
   UserCreate,
@@ -101,7 +100,7 @@ const App = ({
 
             {/* Routes not requiring authentication */}
             <Route exact path={'/login'} component={Login} />
-            <Route exact path={'/logout'} component={Logout} />
+            <Route exact path={'/logout'} component={LoggedOut} />
             <Route exact path={'/loggedOut'} component={LoggedOut} />
             <Route exact path={'/newUser'} component={NewUser} />
             <Route exact path={'/resetPassword'} component={ResetPassword} />

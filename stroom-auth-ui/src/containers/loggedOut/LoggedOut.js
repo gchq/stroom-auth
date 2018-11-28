@@ -15,18 +15,24 @@
  */
 
 import React from 'react';
-import {compose} from 'recompose';
+import {compose, lifecycle} from 'recompose';
 import {connect} from 'react-redux';
 
 import Button from '../Button';
+import {logout} from '../../modules/login';
 import './LoggedOut.css';
 import '../Layout.css';
 
 const enhance = compose(
   connect(
     ({config: {stroomUiUrl}}) => ({stroomUiUrl}),
-    {},
+    {logout},
   ),
+  lifecycle({
+    componentWillMount() {
+      this.props.logout();
+    },
+  }),
 );
 
 const LoggedOut = ({stroomUiUrl}) => {

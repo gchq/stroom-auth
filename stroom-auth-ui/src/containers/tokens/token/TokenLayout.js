@@ -14,43 +14,41 @@
  * limitations under the License.
  */
 
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { bindActionCreators } from "redux";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import {bindActionCreators} from 'redux';
 
-import TokenSearch from "../tokenSearch";
-import TokenCreate from "../tokenCreate";
-import TokenEdit from "../tokenEdit";
-import {
-  deleteSelectedToken,
-} from "../../../modules/token";
+import TokenSearch from '../tokenSearch';
+import TokenCreate from '../tokenCreate';
+import TokenEdit from '../tokenEdit';
+import {deleteSelectedToken} from '../../../modules/token';
 
-import "../../../styles/index.css";
-import "../../../styles/toolbar-small.css";
-import "../../../styles/toggle-small.css";
+import '../../../styles/index.css';
+import '../../../styles/toolbar-small.css';
+import '../../../styles/toggle-small.css';
 
 class TokenLayout extends Component {
   constructor() {
     super();
     this.state = {
-      isHelpDialogOpen: false
+      isHelpDialogOpen: false,
     };
   }
 
   handleHelpDialogOpen() {
-    this.setState({ isHelpDialogOpen: true });
+    this.setState({isHelpDialogOpen: true});
   }
 
   handleHelpDialogClose() {
-    this.setState({ isHelpDialogOpen: false });
+    this.setState({isHelpDialogOpen: false});
   }
 
   render() {
-    const { show, showAlert, alertText } = this.props;
-    const showSearch = show === "search";
-    const showCreate = show === "create";
-    const showEdit = show === "edit";
+    const {show} = this.props;
+    const showSearch = show === 'search';
+    const showCreate = show === 'create';
+    const showEdit = show === 'edit';
     return (
       <div className="Layout-main">
         <div className="User-content" id="User-content">
@@ -68,7 +66,7 @@ class TokenLayout extends Component {
 }
 
 TokenLayout.contextTypes = {
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -81,10 +79,10 @@ const mapDispatchToProps = dispatch =>
     {
       deleteSelectedToken,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(TokenLayout);
