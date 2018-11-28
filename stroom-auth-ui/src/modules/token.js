@@ -21,7 +21,6 @@ import {performTokenSearch, changeSelectedRow} from './tokenSearch';
 import {performUserSearch} from './userSearch';
 
 export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER';
-export const TOGGLE_ALERT_VISIBILITY = 'token/TOGGLE_ALERT_VISIBILITY';
 export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS =
   'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS';
 export const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN';
@@ -31,8 +30,6 @@ export const TOGGLE_STATE = 'token/TOGGLE_STATE';
 export const TOGGLE_IS_CREATING = 'token/TOGGLE_IS_CREATING';
 
 const initialState = {
-  showAlert: false,
-  alertText: '',
   matchingAutoCompleteResults: [],
   errorMessage: '',
   isCreating: false,
@@ -44,14 +41,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         show: action.show,
-      };
-
-    case TOGGLE_ALERT_VISIBILITY:
-      const showAlert = !state.showAlert;
-      return {
-        ...state,
-        showAlert: showAlert,
-        alertText: action.alertText,
       };
 
     case UPDATE_MATCHING_AUTO_COMPLETE_RESULTS:
@@ -102,13 +91,6 @@ export function changeVisibleContainer(container) {
   };
 }
 
-export function toggleAlertVisibility(alertText) {
-  return {
-    type: TOGGLE_ALERT_VISIBILITY,
-    alertText: alertText,
-  };
-}
-
 function showCreateError(message) {
   return {
     type: SHOW_ERROR_MESSAGE,
@@ -152,7 +134,6 @@ export const deleteSelectedToken = tokenId => {
       .then(() => {
         dispatch(changeSelectedRow(tokenId));
         dispatch(performTokenSearch(jwsToken));
-        dispatch(toggleAlertVisibility('Token has been deleted'));
       })
       .catch(error => handleErrors(error, dispatch, jwsToken));
   };
@@ -281,10 +262,7 @@ export function toggleEnabledState() {
         dispatch(toggleState());
       })
       .catch(() => {
-        dispatch(
-          toggleAlertVisibility('Unable to change the state of this token!'),
-        );
-        // TODO Display snackbar with an error message
+        // TODO Show the user an error
       });
   };
 }

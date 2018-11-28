@@ -19,14 +19,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 
-import Snackbar from "material-ui/Snackbar";
-
 import TokenSearch from "../tokenSearch";
 import TokenCreate from "../tokenCreate";
 import TokenEdit from "../tokenEdit";
 import {
   deleteSelectedToken,
-  toggleAlertVisibility
 } from "../../../modules/token";
 
 import "../../../styles/index.css";
@@ -50,7 +47,7 @@ class TokenLayout extends Component {
   }
 
   render() {
-    const { show, showAlert, alertText, toggleAlertVisibility } = this.props;
+    const { show, showAlert, alertText } = this.props;
     const showSearch = show === "search";
     const showCreate = show === "create";
     const showEdit = show === "edit";
@@ -65,12 +62,6 @@ class TokenLayout extends Component {
           {showCreate ? <TokenCreate /> : undefined}
           {showEdit ? <TokenEdit /> : undefined}
         </div>
-        <Snackbar
-          open={showAlert}
-          message={alertText}
-          autoHideDuration={4000}
-          onRequestClose={() => toggleAlertVisibility("")}
-        />
       </div>
     );
   }
@@ -83,15 +74,12 @@ TokenLayout.contextTypes = {
 const mapStateToProps = state => ({
   show: state.token.show,
   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
-  showAlert: state.token.showAlert,
-  alertText: state.token.alertText
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       deleteSelectedToken,
-      toggleAlertVisibility
     },
     dispatch
   );

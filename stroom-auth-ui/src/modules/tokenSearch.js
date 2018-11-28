@@ -15,7 +15,6 @@
  */
 import {HttpError} from '../ErrorTypes';
 import {handleErrors, getJsonBody} from './fetchFunctions';
-import {toggleAlertVisibility} from './token';
 
 export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER';
 export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS';
@@ -263,10 +262,7 @@ export const setEnabledStateOnToken = (tokenId, isEnabled) => {
     )
       .then(handleStatus)
       .catch(() => {
-        dispatch(
-          toggleAlertVisibility('Unable to change the state of this token!'),
-        );
-        // TODO Display snackbar with an error message
+        // TODO Display alert to the user that changing the state failed 
       });
   };
 };

@@ -17,7 +17,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import Snackbar from 'material-ui/Snackbar';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
@@ -33,10 +32,8 @@ import {OnCopy, ByCopy} from '../../auditCopy';
 
 const enhance = compose(
   connect(
-    ({token: {lastReadToken}, user: {showAlert, alertText}}) => ({
+    ({token: {lastReadToken}}) => ({
       token: lastReadToken,
-      showAlert,
-      alertText,
     }),
     {
       toggleEnabledState,
@@ -46,20 +43,10 @@ const enhance = compose(
   lifecycle({
     componentDidMount() {},
   }),
-  //  branch(({token}) => !token, renderComponent(() => <div>Loading...</div>)),
 );
 
 const TokenEditUi = props => {
-  const {
-    token,
-    showAlert,
-    alertText,
-    handleSubmit,
-    toggleAlertVisibility,
-    form,
-    toggleEnabledState,
-    push,
-  } = props;
+  const {token, handleSubmit, form, toggleEnabledState, push} = props;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -123,12 +110,6 @@ const TokenEditUi = props => {
           </div>
         </div>
       )}
-      <Snackbar
-        open={showAlert}
-        message={alertText}
-        autoHideDuration={4000}
-        onRequestClose={() => toggleAlertVisibility('')}
-      />
     </form>
   );
 };
