@@ -20,9 +20,6 @@ import { Route, withRouter, Switch, BrowserRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
-
 import './App.css'
 import Login from '../../containers/login'
 import Logout from '../../containers/logout'
