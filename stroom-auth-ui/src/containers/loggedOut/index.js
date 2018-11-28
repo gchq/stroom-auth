@@ -14,33 +14,6 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react'
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
+import LoggedOut from './LoggedOut';
 
-import Card from 'material-ui/Card'
-
-import './LoggedOut.css'
-import '../Layout.css'
-
-class LoggedOut extends Component {
-  render () {
-    return (
-      <div className='content-floating-without-appbar'>
-        <Card className='LoggedOut-card'>
-          <h3>You have been logged out</h3>
-          <p>Return to Stroom if you would like to log back in.</p>
-        </Card>
-      </div>
-    )
-  }
-}
-
-const mapStateToProps = state => ({})
-
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoggedOut)
+export default LoggedOut;

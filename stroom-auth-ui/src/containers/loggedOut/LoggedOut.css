@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-.LoggedOut-card {
-    width: 400px;
-    padding: 15px;
+.LoggedOut {
+  width: 400px;
+  padding: 15px;
+  border: 1px solid lightgrey;
+}
+
+.LoggedOut__actions {
+  display: flex;
+  justify-content: flex-end;
 }

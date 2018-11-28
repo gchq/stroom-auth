@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-.PathNotFound {
-    width: 300px;
-    padding: 15px;
-    border: 1px solid lightgrey;
-}
+import React from 'react';
+
+import './PathNotFound.css';
+import '../Layout.css';
+
+const PathNotFound = () => {
+  return (
+    <div className="content-floating-without-appbar">
+      <div className="PathNotFound">
+        <h3>Page not found!</h3>
+        <p>There's nothing here I'm afraid.</p>
+      </div>
+    </div>
+  );
+};
+
+export default PathNotFound;
