@@ -19,6 +19,7 @@ import React from 'react';
 import './Unauthorised.css';
 import '../Layout.css';
 
+const expiredTokenCopy = "It's likely that your session has timed-out. Would you like to try logging in again?";
 const Unauthorised = () => {
   return (
     <div className="content-floating-without-appbar">

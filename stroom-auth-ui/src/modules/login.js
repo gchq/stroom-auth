@@ -21,7 +21,6 @@ export const PASSWORD_CHANGE = 'login/PASSWORD_CHANGE';
 export const TOKEN_CHANGE = 'login/TOKEN_CHANGE';
 export const TOKEN_DELETE = 'login/TOKEN_DELETE';
 export const SHOW_LOADER = 'login/SHOW_LOADER';
-export const SHOW_UNAUTHORIZED_DIALOG = 'login/SHOW_UNAUTHORIZED_DIALOG';
 export const CHANGE_LOGGED_IN_USER = 'login/CHANGE_LOGGED_IN_USER';
 export const SET_REDIRECT_URL = 'login/SET_REDIRECT_URL';
 export const SET_CLIENT_ID = 'login/SET_CLIENT_ID';
@@ -30,7 +29,6 @@ export const SET_SESSION_ID = 'login/SET_SESSION_ID';
 const initialState = {
   token: '',
   showLoader: false,
-  showUnauthorizedDialog: false,
   loggedInUserEmail: undefined,
 };
 
@@ -56,12 +54,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         showLoader: action.showLoader,
-      };
-
-    case SHOW_UNAUTHORIZED_DIALOG:
-      return {
-        ...state,
-        showUnauthorizedDialog: action.showUnauthorizedDialog,
       };
 
     case CHANGE_LOGGED_IN_USER:
@@ -122,26 +114,12 @@ export function showLoader(showLoader) {
   };
 }
 
-export const requestWasUnauthorized = showUnauthorizedDialog => {
-  return {
-    type: SHOW_UNAUTHORIZED_DIALOG,
-    showUnauthorizedDialog,
-  };
-};
-
 export function storeLoggedInUser(userEmail) {
   return {
     type: CHANGE_LOGGED_IN_USER,
     userEmail,
   };
 }
-
-export const handleSessionTimeout = () => {
-  return dispatch => {
-    dispatch(logout());
-    dispatch(requestWasUnauthorized(false));
-  };
-};
 
 /** This is the URL to redirect to after logging in, e.g. Stroom's location. */
 export const changeRedirectUrl = redirectUrl => {

@@ -34,7 +34,6 @@ import {ResetPassword, ChangePassword, ConfirmPasswordResetEmail, ResetPasswordR
 import Unauthorised from '../../containers/unauthorised'
 import AuthenticationRequest from '../../startup/authentication/AuthenticationRequest'
 import HandleAuthenticationResponse from '../../startup/authentication/HandleAuthenticationResponse'
-import { handleSessionTimeout } from '../../modules/login'
 
 class App extends Component {
   isLoggedIn () {
@@ -127,20 +126,6 @@ class App extends Component {
             </Switch>
           </div>
         </main>
-        <Dialog
-          title='Unauthorised!'
-          actions={[
-            <FlatButton
-              label='Log in again'
-              primary
-              onClick={this.props.handleSessionTimeout}
-            />
-          ]}
-          modal
-          open={this.props.showUnauthorizedDialog}
-        >
-          It's likely that your session has timed-out. Would you like to try logging in again?
-        </Dialog>
       </div>
     )
   }
@@ -155,12 +140,10 @@ App.contextTypes = {
 
 App.propTypes = {
   idToken: PropTypes.string.isRequired,
-  showUnauthorizedDialog: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
   idToken: state.authentication.idToken,
-  showUnauthorizedDialog: state.login.showUnauthorizedDialog,
   advertisedUrl: state.config.advertisedUrl,
   appClientId: state.config.appClientId,
   authenticationServiceUrl: state.config.authenticationServiceUrl,
@@ -168,7 +151,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  handleSessionTimeout
 }, dispatch)
 
 export default withRouter(connect(
