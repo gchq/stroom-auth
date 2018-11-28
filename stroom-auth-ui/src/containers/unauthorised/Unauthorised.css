@@ -15,7 +15,12 @@
  */
 
 .Unauthorised {
-    width: 400px;
-    padding: 15px;
-    border: 1px solid lightgrey;
+  width: 400px;
+  padding: 15px;
+  border: 1px solid lightgrey;
+}
+
+.Unauthorised__actions {
+  display: flex;
+  justify-content: flex-end;
 }

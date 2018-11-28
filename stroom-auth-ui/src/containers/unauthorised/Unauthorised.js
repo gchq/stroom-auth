@@ -15,23 +15,59 @@
  */
 
 import React from 'react';
+import queryString from 'query-string';
+import {connect} from 'react-redux';
+import {compose, withState, lifecycle} from 'recompose';
+import {withRouter} from 'react-router';
 
+import Button from '../Button';
 import './Unauthorised.css';
 import '../Layout.css';
 
-const expiredTokenCopy = "It's likely that your session has timed-out. Would you like to try logging in again?";
-const Unauthorised = () => {
+const enhance = compose(
+  connect(
+    ({config: {stroomUiUrl}}) => ({stroomUiUrl}),
+    {},
+  ),
+  withRouter,
+  withState('isExpiredToken', 'setIsExpiredToken', false),
+  lifecycle({
+    componentDidMount() {
+      const query = queryString.parse(this.props.location.search);
+      if (query.reason === 'expired_token') {
+        this.props.setIsExpiredToken(true);
+      }
+      console.log({query});
+    },
+  }),
+);
+
+const Unauthorised = ({isExpiredToken, stroomUiUrl}) => {
   return (
     <div className="content-floating-without-appbar">
       <div className="Unauthorised">
         <h3>Unauthorised!</h3>
-        <p>
-          I'm afraid you're not authorised to see this page. If you think you
-          should be able to please contact an administrator.
-        </p>
+        {isExpiredToken ? (
+          <p>
+            It's likely that your session has timed-out. Would you like to try
+            logging in again?
+          </p>
+        ) : (
+          <p>
+            I'm afraid you're not authorised to see this page. If you think you
+            should be able to please contact an administrator.
+          </p>
+        )}
+        <div className="Unauthorised__actions">
+          <Button
+            className="toolbar-button-medium primary"
+            onClick={() => (window.location.href = stroomUiUrl)}>
+            Back to Stroom
+          </Button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Unauthorised;
+export default enhance(Unauthorised);
