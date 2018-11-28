@@ -31,7 +31,6 @@ import { UserCreate, UserEdit, UserSearch, NewUser } from '../../containers/user
 import { TokenCreate, TokenSearch, TokenEdit } from '../../containers/tokens'
 import PathNotFound from '../../containers/pathNotFound'
 import {ResetPassword, ChangePassword, ConfirmPasswordResetEmail, ResetPasswordRequest} from '../../containers/password'
-import Home from '../../containers/home'
 import Unauthorised from '../../containers/unauthorised'
 import AuthenticationRequest from '../../startup/authentication/AuthenticationRequest'
 import HandleAuthenticationResponse from '../../startup/authentication/HandleAuthenticationResponse'
@@ -74,14 +73,6 @@ class App extends Component {
               <Route exact path={'/Unauthorised'} component={Unauthorised} />
 
               {/* Routes requiring authentication */}
-              <Route exact path={'/'} render={() => (
-                this.isLoggedIn() ? <Home /> : <AuthenticationRequest
-                  referrer='/'
-                  uiUrl={this.props.advertisedUrl}
-                  appClientId={this.props.appClientId}
-                  authenticationServiceUrl={this.props.authenticationServiceUrl} />
-              )} />
-
               <Route exact path={'/userSearch'} render={() => (
                 this.isLoggedIn() ? <UserSearch /> : <AuthenticationRequest
                   referrer='/userSearch'
