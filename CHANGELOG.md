@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [v1.0-beta.13]
+
+* Remove Material UI and replacing with our current styles
+
+* Switch from Redux Form to Formik
+
+* Improve validation for passwords
+
 * Add curl back into the service docker image
 
 ## [v1.0-beta.12]
