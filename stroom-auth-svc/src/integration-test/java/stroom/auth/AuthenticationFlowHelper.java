@@ -18,6 +18,7 @@
 
 package stroom.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -30,6 +31,8 @@ import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
+import stroom.auth.exceptions.UnauthorisedException;
+import stroom.auth.resources.authentication.v1.LoginResponse;
 import stroom.auth.service.ApiClient;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.App;
@@ -38,6 +41,7 @@ import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
 
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,11 +57,11 @@ public class AuthenticationFlowHelper {
 
     private static final String CLIENT_ID = "integrationTestClient";
 
-    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException, MalformedURLException, UnirestException {
+    public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException, IOException, UnirestException {
         return authenticateAs("admin", "admin");
     }
 
-    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException, MalformedURLException, UnirestException {
+    public static String authenticateAs(String userEmail, String password) throws JoseException, ApiException, URISyntaxException, IOException, UnirestException {
         // We have to change the password for admin because otherwise the flow might demand a changepassword --
         // it certainly would in TravisCI.
         HttpResponse changePasswordResponse = Unirest.post("http://localhost:8099/authentication/v1/changePassword")
@@ -153,7 +157,7 @@ public class AuthenticationFlowHelper {
      * <p>
      * The sessionId would be stored in a cookie and a normal relying party would not have to do this.
      */
-    public static String performLogin(String sessionId, String username, String password) throws ApiException, URISyntaxException, MalformedURLException {
+    public static String performLogin(String sessionId, String username, String password) throws ApiException, URISyntaxException, IOException {
         // We need to use UniRest again because we're not a browser and we need to manually add in the cookies.
         Credentials credentials = new Credentials();
         credentials.setEmail(username);
@@ -177,7 +181,12 @@ public class AuthenticationFlowHelper {
             throw new ApiException((String)loginResponse.getBody(), loginResponse.getStatus(), null, null);
         }
 
-        URL postAuthenticationRedirectUrl = new URL((String)loginResponse.getBody());
+        ObjectMapper objectMapper = new ObjectMapper();
+        LoginResponse loginResponseObject = objectMapper.readValue(loginResponse.getBody().toString(), LoginResponse.class);
+        if(!loginResponseObject.isLoginSuccessful()) {
+            throw new UnauthorisedException("Authorisation failed");
+        }
+        URL postAuthenticationRedirectUrl = new URL(loginResponseObject.getRedirectUrl());
 
         // The normally supplied advertised host doesn't work on Travis, so we need to hack the URL so it uses localhost.
         String modifiedPostAuthenticationRedirectUrl = String.format(

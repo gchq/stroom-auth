@@ -18,6 +18,7 @@ package stroom.auth.service.resources;
 
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
+import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.resources.support.Dropwizard_IT;
 
@@ -30,10 +31,10 @@ public class Login_IT extends Dropwizard_IT {
     public void incorrect_credentials_1() throws Exception {
         String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
         try {
-            String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "admin");
-            fail("Expected a 401!");
-        } catch (ApiException e) {
-            assertThat(e.getCode()).isEqualTo(401);
+            AuthenticationFlowHelper.performLogin(sessionId, "BAD", "admin");
+            fail("Expected an UnAuthorisedException!");
+        } catch (UnauthorisedException e) {
+            // Implicit pass
         }
     }
 
@@ -41,10 +42,10 @@ public class Login_IT extends Dropwizard_IT {
     public void incorrect_credentials_2() throws Exception {
         String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
         try {
-            String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "admin", "BAD");
-            fail("Expected a 401!");
-        } catch (ApiException e) {
-            assertThat(e.getCode()).isEqualTo(401);
+            AuthenticationFlowHelper.performLogin(sessionId, "admin", "BAD");
+            fail("Expected an UnAuthorisedException!");
+        } catch (UnauthorisedException e) {
+            // Implicit pass
         }
     }
 
@@ -52,10 +53,10 @@ public class Login_IT extends Dropwizard_IT {
     public void incorrect_credentials_3() throws Exception {
         String sessionId = AuthenticationFlowHelper.sendInitialAuthenticationRequest();
         try {
-            String accessCode = AuthenticationFlowHelper.performLogin(sessionId, "BAD", "BAD");
-            fail("Expected a 401!");
-        } catch (ApiException e) {
-            assertThat(e.getCode()).isEqualTo(401);
+            AuthenticationFlowHelper.performLogin(sessionId, "BAD", "BAD");
+            fail("Expected an UnAuthorisedException!");
+        } catch (UnauthorisedException e) {
+            // Implicit pass
         }
     }
 
