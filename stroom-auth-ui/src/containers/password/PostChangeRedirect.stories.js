@@ -18,6 +18,7 @@ import * as React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action, configureActions} from '@storybook/addon-actions';
 import StoryRouter from 'storybook-react-router';
+import { checkA11y } from '@storybook/addon-a11y';
 
 import PostChangeRedirect from './PostChangeRedirect';
 import library from '../../startup/icons';
@@ -37,5 +38,7 @@ stories.addDecorator(
     },
   ),
 );
+
+stories.addDecorator(checkA11y);
 
 stories.add('basic', () => <PostChangeRedirect />);

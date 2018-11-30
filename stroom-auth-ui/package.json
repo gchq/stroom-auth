@@ -45,6 +45,7 @@
     "yup": "^0.26.6"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^4.0.9",
     "@storybook/addon-actions": "^4.0.9",
     "@storybook/addon-options": "^4.0.8",
     "@storybook/react": "^4.0.9",
