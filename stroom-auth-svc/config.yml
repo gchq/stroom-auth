@@ -115,6 +115,7 @@ authorisationService:
 email:
   fromAddress: ${EMAIL_FROM_ADDRESS:- noreply@stroom.com}
   fromName: ${EMAIL_FROM_NAME:- Stroom User Accounts}
+  allowPasswordResets: ${ALLOW_PASSWORD_RESETS:- true}
   passwordResetSubject: ${EMAIL_RESET_SUBJECT:- Password reset for Stroom}
   passwordResetText: ${EMAIL_RESET_TEXT:- 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'}
   passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>:5000/resetPassword/?token=%s'}

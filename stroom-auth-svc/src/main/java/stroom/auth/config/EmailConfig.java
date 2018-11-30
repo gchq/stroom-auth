@@ -53,6 +53,10 @@ public class EmailConfig extends Configuration {
     @JsonProperty
     private float passwordResetTokenValidityInMinutes;
 
+    @NotNull
+    @JsonProperty
+    private boolean allowPasswordResets;
+
     public SmtpConfig getSmtpConfig() {
         return smtpConfig;
     }
@@ -79,5 +83,9 @@ public class EmailConfig extends Configuration {
 
     public String getPasswordResetUrl() {
         return passwordResetUrl;
+    }
+
+    public boolean isAllowPasswordResets() {
+        return allowPasswordResets;
     }
 }

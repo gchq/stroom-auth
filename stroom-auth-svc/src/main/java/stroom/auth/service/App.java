@@ -116,7 +116,7 @@ public final class App extends Application<Config> {
         // Now we can configure everything else
         registerResources(environment);
         registerExceptionMappers(environment);
-        registerHealthChecks(environment, injector.getInstance(EmailSender.class));
+        registerHealthChecks(environment, injector.getInstance(EmailSender.class), config);
         configureSessionHandling(environment);
         configureCors(environment);
         schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
@@ -170,9 +170,10 @@ public final class App extends Application<Config> {
         environment.jersey().register(injector.getInstance(NoSuchUserExceptionMapper.class));
     }
 
-    private void registerHealthChecks(Environment environment, EmailSender emailSender){
+    private void registerHealthChecks(Environment environment, EmailSender emailSender, Config config){
         environment.healthChecks().register(LogLevelInspector.class.getName(), new LogLevelInspector());
-        environment.healthChecks().register(EmailHealthCheck.class.getName(), new EmailHealthCheck(emailSender));
+        environment.healthChecks().register(EmailHealthCheck.class.getName(),
+                new EmailHealthCheck(emailSender, config.getEmailConfig()));
     }
 
     private static void configureAuthentication(JwtConsumer jwtConsumer, Environment environment) {
