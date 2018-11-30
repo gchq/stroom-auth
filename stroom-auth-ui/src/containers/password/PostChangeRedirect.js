@@ -38,7 +38,6 @@ const enhance = compose(
 const PostChangeRedirect = ({redirectUrl}) => {
   return (
     <div>
-      <br />
       <p>
         We're going to send you back to your original destination in&nbsp;
         <Countdown
