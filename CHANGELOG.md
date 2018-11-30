@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.14]
+
 * Allow password resets by email to be enabled and disabled
 
 ## [v1.0-beta.13]
