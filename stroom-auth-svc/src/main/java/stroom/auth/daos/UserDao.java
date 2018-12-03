@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import stroom.auth.config.Config;
 import stroom.auth.exceptions.BadRequestException;
 import stroom.auth.exceptions.NoSuchUserException;
-import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.resources.user.v1.User;
 import stroom.db.auth.Tables;
 import stroom.db.auth.tables.records.UsersRecord;
@@ -150,7 +149,7 @@ public class UserDao {
         }
     }
 
-    public void incrementLoginFailures(String email) {
+    public boolean incrementLoginFailures(String email) {
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
                 .where(new Condition[]{USERS.EMAIL.eq(email)})
@@ -172,8 +171,9 @@ public class UserDao {
 
         if (shouldLock) {
             LOGGER.debug("Account {} has had too many failed access attempts and is locked", email);
-            throw new UnauthorisedException("Too many failed attempts - this account is now locked");
         }
+
+        return shouldLock;
     }
 
     public Optional<User> get(String email) {

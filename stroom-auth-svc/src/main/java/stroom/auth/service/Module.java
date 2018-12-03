@@ -33,7 +33,6 @@ import stroom.auth.daos.UserDao;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
 import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
 import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
-import stroom.auth.exceptions.mappers.UnauthorisedExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
 import stroom.auth.resources.token.v1.TokenResource;
@@ -63,7 +62,6 @@ public final class Module extends AbstractModule {
         bind(TokenBuilderFactory.class);
         bind(StroomEventLoggingService.class);
 
-        bind(UnauthorisedExceptionMapper.class);
         bind(BadRequestExceptionMapper.class);
         bind(TokenCreationExceptionMapper.class);
         bind(UnsupportedFilterExceptionMapper.class);

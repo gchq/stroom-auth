@@ -18,7 +18,6 @@ package stroom.auth.service.resources;
 
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
-import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.resources.support.Dropwizard_IT;
 
@@ -33,8 +32,8 @@ public class Login_IT extends Dropwizard_IT {
         try {
             AuthenticationFlowHelper.performLogin(sessionId, "BAD", "admin");
             fail("Expected an UnAuthorisedException!");
-        } catch (UnauthorisedException e) {
-            // Implicit pass
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage()).isEqualToIgnoringCase("LOGIN_FAILED");
         }
     }
 
@@ -44,8 +43,8 @@ public class Login_IT extends Dropwizard_IT {
         try {
             AuthenticationFlowHelper.performLogin(sessionId, "admin", "BAD");
             fail("Expected an UnAuthorisedException!");
-        } catch (UnauthorisedException e) {
-            // Implicit pass
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage()).isEqualToIgnoringCase("LOGIN_FAILED");
         }
     }
 
@@ -55,8 +54,8 @@ public class Login_IT extends Dropwizard_IT {
         try {
             AuthenticationFlowHelper.performLogin(sessionId, "BAD", "BAD");
             fail("Expected an UnAuthorisedException!");
-        } catch (UnauthorisedException e) {
-            // Implicit pass
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage()).isEqualToIgnoringCase("LOGIN_FAILED");
         }
     }
 
