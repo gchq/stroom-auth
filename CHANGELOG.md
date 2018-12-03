@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Change logback archived logs to be gzip compressed
+
 ## [v1.0-beta.14]
 
 * Allow password resets by email to be enabled and disabled
