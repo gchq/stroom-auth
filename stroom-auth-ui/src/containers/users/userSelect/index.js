@@ -21,7 +21,8 @@ import {useMappedState} from 'redux-react-hook';
 import './asyncUserSelect.css';
 
 const loadOptions = (inputValue, callback, idToken, url) => {
-  fetch(`${url}/search?email=${inputValue}`, {
+  const email = inputValue || '';
+  fetch(`${url}/search?email=${email}`, {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -69,6 +70,7 @@ function AsyncUserSelect(props) {
 
   return (
     <AsyncSelect
+      placeholder=''
       styles={customStyles}
       className="AsyncUserSelect"
       cacheOptions

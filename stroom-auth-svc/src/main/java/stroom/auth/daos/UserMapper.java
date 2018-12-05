@@ -19,6 +19,7 @@
 package stroom.auth.daos;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import stroom.auth.resources.user.v1.User;
 import stroom.db.auth.tables.records.UsersRecord;
 
@@ -38,14 +39,13 @@ public final class UserMapper {
         HashMap userMap = new HashMap();
 
         if (user.getId() != null) userMap.put("id", user.getId());
-        if (user.getEmail() != null) userMap.put("email", user.getEmail());
-        if (user.getPassword_hash() != null) userMap.put("password_hash", user.getPassword_hash());
+        if (!Strings.isNullOrEmpty(user.getEmail())) userMap.put("email", user.getEmail());
+        if (!Strings.isNullOrEmpty(user.getPassword_hash())) userMap.put("password_hash", user.getPassword_hash());
         // This will override the setting for getPasswordHash, above. If there's a hash it'll map that,
         // but if there's a password it'll update the hash.
-        if (user.getPassword() != null) userMap.put("password_hash", user.generatePasswordHash());
-        if (user.getState() != null) userMap.put("state", user.getState());
+        if (!Strings.isNullOrEmpty(user.getPassword())) userMap.put("password_hash", user.generatePasswordHash());
         if (user.getFirst_name() != null) userMap.put("first_name", user.getFirst_name());
-        if (user.getLast_name() != null) userMap.put("last_name", user.getLast_name());
+        if (user.getLast_name() != null)userMap.put("last_name", user.getLast_name());
         if (user.getComments() != null) userMap.put("comments", user.getComments());
         if (user.getLogin_count() != null) userMap.put("login_count", user.getLogin_count());
         if (user.getLogin_failures() != null) userMap.put("login_failures", user.getLogin_failures());
@@ -54,6 +54,15 @@ public final class UserMapper {
         if (user.getCreated_by_user() != null) userMap.put("created_by_user", user.getCreated_by_user());
         if (user.getUpdated_on() != null) userMap.put("updated_on", convertISO8601ToTimestamp(user.getUpdated_on()));
         if (user.getUpdated_by_user() != null) userMap.put("updated_by_user", user.getUpdated_by_user());
+
+        // This is last because if we're going from locked to enabled then we need to reset the login failures.
+        // And in this case we'll want to override any other setting for login_failures.
+        if (user.getState() != null) {
+            if(usersRecord.getState().equals("locked") && user.getState().equalsIgnoreCase("enabled")) {
+                userMap.put("login_failures", 0);
+            }
+            userMap.put("state", user.getState());
+        }
 
         usersRecord.from(userMap);
         return usersRecord;
