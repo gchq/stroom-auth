@@ -40,6 +40,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.Timestamp;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -206,9 +207,9 @@ public class UserDao {
                 .execute();
     }
 
-    public Boolean needsPasswordChange(String email, int passwordChangeThreshold, boolean forcePasswordChangeOnFirstLogin) {
+    public Boolean needsPasswordChange(String email, int passwordChangeThresholdInMins, boolean forcePasswordChangeOnFirstLogin) {
         Validate.notNull(email, "email must not be null");
-        Validate.inclusiveBetween(0, Integer.MAX_VALUE, passwordChangeThreshold);
+        Validate.inclusiveBetween(0, Integer.MAX_VALUE, passwordChangeThresholdInMins);
 
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
@@ -223,9 +224,9 @@ public class UserDao {
                 user.getCreatedOn().toLocalDateTime() :
                 user.getPasswordLastChanged().toLocalDateTime();
         LocalDateTime now = LocalDateTime.ofInstant(Instant.now(clock), ZoneId.systemDefault());
-        long daysSinceLastPasswordChange = passwordLastChanged.until(now, ChronoUnit.DAYS);
+        long minsSinceLastPasswordChange = passwordLastChanged.until(now, ChronoUnit.MINUTES);
 
-        boolean thresholdBreached = daysSinceLastPasswordChange >= passwordChangeThreshold;
+        boolean thresholdBreached = minsSinceLastPasswordChange >= passwordChangeThresholdInMins;
         boolean isFirstLogin = user.getPasswordLastChanged() == null;
 
         if(thresholdBreached || (forcePasswordChangeOnFirstLogin && isFirstLogin)){
@@ -234,8 +235,8 @@ public class UserDao {
         } else return false;
     }
 
-    public int disableNewInactiveUsers(int inactivityThresholdInDays){
-        Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInDays);
+    public int disableNewInactiveUsers(int inactivityThresholdInMins){
+        Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInMins);
 
         int numberOfDisabledAccounts = database
                 .update(Tables.USERS)
@@ -249,8 +250,8 @@ public class UserDao {
         return numberOfDisabledAccounts;
     }
 
-    public int disableInactiveUsers(int inactivityThresholdInDays){
-        Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInDays);
+    public int disableInactiveUsers(int inactivityThresholdInMins){
+        Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInMins);
 
         int numberOfDisabledAccounts = database
                 .update(Tables.USERS)
@@ -268,9 +269,9 @@ public class UserDao {
         return result != null;
     }
 
-    private Timestamp convertThresholdToTimestamp(int days){
+    private Timestamp convertThresholdToTimestamp(int mins){
         Instant now = Instant.now(clock);
-        Instant thresholdInstant = now.minus(Period.ofDays(days));
+        Instant thresholdInstant = now.minus(Duration.ofMinutes(mins));
         return Timestamp.from(thresholdInstant);
     }
 
