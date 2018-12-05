@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v1.0-beta.15]
+## [v1.0-beta.16]
 
 * Issue **#96** : Fixed an issue where the user select box is initially empty when trying to create an API key
 
