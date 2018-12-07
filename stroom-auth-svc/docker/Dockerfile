@@ -59,7 +59,7 @@ RUN apk add --no-cache \
 
 # Copy all the artifacts required to run stroom-auth-service
 # In order of likelyhood to change, most staic first.
-COPY --chown=auth:auth ./docker-entrypoint.sh /stroom-auth-service/
+COPY --chown=auth:auth ./*.sh /stroom-auth-service/
 COPY --chown=auth:auth ./build/config.yml /stroom-auth-service/
 COPY --chown=auth:auth ./build/stroom-auth-service-all.jar /stroom-auth-service/
 
@@ -69,3 +69,6 @@ ARG GIT_TAG=unspecified
 LABEL \
     git_commit="$GIT_COMMIT" \
     git_tag="$GIT_TAG"
+# Pass the GIT_TAG through to the running container
+# This should not be set at container run time
+ENV GIT_TAG=$GIT_TAG
