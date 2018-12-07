@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom/#937** : Add setting of container identity in extra_headers file to docker image.
+
 ## [v1.0-beta.16]
 
 * Issue **#96** : Fixed an issue where the user select box is initially empty when trying to create an API key
