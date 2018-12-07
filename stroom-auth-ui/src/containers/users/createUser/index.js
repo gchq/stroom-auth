@@ -22,7 +22,7 @@ import {push} from 'react-router-redux';
 
 import './CreateUserForm.css';
 import '../../Layout.css';
-import UserFields from '../userFields';
+import UserFields from '../UserFields';
 import {createUser as onSubmit} from '../../../modules/user';
 import {hasAnyProps} from '../../../lang';
 import {UserValidationSchema, validateAsync} from '../validation';

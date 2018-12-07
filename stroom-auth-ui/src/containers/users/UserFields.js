@@ -18,8 +18,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Field, ErrorMessage} from 'formik';
 
-import '../../../styles/form.css';
-import {AuditCopy, LoginStatsCopy} from '../../auditCopy';
+import '../../styles/form.css';
+import {AuditCopy, LoginStatsCopy} from '../auditCopy';
 
 const LoginFailureCopy = ({attemptCount}) => (
   <div className="copy">

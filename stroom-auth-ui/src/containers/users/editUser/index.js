@@ -32,7 +32,7 @@ import BackConfirmation from '../BackConfirmation';
 import {push} from 'react-router-redux';
 
 import './EditUser.css';
-import UserFields from '../userFields';
+import UserFields from '../UserFields';
 import {
   saveChanges as onSubmit,
   toggleAlertVisibility,
