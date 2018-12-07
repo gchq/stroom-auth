@@ -17,6 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Field, ErrorMessage} from 'formik';
+import Checkbox from 'rc-checkbox';
 
 import '../../styles/form.css';
 import {AuditCopy, LoginStatsCopy} from '../auditCopy';
@@ -26,6 +27,20 @@ const LoginFailureCopy = ({attemptCount}) => (
     Login attempts with an incorrect password: {attemptCount}
   </div>
 );
+
+const CheckboxField = ({field, form: {touched, errors}, ...props}) => {
+  console.log({field});
+  console.log({props});
+  return (
+    <Checkbox
+      defaultChecked={field.value}
+      checked={field.value}
+      onChange={field.onChange}
+      {...field}
+      {...props}
+    />
+  );
+};
 
 const UserFields = ({
   showCalculatedFields,
@@ -62,7 +77,16 @@ const UserFields = ({
               />
             </div>
           </div>
-          <div className="field-container__spacer" />
+        </div>
+      </div>
+    </div>
+
+    <div className="section">
+      <div className="section__title">
+        <h3>Status</h3>
+      </div>
+      <div className="section__fields">
+        <div className="section__fields__row">
           <div className="field-container vertical">
             <label>Account status</label>
             <Field name="state" component="select">
@@ -70,6 +94,22 @@ const UserFields = ({
               <option value="disabled">Inactive</option>
               <option value="locked">Locked</option>
             </Field>
+          </div>
+          <div className="field-container__spacer" />
+          <div className="field-container">
+            <label>Never expire</label>
+            <div className="field-container__spacer" />
+            <div className="field-container--with-validation">
+              <Field
+                name="never_expires"
+                label="never_expires"
+                component={CheckboxField}
+              />
+              <ErrorMessage
+                name="never_expire"
+                render={msg => <div className="validation-error">{msg}</div>}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -108,6 +148,7 @@ const UserFields = ({
         </div>
       </div>
     </div>
+
     <div className="section">
       <div className="section__title">
         <h3>Comments</h3>

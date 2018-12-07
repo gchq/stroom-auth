@@ -54,6 +54,7 @@ public final class UserMapper {
         if (user.getCreated_by_user() != null) userMap.put("created_by_user", user.getCreated_by_user());
         if (user.getUpdated_on() != null) userMap.put("updated_on", convertISO8601ToTimestamp(user.getUpdated_on()));
         if (user.getUpdated_by_user() != null) userMap.put("updated_by_user", user.getUpdated_by_user());
+        if (user.getNever_expires() != null) userMap.put("never_expires", user.getNever_expires());
 
         // This is last because if we're going from locked to enabled then we need to reset the login failures.
         // And in this case we'll want to override any other setting for login_failures.

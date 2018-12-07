@@ -188,6 +188,7 @@ export const saveChanges = editedUser => {
       last_name,
       comments,
       state,
+      never_expires,
     } = editedUser;
 
     fetch(`${getState().config.userServiceUrl}/${id}`, {
@@ -205,6 +206,7 @@ export const saveChanges = editedUser => {
         last_name,
         comments,
         state,
+        never_expires,
       }),
     })
       .then(handleStatus)
@@ -225,7 +227,15 @@ export const createUser = newUser => {
   return (dispatch, getState) => {
     dispatch(toggleIsSaving());
     const jwsToken = getState().authentication.idToken;
-    const {email, password, first_name, last_name, comments, state} = newUser;
+    const {
+      email,
+      password,
+      first_name,
+      last_name,
+      comments,
+      state,
+      never_expires,
+    } = newUser;
 
     dispatch(showCreateLoader(true));
 
@@ -244,6 +254,7 @@ export const createUser = newUser => {
         last_name,
         comments,
         state,
+        never_expires,
       }),
     })
       .then(handleStatus)

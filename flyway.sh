@@ -23,4 +23,4 @@ fi
 # We should be able to do this using the Flyway Gradle plugin. There are a few issues with this:
 #  1. The Flyway Gradle plugin isn't recognising the configuration in the build.gradle file.
 #  2. This might be solved by upgrading from Flyway 4.x to Flyway 5.x, but the Dropwizard bundle is 4.x only, so we can't.
-./gradlew -Pflyway.user=authuser -Pflyway.password=stroompassword1 -Pflyway.url=jdbc:mysql://localhost:3307/auth?useUnicode=yes&characterEncoding=UTF-8 -Pflyway.locations=filesystem:stroom-auth-svc/src/main/resources/db/migration flyway$1
+./gradlew -Pflyway.user=authuser -Pflyway.password=stroompassword1 -Pflyway.url="jdbc:mysql://localhost:3307/auth?useUnicode=yes&characterEncoding=UTF-8" -Pflyway.locations="filesystem:stroom-auth-svc/src/main/resources/db/migration" -Pflyway.table="schema_version" flyway$1

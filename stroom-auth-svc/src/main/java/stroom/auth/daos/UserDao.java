@@ -93,6 +93,7 @@ public class UserDao {
                 .set(USERS.STATE, newUser.getState())
                 .set(USERS.CREATED_ON, Timestamp.from(Instant.now(clock)))
                 .set(USERS.CREATED_BY_USER, creatingUsername)
+                .set(USERS.NEVER_EXPIRES, newUser.getNever_expires())
                 .returning(new Field[]{USERS.ID}).fetchOne();
         return usersRecord.getId();
     }
