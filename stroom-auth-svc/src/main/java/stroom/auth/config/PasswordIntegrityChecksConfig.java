@@ -5,17 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
 
 public class PasswordIntegrityChecksConfig {
-    @NotNull
-    @JsonProperty
-    private int disableInactiveNewAccountAfterXDays = 30;
 
     @NotNull
     @JsonProperty
-    private int disableInactiveAccountAfterXDays = 30;
+    private int disableInactiveNewAccountAfterXMins = 30;
 
     @NotNull
     @JsonProperty
-    private int requirePasswordChangeAfterXDays = 90;
+    private int disableInactiveAccountAfterXMins = 30;
+
+    @NotNull
+    @JsonProperty
+    private int requirePasswordChangeAfterXMins = 90;
 
     @NotNull
     @JsonProperty
@@ -33,16 +34,16 @@ public class PasswordIntegrityChecksConfig {
     @JsonProperty
     private int minimumPasswordLength;
 
-    public int getDisableInactiveNewAccountAfterXDays() {
-        return disableInactiveNewAccountAfterXDays;
+    public int getDisableInactiveNewAccountAfterXMins() {
+        return disableInactiveNewAccountAfterXMins;
     }
 
-    public int getDisableInactiveAccountAfterXDays() {
-        return disableInactiveAccountAfterXDays;
+    public int getDisableInactiveAccountAfterXMins() {
+        return disableInactiveAccountAfterXMins;
     }
 
-    public int getRequirePasswordChangeAfterXDays() {
-        return requirePasswordChangeAfterXDays;
+    public int getRequirePasswordChangeAfterXMins() {
+        return requirePasswordChangeAfterXMins;
     }
 
     public int getSecondsBetweenChecks() {

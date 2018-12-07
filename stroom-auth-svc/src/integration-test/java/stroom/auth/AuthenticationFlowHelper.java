@@ -31,7 +31,6 @@ import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
-import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.resources.authentication.v1.LoginResponse;
 import stroom.auth.service.ApiClient;
 import stroom.auth.service.ApiException;
@@ -184,7 +183,7 @@ public class AuthenticationFlowHelper {
         ObjectMapper objectMapper = new ObjectMapper();
         LoginResponse loginResponseObject = objectMapper.readValue(loginResponse.getBody().toString(), LoginResponse.class);
         if(!loginResponseObject.isLoginSuccessful()) {
-            throw new UnauthorisedException("Authorisation failed");
+            throw new RuntimeException("LOGIN_FAILED");
         }
         URL postAuthenticationRedirectUrl = new URL(loginResponseObject.getRedirectUrl());
 

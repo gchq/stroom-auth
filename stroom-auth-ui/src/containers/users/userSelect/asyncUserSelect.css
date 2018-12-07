@@ -17,3 +17,8 @@
 .AsyncUserSelect {
   width: 300px;
 }
+
+.AsyncUserSelect input {
+  margin: 0 0 0 0;
+  height: auto;
+}

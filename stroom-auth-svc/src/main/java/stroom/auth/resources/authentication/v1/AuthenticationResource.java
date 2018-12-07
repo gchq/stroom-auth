@@ -41,7 +41,6 @@ import stroom.auth.config.PasswordIntegrityChecksConfig;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
 import stroom.auth.exceptions.NoSuchUserException;
-import stroom.auth.exceptions.UnauthorisedException;
 import stroom.auth.resources.token.v1.Token;
 import stroom.auth.resources.user.v1.User;
 import stroom.auth.service.eventlogging.StroomEventLoggingService;
@@ -93,6 +92,9 @@ import static stroom.auth.resources.authentication.v1.PasswordValidator.validate
 @Api(description = "Stroom Authentication API", tags = {"Authentication"})
 public final class AuthenticationResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationResource.class);
+    private static final String INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
+    private static final String ACCOUNT_LOCKED_MESSAGE = "This account is locked. Please contact your administrator";
+    private static final String ACCOUNT_DISABLED_MESSAGE = "This account is marked as inactive. Please contact your administrator";
 
     private Config config;
     private final Pattern dnPattern;
@@ -293,11 +295,18 @@ public final class AuthenticationResource {
         switch (loginResult) {
             case BAD_CREDENTIALS:
                 LOGGER.debug("Password for {} is incorrect", credentials.getEmail());
-                userDao.incrementLoginFailures(credentials.getEmail());
+                boolean shouldLock = userDao.incrementLoginFailures(credentials.getEmail());
                 stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
 
-                return status(Status.OK)
-                        .entity(new LoginResponse(false, "Invalid credentials", null)).build();
+                if (shouldLock) {
+                    return status(Status.OK)
+                            .entity(
+                                    new LoginResponse(false, ACCOUNT_LOCKED_MESSAGE, null))
+                            .build();
+                } else {
+                    return status(Status.OK)
+                            .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
+                }
             case GOOD_CREDENTIALS:
                 String redirectionUrl = processSuccessfulLogin(session, credentials, sessionId);
                 stroomEventLoggingService.successfulLogin(httpServletRequest, credentials.getEmail());
@@ -310,27 +319,27 @@ public final class AuthenticationResource {
                 // we don't want to do this.
                 stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
-                        .entity(new LoginResponse(false, "Invalid credentials", null)).build();
+                        .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
             case LOCKED_BAD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
-                        .entity(new LoginResponse(false, "Invalid credentials", null)).build();
+                        .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
             case LOCKED_GOOD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
-                        .entity(new LoginResponse(false, "This account is locked. Please contact your administrator.", null)).build();
+                        .entity(new LoginResponse(false, ACCOUNT_LOCKED_MESSAGE, null)).build();
             case DISABLED_BAD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
-                        .entity(new LoginResponse(false, "Invalid credentials", null)).build();
+                        .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
             case DISABLED_GOOD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
-                        .entity(new LoginResponse(false, "This account is disabled. Please contact your administrator.", null)).build();
+                        .entity(new LoginResponse(false, ACCOUNT_DISABLED_MESSAGE, null)).build();
             default:
                 String errorMessage = String.format("%s does not support a LoginResult of %s",
                         this.getClass().getSimpleName(), loginResult.toString());
@@ -487,7 +496,7 @@ public final class AuthenticationResource {
             response = Boolean.class, tags = {"Authentication"})
     public final Response needsPasswordChange(@QueryParam("email") String email) {
         boolean userNeedsToChangePassword = userDao.needsPasswordChange(
-                email, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays(),
+                email, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXMins(),
                 config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin());
         return Response.status(Status.OK).entity(userNeedsToChangePassword).build();
     }
@@ -541,7 +550,7 @@ public final class AuthenticationResource {
         String username = session.getUserEmail();
 
         boolean userNeedsToChangePassword = userDao.needsPasswordChange(
-                username, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXDays(),
+                username, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXMins(),
                 config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin());
 
         if (userNeedsToChangePassword) {
