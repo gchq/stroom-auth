@@ -64,7 +64,7 @@ public final class User {
     @Nullable
     private String created_by_user;
     @Nullable
-    private String never_expires;
+    private boolean never_expires;
 
     public User() {
     }
@@ -210,11 +210,11 @@ public final class User {
     }
 
     @Nullable
-    public String getNever_expires() {
+    public boolean getNever_expires() {
         return never_expires;
     }
 
-    public void setNever_expires(@Nullable String never_expires) {
+    public void setNever_expires(@Nullable boolean never_expires) {
         this.never_expires = never_expires;
     }
 
