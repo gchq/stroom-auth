@@ -70,7 +70,8 @@ main() {
 
     if ! grep -q "^\[${version}\]:" "${changelog_file}"; then
         echo -e "${RED}ERROR${GREEN}: Version [${BLUE}${version}${GREEN}] does not have a link entry at the bottom of the CHANGELOG.${NC}"
-        echo -e "${GREEN}e.g ${BLUE}[v1.0-beta.17]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.15...v1.0-beta.16${NC}"
+        echo -e "${GREEN}e.g.:${NC}"
+        echo -e "${BLUE}[v1.0-beta.17]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.15...v1.0-beta.16${NC}"
         echo
         exit 1
     fi
