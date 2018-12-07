@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.17] - 2018-12-07
+
 * Issue **gchq/stroom/#937** : Add setting of container identity in extra_headers file to docker image.
 
 ## [v1.0-beta.16]
@@ -120,7 +122,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.16...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.17...master
+[v1.0-beta.17]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.16...v1.0-beta.17
 [v1.0-beta.16]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.15...v1.0-beta.16
 [v1.0-beta.15]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.14...v1.0-beta.15
 [v1.0-beta.14]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.13...v1.0-beta.14
