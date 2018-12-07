@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add GIT_TAG & GIT_COMMIT build args to service docker build in Travis.
+
 ## [v1.0-beta.17] - 2018-12-07
 
 * Issue **gchq/stroom/#937** : Add setting of container identity in extra_headers file to docker image.
