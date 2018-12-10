@@ -149,7 +149,12 @@ release_to_docker_hub() {
     echo -e "docker_repo:  [${GREEN}${docker_repo}${NC}]"
     echo -e "context_root: [${GREEN}${context_root}${NC}]"
 
-    docker build ${all_tag_args} ${context_root}
+    # If we have a TRAVIS_TAG (git tag) then use that, else use the floating tag
+    docker build \
+        ${all_tag_args} \
+        --build-arg GIT_COMMIT=${TRAVIS_COMMIT} \
+        --build-arg GIT_TAG=${TRAVIS_TAG:-${snapshot_floating_tag}} \
+        ${context_root}
 
     echo -e "Logging in to Docker"
 
