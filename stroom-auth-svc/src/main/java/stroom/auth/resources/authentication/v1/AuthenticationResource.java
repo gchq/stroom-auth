@@ -321,10 +321,9 @@ public final class AuthenticationResource {
                 return status(Status.OK)
                         .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
             case LOCKED_BAD_CREDENTIALS:
-                // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLogin(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
-                        .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
+                        .entity(new LoginResponse(false, ACCOUNT_LOCKED_MESSAGE, null)).build();
             case LOCKED_GOOD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
                 stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
