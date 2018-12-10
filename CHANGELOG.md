@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.18]
+
+* Issue **#100** : Make forms more responsive
+
+* Issue **#99** : Add a 'never expires' option to API keys
+
+* Issue **#97** : Fix 'invalid date' on audit information
+
 * Add GIT_TAG & GIT_COMMIT build args to service docker build in Travis.
 
 ## [v1.0-beta.17] - 2018-12-07
@@ -125,6 +133,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Issue **#85** : Focus on username field when the login page loads
 
 [Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.17...master
+[v1.0-beta.18]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.17...v1.0-beta.18
 [v1.0-beta.17]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.16...v1.0-beta.17
 [v1.0-beta.16]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.15...v1.0-beta.16
 [v1.0-beta.15]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.14...v1.0-beta.15
