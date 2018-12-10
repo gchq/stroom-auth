@@ -132,7 +132,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.17...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.18...master
 [v1.0-beta.18]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.17...v1.0-beta.18
 [v1.0-beta.17]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.16...v1.0-beta.17
 [v1.0-beta.16]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.15...v1.0-beta.16
