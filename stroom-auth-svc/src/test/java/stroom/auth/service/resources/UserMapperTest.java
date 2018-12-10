@@ -43,6 +43,7 @@ public final class UserMapperTest {
         usersRecord.setUpdatedByUser("updating user");
         usersRecord.setCreatedOn(new Timestamp(System.currentTimeMillis()));
         usersRecord.setCreatedByUser("creating user");
+        usersRecord.setNeverExpires(true);
 
         User user = new User();
         user.setId(2);
@@ -59,6 +60,7 @@ public final class UserMapperTest {
         user.setUpdated_by_user("New updating user");
         user.setCreated_on("2017-01-03T00:00:00.000Z");
         user.setCreated_by_user("New creating user");
+        user.setNever_expires(false);
 
         UsersRecord updatedRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
         assertThat(updatedRecord.getId()).isEqualTo(2);
@@ -75,6 +77,7 @@ public final class UserMapperTest {
         assertThat(updatedRecord.getUpdatedByUser()).isEqualTo("New updating user");
         assertThat(updatedRecord.getCreatedOn()).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-03T00:00:00.000Z"));
         assertThat(updatedRecord.getCreatedByUser()).isEqualTo("New creating user");
+        assertThat(updatedRecord.getNeverExpires()).isEqualTo(false);
     }
 
     @Test
@@ -83,7 +86,7 @@ public final class UserMapperTest {
         // To make it pass you'll need to updated the count, below.
         // It exists to remind you to add a mapping in UserMapper.
         // The count is one more than the number in UserRecord, because it has a 'password' property.
-        int currentNumberOfPropertiesOnUser = 15;
+        int currentNumberOfPropertiesOnUser = 16;
         assertThat(User.class.getDeclaredFields().length).isEqualTo(currentNumberOfPropertiesOnUser);
     }
 }
