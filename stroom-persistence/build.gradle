@@ -20,6 +20,8 @@ apply plugin: 'nu.studer.jooq'
 
 dependencies {
     compile deps.jooq
+    compile deps.jooq_codegen
+    compile deps.jooq_meta
     compile deps.javax_annotations
     compile deps.jaxws_api
 
@@ -34,7 +36,7 @@ if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
     configure(project) {
         //configure jooq plugin to generate code
         jooq {
-            version = '3.9.3'
+            version = '3.11.7'
             edition = 'OSS'
             authdb(sourceSets.main) {
                 jdbc {
@@ -44,7 +46,7 @@ if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
                     password = 'stroompassword1'
                 }
                 generator {
-                    name = 'org.jooq.util.DefaultGenerator'
+                    name = 'org.jooq.codegen.JavaGenerator'
                     database {
                         name = 'org.jooq.meta.mysql.MySQLDatabase'
                         // Add anything you want included in generation below

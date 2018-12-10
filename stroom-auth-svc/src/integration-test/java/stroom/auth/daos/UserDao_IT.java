@@ -106,6 +106,38 @@ public class UserDao_IT extends Database_IT {
     }
 
     @Test
+    public void testNeverExpiresUser(){
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
+            // GIVEN...
+            UserDao userDao = getUserDao(conn);
+
+            final String user01 = UUID.randomUUID().toString();
+            final String user02 = UUID.randomUUID().toString();
+
+            // Create a test user who should be disabled
+            createUserAccount(userDao, user01, false);
+            userDao.recordSuccessfulLogin(user01);
+
+            // Create a test user who should be disabled were it not for the never expire option
+            createUserAccount(userDao, user02, true);
+            userDao.recordSuccessfulLogin(user02);
+
+            // WHEN...
+            setClockToDaysFromNow(userDao, 91);
+            int numberOfDisabledUsers = userDao.disableInactiveUsers(129600);
+
+            // THEN...
+            assertThat(numberOfDisabledUsers).isEqualTo(1);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+
+    @Test
     public void testNeedsPasswordChange() {
         try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
@@ -145,10 +177,15 @@ public class UserDao_IT extends Database_IT {
         }
     }
 
-    private static void createUserAccount(UserDao userDao, String email){
+    private static void createUserAccount(UserDao userDao, String email) {
+        createUserAccount(userDao, email, false);
+    }
+
+    private static void createUserAccount(UserDao userDao, String email, boolean neverExpires){
         User user = new User();
         user.setEmail(email);
         user.setState(ENABLED);
+        user.setNever_expires(neverExpires);
         userDao.create(user, "UserDao_IT");
         User newUser = userDao.get(email).get();
         assertThat(newUser.getState()).isEqualTo(ENABLED);

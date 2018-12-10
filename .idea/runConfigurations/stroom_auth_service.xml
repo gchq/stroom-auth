@@ -6,7 +6,8 @@
     <module name="stroom-auth-svc_main" />
     <option name="PROGRAM_PARAMETERS" value="server config.generated.yml" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/stroom-auth-svc" />
-    <method>
+    <method v="2">
+      <option name="Make" enabled="true" />
       <option name="RunConfigurationTask" enabled="true" />
       <option name="RunConfigurationTask" enabled="true" />
     </method>

@@ -339,7 +339,8 @@ public final class UserResource {
                         USERS.UPDATED_ON,
                         USERS.UPDATED_BY_USER,
                         USERS.CREATED_ON,
-                        USERS.CREATED_BY_USER)
+                        USERS.CREATED_BY_USER,
+                        USERS.NEVER_EXPIRES)
                 .from(USERS)
                 .where(new Condition[]{USERS.ID.eq(userId)})
                 .fetchOne();
@@ -371,7 +372,8 @@ public final class UserResource {
                     USERS.UPDATED_ON,
                     USERS.UPDATED_BY_USER,
                     USERS.CREATED_ON,
-                    USERS.CREATED_BY_USER);
+                    USERS.CREATED_BY_USER,
+                    USERS.NEVER_EXPIRES);
             foundUserResult.add(foundUserRecord);
             String foundUserJson = foundUserResult
                     .formatJSON((new JSONFormat())

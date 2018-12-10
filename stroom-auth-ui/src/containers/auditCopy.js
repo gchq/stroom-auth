@@ -43,14 +43,18 @@ export const AuditCopy = ({createdBy, createdOn, updatedBy, updatedOn}) => {
     <div>
       <OnCopy on={createdOn} verb="Created" />
       <ByCopy by={createdBy} verb="Created by" />
-      <OnCopy on={updatedOn} verb="Updated" />
+      <OnCopy
+        on={updatedOn}
+        verb="Updated"
+        fallbackCopy="This has never been updated."
+      />
       <ByCopy by={updatedBy} verb="Updated by" />
     </div>
   );
 };
 
 export const OnCopy = ({on, verb, fallbackCopy}) => {
-  if (on !== undefined) {
+  if (on !== undefined && on !== null) {
     on = moment(on);
     return (
       <div className="copy">
@@ -64,7 +68,7 @@ export const OnCopy = ({on, verb, fallbackCopy}) => {
 };
 
 export const ByCopy = ({by, verb, fallbackCopy}) => {
-  if (by !== undefined) {
+  if (by !== undefined && by !== null) {
     return (
       <div className="copy">
         <strong>{verb}</strong> '{by}

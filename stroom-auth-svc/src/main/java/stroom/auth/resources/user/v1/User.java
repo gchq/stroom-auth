@@ -63,6 +63,8 @@ public final class User {
     private String created_on;
     @Nullable
     private String created_by_user;
+    @Nullable
+    private boolean never_expires;
 
     public User() {
     }
@@ -207,6 +209,15 @@ public final class User {
         this.created_by_user = createdByUser;
     }
 
+    @Nullable
+    public boolean getNever_expires() {
+        return never_expires;
+    }
+
+    public void setNever_expires(@Nullable boolean never_expires) {
+        this.never_expires = never_expires;
+    }
+
     /**
      * This is not the same as getPasswordHash(). That's a getting for the model property,
      * but this method actually creates a new hash.
@@ -237,6 +248,7 @@ public final class User {
         return Pair.of(isValid, validationMessages);
     }
 
+
     public enum UserState {
         ENABLED("enabled"),
         DISABLED("disabled"),
@@ -259,7 +271,19 @@ public final class User {
                 "id=" + id +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
+                ", comments='" + comments + '\'' +
                 ", email='" + email + '\'' +
+                ", state='" + state + '\'' +
+                ", password='" + password + '\'' +
+                ", password_hash='" + password_hash + '\'' +
+                ", login_failures=" + login_failures +
+                ", login_count=" + login_count +
+                ", last_login='" + last_login + '\'' +
+                ", updated_on='" + updated_on + '\'' +
+                ", updated_by_user='" + updated_by_user + '\'' +
+                ", created_on='" + created_on + '\'' +
+                ", created_by_user='" + created_by_user + '\'' +
+                ", never_expire='" + never_expires + '\'' +
                 '}';
     }
 }

@@ -93,6 +93,7 @@ public class UserDao {
                 .set(USERS.STATE, newUser.getState())
                 .set(USERS.CREATED_ON, Timestamp.from(Instant.now(clock)))
                 .set(USERS.CREATED_BY_USER, creatingUsername)
+                .set(USERS.NEVER_EXPIRES, newUser.getNever_expires())
                 .returning(new Field[]{USERS.ID}).fetchOne();
         return usersRecord.getId();
     }
@@ -243,7 +244,7 @@ public class UserDao {
                 .where(Tables.USERS.CREATED_ON.lessOrEqual(activityThreshold))
                 .and(Tables.USERS.LAST_LOGIN.isNull())
                 // We don't want to disable admin because that could lock the users out of the system
-                .and(Tables.USERS.EMAIL.ne("admin"))
+                .and(USERS.NEVER_EXPIRES.ne(true))
                 .execute();
 
         return numberOfDisabledAccounts;
@@ -257,7 +258,7 @@ public class UserDao {
                 .set(Tables.USERS.STATE, "disabled")
                 .where(Tables.USERS.LAST_LOGIN.lessOrEqual(activityThreshold))
                 // We don't want to disable admin because that could lock the users out of the system
-                .and(Tables.USERS.EMAIL.ne("admin"))
+                .and(USERS.NEVER_EXPIRES.ne(true))
                 .execute();
 
         return numberOfDisabledAccounts;
