@@ -30,7 +30,7 @@ import {resetPassword as onSubmit} from '../../modules/user';
 const enhance = compose(
   withRouter,
   connect(
-    ({user: {showAlert}}) => ({showAlert}),
+    ({user: {showAlert}, config: {stroomUiUrl}}) => ({showAlert, stroomUiUrl}),
     {
       changeToken,
       onSubmit,
@@ -87,6 +87,7 @@ const ResetPassword = ({
   expiredToken,
   showAlert,
   push,
+  stroomUiUrl,
 }) => {
   const failure = (
     <div>
@@ -114,10 +115,10 @@ const ResetPassword = ({
           <span className="ChangePassword-countdown">{seconds}</span>
         )}
         onComplete={() => {
-          push('/login');
+          window.location.href = stroomUiUrl;
         }}
       />
-      &nbsp;seconds, or you can <a href="/login">go there now.</a>
+      &nbsp;seconds, or you can <a href={stroomUiUrl}>go there now.</a>
     </p>
   );
 
