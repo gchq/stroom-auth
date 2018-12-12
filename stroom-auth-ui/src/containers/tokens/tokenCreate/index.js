@@ -57,7 +57,9 @@ const TokenCreateForm = ({onSubmit, isCreating, push}) => {
           onSubmit(values.user.label, actions.setSubmitting);
           actions.setSubmitting(false);
         }}
-        render={({handleSubmit, setFieldValue, errorMessage}) => (
+        render={({handleSubmit, setFieldValue, errorMessage, values}) => {
+          const submitIsDisabled = values.user === undefined
+          return (
           <form onSubmit={handleSubmit}>
             <div className="header">
                 <Button
@@ -91,14 +93,15 @@ const TokenCreateForm = ({onSubmit, isCreating, push}) => {
             <div className="footer">
               <Button
                 className="toolbar-button-small primary"
-                icon="plus"
+                disabled={submitIsDisabled}
+                icon="plus"
                 type="submit"
                 isLoading={isCreating}>
                 Create
               </Button>
             </div>
           </form>
-        )}
+        )}}
       />
     </div>
   );
