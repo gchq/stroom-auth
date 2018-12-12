@@ -18,11 +18,17 @@ import * as Yup from 'yup';
 
 import {hasAnyProps} from '../../lang';
 
-const UserValidationSchema = Yup.object().shape({
+export const NewUserValidationSchema = Yup.object().shape({
+  email: Yup.string().required('Required'),
+  password: Yup.string().required('Required'),
+  verifyPassword: Yup.string().required('Required'),
+});
+
+export const UserValidationSchema = Yup.object().shape({
   email: Yup.string().required('Required'),
 });
 
-const validateAsync = (values, idToken, url) => {
+export const validateAsync = (values, idToken, url) => {
   if (values.password) {
     return fetch(`${url}/isPasswordValid`, {
       headers: {
@@ -90,4 +96,3 @@ const validateAsync = (values, idToken, url) => {
   }
 };
 
-export {UserValidationSchema, validateAsync};

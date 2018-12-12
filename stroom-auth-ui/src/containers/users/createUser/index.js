@@ -25,7 +25,7 @@ import '../../Layout.css';
 import UserFields from '../UserFields';
 import {createUser as onSubmit} from '../../../modules/user';
 import {hasAnyProps} from '../../../lang';
-import {UserValidationSchema, validateAsync} from '../validation';
+import {NewUserValidationSchema, validateAsync} from '../validation';
 import Button from '../../Button';
 
 const enhance = compose(
@@ -71,7 +71,7 @@ const UserCreateForm = ({
       validate={values =>
         validateAsync(values, idToken, authenticationServiceUrl)
       }
-      validationSchema={UserValidationSchema}>
+      validationSchema={NewUserValidationSchema}>
       {({errors, touched}) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
