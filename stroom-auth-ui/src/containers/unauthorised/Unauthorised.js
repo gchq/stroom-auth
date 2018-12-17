@@ -31,40 +31,72 @@ const enhance = compose(
   ),
   withRouter,
   withState('isExpiredToken', 'setIsExpiredToken', false),
+  withState('isAccountLocked', 'setIsAccountLocked', false),
   lifecycle({
     componentDidMount() {
       const query = queryString.parse(this.props.location.search);
       if (query.reason === 'expired_token') {
         this.props.setIsExpiredToken(true);
+      } else if (query.reason === 'account_locked') {
+        this.props.setIsAccountLocked(true);
       }
       console.log({query});
     },
   }),
 );
 
-const Unauthorised = ({isExpiredToken, stroomUiUrl}) => {
+const Unauthorised = ({isExpiredToken, isAccountLocked, stroomUiUrl}) => {
+  const backToStroomButton = (url) => (
+    <div className="Unauthorised__actions">
+      <Button
+        className="toolbar-button-medium primary"
+        onClick={() => (window.location.href = url)}>
+        Back to Stroom
+      </Button>
+    </div>
+  );
+
+  const expiredTokenMessage = (
+    <React.Fragment>
+      <p>
+        It's likely that your session has timed-out. Would you like to try
+        logging in again?
+      </p>
+      {backToStroomButton(stroomUiUrl)}
+    </React.Fragment>
+  );
+
+  const accountLockedMessage = (
+    <React.Fragment>
+      <p>
+        The account associated with your certificate has been locked. Please
+        contact an administrator.
+      </p>
+      <p>
+        If you have a username/password account then you might want to try
+        logging in.
+      </p>
+      {backToStroomButton(`${stroomUiUrl}?prompt=login`)}
+    </React.Fragment>
+  );
+
+  const standardMessage = (
+    <React.Fragment>
+      <p>
+        I'm afraid you're not authorised to see this page. If you think you
+        should be able to please contact an administrator.
+      </p>
+      {backToStroomButton(stroomUiUrl)}
+    </React.Fragment>
+  );
+
   return (
     <div className="content-floating-without-appbar">
       <div className="Unauthorised">
         <h3>Unauthorised!</h3>
-        {isExpiredToken ? (
-          <p>
-            It's likely that your session has timed-out. Would you like to try
-            logging in again?
-          </p>
-        ) : (
-          <p>
-            I'm afraid you're not authorised to see this page. If you think you
-            should be able to please contact an administrator.
-          </p>
-        )}
-        <div className="Unauthorised__actions">
-          <Button
-            className="toolbar-button-medium primary"
-            onClick={() => (window.location.href = stroomUiUrl)}>
-            Back to Stroom
-          </Button>
-        </div>
+        {isExpiredToken ? expiredTokenMessage : undefined}
+        {isAccountLocked ? accountLockedMessage : undefined}
+        {!isExpiredToken && !isAccountLocked ? standardMessage : undefined}
       </div>
     </div>
   );

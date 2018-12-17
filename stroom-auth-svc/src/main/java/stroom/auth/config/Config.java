@@ -90,6 +90,10 @@ public final class Config extends Configuration {
     private Integer failedLoginLockThreshold = 3;
 
     @Nullable
+    @JsonProperty
+    private String unauthorisedUrl = "";
+
+    @Nullable
     @JsonProperty("email")
     private EmailConfig emailConfig;
 
@@ -174,6 +178,11 @@ public final class Config extends Configuration {
         return sessionIdCookieMaxAge;
     }
 
+    @Nullable
+    public String getUnauthorisedUrl() {
+        return unauthorisedUrl;
+    }
+
     public PasswordIntegrityChecksConfig getPasswordIntegrityChecksConfig() {
         return passwordIntegrityChecksConfig;
     }
@@ -196,5 +205,4 @@ public final class Config extends Configuration {
                 .get();
         return port;
     }
-
 }
