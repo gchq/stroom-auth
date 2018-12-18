@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.20 - 2018-12-18]
+
+* Issue **#116** : Update expired developer API keys
+*
+* Issue **#102** : Fix bad redirect after an email-based password reset
+  
+* Issue **#103** : Disabling new and new but inactive accounts uses the same number of minutes
+
+* Issue **#104** : Password validation layout
+
+* Issue **#105** : Password field is not mandatory when creating a user
+
+* Issue **#106** : No validation on the API creation page
+
+* Issue **#110** : Active PKI users are marked as Inactive in the Users tab
+
 ## [v1.0-beta.19]
 
 * Issue **#101** : Fix issue where 'account locked' message was only displayed once.
@@ -136,7 +152,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.19...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.20...master
+[v1.0-beta.20]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.19...v1.0-beta.20
 [v1.0-beta.19]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.18...v1.0-beta.19
 [v1.0-beta.18]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.17...v1.0-beta.18
 [v1.0-beta.17]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.16...v1.0-beta.17
