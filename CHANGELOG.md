@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v1.0-beta.20 - 2018-12-18]
+## [v1.0-beta.20] - 2018-12-18
 
 * Issue **#116** : Update expired developer API keys
 *
