@@ -23,6 +23,7 @@ public class UserDao_IT extends Database_IT {
 
     private static final String DISABLED = "disabled";
     private static final String ENABLED = "enabled";
+    private static final String LOCKED = "locked";
 
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UserDao_IT.class);
 
@@ -95,11 +96,40 @@ public class UserDao_IT extends Database_IT {
             numberOfDisabledUsers = userDao.disableInactiveUsers(129600);
 
             //ALSO THEN...
-            assertThat(numberOfDisabledUsers).isEqualTo(2);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(numberOfDisabledUsers).isEqualTo(1);
             assertThat(userDao.get(user02).get().getState()).isEqualTo(DISABLED);
 
         } catch (SQLException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testLockedUserIsNeverMadeInactive() {
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
+            // GIVEN...
+            UserDao userDao = getUserDao(conn);
+
+            final String user01 = UUID.randomUUID().toString();
+            final String user02 = UUID.randomUUID().toString();
+
+            // Create a test user who should be disabled
+            createUserAccount(userDao, user01);
+            userDao.recordSuccessfulLogin(user01);
+
+            createUserAccount(userDao, user02, false, LOCKED);
+
+            // WHEN...
+            setClockToDaysFromNow(userDao, 91);
+            int numberOfDisabledUsers = userDao.disableInactiveUsers(129600);
+
+            // THEN...
+            assertThat(numberOfDisabledUsers).isEqualTo(1);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(LOCKED);
+
+        } catch(SQLException e ){
             e.printStackTrace();
             fail();
         }
@@ -178,17 +208,21 @@ public class UserDao_IT extends Database_IT {
     }
 
     private static void createUserAccount(UserDao userDao, String email) {
-        createUserAccount(userDao, email, false);
+        createUserAccount(userDao, email, false, ENABLED);
     }
 
     private static void createUserAccount(UserDao userDao, String email, boolean neverExpires){
+        createUserAccount(userDao, email, neverExpires, ENABLED);
+    }
+
+    private static void createUserAccount(UserDao userDao, String email, boolean neverExpires, String status){
         User user = new User();
         user.setEmail(email);
-        user.setState(ENABLED);
+        user.setState(status);
         user.setNever_expires(neverExpires);
         userDao.create(user, "UserDao_IT");
         User newUser = userDao.get(email).get();
-        assertThat(newUser.getState()).isEqualTo(ENABLED);
+        assertThat(newUser.getState()).isEqualTo(status);
     }
 
     private static UserDao getUserDao(Connection conn){
