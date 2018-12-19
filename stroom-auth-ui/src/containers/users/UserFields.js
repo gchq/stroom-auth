@@ -91,8 +91,8 @@ const UserFields = ({
             <label>Account status</label>
             <Field name="state" component="select">
               <option value="enabled">Active</option>
-              <option value="disabled">Inactive</option>
-              <option value="locked">Locked</option>
+              <option disabled value="disabled">Inactive (because of disuse)</option>
+              <option value="locked">Locked (because of failed logins or by an admin)</option>
             </Field>
           </div>
           <div className="field-container__spacer" />
