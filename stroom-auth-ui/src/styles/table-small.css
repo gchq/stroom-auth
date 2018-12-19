@@ -4,6 +4,10 @@
   font-size: 12px !important;
 }
 
+.rt-resizable-header-content {
+  text-align: left;
+}
+
 .table-small-container .rt-tbody {
   display: flex;
 }
