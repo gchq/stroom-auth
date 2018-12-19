@@ -14,6 +14,7 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
 import org.junit.Ignore;
 import org.junit.Test;
+import stroom.auth.TokenBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,8 +25,18 @@ import static junit.framework.TestCase.fail;
 public class KeyGenerator {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(KeyGenerator.class);
     RsaJsonWebKey rsaJwk = RsaJwkGenerator.generateJwk(2048);
+    private final String JWK = "{\"kty\":\"RSA\",\"kid\":\"1ec7a983-317d-46ce-ae93-ce42bc217e52\",\"n\":\"72G4eRyG91OlsKOs-s2vBsbvXV5IKDOUpqDkFKYR_pCJwSBgD4BZYZ_qnIXx5L6cIK1Hsk_nMchHnL9lK7-nIt_bO41AyBes2IF2TTPuPKwqGY-aKCcuRh_BkDrCPZBR7-iyuYigL8MwgiP-yX6ieNpXzrfy3C8IYwLrKjLt39fb0fBod6_nrBPZeBUlH5m5pswNDfbOJII3bEGq5uQw5SZbaGBEEVbvkLNTROByK1PuOezfrpAyTWHCsG-zEsQ0HuIFyVo07sFJhV1AypPL-s71vKi6sDY46Mc5I2KV4CHbdvIhHT4xTaAhE9VimZgQW6sVvpRalV5XL8czjWVjtw\",\"e\":\"AQAB\",\"d\":\"HnwZXAMQBQs3_Ii7jK0I7xoCfad2FPiMo7O1mBOWEw8hG-EdmpvDxjTxUcGVDoZfp6GpkcGvNZ3F0OZm4e1kQYK0jp7scw7gyimigS5t1nguXFb3UMm8kN2WbuGsvt5UMPM3X31QuQRodwpSdiKUWkOkDwVJ_lRXAxTqEdOui2TY2WzKijvBEahyA2pqUGvrajF2GKFbZzXO1zagq6VhGCQohvCkaRWB-tVzc4-Ns6v3jqCKRpYYPrxD4C0RZ1K6InkxtXg1qYrcGMAPzCbqdjLoN41k-ZLNrp8rUSbRf2JAv9A8Ca2r6GDa0PcsySIbUWfduXOgGSuSfW6Hze1nMQ\",\"p\":\"__6DyUpzhXxh6JfRghv2K371tCeV4l1Q45S92Ea1IX3Y6iBweK4W6ToQYTM7l_0bA5eaJ3kywvmpFqzpEcmtsOJOyg_rPQe3GeBDhUJLHqEPDT4t2yc8eQnrFOdWLEYg2nYWLoOkFPS36UBgJtaxIpyj16qidk-DYSEXpeDcqkM\",\"q\":\"72McA2LIVj3hjlt_JsLpMFpcMm7E6knS-YITQUlwIFmVcW5tNQkC871o5x5AJL2Zj7MwxGHEx1WLzwd8B6lGkFP4BTpjCEoo_kXS-6IWyI3p6v7EmIb1O5Av8W37CA3VkPtuM-_dTFGlEW2vF0_ZetvTL49FlRx01Ekt48pvK30\",\"dp\":\"xEAYQ_6hpVn_rVKGORq6lAnWz2_xhgJH-tCS4fUC81QJMSQBVWMRCWeMGxgtvY06Ynycn1pYwgSnzkxsuUhFse8su9eMXdNGWb4FxWlXMXoDkgFzIiloQNqLsBDRjUuN8CzLQImHBtG9FEJX9C5uybwQF0wnFFBMxe-as345bQU\",\"dq\":\"1z03vNue4dw16Dfgdcueu7kjWL08FKRYK7uG8JbFWHDz68-sJZl6rAlMPzJ13hMT9Z7aZFi8A7apRHaoUIMlTTQStzCuRo_Xl_jUISi2b5EaGA8GWVZPPUUBtoR6x90Yf4lypwQu6CYo0yjZ244SL2Nj2Ulq-Q1jBlTeDAjCOEk\",\"qi\":\"a6D1TYa8dgJDqKfZ926SqPxzA3FiJPWAfo8BTyIahZFqqaPAaXEfKUTTCZKmIqsWwNntGcdmDhnNGZ11E2X8MPYkRpnIQj3BywtDzRbPGJ8AFcvy6Zq_vYl874LFrkvGPILe6NxabRCyrFgDKOQ-gIjkL83t0wyS_vVlrGLtCrk\"}";
 
-    public KeyGenerator() throws JoseException {}
+    public KeyGenerator() throws JoseException {
+    }
+
+    @Test
+    public void tokenBuilder() throws JoseException {
+        TokenBuilder builder = new TokenBuilder();
+        PublicJsonWebKey jwk = RsaJsonWebKey.Factory.newPublicJwk(JWK);
+        String key = builder.subject("statsServiceUser").expirationInMinutes(30).issuer("stroom").algorithm("RS256").privateVerificationKey(jwk.getPrivateKey()).build();
+        LOGGER.info(key);
+    }
 
     @Test
     public void generateRsaKeys() throws JoseException {
@@ -50,13 +61,11 @@ public class KeyGenerator {
                         new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, // which is only RS256 here
                                 AlgorithmIdentifiers.RSA_USING_SHA256))
                 .build(); // create the JwtConsumer instance
-        try
-        {
+        try {
             //  Validate the JWT and process it to the Claims
             JwtClaims jwtClaims = jwtConsumer.processToClaims(jwt);
             System.out.println("JWT validation succeeded! " + jwtClaims);
-        }
-        catch (InvalidJwtException e) {
+        } catch (InvalidJwtException e) {
             System.out.println("Invalid JWT! " + e);
             fail();
         }
@@ -74,7 +83,7 @@ public class KeyGenerator {
         return jwt;
     }
 
-    private String getPrivate(){
+    private String getPrivate() {
         return rsaJwk.toJson(JsonWebKey.OutputControlLevel.INCLUDE_PRIVATE);
     }
 
@@ -82,7 +91,7 @@ public class KeyGenerator {
         return rsaJwk.toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
     }
 
-    private JwtClaims getSomeClaimsForTesting(){
+    private JwtClaims getSomeClaimsForTesting() {
         // Create the Claims, which will be the content of the JWT
         JwtClaims claims = new JwtClaims();
         claims.setIssuer("stroom");  // who creates the token and signs it
@@ -92,7 +101,7 @@ public class KeyGenerator {
         claims.setIssuedAtToNow();  // when the token was issued/created (now)
         claims.setNotBeforeMinutesInThePast(2); // time before which the token is not yet valid (2 minutes ago)
         claims.setSubject("subject"); // the subject/principal is whom the token is about
-        claims.setClaim("email","mail@example.com"); // additional claims/attributes about the subject can be added
+        claims.setClaim("email", "mail@example.com"); // additional claims/attributes about the subject can be added
         List<String> groups = Arrays.asList("group-one", "other-group", "group-three");
         claims.setStringListClaim("groups", groups); // multi-valued claims work too and will end up as a JSON array
         return claims;

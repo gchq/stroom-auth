@@ -18,8 +18,6 @@
 
 package stroom.auth;
 
-import org.jose4j.jwk.PublicJsonWebKey;
-import org.jose4j.lang.JoseException;
 import stroom.auth.config.Config;
 import stroom.auth.exceptions.TokenCreationException;
 import stroom.auth.resources.token.v1.Token.TokenType;
