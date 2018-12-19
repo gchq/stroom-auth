@@ -72,7 +72,7 @@ const UserCreateForm = ({
         validateAsync(values, idToken, authenticationServiceUrl)
       }
       validationSchema={NewUserValidationSchema}>
-      {({errors, touched}) => {
+      {({errors, touched, setFieldTouched}) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (
@@ -89,6 +89,7 @@ const UserCreateForm = ({
               showCalculatedFields={false}
               errors={errors}
               touched={touched}
+              setFieldTouched={setFieldTouched}
             />
             <div className="footer">
               <Button
