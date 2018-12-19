@@ -40,7 +40,6 @@ const enhance = compose(
       } else if (query.reason === 'account_locked') {
         this.props.setIsAccountLocked(true);
       }
-      console.log({query});
     },
   }),
 );

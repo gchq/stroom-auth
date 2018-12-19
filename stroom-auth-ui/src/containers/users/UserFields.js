@@ -29,8 +29,6 @@ const LoginFailureCopy = ({attemptCount}) => (
 );
 
 const CheckboxField = ({field, form: {touched, errors}, ...props}) => {
-  console.log({field});
-  console.log({props});
   return (
     <Checkbox
       defaultChecked={field.value}
@@ -47,6 +45,7 @@ const UserFields = ({
   errors,
   touched,
   userBeingEdited,
+  setFieldTouched,
 }) => (
   <div className="container">
     <div className="section">
@@ -89,7 +88,7 @@ const UserFields = ({
         <div className="section__fields__row">
           <div className="field-container vertical">
             <label>Account status</label>
-            <Field name="state" component="select">
+            <Field name="state" component="select" onChange={() => setFieldTouched("state")}>
               <option value="enabled">Active</option>
               <option disabled value="disabled">Inactive (because of disuse)</option>
               <option value="locked">Locked (because of failed logins or by an admin)</option>
