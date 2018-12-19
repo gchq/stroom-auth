@@ -69,10 +69,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -213,43 +211,30 @@ public final class AuthenticationResource {
             } else {
                 String subject = optionalSubject.get();
                 if (!userDao.exists(subject)) {
-                    User newUser = new User();
-                    newUser.setEmail(subject);
-                    newUser.setState("enabled");
-                    newUser.setComments("Automatically created because the user has a valid certificate.");
+                    // There's no user so we can't let them have access.
+                    responseBuilder = seeOther(UriBuilder.fromUri(this.config.getUnauthorisedUrl()).build());
+                } else {
 
-                    // TODO: Password is currently mandatory so we need to set something. However this user might
-                    // not be logging in because they have a certificate. Should we give them a password and let them
-                    // log in, or should we add a field to make impossible for this user to log in at all? Or we could
-                    // set the password as a UUID and forget it. It'd be hashed and then gone forever.
-                    byte[] bytes = new byte[20];
-                    new SecureRandom().nextBytes(bytes);
-                    String secureRandomPassword = Base64.getUrlEncoder().encodeToString(bytes);
-                    newUser.setPassword(secureRandomPassword);
-
-                    userDao.create(newUser, "admin");
-                    LOGGER.info("I've not see this certificate user ID before so I've created a new user account for them.");
+                    User user = userDao.get(subject).get();
+                    if (user.getState().equals("enabled")) {
+                        LOGGER.info("Logging user in using DN with subject {}", subject);
+                        optionalSession.get().setAuthenticated(true);
+                        optionalSession.get().setUserEmail(subject);
+                        String accessCode = SessionManager.createAccessCode();
+                        relyingParty.setAccessCode(accessCode);
+                        String idToken = createIdToken(subject, nonce, state, sessionId);
+                        relyingParty.setIdToken(idToken);
+                        responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
+                        stroomEventLoggingService.successfulLogin(httpServletRequest, subject);
+                        // Reset last access, login failures, etc...
+                        userDao.recordSuccessfulLogin(subject);
+                    } else {
+                        stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, subject);
+                        String failureUrl = this.config.getUnauthorisedUrl() + "?reason=account_locked";
+                        responseBuilder = seeOther(UriBuilder.fromUri(failureUrl).build());
+                    }
                 }
 
-                User user = userDao.get(subject).get();
-                if(user.getState().equals("enabled")) {
-                    LOGGER.info("Logging user in using DN with subject {}", subject);
-                    optionalSession.get().setAuthenticated(true);
-                    optionalSession.get().setUserEmail(subject);
-                    String accessCode = SessionManager.createAccessCode();
-                    relyingParty.setAccessCode(accessCode);
-                    String idToken = createIdToken(subject, nonce, state, sessionId);
-                    relyingParty.setIdToken(idToken);
-                    responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
-                    stroomEventLoggingService.successfulLogin(httpServletRequest, subject);
-                    // Reset last access, login failures, etc...
-                    userDao.recordSuccessfulLogin(subject);
-                }
-                else {
-                    stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, subject);
-                    String failureUrl = this.config.getUnauthorisedUrl() + "?reason=account_locked";
-                    responseBuilder = seeOther(UriBuilder.fromUri(failureUrl).build());
-                }
             }
         }
         // There's no session and there's no certificate so we'll send them to the login page

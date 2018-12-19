@@ -34,7 +34,7 @@ public class KeyGenerator {
     public void tokenBuilder() throws JoseException {
         TokenBuilder builder = new TokenBuilder();
         PublicJsonWebKey jwk = RsaJsonWebKey.Factory.newPublicJwk(JWK);
-        String key = builder.subject("statsServiceUser").expirationInMinutes(30).issuer("stroom").algorithm("RS256").privateVerificationKey(jwk.getPrivateKey()).build();
+        String key = builder.subject("admin").expirationInMinutes(30).issuer("stroom").algorithm("RS256").privateVerificationKey(jwk.getPrivateKey()).build();
         LOGGER.info(key);
     }
 
