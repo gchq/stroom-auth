@@ -6,12 +6,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.21] - 2018-12-19
+
+* Issue **#111** : Changing a User status from Inactive to Locked doesn't enable the save button
+
+* Issue **#112** : Only active accounts should be considered for scheduled inactivity checks
+
+* Issue **#114** : Improve copy of account statuses
+
+* Issue **#115** : It should not be possible to manually set an account as 'inactive'
+
+* Issue **#117** : Improve logging
+
+* Issue **#121** : Users with certificates should not be able to log in unless they have a user account
+
 ## [v1.0-beta.20] - 2018-12-18
 
 * Issue **#116** : Update expired developer API keys
-*
+
 * Issue **#102** : Fix bad redirect after an email-based password reset
-  
+
 * Issue **#103** : Disabling new and new but inactive accounts uses the same number of minutes
 
 * Issue **#104** : Password validation layout
@@ -152,7 +166,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.20...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.21...master
+[v1.0-beta.21]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.20...v1.0-beta.21
 [v1.0-beta.20]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.19...v1.0-beta.20
 [v1.0-beta.19]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.18...v1.0-beta.19
 [v1.0-beta.18]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.17...v1.0-beta.18
