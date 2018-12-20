@@ -235,7 +235,7 @@ public class UserDao {
         } else return false;
     }
 
-    public int disableNewInactiveUsers(int inactivityThresholdInMins){
+    public int deactivateNewInactiveUsers(int inactivityThresholdInMins){
         Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInMins);
 
         int numberOfDisabledAccounts = database
@@ -253,7 +253,7 @@ public class UserDao {
         return numberOfDisabledAccounts;
     }
 
-    public int disableInactiveUsers(int inactivityThresholdInMins){
+    public int deactivateInactiveUsers(int inactivityThresholdInMins){
         Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInMins);
 
         int numberOfDisabledAccounts = database

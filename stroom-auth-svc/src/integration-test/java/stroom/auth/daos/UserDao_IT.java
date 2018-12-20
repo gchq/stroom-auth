@@ -50,7 +50,7 @@ public class UserDao_IT extends Database_IT {
 
             // WHEN...
             setClockToDaysFromNow(userDao, 31);
-            int numberOfDisabledUsers = userDao.disableNewInactiveUsers(43200);
+            int numberOfDisabledUsers = userDao.deactivateNewInactiveUsers(43200);
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -84,7 +84,7 @@ public class UserDao_IT extends Database_IT {
 
             // WHEN...
             setClockToDaysFromNow(userDao, 91);
-            int numberOfDisabledUsers = userDao.disableInactiveUsers(129600);
+            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(129600);
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -93,7 +93,7 @@ public class UserDao_IT extends Database_IT {
 
             // ALSO WHEN...
             setClockToDaysFromNow(userDao, 200);
-            numberOfDisabledUsers = userDao.disableInactiveUsers(129600);
+            numberOfDisabledUsers = userDao.deactivateInactiveUsers(129600);
 
             //ALSO THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -122,7 +122,7 @@ public class UserDao_IT extends Database_IT {
 
             // WHEN...
             setClockToDaysFromNow(userDao, 91);
-            int numberOfDisabledUsers = userDao.disableInactiveUsers(129600);
+            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(129600);
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -154,7 +154,7 @@ public class UserDao_IT extends Database_IT {
 
             // WHEN...
             setClockToDaysFromNow(userDao, 91);
-            int numberOfDisabledUsers = userDao.disableInactiveUsers(129600);
+            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(129600);
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);

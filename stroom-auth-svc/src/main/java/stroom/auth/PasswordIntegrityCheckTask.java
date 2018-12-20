@@ -21,15 +21,15 @@ public class PasswordIntegrityCheckTask extends TimerTask {
 
     @Override
     public void run() {
-        LOGGER.info("Performing password integrity checks.");
+        LOGGER.info("Checking for accounts that are not being used.");
 
-        int numberOfDisabledNewAccounts = userDao.disableNewInactiveUsers(passwordIntegrityChecksConfig.getDisableInactiveNewAccountAfterXMins());
-        LOGGER.info("Disabled {} new user account(s) that have been inactive for {} days or more.",
-                numberOfDisabledNewAccounts, passwordIntegrityChecksConfig.getDisableInactiveNewAccountAfterXMins());
+        int numberOfInactiveNewAccounts = userDao.deactivateNewInactiveUsers(passwordIntegrityChecksConfig.getDisableInactiveNewAccountAfterXMins());
+        LOGGER.info("Deactivated {} new user account(s) that have been inactive for {} days or more.",
+                numberOfInactiveNewAccounts, passwordIntegrityChecksConfig.getDisableInactiveNewAccountAfterXMins());
 
-        int numberOfDisabledAccounts = userDao.disableInactiveUsers(passwordIntegrityChecksConfig.getDisableInactiveAccountAfterXMins());
-        LOGGER.info("Disabled {} user account(s) that have been inactive for {} days or more.",
-                numberOfDisabledAccounts, passwordIntegrityChecksConfig.getDisableInactiveAccountAfterXMins());
+        int numberOfInactiveAccounts = userDao.deactivateInactiveUsers(passwordIntegrityChecksConfig.getDisableInactiveAccountAfterXMins());
+        LOGGER.info("Deactivated {} user account(s) that have been inactive for {} days or more.",
+                numberOfInactiveAccounts, passwordIntegrityChecksConfig.getDisableInactiveAccountAfterXMins());
 
         // TODO password change checks
     }

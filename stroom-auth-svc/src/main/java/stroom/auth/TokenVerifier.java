@@ -91,7 +91,7 @@ public class TokenVerifier {
         }
 
         if (!tokenRecord.get().isEnabled()) {
-            LOGGER.warn("Someone tried to verify a token that is disabled.");
+            LOGGER.warn("Someone tried to verify a token that is not enabled.");
             return Optional.empty();
         }
         LOGGER.debug("Looks like this token is fine.");
