@@ -19,13 +19,12 @@ import java.util.UUID;
 
 import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
+import static stroom.auth.resources.user.v1.User.UserState.ENABLED;
+import static stroom.auth.resources.user.v1.User.UserState.LOCKED;
+import static stroom.auth.resources.user.v1.User.UserState.DISABLED;
+import static stroom.auth.resources.user.v1.User.UserState.INACTIVE;
 
 public class UserDao_IT extends Database_IT {
-
-    private static final String INACTIVE = "inactive";
-    private static final String DISABLED = "disabled";
-    private static final String ENABLED = "enabled";
-    private static final String LOCKED = "locked";
 
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(UserDao_IT.class);
 
@@ -56,9 +55,9 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
-            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
-            assertThat(userDao.get(user03).get().getState()).isEqualTo(ENABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE.getStateText());
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED.getStateText());
+            assertThat(userDao.get(user03).get().getState()).isEqualTo(ENABLED.getStateText());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -90,8 +89,8 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
-            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE.getStateText());
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED.getStateText());
 
             // ALSO WHEN...
             setClockToDaysFromNow(userDao, 200);
@@ -99,7 +98,7 @@ public class UserDao_IT extends Database_IT {
 
             //ALSO THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user02).get().getState()).isEqualTo(INACTIVE);
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(INACTIVE.getStateText());
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,7 +119,7 @@ public class UserDao_IT extends Database_IT {
             createUserAccount(userDao, user01);
             userDao.recordSuccessfulLogin(user01);
 
-            createUserAccount(userDao, user02, false, LOCKED);
+            createUserAccount(userDao, user02, false, LOCKED.getStateText());
 
             // WHEN...
             setClockToDaysFromNow(userDao, 91);
@@ -128,8 +127,8 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
-            assertThat(userDao.get(user02).get().getState()).isEqualTo(LOCKED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE.getStateText());
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(LOCKED.getStateText());
 
         } catch(SQLException e ){
             e.printStackTrace();
@@ -150,7 +149,7 @@ public class UserDao_IT extends Database_IT {
             createUserAccount(userDao, user01);
             userDao.recordSuccessfulLogin(user01);
 
-            createUserAccount(userDao, user02, false, DISABLED);
+            createUserAccount(userDao, user02, false, DISABLED.getStateText());
 
             // WHEN...
             setClockToDaysFromNow(userDao, 91);
@@ -158,8 +157,8 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
-            assertThat(userDao.get(user02).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE.getStateText());
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(DISABLED.getStateText());
 
         } catch(SQLException e ){
             e.printStackTrace();
@@ -190,8 +189,8 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
-            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE.getStateText());
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED.getStateText());
         } catch (SQLException e) {
             e.printStackTrace();
             fail();
@@ -240,11 +239,11 @@ public class UserDao_IT extends Database_IT {
     }
 
     private static void createUserAccount(UserDao userDao, String email) {
-        createUserAccount(userDao, email, false, ENABLED);
+        createUserAccount(userDao, email, false, ENABLED.getStateText());
     }
 
     private static void createUserAccount(UserDao userDao, String email, boolean neverExpires){
-        createUserAccount(userDao, email, neverExpires, ENABLED);
+        createUserAccount(userDao, email, neverExpires, ENABLED.getStateText());
     }
 
     private static void createUserAccount(UserDao userDao, String email, boolean neverExpires, String status){

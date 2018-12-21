@@ -217,7 +217,7 @@ public final class AuthenticationResource {
                 } else {
 
                     User user = userDao.get(subject).get();
-                    if (user.getState().equals("enabled")) {
+                    if (user.getState().equals(User.UserState.ENABLED.getStateText())) {
                         LOGGER.info("Logging user in using DN with subject {}", subject);
                         optionalSession.get().setAuthenticated(true);
                         optionalSession.get().setUserEmail(subject);

@@ -24,6 +24,8 @@ import stroom.db.auth.tables.records.UsersRecord;
 import java.sql.Timestamp;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static stroom.auth.resources.user.v1.User.UserState.DISABLED;
+import static stroom.auth.resources.user.v1.User.UserState.ENABLED;
 
 public final class UserMapperTest {
     @Test
@@ -32,7 +34,7 @@ public final class UserMapperTest {
         usersRecord.setId(1);
         usersRecord.setEmail("email");
         usersRecord.setPasswordHash("hash");
-        usersRecord.setState("enabled");
+        usersRecord.setState(ENABLED.getStateText());
         usersRecord.setFirstName("first name");
         usersRecord.setLastName("last name");
         usersRecord.setComments("comments");
@@ -49,7 +51,7 @@ public final class UserMapperTest {
         user.setId(2);
         user.setEmail("new email");
         user.setPassword_hash("new hash");
-        user.setState("disabled");
+        user.setState(DISABLED.getStateText());
         user.setFirst_name("new first name");
         user.setLast_name("new last name");
         user.setComments("new comments");
@@ -66,7 +68,7 @@ public final class UserMapperTest {
         assertThat(updatedRecord.getId()).isEqualTo(2);
         assertThat(updatedRecord.getEmail()).isEqualTo("new email");
         assertThat(updatedRecord.getPasswordHash()).isEqualTo("new hash");
-        assertThat(updatedRecord.getState()).isEqualTo("disabled");
+        assertThat(updatedRecord.getState()).isEqualTo(DISABLED.getStateText());
         assertThat(updatedRecord.getFirstName()).isEqualTo("new first name");
         assertThat(updatedRecord.getLastName()).isEqualTo("new last name");
         assertThat(updatedRecord.getComments()).isEqualTo("new comments");
