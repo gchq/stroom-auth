@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserDao_IT extends Database_IT {
 
+    private static final String INACTIVE = "inactive";
     private static final String DISABLED = "disabled";
     private static final String ENABLED = "enabled";
     private static final String LOCKED = "locked";
@@ -55,7 +56,7 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
             assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
             assertThat(userDao.get(user03).get().getState()).isEqualTo(ENABLED);
 
@@ -66,7 +67,7 @@ public class UserDao_IT extends Database_IT {
     }
 
     @Test
-    public void testInactiveUserIsDisabled(){
+    public void testInactiveUserIsDeactivated(){
         try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
@@ -89,7 +90,7 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
             assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
 
             // ALSO WHEN...
@@ -98,7 +99,7 @@ public class UserDao_IT extends Database_IT {
 
             //ALSO THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user02).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(INACTIVE);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,8 +128,38 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
             assertThat(userDao.get(user02).get().getState()).isEqualTo(LOCKED);
+
+        } catch(SQLException e ){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testDisabledUserIsNeverMadeInactive() {
+        try (Connection conn = DriverManager.getConnection(mysql.getJdbcUrl(), JDBC_USER, JDBC_PASSWORD)) {
+            // GIVEN...
+            UserDao userDao = getUserDao(conn);
+
+            final String user01 = UUID.randomUUID().toString();
+            final String user02 = UUID.randomUUID().toString();
+
+            // Create a test user who should be disabled
+            createUserAccount(userDao, user01);
+            userDao.recordSuccessfulLogin(user01);
+
+            createUserAccount(userDao, user02, false, DISABLED);
+
+            // WHEN...
+            setClockToDaysFromNow(userDao, 91);
+            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(Duration.parse("P90D"));
+
+            // THEN...
+            assertThat(numberOfDisabledUsers).isEqualTo(1);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
+            assertThat(userDao.get(user02).get().getState()).isEqualTo(DISABLED);
 
         } catch(SQLException e ){
             e.printStackTrace();
@@ -159,7 +190,7 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
-            assertThat(userDao.get(user01).get().getState()).isEqualTo(DISABLED);
+            assertThat(userDao.get(user01).get().getState()).isEqualTo(INACTIVE);
             assertThat(userDao.get(user02).get().getState()).isEqualTo(ENABLED);
         } catch (SQLException e) {
             e.printStackTrace();

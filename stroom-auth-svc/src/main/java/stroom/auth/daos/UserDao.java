@@ -244,10 +244,10 @@ public class UserDao {
 
         int numberOfDisabledAccounts = database
                 .update(Tables.USERS)
-                .set(Tables.USERS.STATE, "disabled")
+                .set(Tables.USERS.STATE, User.UserState.INACTIVE.getStateText())
                 .where(Tables.USERS.CREATED_ON.lessOrEqual(activityThreshold))
                 // We are only going to deactivate enabled accounts
-                .and(USERS.STATE.eq("enabled"))
+                .and(USERS.STATE.eq(User.UserState.ENABLED.getStateText()))
                 // A 'new' user is one who has never logged in.
                 .and(Tables.USERS.LAST_LOGIN.isNull())
                 // We don't want to disable admin because that could lock the users out of the system
@@ -262,10 +262,10 @@ public class UserDao {
 
         int numberOfDisabledAccounts = database
                 .update(Tables.USERS)
-                .set(Tables.USERS.STATE, "disabled")
+                .set(Tables.USERS.STATE, User.UserState.INACTIVE.getStateText())
                 .where(Tables.USERS.LAST_LOGIN.lessOrEqual(activityThreshold))
                 // We are only going to deactivate enabled accounts
-                .and(USERS.STATE.eq("enabled"))
+                .and(USERS.STATE.eq(User.UserState.ENABLED.getStateText()))
                 // We don't want to disable admin because that could lock the users out of the system
                 .and(USERS.NEVER_EXPIRES.ne(true))
                 .execute();

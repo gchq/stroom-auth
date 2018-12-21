@@ -65,6 +65,7 @@ const customStyles = {
 
 function AsyncUserSelect(props) {
   const {onChange} = props;
+  // eslint-disable-next-line
   const [_, setInputValue] = useState('');
   const {idToken, url} = useMappedState(mapState);
 

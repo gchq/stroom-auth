@@ -90,7 +90,7 @@ const LoginForm = ({
               <Form>
                 <div className="Login__content">
                   <div className="Login__icon-container">
-                    <img src={icon} title="Stroom logo" />
+                    <img src={icon} alt="Stroom logo" />
                   </div>
                   <div className="field-container vertical">
                     <div className="horizontal-label-and-validation-container">
