@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.22] - 2018-12-21
+
+* Issue **#113** : Add 'disabled' status
+
+* Issue **#111** : Fix button enable events
+
+* Issue **#120** : Improve text size
+
+* Issue **#119** : Improve heading alignment
+
+* Issue **#118** : Improve logging
+
 ## [v1.0-beta.21] - 2018-12-19
 
 * Issue **#111** : Changing a User status from Inactive to Locked doesn't enable the save button
@@ -166,7 +178,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.21...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.22...master
+[v1.0-beta.22]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.21...v1.0-beta.22
 [v1.0-beta.21]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.20...v1.0-beta.21
 [v1.0-beta.20]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.19...v1.0-beta.20
 [v1.0-beta.19]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.18...v1.0-beta.19
