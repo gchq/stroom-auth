@@ -14,6 +14,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.Duration;
 import java.util.UUID;
 
 import static junit.framework.TestCase.fail;
@@ -50,7 +51,7 @@ public class UserDao_IT extends Database_IT {
 
             // WHEN...
             setClockToDaysFromNow(userDao, 31);
-            int numberOfDisabledUsers = userDao.deactivateNewInactiveUsers(43200);
+            int numberOfDisabledUsers = userDao.deactivateNewInactiveUsers(Duration.parse("P30D"));
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -84,7 +85,7 @@ public class UserDao_IT extends Database_IT {
 
             // WHEN...
             setClockToDaysFromNow(userDao, 91);
-            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(129600);
+            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(Duration.parse("P90D"));
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -93,7 +94,7 @@ public class UserDao_IT extends Database_IT {
 
             // ALSO WHEN...
             setClockToDaysFromNow(userDao, 200);
-            numberOfDisabledUsers = userDao.deactivateInactiveUsers(129600);
+            numberOfDisabledUsers = userDao.deactivateInactiveUsers(Duration.parse("P90D"));
 
             //ALSO THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -122,7 +123,7 @@ public class UserDao_IT extends Database_IT {
 
             // WHEN...
             setClockToDaysFromNow(userDao, 91);
-            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(129600);
+            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(Duration.parse("P90D"));
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -154,7 +155,7 @@ public class UserDao_IT extends Database_IT {
 
             // WHEN...
             setClockToDaysFromNow(userDao, 91);
-            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(129600);
+            int numberOfDisabledUsers = userDao.deactivateInactiveUsers(Duration.parse("P90D"));
 
             // THEN...
             assertThat(numberOfDisabledUsers).isEqualTo(1);
@@ -184,22 +185,22 @@ public class UserDao_IT extends Database_IT {
 
             // THEN...
             // Simple
-            Boolean shouldNotNeedChange = userDao.needsPasswordChange(user01, 1, true);
+            Boolean shouldNotNeedChange = userDao.needsPasswordChange(user01, Duration.parse("PT1M"), true);
             assertThat(shouldNotNeedChange).isTrue();
 
-            Boolean shouldNeedChange = userDao.needsPasswordChange(user01, 200, true);
+            Boolean shouldNeedChange = userDao.needsPasswordChange(user01, Duration.parse("PT200M"), true);
             // True because they've not had a password change.
             assertThat(shouldNeedChange).isTrue();
 
             // Boundary cases
-            Boolean shouldNotNeedChangeBoundaryCase = userDao.needsPasswordChange(user01, 129600, true);
+            Boolean shouldNotNeedChangeBoundaryCase = userDao.needsPasswordChange(user01, Duration.parse("P90D"), true);
             assertThat(shouldNotNeedChangeBoundaryCase).isTrue();
 
             userDao.changePassword(user01, "new password");
-            shouldNeedChange = userDao.needsPasswordChange(user01, 200, true);
+            shouldNeedChange = userDao.needsPasswordChange(user01, Duration.parse("PT200M"), true);
             assertThat(shouldNeedChange).isFalse();
 
-            Boolean shouldNeedChangeBoundaryCase = userDao.needsPasswordChange(user01, 91, true);
+            Boolean shouldNeedChangeBoundaryCase = userDao.needsPasswordChange(user01, Duration.parse("PT91M"), true);
             assertThat(shouldNeedChangeBoundaryCase).isFalse();
         } catch (SQLException e) {
             e.printStackTrace();

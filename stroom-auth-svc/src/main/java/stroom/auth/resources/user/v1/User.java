@@ -251,6 +251,7 @@ public final class User {
 
     public enum UserState {
         ENABLED("enabled"),
+        INACTIVE("inactive"),
         DISABLED("disabled"),
         LOCKED("locked");
 

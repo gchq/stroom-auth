@@ -92,7 +92,8 @@ public final class AuthenticationResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationResource.class);
     private static final String INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
     private static final String ACCOUNT_LOCKED_MESSAGE = "This account is locked. Please contact your administrator";
-    private static final String ACCOUNT_DISABLED_MESSAGE = "This account is marked as inactive. Please contact your administrator";
+    private static final String ACCOUNT_DISABLED_MESSAGE = "This account is disabled. Please contact your administrator";
+    private static final String ACCOUNT_INACTIVE_MESSAGE = "This account is marked as inactive. Please contact your administrator";
 
     private Config config;
     private final Pattern dnPattern;
@@ -229,7 +230,7 @@ public final class AuthenticationResource {
                         // Reset last access, login failures, etc...
                         userDao.recordSuccessfulLogin(subject);
                     } else {
-                        stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, subject);
+                        stroomEventLoggingService.failedLoginBecause(httpServletRequest, subject, User.UserState.LOCKED.getStateText());
                         String failureUrl = this.config.getUnauthorisedUrl() + "?reason=account_locked";
                         responseBuilder = seeOther(UriBuilder.fromUri(failureUrl).build());
                     }
@@ -322,19 +323,27 @@ public final class AuthenticationResource {
                         .entity(new LoginResponse(false, ACCOUNT_LOCKED_MESSAGE, null)).build();
             case LOCKED_GOOD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
-                stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
+                stroomEventLoggingService.failedLoginBecause(httpServletRequest, credentials.getEmail(), User.UserState.LOCKED.getStateText());
                 return status(Status.OK)
                         .entity(new LoginResponse(false, ACCOUNT_LOCKED_MESSAGE, null)).build();
             case DISABLED_BAD_CREDENTIALS:
                 // If the credentials are bad we don't want to reveal the status of the account to the user.
-                stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
+                stroomEventLoggingService.failedLoginBecause(httpServletRequest, credentials.getEmail(), User.UserState.DISABLED.getStateText());
                 return status(Status.OK)
                         .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
             case DISABLED_GOOD_CREDENTIALS:
-                // If the credentials are bad we don't want to reveal the status of the account to the user.
-                stroomEventLoggingService.failedLoginBecauseLocked(httpServletRequest, credentials.getEmail());
+                stroomEventLoggingService.failedLoginBecause(httpServletRequest, credentials.getEmail(), User.UserState.DISABLED.getStateText());
                 return status(Status.OK)
                         .entity(new LoginResponse(false, ACCOUNT_DISABLED_MESSAGE, null)).build();
+            case INACTIVE_BAD_CREDENTIALS:
+                // If the credentials are bad we don't want to reveal the status of the account to the user.
+                stroomEventLoggingService.failedLoginBecause(httpServletRequest, credentials.getEmail(), User.UserState.INACTIVE.getStateText());
+                return status(Status.OK)
+                        .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
+            case INACTIVE_GOOD_CREDENTIALS:
+                stroomEventLoggingService.failedLoginBecause(httpServletRequest, credentials.getEmail(), User.UserState.INACTIVE.getStateText());
+                return status(Status.OK)
+                        .entity(new LoginResponse(false, ACCOUNT_INACTIVE_MESSAGE, null)).build();
             default:
                 String errorMessage = String.format("%s does not support a LoginResult of %s",
                         this.getClass().getSimpleName(), loginResult.toString());
@@ -491,7 +500,7 @@ public final class AuthenticationResource {
             response = Boolean.class, tags = {"Authentication"})
     public final Response needsPasswordChange(@QueryParam("email") String email) {
         boolean userNeedsToChangePassword = userDao.needsPasswordChange(
-                email, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXMins(),
+                email, config.getPasswordIntegrityChecksConfig().getMandatoryPasswordChangeDuration(),
                 config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin());
         return Response.status(Status.OK).entity(userNeedsToChangePassword).build();
     }
@@ -545,7 +554,7 @@ public final class AuthenticationResource {
         String username = session.getUserEmail();
 
         boolean userNeedsToChangePassword = userDao.needsPasswordChange(
-                username, config.getPasswordIntegrityChecksConfig().getRequirePasswordChangeAfterXMins(),
+                username, config.getPasswordIntegrityChecksConfig().getMandatoryPasswordChangeDuration(),
                 config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin());
 
         if (userNeedsToChangePassword) {

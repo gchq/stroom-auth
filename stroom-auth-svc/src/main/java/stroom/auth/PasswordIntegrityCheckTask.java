@@ -23,13 +23,13 @@ public class PasswordIntegrityCheckTask extends TimerTask {
     public void run() {
         LOGGER.info("Checking for accounts that are not being used.");
 
-        int numberOfInactiveNewAccounts = userDao.deactivateNewInactiveUsers(passwordIntegrityChecksConfig.getDisableInactiveNewAccountAfterXMins());
+        int numberOfInactiveNewAccounts = userDao.deactivateNewInactiveUsers(passwordIntegrityChecksConfig.getNeverUsedAccountDeactivationThreshold());
         LOGGER.info("Deactivated {} new user account(s) that have been inactive for {} days or more.",
-                numberOfInactiveNewAccounts, passwordIntegrityChecksConfig.getDisableInactiveNewAccountAfterXMins());
+                numberOfInactiveNewAccounts, passwordIntegrityChecksConfig.getNeverUsedAccountDeactivationThreshold());
 
-        int numberOfInactiveAccounts = userDao.deactivateInactiveUsers(passwordIntegrityChecksConfig.getDisableInactiveAccountAfterXMins());
+        int numberOfInactiveAccounts = userDao.deactivateInactiveUsers(passwordIntegrityChecksConfig.getUnusedAccountDeactivationThreshold());
         LOGGER.info("Deactivated {} user account(s) that have been inactive for {} days or more.",
-                numberOfInactiveAccounts, passwordIntegrityChecksConfig.getDisableInactiveAccountAfterXMins());
+                numberOfInactiveAccounts, passwordIntegrityChecksConfig.getUnusedAccountDeactivationThreshold());
 
         // TODO password change checks
     }

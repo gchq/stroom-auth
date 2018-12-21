@@ -90,8 +90,9 @@ const UserFields = ({
             <label>Account status</label>
             <Field name="state" component="select" onChange={() => setFieldTouched("state")}>
               <option value="enabled">Active</option>
-              <option disabled value="disabled">Inactive (because of disuse)</option>
-              <option value="locked">Locked (because of failed logins or by an admin)</option>
+              <option value="disabled">Disabled</option>
+              <option disabled value="inactive">Inactive (because of disuse)</option>
+              <option disabled value="locked">Locked (because of failed logins)</option>
             </Field>
           </div>
           <div className="field-container__spacer" />

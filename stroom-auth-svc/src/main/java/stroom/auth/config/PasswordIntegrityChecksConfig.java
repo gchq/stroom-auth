@@ -3,24 +3,25 @@ package stroom.auth.config;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
+import java.time.Duration;
 
 public class PasswordIntegrityChecksConfig {
 
     @NotNull
     @JsonProperty
-    private int disableInactiveNewAccountAfterXMins = 30;
+    private Duration neverUsedAccountDeactivationThreshold = Duration.parse("P30D");
 
     @NotNull
     @JsonProperty
-    private int disableInactiveAccountAfterXMins = 30;
+    private Duration unusedAccountDeactivationThreshold = Duration.parse("P90D");
 
     @NotNull
     @JsonProperty
-    private int requirePasswordChangeAfterXMins = 90;
+    private Duration mandatoryPasswordChangeDuration = Duration.parse("P90D");
 
     @NotNull
     @JsonProperty
-    private int secondsBetweenChecks = 120;
+    private Duration durationBetweenChecks = Duration.parse("PT2M");
 
     @NotNull
     @JsonProperty
@@ -34,20 +35,20 @@ public class PasswordIntegrityChecksConfig {
     @JsonProperty
     private int minimumPasswordLength;
 
-    public int getDisableInactiveNewAccountAfterXMins() {
-        return disableInactiveNewAccountAfterXMins;
+    public Duration getNeverUsedAccountDeactivationThreshold() {
+        return neverUsedAccountDeactivationThreshold;
     }
 
-    public int getDisableInactiveAccountAfterXMins() {
-        return disableInactiveAccountAfterXMins;
+    public Duration getUnusedAccountDeactivationThreshold() {
+        return unusedAccountDeactivationThreshold;
     }
 
-    public int getRequirePasswordChangeAfterXMins() {
-        return requirePasswordChangeAfterXMins;
+    public Duration getMandatoryPasswordChangeDuration() {
+        return mandatoryPasswordChangeDuration;
     }
 
-    public int getSecondsBetweenChecks() {
-        return secondsBetweenChecks;
+    public Duration getDurationBetweenChecks() {
+        return durationBetweenChecks;
     }
 
     public boolean isForcePasswordChangeOnFirstLogin() {

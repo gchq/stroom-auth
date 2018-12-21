@@ -134,15 +134,20 @@ public class UserDao {
         else {
             boolean isPasswordCorrect = BCrypt.checkpw(password, user.getPasswordHash());
             boolean isDisabled = user.getState().equals(User.UserState.DISABLED.getStateText());
+            boolean isInactive = user.getState().equals(User.UserState.INACTIVE.getStateText());
             boolean isLocked = user.getState().equals(User.UserState.LOCKED.getStateText());
 
             if (isLocked) {
-                LOGGER.debug("Account {} tried to log in but it is disabled.", email);
+                LOGGER.debug("Account {} tried to log in but it is locked.", email);
                 return isPasswordCorrect ? LoginResult.LOCKED_GOOD_CREDENTIALS : LoginResult.LOCKED_BAD_CREDENTIALS;
             }
             else if (isDisabled) {
-                LOGGER.debug("Account {} tried to log in but it is locked.", email);
+                LOGGER.debug("Account {} tried to log in but it is disabled.", email);
                 return isPasswordCorrect ? LoginResult.DISABLED_GOOD_CREDENTIALS : LoginResult.DISABLED_BAD_CREDENTIALS;
+            }
+            else if (isInactive) {
+                LOGGER.debug("Account {} tried to log in but it is inactive.", email);
+                return isPasswordCorrect ? LoginResult.INACTIVE_GOOD_CREDENTIALS : LoginResult.INACTIVE_BAD_CREDENTIALS;
             }
             else {
                 return isPasswordCorrect ? LoginResult.GOOD_CREDENTIALS : LoginResult.BAD_CREDENTIALS;
@@ -207,9 +212,8 @@ public class UserDao {
                 .execute();
     }
 
-    public Boolean needsPasswordChange(String email, int passwordChangeThresholdInMins, boolean forcePasswordChangeOnFirstLogin) {
+    public Boolean needsPasswordChange(String email, Duration mandatoryPasswordChangeDuration, boolean forcePasswordChangeOnFirstLogin) {
         Validate.notNull(email, "email must not be null");
-        Validate.inclusiveBetween(0, Integer.MAX_VALUE, passwordChangeThresholdInMins);
 
         UsersRecord user = (UsersRecord) database
                 .selectFrom((Table) USERS)
@@ -224,9 +228,9 @@ public class UserDao {
                 user.getCreatedOn().toLocalDateTime() :
                 user.getPasswordLastChanged().toLocalDateTime();
         LocalDateTime now = LocalDateTime.ofInstant(Instant.now(clock), ZoneId.systemDefault());
-        long minsSinceLastPasswordChange = passwordLastChanged.until(now, ChronoUnit.MINUTES);
+        Duration durationSinceLastPasswordChange = Duration.ofMinutes(passwordLastChanged.until(now, ChronoUnit.MINUTES));
 
-        boolean thresholdBreached = minsSinceLastPasswordChange >= passwordChangeThresholdInMins;
+        boolean thresholdBreached = durationSinceLastPasswordChange.compareTo(mandatoryPasswordChangeDuration) > 0;
         boolean isFirstLogin = user.getPasswordLastChanged() == null;
 
         if(thresholdBreached || (forcePasswordChangeOnFirstLogin && isFirstLogin)){
@@ -235,8 +239,8 @@ public class UserDao {
         } else return false;
     }
 
-    public int deactivateNewInactiveUsers(int inactivityThresholdInMins){
-        Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInMins);
+    public int deactivateNewInactiveUsers(Duration neverUsedAccountDeactivationThreshold){
+        Timestamp activityThreshold = convertThresholdToTimestamp(neverUsedAccountDeactivationThreshold);
 
         int numberOfDisabledAccounts = database
                 .update(Tables.USERS)
@@ -253,8 +257,8 @@ public class UserDao {
         return numberOfDisabledAccounts;
     }
 
-    public int deactivateInactiveUsers(int inactivityThresholdInMins){
-        Timestamp activityThreshold = convertThresholdToTimestamp(inactivityThresholdInMins);
+    public int deactivateInactiveUsers(Duration unusedAccountDeactivationThreshold){
+        Timestamp activityThreshold = convertThresholdToTimestamp(unusedAccountDeactivationThreshold);
 
         int numberOfDisabledAccounts = database
                 .update(Tables.USERS)
@@ -274,9 +278,9 @@ public class UserDao {
         return result != null;
     }
 
-    private Timestamp convertThresholdToTimestamp(int mins){
+    private Timestamp convertThresholdToTimestamp(Duration duration){
         Instant now = Instant.now(clock);
-        Instant thresholdInstant = now.minus(Duration.ofMinutes(mins));
+        Instant thresholdInstant = now.minus(duration);
         return Timestamp.from(thresholdInstant);
     }
 
@@ -287,7 +291,9 @@ public class UserDao {
         LOCKED_GOOD_CREDENTIALS,
         DISABLED_BAD_CREDENTIALS,
         DISABLED_GOOD_CREDENTIALS,
-        USER_DOES_NOT_EXIST
+        USER_DOES_NOT_EXIST,
+        INACTIVE_GOOD_CREDENTIALS,
+        INACTIVE_BAD_CREDENTIALS;
     }
 
 }

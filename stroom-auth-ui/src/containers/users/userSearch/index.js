@@ -51,6 +51,10 @@ function renderStateCell(state) {
       break;
     case 'disabled':
       stateColour = '#ff2e00';
+      stateText = 'Disabled';
+      break;
+    case 'inactive':
+      stateColour = '#ff2e00';
       stateText = 'Inactive';
       break;
     default:

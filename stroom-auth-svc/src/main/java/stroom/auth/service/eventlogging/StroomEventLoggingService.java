@@ -70,10 +70,11 @@ public class StroomEventLoggingService {
         stroomEventFactory.log(event);
     }
 
-    public void failedLoginBecauseLocked(final HttpServletRequest request, String usersEmail) {
+
+    public void failedLoginBecause(final HttpServletRequest request, String usersEmail, String failedStatus) {
         Event event = createAuthenticateEvent("Logon",
                 request, usersEmail, AuthenticateAction.LOGON,
-                "User attempted to log in but failed because the account is locked.");
+                "User attempted to log in but failed because the account is " + failedStatus + ".");
         AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
         authenticateOutcome.setReason(ACCOUNT_LOCKED);
         event.getEventDetail().getAuthenticate().setOutcome(authenticateOutcome);

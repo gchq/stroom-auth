@@ -208,7 +208,7 @@ public final class App extends Application<Config> {
         time.schedule(
                 passwordIntegrityCheckTask,
                 0,
-                config.getPasswordIntegrityChecksConfig().getSecondsBetweenChecks() * 1000);
+                config.getPasswordIntegrityChecksConfig().getDurationBetweenChecks().toMillis());
     }
 
 }

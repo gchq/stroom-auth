@@ -129,10 +129,10 @@ email:
     password: ${EMAIL_SMTP_PASSWORD:-password}
 
 passwordIntegrityChecks:
-  disableInactiveNewAccountAfterXMins: ${DISABLE_INACTIVE_NEW_ACCOUNT_AFTER_X_MINS:- 43200} # 30 days
-  disableInactiveAccountAfterXMins: ${DISABLE_INACTIVE_ACCOUNT_AFTER_X_MINS:- 129600} # 90 days
-  requirePasswordChangeAfterXMins: ${REQUIRE_PASSWORD_CHANGE_AFTER_X_MINS:- 43200} # 30 days
-  secondsBetweenChecks: ${SECONDS_BETWEEN_PASSWORD_INTEGRITY_CHECKS:- 120}
+  neverUsedAccountDeactivationThreshold: ${NEVER_USED_ACCOUNT_DEACTIVATION_THRESHOLD:-P30D} # 30 days
+  unusedAccountDeactivationThreshold: ${UNUSED_ACCOUNT_DEACTIVATION_THRESHOLD:-P90D} # 90 days
+  mandatoryPasswordChangeDuration: ${MANDATORY_PASSWORD_CHANGE_DURATION:-P30D} # 30 days
+  durationBetweenChecks: ${DURATION_BETWEEN_CHECKS:-PT2M}
   forcePasswordChangeOnFirstLogin: ${FORCE_PASSWORD_CHANGE_ON_FIRST_LOGIN:-true}
   # There is an effective regex here: https://stackoverflow.com/questions/3802192/regexp-java-for-password-validation
   # That regex won't work when pasted directly into this YAML.
