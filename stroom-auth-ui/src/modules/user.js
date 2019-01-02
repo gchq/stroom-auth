@@ -327,15 +327,35 @@ export const fetchUser = userId => {
   };
 };
 
-export const deleteSelectedUser = userId => {
-  return (dispatch, getState) => {
-    const jwsToken = getState().authentication.idToken;
-    const userIdToDelete = getState().userSearch.selectedUserRowId;
-    fetch(`${getState().config.userServiceUrl}/${userIdToDelete}`, {
+const disableAuthorisationUser = (email, idToken, authorisationServiceUrl) => {
+  fetch(
+    `${authorisationServiceUrl}/setUserStatus?id=${email}&status=disabled`,
+    {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwsToken,
+        Authorization: 'Bearer ' + idToken,
+      },
+      method: 'post',
+      mode: 'cors',
+    },
+  ).then(handleStatus);
+};
+
+export const deleteSelectedUser = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const idToken = state.authentication.idToken;
+    const userIdToDelete = state.userSearch.selectedUserRowId;
+    const user = state.userSearch.results.find(
+      result => result.id === userIdToDelete,
+    );
+    console.log({user});
+    fetch(`${state.config.userServiceUrl}/${userIdToDelete}`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + idToken,
       },
       method: 'delete',
       mode: 'cors',
@@ -343,11 +363,16 @@ export const deleteSelectedUser = userId => {
       .then(handleStatus)
       .then(getBody)
       .then(() => {
-        dispatch(changeSelectedRow(userId));
-        dispatch(performUserSearch(jwsToken));
+        disableAuthorisationUser(
+          user.email,
+          idToken,
+          getState().config.authorisationServiceUrl,
+        );
+        dispatch(changeSelectedRow(userIdToDelete));
+        dispatch(performUserSearch(idToken));
         dispatch(toggleAlertVisibility('User has been deleted'));
       })
-      .catch(error => handleErrors(error, dispatch, jwsToken));
+      .catch(error => handleErrors(error, dispatch, idToken));
   };
 };
 
