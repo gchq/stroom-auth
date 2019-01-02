@@ -2,7 +2,7 @@
 """
 Transforms an SQL extract of pre-6.0 Stroom users to 6.0 users, ready for import to the stroom-auth database. If you're upgrading to Stroom 6.0 then this is a necessary step.
 
-This scripts expects the input TSV to have the following colums: NAME, STAT. 
+This scripts expects the input TSV to have the following colums: NAME, STAT. If a user already exists it won't try and insert that user.
 
 You could use something like the following SQL to dump the users from Stroom into a TSV:
     echo 'SELECT NAME, STAT FROM USR' | mysql -h"192.168.1.9" -P"3307" -u"stroomuser" -p"stroompassword1" stroom > user_extract.tsv
