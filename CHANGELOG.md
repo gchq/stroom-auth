@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.24] - 2019-01-02
+
+* Issue **#123**: Disable authorisation users when an authentication user is deleted
+
 ## [v1.0-beta.23] - 2019-01-02
 
 * Issue **#124**: Add 5 -> 6 migration script
@@ -182,7 +186,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.23...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.24...master
+[v1.0-beta.24]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.23...v1.0-beta.24
 [v1.0-beta.23]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.22...v1.0-beta.23
 [v1.0-beta.22]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.21...v1.0-beta.22
 [v1.0-beta.21]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.20...v1.0-beta.21
