@@ -1,6 +1,30 @@
 # stroom-auth
 Pre-release version of a Stroom authentication service.
 
+## Migrating from a pre-6.0 Stroom
+In Stroom 6.0 the responsibility for user identities moved from the Stroom core to this service. When upgrading from a pre-6.0 version of Stroom you must migrate users from Stroom to stroom-auth. You can use the following scripts for this. Make sure you update your host, port, username, and password.
+
+### Extract
+```bash
+# Dump the users from Stroom into a TSV.
+echo 'SELECT NAME, STAT FROM USR' | mysql -h"192.168.1.9" -P"3307" -u"stroomuser" -p"stroompassword1" stroom > user_extract.tsv
+```
+```sql
+-- You could also do this from within MySQL, but you'd need to make sure your user privileges were compatible:
+SELECT NAME, STAT INTO OUTFILE './user_extract.tsv' FROM USR;
+```
+
+### Transform
+```bash
+# Run the following python script to create a TSV to load into stroom-auth
+transform_user_extract.py user_extract.tsv transformed_users.sql
+```
+
+### Load
+```bash
+# Insert the users into stroom-auth
+```
+
 ## Releasing to DockerHub
 You can release an image to DockerHub by pushing a tag to GitHub. GitHub will tell Travis to build, and pass it the tag. Our CI build script, `travis.script.sh`, will do the build and push the image. It will do this for every push to master and it will do it for _certain_ tags. 
 

@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="10" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="stroom.auth.service.App" />
-    <module name="stroom-auth-svc_main" />
+    <module name="stroom-auth.stroom-auth-svc.main" />
     <option name="PROGRAM_PARAMETERS" value="server config.generated.yml" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/stroom-auth-svc" />
     <method v="2">
