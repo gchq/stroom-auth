@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v1.0-beta.23] - 2019-12-02
+## [v1.0-beta.23] - 2019-01-02
 
 * Issue **#124**: Add 5 -> 6 migration script
 
