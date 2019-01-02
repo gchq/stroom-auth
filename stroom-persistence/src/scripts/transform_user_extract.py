@@ -35,7 +35,7 @@ def transform(input_tsv, output_sql):
     created_on = datetime.datetime.now().isoformat()
 
     insert_template = """
-    INSERT INTO users (
+    INSERT IGNORE INTO users (
         email,
         password_hash,
         state,
