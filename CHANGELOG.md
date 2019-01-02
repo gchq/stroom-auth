@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.23] - 2019-12-02
+
+* Issue **#124**: Add 5 -> 6 migration script
+
 ## [v1.0-beta.22] - 2018-12-21
 
 * Issue **#113** : Add 'disabled' status
@@ -178,7 +182,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.22...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.23...master
+[v1.0-beta.23]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.22...v1.0-beta.23
 [v1.0-beta.22]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.21...v1.0-beta.22
 [v1.0-beta.21]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.20...v1.0-beta.21
 [v1.0-beta.20]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.19...v1.0-beta.20
