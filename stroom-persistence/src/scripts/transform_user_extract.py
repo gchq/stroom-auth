@@ -9,23 +9,25 @@ If a user already exists it won't try and insert that user.
 
 You could use something like the following SQL to dump the users from Stroom
 into a TSV:
-    echo 'SELECT NAME, STAT FROM USR' | mysql -h"192.168.1.9" -P"3307"
-        -u"stroomuser" -p"stroompassword1" stroom > user_extract.tsv
+    echo 'SELECT NAME, STAT FROM USR' | mysql -h"192.168.1.9" -P"3307" \
+ -u"stroomuser" -p"stroompassword1" stroom > user_extract.tsv
 
 If you have the right permissions you could also get the extract like this by
 executing the following in mysql:
     SELECT NAME, STAT INTO OUTFILE './user_extract.tsv' FROM USR;
+"""
 
+import csv
+import datetime
+import sys
+
+usage = """
 Usage:
 transform_user_extract.py <input_tsv> <output_sql>
 
 E.g.
 ./transform_user_extract.py user_extract.tsv transformed_users.sql
 """
-
-import csv
-import datetime
-from docopt import docopt
 
 
 def transform(input_tsv, output_sql):
@@ -89,11 +91,20 @@ def transform(input_tsv, output_sql):
 
 
 def main():
-    arguments = docopt(__doc__, version='v1.0')
-    input_tsv = arguments["<input_tsv>"]
-    output_sql = arguments["<output_sql>"]
+    help_string = __doc__
 
-    transform(input_tsv, output_sql)
+    # Something like docopt would be better for handling args but we're
+    # targeting environments where this might not be available.
+    if len(sys.argv) is 1:
+        print help_string
+        print usage
+    elif len(sys.argv) is 3:
+        input_file = sys.argv[1]
+        output_file = sys.argv[2]
+        transform(input_file, output_file)
+    else:
+        print 'Bad number of arguments'
+        print usage
 
 
 if __name__ == '__main__':
