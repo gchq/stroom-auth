@@ -68,7 +68,7 @@ const ChangePasswordFields = ({
       validate={values =>
         validateAsync(values, idToken, authenticationServiceUrl)
       }>
-      {({errors, touched, submitForm}) => {
+      {({errors, touched, submitForm, isSubmitting}) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (
@@ -141,6 +141,7 @@ const ChangePasswordFields = ({
                 <div className="ChangePassword-actions">
                   <Button
                     className="ChangePassword-button primary"
+                    isLoading={isSubmitting}
                     disabled={isPristine || hasErrors}
                     type="submit"
                     label=""
