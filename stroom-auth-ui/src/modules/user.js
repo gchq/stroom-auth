@@ -448,6 +448,7 @@ export const resetPassword = values => {
   return (dispatch, getState) => {
     const newPassword = values.password;
     const jwsToken = getState().login.token;
+    const stroomUiUrl = getState().config.stroomUiUrl;
 
     fetch(`${getState().config.authenticationServiceUrl}/resetPassword/`, {
       headers: {
@@ -462,7 +463,7 @@ export const resetPassword = values => {
       .then(getJsonBody)
       .then(response => {
         if (response.changeSucceeded) {
-          dispatch(toggleAlertVisibility('Your password has been changed'));
+          window.location.href = stroomUiUrl;
         } else {
           let errorMessage = [];
           if (response.failedOn.includes('COMPLEXITY')) {

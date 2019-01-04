@@ -105,23 +105,6 @@ const ResetPassword = ({
     </div>
   );
 
-  const confirmation = (
-    <p>
-      You password has been changed. We're going to send you to the login page
-      in&nbsp;
-      <Countdown
-        date={Date.now() + 5000}
-        renderer={({hours, minutes, seconds, completed}) => (
-          <span className="ChangePassword-countdown">{seconds}</span>
-        )}
-        onComplete={() => {
-          window.location.href = stroomUiUrl;
-        }}
-      />
-      &nbsp;seconds, or you can <a href={stroomUiUrl}>go there now.</a>
-    </p>
-  );
-
   const showFailure = missingToken || invalidToken || expiredToken;
   const showChangePasswordFields = !showAlert && !showFailure;
   return (
@@ -130,7 +113,6 @@ const ResetPassword = ({
         <div className="section__title">
           <h3>Reset your password</h3>
         </div>
-        {showAlert ? confirmation : undefined}
         {showFailure ? failure : undefined}
         {showChangePasswordFields ? (
           <ChangePasswordFields
