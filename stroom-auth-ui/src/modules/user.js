@@ -402,6 +402,7 @@ export const changePassword = values => {
     const email = values.email;
     const oldPassword = values.oldPassword;
     const newPassword = values.password;
+    const redirectUrl = values.redirectUrl;
 
     fetch(`${getState().config.authenticationServiceUrl}/changePassword/`, {
       headers: {
@@ -415,7 +416,12 @@ export const changePassword = values => {
       .then(getJsonBody)
       .then(response => {
         if (response.changeSucceeded) {
-          dispatch(toggleAlertVisibility('Your password has been changed'));
+          // If we successfully changed the password then we want to redirect if there's a redirection URL
+          if (redirectUrl !== undefined) {
+            window.location.href = redirectUrl;
+          } else {
+            dispatch(toggleAlertVisibility('Your password has been changed'));
+          }
         } else {
           let errorMessage = [];
           if (response.failedOn.includes('BAD_OLD_PASSWORD')) {

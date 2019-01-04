@@ -21,7 +21,6 @@ import {withRouter} from 'react-router';
 import Cookies from 'cookies-js';
 import queryString from 'query-string';
 
-import PostChangeRedirect from './PostChangeRedirect';
 import './ChangePassword.css';
 import '../Layout.css';
 import {changePassword as onSubmit} from '../../modules/user';
@@ -108,12 +107,6 @@ const ChangePassword = ({
 
         {showAlert && !redirectUrl ? (
           <p>Your password has been changed.</p>
-        ) : (
-          undefined
-        )}
-
-        {showAlert && redirectUrl ? (
-          <PostChangeRedirect redirectUrl={redirectUrl} />
         ) : (
           undefined
         )}
