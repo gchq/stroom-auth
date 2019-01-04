@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#109**: Button on Change Password page does not disable when clicked
+
+* Issue **#67**: Clear out obsolete dependencies in `public`
+
 ## [v1.0-beta.25] - 2019-01-03
 
 * Update JOSE library
