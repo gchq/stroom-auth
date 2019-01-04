@@ -42,7 +42,7 @@ import stroom.db.auth.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = -369251902;
+    private static final long serialVersionUID = -399118570;
 
     /**
      * The reference instance of <code>auth.users</code>
@@ -135,7 +135,12 @@ public class Users extends TableImpl<UsersRecord> {
     /**
      * The column <code>auth.users.never_expires</code>.
      */
-    public final TableField<UsersRecord, Boolean> NEVER_EXPIRES = createField("never_expires", org.jooq.impl.SQLDataType.BIT.defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
+    public final TableField<UsersRecord, Boolean> NEVER_EXPIRES = createField("never_expires", org.jooq.impl.SQLDataType.BOOLEAN.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>auth.users.force_password_change</code>.
+     */
+    public final TableField<UsersRecord, Boolean> FORCE_PASSWORD_CHANGE = createField("force_password_change", org.jooq.impl.SQLDataType.BOOLEAN.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.BOOLEAN)), this, "");
 
     /**
      * Create a <code>auth.users</code> table reference

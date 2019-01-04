@@ -53,6 +53,12 @@ if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
                         includes = 'users|tokens|token_types|json_web_key'
                         // We don't want to include flyway versioning
                         excludes = 'schema_version'
+                        forcedTypes {
+                            forcedType {
+                                name = 'BOOLEAN'
+                                types = 'tinyint'
+                            }
+                        }
                     }
                     target {
                         packageName = 'stroom.db'
