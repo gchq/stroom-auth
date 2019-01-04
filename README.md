@@ -48,12 +48,10 @@ This module accesses the existing Stroom database. Eventually the relevant table
 ### Making a database change in dev
 Obviously you'll lose test data if you do this.
 
-1. Stop the database container and delete it
-2. Change the migrations to whatever SQL you need
-3. Run the app to perform the migrations (or use the Flyway command line)
-4. Delete the old models at `stroom-persistence/src/main/java/stroom`.
-5. Run `./gradlew generateAuthdbJooqSchemaSource` to generate the models again
-6. Restart app
+1. Add your migrations.
+2. Start and then stop the app so the migrations get run on your local database.
+3. Run `./gradlew clean build -x test -x integrationTest -PjooqGeneration=true` to update the models
+4. Commit your changes
 
 ### Dropping all tables
 ```sql
