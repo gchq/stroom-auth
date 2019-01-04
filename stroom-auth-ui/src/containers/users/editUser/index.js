@@ -130,7 +130,7 @@ const UserEditForm = ({
         validateAsync(values, idToken, authenticationServiceUrl)
       }
       validationSchema={UserValidationSchema}>
-      {({errors, touched, submitForm, setFieldTouched}) => {
+      {({errors, touched, submitForm, setFieldTouched, setFieldValue}) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (
@@ -150,6 +150,7 @@ const UserEditForm = ({
                 errors={errors}
                 touched={touched}
                 setFieldTouched={setFieldTouched}
+                setFieldValue={setFieldValue}
               />
               <div className="footer">
                 <Button

@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.25] - 2019-01-03
+
+* Update JOSE library
+
+* Fix broken drop-down
+
+* Make transform_user_extract.py Python 2.6 compatible and without dependencies 
+
 ## [v1.0-beta.24] - 2019-01-02
 
 * Issue **#123**: Disable authorisation users when an authentication user is deleted
@@ -186,7 +194,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.24...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.25...master
+[v1.0-beta.25]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.24...v1.0-beta.25
 [v1.0-beta.24]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.23...v1.0-beta.24
 [v1.0-beta.23]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.22...v1.0-beta.23
 [v1.0-beta.22]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.21...v1.0-beta.22

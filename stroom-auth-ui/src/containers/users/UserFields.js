@@ -46,6 +46,7 @@ const UserFields = ({
   touched,
   userBeingEdited,
   setFieldTouched,
+  setFieldValue,
 }) => (
   <div className="container">
     <div className="section">
@@ -88,11 +89,21 @@ const UserFields = ({
         <div className="section__fields__row">
           <div className="field-container vertical">
             <label>Account status</label>
-            <Field name="state" component="select" onChange={() => setFieldTouched("state")}>
+            <Field
+              name="state"
+              component="select"
+              onChange={event => {
+                setFieldValue('state', event.target.value);
+                setFieldTouched('state');
+              }}>
               <option value="enabled">Active</option>
               <option value="disabled">Disabled</option>
-              <option disabled value="inactive">Inactive (because of disuse)</option>
-              <option disabled value="locked">Locked (because of failed logins)</option>
+              <option disabled value="inactive">
+                Inactive (because of disuse)
+              </option>
+              <option disabled value="locked">
+                Locked (because of failed logins)
+              </option>
             </Field>
           </div>
           <div className="field-container__spacer" />
