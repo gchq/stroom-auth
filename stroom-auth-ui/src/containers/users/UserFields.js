@@ -129,9 +129,6 @@ const UserFields = ({
     <div className="section">
       <div className="section__title">
         <h3>Password</h3>
-        <p className="section__subtitle">
-          You can change this user's password here
-        </p>
       </div>
       <div className="section__fields">
         <div className="section__fields__row">
@@ -153,6 +150,19 @@ const UserFields = ({
               <ErrorMessage
                 name="verifyPassword"
                 render={msg => <div className="validation-error">{msg}</div>}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="section__fields__row">
+          <div className="field-container">
+            <label>Force a password change at next login</label>
+            <div className="field-container__spacer" />
+            <div className="field-container--with-validation">
+              <Field
+                name="force_password_change"
+                label="force_password_change"
+                component={CheckboxField}
               />
             </div>
           </div>

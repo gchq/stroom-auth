@@ -56,6 +56,7 @@ public final class UserMapper {
         if (user.getUpdated_by_user() != null) userMap.put("updated_by_user", user.getUpdated_by_user());
 
         userMap.put("never_expires", user.getNever_expires());
+        userMap.put("force_password_change", user.isForce_password_change());
 
         // This is last because if we're going from locked to enabled then we need to reset the login failures.
         // And in this case we'll want to override any other setting for login_failures.

@@ -53,6 +53,7 @@ const initialValues = {
   password: '',
   verifyPassword: '',
   comments: '',
+  force_password_change: true,
 };
 
 const UserCreateForm = ({

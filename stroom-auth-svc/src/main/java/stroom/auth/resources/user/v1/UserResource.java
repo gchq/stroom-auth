@@ -202,24 +202,38 @@ public final class UserResource {
         Record foundUserRecord = database
                 .select(USERS.ID,
                         USERS.EMAIL,
+                        USERS.FIRST_NAME,
+                        USERS.LAST_NAME,
+                        USERS.COMMENTS,
+                        USERS.STATE,
                         USERS.LOGIN_FAILURES,
+                        USERS.LOGIN_COUNT,
                         USERS.LAST_LOGIN,
                         USERS.UPDATED_ON,
                         USERS.UPDATED_BY_USER,
                         USERS.CREATED_ON,
-                        USERS.CREATED_BY_USER)
+                        USERS.CREATED_BY_USER,
+                        USERS.NEVER_EXPIRES,
+                        USERS.FORCE_PASSWORD_CHANGE)
                 .from(USERS)
                 .where(new Condition[]{USERS.EMAIL.eq(authenticatedServiceUser.getName())}).fetchOne();
         Result foundUserResult = database
-                .newResult(
-                        USERS.ID,
+                .newResult(USERS.ID,
                         USERS.EMAIL,
+                        USERS.FIRST_NAME,
+                        USERS.LAST_NAME,
+                        USERS.COMMENTS,
+                        USERS.STATE,
                         USERS.LOGIN_FAILURES,
+                        USERS.LOGIN_COUNT,
                         USERS.LAST_LOGIN,
                         USERS.UPDATED_ON,
                         USERS.UPDATED_BY_USER,
                         USERS.CREATED_ON,
-                        USERS.CREATED_BY_USER);
+                        USERS.CREATED_BY_USER,
+                        USERS.NEVER_EXPIRES,
+                        USERS.FORCE_PASSWORD_CHANGE
+                );
         foundUserResult.add(foundUserRecord);
         String foundUserJson = foundUserResult.formatJSON((new JSONFormat()).header(false).recordFormat(JSONFormat.RecordFormat.OBJECT));
 
@@ -340,7 +354,8 @@ public final class UserResource {
                         USERS.UPDATED_BY_USER,
                         USERS.CREATED_ON,
                         USERS.CREATED_BY_USER,
-                        USERS.NEVER_EXPIRES)
+                        USERS.NEVER_EXPIRES,
+                        USERS.FORCE_PASSWORD_CHANGE)
                 .from(USERS)
                 .where(new Condition[]{USERS.ID.eq(userId)})
                 .fetchOne();
@@ -373,7 +388,8 @@ public final class UserResource {
                     USERS.UPDATED_BY_USER,
                     USERS.CREATED_ON,
                     USERS.CREATED_BY_USER,
-                    USERS.NEVER_EXPIRES);
+                    USERS.NEVER_EXPIRES,
+                    USERS.FORCE_PASSWORD_CHANGE);
             foundUserResult.add(foundUserRecord);
             String foundUserJson = foundUserResult
                     .formatJSON((new JSONFormat())

@@ -189,6 +189,7 @@ export const saveChanges = editedUser => {
       comments,
       state,
       never_expires,
+      force_password_change,
     } = editedUser;
 
     fetch(`${getState().config.userServiceUrl}/${id}`, {
@@ -207,6 +208,7 @@ export const saveChanges = editedUser => {
         comments,
         state,
         never_expires,
+        force_password_change,
       }),
     })
       .then(handleStatus)
@@ -235,6 +237,7 @@ export const createUser = newUser => {
       comments,
       state,
       never_expires,
+      force_password_change,
     } = newUser;
 
     dispatch(showCreateLoader(true));
@@ -255,6 +258,7 @@ export const createUser = newUser => {
         comments,
         state,
         never_expires,
+        force_password_change,
       }),
     })
       .then(handleStatus)

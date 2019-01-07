@@ -94,6 +94,7 @@ public class UserDao {
                 .set(USERS.CREATED_ON, Timestamp.from(Instant.now(clock)))
                 .set(USERS.CREATED_BY_USER, creatingUsername)
                 .set(USERS.NEVER_EXPIRES, newUser.getNever_expires())
+                .set(USERS.FORCE_PASSWORD_CHANGE, newUser.isForce_password_change())
                 .returning(new Field[]{USERS.ID}).fetchOne();
         return usersRecord.getId();
     }
@@ -205,6 +206,7 @@ public class UserDao {
         String newPasswordHash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         user.setPasswordHash(newPasswordHash);
         user.setPasswordLastChanged(Timestamp.from(clock.instant()));
+        user.setForcePasswordChange(false);
 
         database.update((Table) USERS)
                 .set(user)
@@ -233,7 +235,7 @@ public class UserDao {
         boolean thresholdBreached = durationSinceLastPasswordChange.compareTo(mandatoryPasswordChangeDuration) > 0;
         boolean isFirstLogin = user.getPasswordLastChanged() == null;
 
-        if(thresholdBreached || (forcePasswordChangeOnFirstLogin && isFirstLogin)){
+        if(thresholdBreached || (forcePasswordChangeOnFirstLogin && isFirstLogin) || user.getForcePasswordChange()){
             LOGGER.debug("User {} needs a password change.", email);
             return true;
         } else return false;

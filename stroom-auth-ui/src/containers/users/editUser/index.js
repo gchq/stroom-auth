@@ -101,7 +101,8 @@ const enhance = compose(
         password: '',
         verifyPassword: '',
         comments: userBeingEdited.comments || '',
-        neverExpire: false,
+        never_expires: userBeingEdited.never_expires || false,
+        force_password_change: userBeingEdited.force_password_change || false,
       },
     };
   }),
