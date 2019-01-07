@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#91**: Allow an admin to specify that a user must change password at next login
+
+* Issue **#107**: Remove the 'password has been reset, prepare for redirection' page
+
 * Issue **#109**: Button on Change Password page does not disable when clicked
 
 * Issue **#67**: Clear out obsolete dependencies in `public`
