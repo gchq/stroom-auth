@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.26] - 2019-01-15
+
+* Issue #126: Fix new API key page
+
 * Issue **#109**: Button on Change Password page does not disable when clicked
 
 * Issue **#67**: Clear out obsolete dependencies in `public`
@@ -198,7 +202,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.25...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.26...master
+[v1.0-beta.26]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.25...v1.0-beta.26
 [v1.0-beta.25]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.24...v1.0-beta.25
 [v1.0-beta.24]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.23...v1.0-beta.24
 [v1.0-beta.23]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.22...v1.0-beta.23
