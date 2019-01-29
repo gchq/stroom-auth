@@ -193,6 +193,7 @@ public final class AuthenticationResource {
 
         // Check for an authenticated session
         if (isAuthenticated) {
+            LOGGER.debug("User has a session, sending them to the RP");
             String accessCode = SessionManager.createAccessCode();
             relyingParty.setAccessCode(accessCode);
             String subject = optionalSession.get().getUserEmail();
@@ -203,6 +204,7 @@ public final class AuthenticationResource {
         // Check for a certificate
         else if (loginUsingCertificate) {
             String cn = optionalCn.get();
+            LOGGER.debug("User has presented a certificate: {}", cn);
             Optional<String> optionalSubject = getIdFromCertificate(cn);
 
             if (!optionalSubject.isPresent()) {
@@ -212,10 +214,10 @@ public final class AuthenticationResource {
             } else {
                 String subject = optionalSubject.get();
                 if (!userDao.exists(subject)) {
+                    LOGGER.debug("The user identified by the certificate does not exist in the auth database.");
                     // There's no user so we can't let them have access.
                     responseBuilder = seeOther(UriBuilder.fromUri(this.config.getUnauthorisedUrl()).build());
                 } else {
-
                     User user = userDao.get(subject).get();
                     if (user.getState().equals(User.UserState.ENABLED.getStateText())) {
                         LOGGER.info("Logging user in using DN with subject {}", subject);
@@ -230,6 +232,7 @@ public final class AuthenticationResource {
                         // Reset last access, login failures, etc...
                         userDao.recordSuccessfulLogin(subject);
                     } else {
+                        LOGGER.debug("The user identified by the certificate is not enabled!");
                         stroomEventLoggingService.failedLoginBecause(httpServletRequest, subject, User.UserState.LOCKED.getStateText());
                         String failureUrl = this.config.getUnauthorisedUrl() + "?reason=account_locked";
                         responseBuilder = seeOther(UriBuilder.fromUri(failureUrl).build());
@@ -240,6 +243,7 @@ public final class AuthenticationResource {
         }
         // There's no session and there's no certificate so we'll send them to the login page
         else {
+            LOGGER.debug("User has no session and no certificate - sending them to login.");
             String failureParams = String.format(
                     "?error=login_required&" +
                             "state=%s&" +
