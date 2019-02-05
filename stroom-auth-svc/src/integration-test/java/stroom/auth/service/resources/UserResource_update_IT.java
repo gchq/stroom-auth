@@ -40,7 +40,7 @@ public final class UserResource_update_IT extends Dropwizard_IT {
 
         User user = userManager.deserialiseUsers(userApi.getUser(response.getData())).get(0);
 
-        user.setEmail("new email_" + UUID.randomUUID().toString());
+        user.setEmail("new_email_" + UUID.randomUUID().toString());
 
         userApi.updateUser(response.getData(), new stroom.auth.service.api.model.User()
             .id(user.getId())
