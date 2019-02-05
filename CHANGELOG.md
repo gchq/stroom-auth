@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.29] - 2019-02-05
+
 * Change service docker image base to openjdk:8u181-jre-alpine3.8
 
 ## [v1.0-beta.28] - 2019-02-05
@@ -212,7 +214,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.28...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.29...master
+[v1.0-beta.29]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.28...v1.0-beta.29
 [v1.0-beta.28]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.27...v1.0-beta.28
 [v1.0-beta.27]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.26...v1.0-beta.27
 [v1.0-beta.26]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.25...v1.0-beta.26
