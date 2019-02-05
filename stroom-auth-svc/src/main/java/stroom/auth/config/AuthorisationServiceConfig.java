@@ -36,6 +36,10 @@ public class AuthorisationServiceConfig {
     @JsonProperty
     private String canManageUsersPermission;
 
+    @NotNull
+    @JsonProperty
+    private String setUserStatusPath;
+
     public String getUrl() {
         return url;
     }
@@ -48,4 +52,7 @@ public class AuthorisationServiceConfig {
         return canManageUsersPermission;
     }
 
+    public String getSetUserStatusPath() {
+        return setUserStatusPath;
+    }
 }

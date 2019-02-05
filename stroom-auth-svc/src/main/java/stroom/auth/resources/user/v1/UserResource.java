@@ -424,6 +424,11 @@ public final class UserResource {
             }
         }
 
+        if(!usersRecord.getState().equalsIgnoreCase(user.getState())) {
+            // We need to make sure that the authorisation user has the same status as the user we're updating.
+            authorisationServiceClient.setUserStatus(authenticatedServiceUser.getJwt(), user.getEmail(), user.getState());
+        }
+
         user.setUpdated_by_user(authenticatedServiceUser.getName());
         user.setUpdated_on(ZonedDateTime.now().toString());
         UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);

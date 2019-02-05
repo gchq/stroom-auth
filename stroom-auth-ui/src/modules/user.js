@@ -329,14 +329,14 @@ export const fetchUser = userId => {
 
 const disableAuthorisationUser = (email, idToken, authorisationServiceUrl) => {
   fetch(
-    `${authorisationServiceUrl}/setUserStatus?id=${email}&status=disabled`,
+    `${authorisationServiceUrl}/setUserStatus?userId=${email}&status=disabled`,
     {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + idToken,
       },
-      method: 'post',
+      method: 'get',
       mode: 'cors',
     },
   ).then(handleStatus);
