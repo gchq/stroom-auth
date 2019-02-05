@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Change service docker image base to openjdk:8u181-jre-alpine3.8
+
 ## [v1.0-beta.28] - 2019-02-05
 
 * Issue **#129**: Update authorisation user's status when authentication user's status is changed
