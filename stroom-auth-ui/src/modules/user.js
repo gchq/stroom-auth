@@ -327,6 +327,7 @@ export const fetchUser = userId => {
   };
 };
 
+// TODO: This should happen in the service, not here.
 const disableAuthorisationUser = (email, idToken, authorisationServiceUrl) => {
   fetch(
     `${authorisationServiceUrl}/setUserStatus?userId=${email}&status=disabled`,
