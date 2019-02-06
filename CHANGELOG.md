@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Uplift base docker image to openjdk:8u191-jdk-alpine3.9, reverting back to JDK for access to diagnostic tools.
+
 ## [v1.0-beta.29] - 2019-02-05
 
 * Change service docker image base to openjdk:8u181-jre-alpine3.8

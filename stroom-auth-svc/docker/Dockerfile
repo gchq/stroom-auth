@@ -20,10 +20,13 @@
 
 # NOTE: 
 # This Dockerfile used to be openjdk:10.0.2-jre-slim (debian)
-# When this needs to be uplifted to java 10 again the j10 version can be found at:
+# When this needs to be uplifted to java 10+ again the j10 version can be found at:
 # commit 388db68fb90b623cc9ed360d6a20dab77134e152, tag v1.0-beta.7
 # Further to this, master branch is J10 and thus openjdk:10.0.2-jre-slim 
-FROM openjdk:8u181-jre-alpine3.8
+
+# The JDK (rather than JRE) is required for the diagnostic tools like
+# jstat/jmap/jcmd/etc.
+FROM openjdk:8u191-jdk-alpine3.9 as stroom-base-stage
 
 WORKDIR /stroom-auth-service
 
