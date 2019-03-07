@@ -21,7 +21,6 @@ import {withRouter} from 'react-router';
 import {compose, withState, lifecycle} from 'recompose';
 import queryString from 'query-string';
 import jwtDecode from 'jwt-decode';
-import Countdown from 'react-countdown-now';
 
 import ChangePasswordFields from './ChangePasswordFields';
 import {changeToken} from '../../modules/login';
