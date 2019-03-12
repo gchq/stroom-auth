@@ -17,14 +17,11 @@
 import {combineReducers} from 'redux';
 import {routerReducer} from 'react-router-redux';
 // import {reducer as formReducer} from 'redux-form';
-import {authorisationReducer as authorisation, authenticationReducer as authentication, AuthenticationStoreState} from '../startup/authentication';
-import { reducer as config, StoreState as ConfigStoreState } from "../startup/config";
-import {
-  reducer as errorPage,
-  StoreState as ErrorPageState
-} from "../components/ErrorPage";
-import { reducer as user, StoreState as UserStoreState} from "../api/users"
-import { reducer as user, StoreState as UserSearchState} from "../api/users"
+import {authorisationReducer as authorisation, authenticationReducer as authentication} from '../startup/authentication';
+
+import { reducer as config} from "../startup/config";
+import { reducer as errorPage} from "../components/ErrorPage";
+import { reducer as user} from "../api/users"
 //import {
 // authenticationReducer as authentication,
 // authorisationReducer as authorisation,
@@ -36,14 +33,6 @@ import { reducer as user, StoreState as UserSearchState} from "../api/users"
  import token from './token';
  import tokenSearch from './tokenSearch';
 
- //TODO: Make this its own file so it can be navigated to in a non-idiotic way.
- export interface GlobalStoreState {
-  config: ConfigStoreState;
-  authentication: AuthenticationStoreState;
-  errorPage: ErrorPageState;
-  user: UserStoreState;
-  userSearch: UserSearchState;
-}
 
 
 export default combineReducers({

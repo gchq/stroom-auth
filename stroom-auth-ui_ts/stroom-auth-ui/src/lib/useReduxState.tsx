@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { useMappedState } from "redux-react-hook";
-import { GlobalStoreState } from "../modules";
+import { GlobalStoreState } from "../modules/GlobalStoreState";
 
 /**
  * This is a convenience function to get Redux State Retrieval.
