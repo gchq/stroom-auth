@@ -1,0 +1,69 @@
+.toolbar-small {
+  height: 38px !important;
+  background-color: white !important;
+}
+
+/* 
+ * This modifies the toolbar title to make it smaller.
+ */
+.toolbar-title-small {
+  /* The default colourings for the toolbar and title is low-contrast grey-on-grey. Changing for improved accessibility. */
+  color: black !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  width: 100px;
+}
+
+/****************************************
+ * SMALL TOOLBAR BUTTON START
+ ***************************************/
+.toolbar-button-small {
+  margin-left: 10px !important;
+  width: 110px !important;
+}
+
+.toolbar-button-medium {
+  margin-left: 10px !important;
+  width: 150px !important;
+}
+
+.toolbar-button-large {
+  margin-left: 10px !important;
+  width: 170px !important;
+}
+
+.toolbar-button-full {
+  width: 100%;
+}
+
+/*
+ * This makes a button small
+ */
+.toolbar-button-small button {
+  height: 28px !important;
+  line-height: 28px !important;
+}
+
+/*
+ * This modifies the padding on the right of the button as well as the font size.
+ * It assumes there's a single span with padding.
+ */
+.toolbar-button-small span {
+  font-size: 12px !important;
+  padding-right: 8px !important;
+}
+
+/* 
+ * A smaller icon for a button
+ * This modifies the padding on the left of the button, but only on an icon button.
+ * If the icons aren't left-aligned it might not work properly. 
+ * If there's no icon this won't have any effect. 
+ */
+/*.toolbar-button-small svg {
+  margin-left: 4px !important;
+  height: 18px !important;
+}*/
+
+/****************************************
+ * SMALL TOOLBAR BUTTON END
+ ***************************************/

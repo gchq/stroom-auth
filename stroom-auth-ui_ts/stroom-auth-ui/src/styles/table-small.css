@@ -1,0 +1,62 @@
+.table-small-container .ReactTable input,
+.table-small-container .ReactTable select {
+  padding: 2px 7px !important;
+  font-size: 12px !important;
+}
+
+.rt-resizable-header-content {
+  text-align: left;
+}
+
+.table-small-container .rt-tbody {
+  display: flex;
+}
+
+.table-header-small {
+  height: 25px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4d4d4d;
+}
+
+.table-row-small {
+  height: 25px;
+  font-size: 12px;
+  padding-top: 0px;
+}
+
+.table-row-dimmed {
+  color: darkgray;
+}
+
+.table-row-selected {
+  /* This is amber100, a lighter version of the accent colour, amber900 */
+  background-color: #ffecb3 !important;
+}
+
+.table-small-container .pagination-top span {
+  font-size: 13px;
+}
+.table-small-container .pagination-bottom span {
+  font-size: 13px;
+}
+
+.table-small-container .pagination-top .-pagination {
+  height: 30px !important;
+}
+.table-small-container .pagination-bottom .-pagination {
+  height: 30px !important;
+}
+
+.table-small-container .pagination-top .-pagination button {
+  padding: 3px;
+  font-size: 13px;
+}
+.table-small-container .pagination-bottom .-pagination button {
+  padding: 3px;
+  font-size: 13px;
+}
+
+.rt-thead.-header {
+  box-shadow: 0 1px 0px 0 rgba(0, 0, 0, 0.15) !important;
+}
