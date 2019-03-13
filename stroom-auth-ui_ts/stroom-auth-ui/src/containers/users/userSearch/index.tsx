@@ -195,6 +195,7 @@ const UserSearch = ({
 }))
 
   React.useEffect(() => {
+    useUserSearchApi
     const {performUserSearch, idToken} = this.props;
     performUserSearch(idToken); 
   }, [])
