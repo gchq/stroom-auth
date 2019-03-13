@@ -21,21 +21,17 @@ import 'rc-checkbox/assets/index.css';
 import {compose, withProps, withState, lifecycle} from 'recompose';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import dateFormat from 'dateformat';
+import * as dateFormat from 'dateformat';
 import {push} from 'react-router-redux';
 
 import Button from '../../Button';
 import './UserSearch.css';
 import '../../../styles/table-small.css';
-import {deleteSelectedUser} from '../../../modules/user';
-import {
-  performUserSearch,
-  changeSelectedRow,
-} from '../../../modules/userSearch';
-import {useActionCreators, useApi} from '../../../api/users';
+import {useActionCreators, useApi as useUsersApi} from "../../../api/users";
+import {useApi as useUserSearchApi} from "../../../api/userSearch";
 import useReduxState from "../../../lib/useReduxState";
-
 import useRouter from "../../../lib/useRouter";
+
 function filterRow(row, filter) {
   var index = row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase());
   return index >= 0;
@@ -173,15 +169,18 @@ const enhance = compose(
 
 const UserSearch = ({
   selectedUserRowId,
-  deleteSelectedUser,
+  // deleteSelectedUser,
   isFilteringEnabled,
   setFilteringEnabled,
-  changeSelectedRow,
+  // changeSelectedRow,
   results,
   showSearchLoader,
   deleteButtonDisabled,
   push,
 }) => {
+  const {deleteSelectedUser} = useUsersApi();
+  const {performUserSearch,changeSelectedRow} = useUserSearchApi();
+
   const {
     idToken,
     showSearchLoader, results, selectedUserRowId,
@@ -194,6 +193,12 @@ const UserSearch = ({
     showSearchLoader, results, selectedUserRowId,
     errorStatus, errorText
 }))
+
+  React.useEffect(() => {
+    const {performUserSearch, idToken} = this.props;
+    performUserSearch(idToken); 
+  }, [])
+
   return (
     <div className="UserSearch-main">
       <div className="header">

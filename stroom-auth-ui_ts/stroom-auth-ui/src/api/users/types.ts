@@ -7,6 +7,8 @@ export interface StoreState {
     changePasswordErrorMessage: any; // TODO: should be an array type of String
     isSaving: boolean;
     userBeingEdited: User;
+    errorStatus: String;
+    errorText: String;
   }
 
 export interface User {
