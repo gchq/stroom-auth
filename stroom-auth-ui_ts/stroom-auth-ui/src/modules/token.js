@@ -20,101 +20,101 @@ import {handleErrors, getBody, getJsonBody} from './fetchFunctions';
 import {performTokenSearch, changeSelectedRow} from './tokenSearch';
 import {performUserSearch} from './userSearch';
 
-export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER';
-export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS =
-  'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS';
-export const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN';
-export const SHOW_ERROR_MESSAGE = 'token/SHOW_ERROR_MESSAGE';
-export const HIDE_ERROR_MESSAGE = 'token/HIDE_ERROR_MESSAGE';
-export const TOGGLE_STATE = 'token/TOGGLE_STATE';
-export const TOGGLE_IS_CREATING = 'token/TOGGLE_IS_CREATING';
+// export const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER';
+// export const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS =
+//   'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS';
+// export const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN';
+// export const SHOW_ERROR_MESSAGE = 'token/SHOW_ERROR_MESSAGE';
+// export const HIDE_ERROR_MESSAGE = 'token/HIDE_ERROR_MESSAGE';
+// export const TOGGLE_STATE = 'token/TOGGLE_STATE';
+// export const TOGGLE_IS_CREATING = 'token/TOGGLE_IS_CREATING';
 
-const initialState = {
-  matchingAutoCompleteResults: [],
-  errorMessage: '',
-  isCreating: false,
-};
+// const initialState = {
+//   matchingAutoCompleteResults: [],
+//   errorMessage: '',
+//   isCreating: false,
+// };
 
-export default (state = initialState, action) => {
-  switch (action.type) {
-    case CHANGE_VISIBLE_CONTAINER:
-      return {
-        ...state,
-        show: action.show,
-      };
+// export default (state = initialState, action) => {
+//   switch (action.type) {
+//     case CHANGE_VISIBLE_CONTAINER:
+//       return {
+//         ...state,
+//         show: action.show,
+//       };
 
-    case UPDATE_MATCHING_AUTO_COMPLETE_RESULTS:
-      return {
-        ...state,
-        matchingAutoCompleteResults: action.matchingAutoCompleteResults,
-      };
+//     case UPDATE_MATCHING_AUTO_COMPLETE_RESULTS:
+//       return {
+//         ...state,
+//         matchingAutoCompleteResults: action.matchingAutoCompleteResults,
+//       };
 
-    case CHANGE_READ_CREATED_TOKEN:
-      return {
-        ...state,
-        lastReadToken: action.lastReadToken,
-      };
+//     case CHANGE_READ_CREATED_TOKEN:
+//       return {
+//         ...state,
+//         lastReadToken: action.lastReadToken,
+//       };
 
-    case SHOW_ERROR_MESSAGE:
-      return {
-        ...state,
-        errorMessage: action.message,
-      };
+//     case SHOW_ERROR_MESSAGE:
+//       return {
+//         ...state,
+//         errorMessage: action.message,
+//       };
 
-    case HIDE_ERROR_MESSAGE:
-      return {
-        ...state,
-        errorMessage: '',
-      };
-    case TOGGLE_STATE:
-      return {
-        ...state,
-        lastReadToken: {
-          ...state.lastReadToken,
-          enabled: !state.lastReadToken.enabled,
-        },
-      };
-    case TOGGLE_IS_CREATING:
-      return {
-        ...state,
-        isCreating: !state.isCreating,
-      };
-    default:
-      return state;
-  }
-};
+//     case HIDE_ERROR_MESSAGE:
+//       return {
+//         ...state,
+//         errorMessage: '',
+//       };
+//     case TOGGLE_STATE:
+//       return {
+//         ...state,
+//         lastReadToken: {
+//           ...state.lastReadToken,
+//           enabled: !state.lastReadToken.enabled,
+//         },
+//       };
+//     case TOGGLE_IS_CREATING:
+//       return {
+//         ...state,
+//         isCreating: !state.isCreating,
+//       };
+//     default:
+//       return state;
+//   }
+// };
 
-export function changeVisibleContainer(container) {
-  return {
-    type: CHANGE_VISIBLE_CONTAINER,
-    show: container,
-  };
-}
+// export function changeVisibleContainer(container) {
+//   return {
+//     type: CHANGE_VISIBLE_CONTAINER,
+//     show: container,
+//   };
+// }
 
-function showCreateError(message) {
-  return {
-    type: SHOW_ERROR_MESSAGE,
-    message,
-  };
-}
+// function showCreateError(message) {
+//   return {
+//     type: SHOW_ERROR_MESSAGE,
+//     message,
+//   };
+// }
 
-function hideCreateError() {
-  return {
-    type: HIDE_ERROR_MESSAGE,
-  };
-}
+// function hideCreateError() {
+//   return {
+//     type: HIDE_ERROR_MESSAGE,
+//   };
+// }
 
-function toggleState() {
-  return {
-    type: TOGGLE_STATE,
-  };
-}
+// function toggleState() {
+//   return {
+//     type: TOGGLE_STATE,
+//   };
+// }
 
-function toggleIsCreating() {
-  return {
-    type: TOGGLE_IS_CREATING,
-  };
-}
+// function toggleIsCreating() {
+//   return {
+//     type: TOGGLE_IS_CREATING,
+//   };
+// }
 
 export const deleteSelectedToken = tokenId => {
   return (dispatch, getState) => {
