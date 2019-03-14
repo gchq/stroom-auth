@@ -19,7 +19,6 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 
 import TokenLayout from "./TokenLayout";
-import { changeVisibleContainer } from "../../../modules/token";
 import {useApi as useUserSearchApi, 
   useActionCreators as useUserSearchActionCreators} from "../../../api/userSearch";
   import {useActionCreators as useTokenActionCreators} from '../../../api/tokens';

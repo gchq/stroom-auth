@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import React, {Component} from 'react';
+import * as React from 'react';
+import {Component} from 'react';
 import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 
 import TokenSearch from '../tokenSearch';
 import TokenCreate from '../tokenCreate';
 import TokenEdit from '../tokenEdit';
-import {deleteSelectedToken} from '../../../modules/token';
+import {useApi as useTokenApi} from '../../../api/tokens'
+// import {deleteSelectedToken} from '../../../modules/token';
 
 import '../../../styles/index.css';
 import '../../../styles/toolbar-small.css';

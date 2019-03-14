@@ -14,7 +14,7 @@ const TOGGLE_IS_CREATING = 'token/TOGGLE_IS_CREATING';
 
 
 interface ChangeVisibleContainerAction extends Action<'token/CHANGE_VISIBLE_CONTAINER'>{
-   show: boolean; 
+   show: String; 
 }
 interface UpdateMatchingAutoCompleteResultsAction extends Action<'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS'>{
    matchingAutoCompleteResults: Token[]; 
@@ -41,7 +41,7 @@ const defaultState: StoreState = {
 
 
 export const useActionCreators = genUseActionCreators({
-    changeVisibleContainer: (show: boolean): ChangeVisibleContainerAction => ({
+    changeVisibleContainer: (show: String): ChangeVisibleContainerAction => ({
         type: CHANGE_VISIBLE_CONTAINER,
         show
     }),
