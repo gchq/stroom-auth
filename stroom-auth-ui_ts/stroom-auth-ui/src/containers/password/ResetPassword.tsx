@@ -24,7 +24,7 @@ import { useApi } from "../../api/users";
 import { useReduxState } from "../../lib/useReduxState";
 import ChangePasswordFields from "./ChangePasswordFields";
 import { useActionCreators } from "../../api/authentication";
-import useHttpQueryParam from 'src/lib/useHttpQueryParam';
+import useHttpQueryParam from "../../lib/useHttpQueryParam";
 // import useRouter from "../../lib/useRouter";
 
 // const enhance = compose(
@@ -83,11 +83,9 @@ import useHttpQueryParam from 'src/lib/useHttpQueryParam';
 const ResetPassword = () => {
   const { resetPassword } = useApi();
 
-  const { showAlert } = useReduxState(
-    ({ user: { showAlert } }) => ({
-      showAlert,
-    })
-  );
+  const { showAlert } = useReduxState(({ user: { showAlert } }) => ({
+    showAlert
+  }));
   const [missingToken, setMissingToken] = useState(false);
   const [invalidToken, setInvalidToken] = useState(false);
   const [expiredToken, setExpiredToken] = useState(false);
@@ -104,7 +102,7 @@ const ResetPassword = () => {
       missingToken = true;
     } else {
       try {
-        const decodedToken:{exp:number} = jwtDecode(token);
+        const decodedToken: { exp: number } = jwtDecode(token);
         const now = new Date().getTime() / 1000;
         expiredToken = decodedToken.exp <= now;
       } catch (err) {
@@ -129,13 +127,13 @@ const ResetPassword = () => {
       {missingToken || invalidToken ? (
         <p>I'm afraid this password reset link is broken.</p>
       ) : (
-          undefined
-        )}
+        undefined
+      )}
       {expiredToken ? (
         <p>I'm afraid this password reset link has expired.</p>
       ) : (
-          undefined
-        )}
+        undefined
+      )}
     </div>
   );
 
@@ -154,8 +152,8 @@ const ResetPassword = () => {
             onSubmit={resetPassword}
           />
         ) : (
-            undefined
-          )}
+          undefined
+        )}
       </div>
     </div>
   );

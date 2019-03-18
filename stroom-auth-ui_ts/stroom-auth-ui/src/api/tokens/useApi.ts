@@ -30,10 +30,10 @@ import { useApi as useTokenSearchApi } from "../tokenSearch";
 import { useActionCreators as useTokenActionCreators } from "./redux";
 import useRouter from "../../lib/useRouter";
 // import { User } from "../users";
-import { GlobalStoreState } from "src/modules/GlobalStoreState";
+import { GlobalStoreState } from "../../modules/GlobalStoreState";
 
 interface Api {
-  deleteSelectedToken: (tokenId: String) => void;
+  deleteSelectedToken: () => void;
   createToken: (email: String, setSubmitting: any) => void;
   fetchApiKey: (apiKeyId: String) => void;
   userAutoCompleteChange: (
@@ -60,21 +60,18 @@ export const useApi = (): Api => {
   } = useTokenActionCreators();
 
   return {
-    deleteSelectedToken: useCallback(
-      tokenId => {
-        const tokenIdToDelete = store.tokenSearch.selectedTokenRowId;
-        const url = `${store.config.values.tokenServiceUrl}/${tokenIdToDelete}`;
-        httpDeleteJsonResponse(url)
-          .then(handleStatus)
-          .then(getBody)
-          .then(() => {
-            selectRow(tokenId);
-            performTokenSearch();
-          })
-          .catch(error => handleErrors(error)); //FIXME
-      },
-      [selectRow, performTokenSearch]
-    ),
+    deleteSelectedToken: useCallback(() => {
+      const tokenIdToDelete = store.tokenSearch.selectedTokenRowId;
+      const url = `${store.config.values.tokenServiceUrl}/${tokenIdToDelete}`;
+      httpDeleteJsonResponse(url)
+        .then(handleStatus)
+        .then(getBody)
+        .then(() => {
+          selectRow("");
+          performTokenSearch();
+        })
+        .catch(error => handleErrors(error)); //FIXME
+    }, [selectRow, performTokenSearch]),
 
     createToken: useCallback(
       ({ email, setSubmitting }) => {

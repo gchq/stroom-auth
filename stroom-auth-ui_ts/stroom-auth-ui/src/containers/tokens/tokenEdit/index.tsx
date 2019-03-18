@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
+import * as React from "react";
 import TokenEditUi from "./TokenEditUi";
-import { useApi as useTokenApi } from '../../../api/tokens';
-import useHttpQueryParam from 'src/lib/useHttpQueryParam';
+import { useApi as useTokenApi } from "../../../api/tokens";
+import useHttpQueryParam from "../../../lib/useHttpQueryParam";
 
 //TODO: merge this into the main token edit page
 const TokenEditForm = () => {
@@ -30,6 +30,6 @@ const TokenEditForm = () => {
   }, []);
 
   return <TokenEditUi />;
-}
+};
 
 export default TokenEditForm;

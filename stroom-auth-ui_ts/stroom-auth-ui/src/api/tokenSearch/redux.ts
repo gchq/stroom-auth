@@ -1,7 +1,10 @@
 import { Action } from "redux";
 import { Token } from "../tokens/types"; //TODO don't reach into other modules! Go via index
 import { StoreState } from "./types";
-import { genUseActionCreators, prepareReducer } from "src/lib/redux-actions-ts";
+import {
+  genUseActionCreators,
+  prepareReducer
+} from "../../lib/redux-actions-ts";
 
 const SHOW_SEARCH_LOADER = "tokenSearch/SHOW_SEARCH_LOADER";
 const UPDATE_RESULTS = "tokenSearch/UPDATE_RESULTS";
@@ -18,29 +21,29 @@ interface ShowSearchLoaderAction
 }
 interface UpdateResultsAction extends Action<"tokenSearch/UPDATE_RESULTS"> {
   results: Token[];
-  totalPages: Number;
+  totalPages: number;
 }
 interface SelectRowAction extends Action<"tokenSearch/SELECT_ROW"> {
-  selectedTokenRowId: String;
+  selectedTokenRowId: string;
 }
 interface ToggleEnabledAction extends Action<"tokenSearch/TOGGLE_ENABLED"> {
-  id: String;
+  id: string;
 }
 interface ChangeLastUsedPageSizeAction
   extends Action<"tokenSearch/CHANGE_LAST_USED_PAGE_SIZE"> {
-  lastUsedPageSize: Number;
+  lastUsedPageSize: number;
 }
 interface ChangeLastUsedPageAction
   extends Action<"tokenSearch/CHANGE_LAST_USED_PAGE"> {
-  lastUsedPage: Number;
+  lastUsedPage: number;
 }
 interface ChangeLastUsedSortedAction
   extends Action<"tokenSearch/CHANGE_LAST_USED_SORTED"> {
-  lastUsedSorted: String;
+  lastUsedSorted: string;
 }
 interface ChangeLastUsedFilteredAction
   extends Action<"tokenSearch/CHANGE_LAST_USED_FILTERED"> {
-  lastUsedFiltered: String;
+  lastUsedFiltered: string;
 }
 
 const defaultState: StoreState = {
@@ -61,38 +64,38 @@ export const useActionCreators = genUseActionCreators({
   }),
   updateResults: (
     results: Token[],
-    totalPages: Number
+    totalPages: number
   ): UpdateResultsAction => ({
     type: UPDATE_RESULTS,
     results,
     totalPages
   }),
-  selectRow: (selectedTokenRowId: String): SelectRowAction => ({
+  selectRow: (selectedTokenRowId: string): SelectRowAction => ({
     type: SELECT_ROW,
     selectedTokenRowId
   }),
-  toggleEnabled: (id: String): ToggleEnabledAction => ({
+  toggleEnabled: (id: string): ToggleEnabledAction => ({
     type: TOGGLE_ENABLED,
     id
   }),
   changeLastUsedPageSize: (
-    lastUsedPageSize: Number
+    lastUsedPageSize: number
   ): ChangeLastUsedPageSizeAction => ({
     type: CHANGE_LAST_USED_PAGE_SIZE,
     lastUsedPageSize
   }),
-  changeLastUsedPage: (lastUsedPage: Number): ChangeLastUsedPageAction => ({
+  changeLastUsedPage: (lastUsedPage: number): ChangeLastUsedPageAction => ({
     type: CHANGE_LAST_USED_PAGE,
     lastUsedPage
   }),
   changeLastUsedSorted: (
-    lastUsedSorted: String
+    lastUsedSorted: string
   ): ChangeLastUsedSortedAction => ({
     type: CHANGE_LAST_USED_SORTED,
     lastUsedSorted
   }),
   changeLastUsedFiltered: (
-    lastUsedFiltered: String
+    lastUsedFiltered: string
   ): ChangeLastUsedFilteredAction => ({
     type: CHANGE_LAST_USED_FILTERED,
     lastUsedFiltered

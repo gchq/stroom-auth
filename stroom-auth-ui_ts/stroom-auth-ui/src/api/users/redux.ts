@@ -15,7 +15,10 @@
  */
 import { Action } from "redux";
 import { StoreState, User } from "./types";
-import { genUseActionCreators, prepareReducer } from "src/lib/redux-actions-ts";
+import {
+  genUseActionCreators,
+  prepareReducer
+} from "../../lib/redux-actions-ts";
 
 // const CREATE_REQUEST = 'user/CREATE_REQUEST';
 // const CREATE_RESPONSE = 'user/CREATE_RESPONSE';

@@ -1,6 +1,9 @@
 import { Action } from "redux";
 import { StoreState } from "./types";
-import { genUseActionCreators, prepareReducer } from "src/lib/redux-actions-ts";
+import {
+  genUseActionCreators,
+  prepareReducer
+} from "../../lib/redux-actions-ts";
 import { User } from "../users/types";
 
 const SHOW_SEARCH_LOADER = "userSearch/SHOW_SEARCH_LOADER";

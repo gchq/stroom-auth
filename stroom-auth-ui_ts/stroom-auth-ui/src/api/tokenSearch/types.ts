@@ -3,10 +3,10 @@ import { Token } from "../tokens";
 export interface StoreState {
   tokens: Token[];
   showSearchLoader: boolean;
-  selectedTokenRowId: String | undefined;
+  selectedTokenRowId: string | undefined;
   results: Token[];
-  totalPages?: Number;
-  errorStatus?: String;
-  errorText?: String;
-  lastUsedPageSize?: Number;
+  totalPages?: number;
+  errorStatus?: string;
+  errorText?: string;
+  lastUsedPageSize?: number;
 }

@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import {Formik, Form} from 'formik';
+import * as React from "react";
+import { Formik, Form } from "formik";
 // import {compose} from 'recompose';
 // import {connect} from 'react-redux';
 // import {push} from 'react-router-redux';
 
-import '../../Layout.css';
-import './CreateUserForm.css';
-import Button from '../../Button';
-import UserFields from '../UserFields';
+import "../../Layout.css";
+import "./CreateUserForm.css";
+import Button from "../../Button";
+import UserFields from "../UserFields";
 import useReduxState from "../../../lib/useReduxState";
-import {NewUserValidationSchema, validateAsync} from '../validation';
+import { NewUserValidationSchema, validateAsync } from "../validation";
 // import {createUser as onSubmit} from '../../../modules/user';
-import {hasAnyProps} from '../../../lang';
-import {useActionCreators, useApi} from '../../../api/users';
+import { hasAnyProps } from "../../../lang";
+import { useApi } from "../../../api/users";
 import useRouter from "../../../lib/useRouter";
-
 
 // const enhance = compose(
 //   connect(
@@ -50,34 +49,37 @@ import useRouter from "../../../lib/useRouter";
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.
 const initialValues = {
-  first_name: '',
-  last_name: '',
-  email: '',
-  state: 'enabled',
-  password: '',
-  verifyPassword: '',
-  comments: '',
-  force_password_change: true,
+  first_name: "",
+  last_name: "",
+  email: "",
+  state: "enabled",
+  password: "",
+  verifyPassword: "",
+  comments: "",
+  force_password_change: true
 };
 
-const UserCreateForm = ({
-  // onSubmit,
-  // idToken,
-  // authenticationServiceUrl,
-  // isSaving,
-  // push,
-}) => {
-// const {createUser} = useActionCreators();
-const {createUser} = useApi();
-const {
-  history,
-} = useRouter();
-  const {idToken, authenticationServiceUrl, isSaving} = useReduxState(
+const UserCreateForm = (
+  {
+    // onSubmit,
+    // idToken,
+    // authenticationServiceUrl,
+    // isSaving,
+    // push,
+  }
+) => {
+  // const {createUser} = useActionCreators();
+  const { createUser } = useApi();
+  const { history } = useRouter();
+  const { idToken, authenticationServiceUrl, isSaving } = useReduxState(
     ({
-       authentication:{idToken}, 
-       user: {isSaving}, 
-       config: {values:{authenticationServiceUrl}}}) => ({idToken, isSaving, authenticationServiceUrl})
-       );
+      authentication: { idToken },
+      user: { isSaving },
+      config: {
+        values: { authenticationServiceUrl }
+      }
+    }) => ({ idToken, isSaving, authenticationServiceUrl })
+  );
   return (
     <Formik
       initialValues={initialValues}
@@ -87,8 +89,9 @@ const {
       validate={values =>
         validateAsync(values, idToken, authenticationServiceUrl)
       }
-      validationSchema={NewUserValidationSchema}>
-      {({errors, touched, setFieldTouched}) => {
+      validationSchema={NewUserValidationSchema}
+    >
+      {({ errors, touched, setFieldTouched, setFieldValue }) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (
@@ -97,7 +100,8 @@ const {
               <Button
                 className="primary toolbar-button-small"
                 icon="arrow-left"
-                onClick={() => history.push('/userSearch')}>
+                onClick={() => history.push("/userSearch")}
+              >
                 Back
               </Button>
             </div>
@@ -106,6 +110,7 @@ const {
               errors={errors}
               touched={touched}
               setFieldTouched={setFieldTouched}
+              setFieldValue={setFieldValue}
             />
             <div className="footer">
               <Button
@@ -113,13 +118,15 @@ const {
                 disabled={isPristine || hasErrors}
                 type="submit"
                 icon="save"
-                isLoading={isSaving}>
+                isLoading={isSaving}
+              >
                 Save
               </Button>
               <Button
                 className="toolbar-button-small secondary"
                 icon="times"
-                onClick={() => history.push('/userSearch')}>
+                onClick={() => history.push("/userSearch")}
+              >
                 Cancel
               </Button>
             </div>

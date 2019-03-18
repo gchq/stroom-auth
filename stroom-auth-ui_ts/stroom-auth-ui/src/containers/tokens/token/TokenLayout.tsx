@@ -14,46 +14,43 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { useState } from 'react';
+import * as React from "react";
 
-import TokenSearch from '../tokenSearch';
-import TokenCreate from '../tokenCreate';
-import TokenEdit from '../tokenEdit';
+import TokenSearch from "../tokenSearch";
+import TokenCreate from "../tokenCreate";
+import TokenEdit from "../tokenEdit";
 // import { useApi as useTokenApi } from '../../../api/tokens'
-import { useReduxState } from '../../../lib/useReduxState';
+import { useReduxState } from "../../../lib/useReduxState";
 
-import '../../../styles/index.css';
-import '../../../styles/toolbar-small.css';
-import '../../../styles/toggle-small.css';
+import "../../../styles/index.css";
+import "../../../styles/toolbar-small.css";
+import "../../../styles/toggle-small.css";
 
 const TokenLayout = () => {
-  const { show/*, selectedTokenRowId */} = useReduxState(({
-    token: { show },
-    tokenSearch: { selectedTokenRowId }
-  }) => ({ show, selectedTokenRowId }));
+  const { show /*, selectedTokenRowId */ } = useReduxState(
+    ({ token: { show }, tokenSearch: { selectedTokenRowId } }) => ({
+      show,
+      selectedTokenRowId
+    })
+  );
 
   // const { deleteSelectedToken } = useTokenApi();
   // const [isHelpDialogOpen, setHelpDialogOpen] = useState(false);
-  const [isFilteringEnabled,/* setFilteringEnabled*/] = useState(false);
-  const showSearch = show === 'search';
-  const showCreate = show === 'create';
-  const showEdit = show === 'edit';
+  // const [isFilteringEnabled,/* setFilteringEnabled*/] = useState(false);
+  const showSearch = show === "search";
+  const showCreate = show === "create";
+  const showEdit = show === "edit";
 
   return (
     <div className="Layout-main">
       <div className="User-content" id="User-content">
-        {showSearch ? (
-          <TokenSearch isFilteringEnabled={isFilteringEnabled} />
-        ) : (
-            undefined
-          )}
+        {showSearch ? <TokenSearch /> : undefined}
         {showCreate ? <TokenCreate /> : undefined}
         {showEdit ? <TokenEdit /> : undefined}
       </div>
     </div>
   );
-}
+};
 
 export default TokenLayout;
 // class TokenLayout extends Component {

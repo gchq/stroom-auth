@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import * as CopyToClipboard from 'react-copy-to-clipboard';
-import * as Checkbox from 'rc-checkbox';
-import 'rc-checkbox/assets/index.css';
+import * as React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import * as CopyToClipboard from "react-copy-to-clipboard";
+import Toggle from "react-toggle";
+import "rc-checkbox/assets/index.css";
 
-import Button from '../../Button';
-import Loader from '../../Loader';
-import './TokenEdit.css';
-import '../../../styles/form.css';
-import { useApi} from '../../../api/tokens';
+import Button from "../../Button";
+import Loader from "../../Loader";
+import "./TokenEdit.css";
+import "../../../styles/form.css";
+import { useApi } from "../../../api/tokens";
 // import {toggleEnabledState} from '../../../modules/token';
-import {OnCopy, ByCopy} from '../../auditCopy';
+import { OnCopy, ByCopy } from "../../auditCopy";
 
-import { useRouter } from '../../../lib/useRouter';
-import { useReduxState } from '../../../lib/useReduxState';
+import { useRouter } from "../../../lib/useRouter";
+import { useReduxState } from "../../../lib/useReduxState";
 
 // const enhance = compose(
 //   connect(
@@ -46,17 +46,21 @@ import { useReduxState } from '../../../lib/useReduxState';
 //   }),
 // );
 
-const TokenEditUi = ({}) => {
-  const {token} = useReduxState(({token:{lastReadToken}}) => ({token: lastReadToken}));
-  const {history} = useRouter();
-  const {toggleEnabledState} = useApi();
+const TokenEditUi = () => {
+  const { token } = useReduxState(({ token: { lastReadToken } }) => ({
+    token: lastReadToken
+  }));
+  const { history } = useRouter();
+  const { toggleEnabledState } = useApi();
 
+  //TODO form needs onsubmit
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <div className="header">
         <button
           className="primary toolbar-button-small"
-          onClick={() => history.push('/tokens')}>
+          onClick={() => history.push("/tokens")}
+        >
           <FontAwesomeIcon icon="arrow-left" /> Back
         </button>
       </div>
@@ -76,7 +80,8 @@ const TokenEditUi = ({}) => {
                   <div className="label-container">
                     <label>Enabled</label>
                   </div>
-                  <Checkbox
+                  <Toggle
+                    icons={false}
                     defaultChecked={token.enabled}
                     checked={token.enabled}
                     onChange={toggleEnabledState}
@@ -115,7 +120,7 @@ const TokenEditUi = ({}) => {
       )}
     </form>
   );
-}; 
+};
 
 // const TokenEditUi = props => {
 //   const {token, handleSubmit, form, toggleEnabledState, push} = props;

@@ -14,192 +14,173 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-// import {connect} from 'react-redux';
-import Checkbox from 'rc-checkbox';
-import 'rc-checkbox/assets/index.css';
-// import {compose, withProps, withState, lifecycle} from 'recompose';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import * as dateFormat from 'dateformat';
-// import {push} from 'react-router-redux';
+import * as React from "react";
+import Toggle from "react-toggle";
+import "rc-checkbox/assets/index.css";
+import ReactTable, { RowInfo } from "react-table";
+import "react-table/react-table.css";
+import * as dateFormat from "dateformat";
 
-import Button from '../../Button';
-import './UserSearch.css';
-import '../../../styles/table-small.css';
-import {useActionCreators as useUsersActionCreators, useApi as useUsersApi} from "../../../api/users";
-import {useActionCreators as useUserSearchActionCreators, useApi as useUserSearchApi} from "../../../api/userSearch";
+import Button from "../../Button";
+import "./UserSearch.css";
+import "../../../styles/table-small.css";
+import {
+  useActionCreators as useUsersActionCreators,
+  useApi as useUsersApi
+} from "../../../api/users";
+import {
+  useActionCreators as useUserSearchActionCreators,
+  useApi as useUserSearchApi
+} from "../../../api/userSearch";
 import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
-import { useState } from 'react';
+import { useState } from "react";
 
-function filterRow(row, filter) {
+// FIXME: Not sure why the actual filter props isn't working
+type FilterProps = {
+  filter: any;
+  onChange: ReactTableFunction;
+};
+
+const getColumnFormat = (selectedUserRowId: string | undefined) => {
+  return [
+    {
+      Header: "",
+      accessor: "id",
+      Cell: (row: RowInfo) => (
+        <div>
+          {selectedUserRowId === row.row.value ? "selected" : "unselected"}
+        </div>
+      ),
+      filterable: false,
+      show: false
+    },
+    {
+      Header: "Email",
+      accessor: "email",
+      maxWidth: 190,
+      filterMethod: (filter, row) => filterRow(row, filter)
+    },
+    {
+      Header: "Account status",
+      accessor: "state",
+      maxWidth: 100,
+      Cell: (row: RowInfo) => renderStateCell(row.row.value),
+      Filter: ({ filter, onChange }) => getStateCellFilter(filter, onChange)
+    },
+    {
+      Header: "Last login",
+      accessor: "last_login",
+      Cell: (row: RowInfo) => formatDate(row.row.value),
+      maxWidth: 165,
+      filterable: false
+    },
+    {
+      Header: "Login failures",
+      accessor: "login_failures",
+      maxWidth: 100
+    },
+    {
+      Header: "Comments",
+      accessor: "comments",
+      filterMethod: (filter, row) => filterRow(row, filter)
+    }
+  ];
+};
+const filterRow = (row, filter) => {
   var index = row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase());
   return index >= 0;
-}
+};
 
-function renderStateCell(state) {
+const renderStateCell = state => {
   let stateColour, stateText;
   switch (state) {
-    case 'enabled':
-      stateColour = '#57d500';
-      stateText = 'Active';
+    case "enabled":
+      stateColour = "#57d500";
+      stateText = "Active";
       break;
-    case 'locked':
-      stateColour = '#ff2e00';
-      stateText = 'Locked';
+    case "locked":
+      stateColour = "#ff2e00";
+      stateText = "Locked";
       break;
-    case 'disabled':
-      stateColour = '#ff2e00';
-      stateText = 'Disabled';
+    case "disabled":
+      stateColour = "#ff2e00";
+      stateText = "Disabled";
       break;
-    case 'inactive':
-      stateColour = '#ff2e00';
-      stateText = 'Inactive';
+    case "inactive":
+      stateColour = "#ff2e00";
+      stateText = "Inactive";
       break;
     default:
-      stateColour = '#ffbf00';
-      stateText = 'Unknown!';
+      stateColour = "#ffbf00";
+      stateText = "Unknown!";
   }
   return (
     <span>
       <span
         style={{
           color: stateColour,
-          transition: 'all .3s ease',
-        }}>
+          transition: "all .3s ease"
+        }}
+      >
         &#x25cf;
-      </span>{' '}
+      </span>{" "}
       {stateText}
     </span>
   );
-}
+};
 
-function getStateCellFilter(filter, onChange) {
+const getStateCellFilter = (filter, onChange) => {
   return (
     <select
       onChange={event => onChange(event.target.value)}
-      style={{width: '100%'}}
-      value={filter ? filter.value : 'all'}>
+      style={{ width: "100%" }}
+      value={filter ? filter.value : "all"}
+    >
       <option value="">Show all</option>
       <option value="enabled">Active only</option>
       <option value="locked">Locked only</option>
       <option value="disabled">Inactive only</option>
     </select>
   );
-}
+};
 
-function formatDate(dateString) {
-  const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
-  return dateString ? dateFormat(dateString, dateFormatString) : '';
-}
+const formatDate = dateString => {
+  const dateFormatString = "ddd mmm d yyyy, hh:MM:ss";
+  return dateString ? dateFormat(dateString, dateFormatString) : "";
+};
 
-function getColumnFormat(selectedUserRowId) {
-  return [
-    {
-      Header: '',
-      accessor: 'id',
-      Cell: row => (
-        <div>{selectedUserRowId === row.value ? 'selected' : 'unselected'}</div>
-      ),
-      filterable: false,
-      show: false,
-    },
-    {
-      Header: 'Email',
-      accessor: 'email',
-      maxWidth: 190,
-      filterMethod: (filter, row) => filterRow(row, filter),
-    },
-    {
-      Header: 'Account status',
-      accessor: 'state',
-      maxWidth: 100,
-      Cell: row => renderStateCell(row.value),
-      Filter: ({filter, onChange}) => getStateCellFilter(filter, onChange),
-    },
-    {
-      Header: 'Last login',
-      accessor: 'last_login',
-      Cell: row => formatDate(row.value),
-      maxWidth: 165,
-      filterable: false,
-    },
-    {
-      Header: 'Login failures',
-      accessor: 'login_failures',
-      maxWidth: 100,
-    },
-    {
-      Header: 'Comments',
-      accessor: 'comments',
-      filterMethod: (filter, row) => filterRow(row, filter),
-    },
-  ];
-}
-
-// const enhance = compose(
-  // connect(
-  //   ({
-  //     authentication: {idToken},
-  //     userSearch: {showSearchLoader, results, selectedUserRowId},
-  //     user: {errorStatus, errorText},
-  //   }) => ({
-  //     idToken,
-  //     showSearchLoader,
-  //     results,
-  //     selectedUserRowId,
-  //     errorStatus,
-  //     errorText,
-  //   }),
-  //   {deleteSelectedUser, performUserSearch, changeSelectedRow, push},
-  // ),
-  // lifecycle({
-  //   componentDidMount() {
-  //     const {performUserSearch, idToken} = this.props;
-  //     performUserSearch(idToken);
-  //   },
-  // }),
-  // withState('isFilteringEnabled', 'setFilteringEnabled', false),
-//   withProps(({selectedUserRowId}) => {
-//     return {
-//       deleteButtonDisabled: !selectedUserRowId,
-//     };
-//   }),
-// );
-
-const UserSearch = ({
-  // selectedUserRowId,
-  // deleteSelectedUser,
-  // isFilteringEnabled,
-  // setFilteringEnabled,
-  // changeSelectedRow,
-  // results,
-  // showSearchLoader,
-  // deleteButtonDisabled,
-  // push,
-}) => {
+const UserSearch = () => {
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
-  const {deleteSelectedUser} = useUsersApi();
-  const {performUserSearch} = useUserSearchApi();
-  const {selectRow} = useUserSearchActionCreators();
+  const { deleteSelectedUser } = useUsersApi();
+  const { performUserSearch } = useUserSearchApi();
+  const { selectRow } = useUserSearchActionCreators();
   const { history } = useRouter();
   const {
     idToken,
-    showSearchLoader, results, selectedUserRowId,
-    errorStatus, errorText
-  } = useReduxState(({
-    authentication: {idToken},
-    userSearch: {showSearchLoader, results, selectedUserRowId},
-    user: {errorStatus, errorText},
-  }) => ({idToken,
-    showSearchLoader, results, selectedUserRowId,
-    errorStatus, errorText
-}))
+    showSearchLoader,
+    results,
+    selectedUserRowId,
+    errorStatus,
+    errorText
+  } = useReduxState(
+    ({
+      authentication: { idToken },
+      userSearch: { showSearchLoader, results, selectedUserRowId },
+      user: { errorStatus, errorText }
+    }) => ({
+      idToken,
+      showSearchLoader,
+      results,
+      selectedUserRowId,
+      errorStatus,
+      errorText
+    })
+  );
 
   React.useEffect(() => {
     performUserSearch();
-  }, [])
+  }, []);
 
   const deleteButtonDisabled = !selectedUserRowId;
 
@@ -208,8 +189,9 @@ const UserSearch = ({
       <div className="header">
         <Button
           className="toolbar-button-small primary"
-          onClick={() => history.push('/newUser')}
-          icon="plus">
+          onClick={() => history.push("/newUser")}
+          icon="plus"
+        >
           Create
         </Button>
         {deleteButtonDisabled ? (
@@ -217,7 +199,8 @@ const UserSearch = ({
             <Button
               className="toolbar-button-small primary"
               disabled
-              icon="edit">
+              icon="edit"
+            >
               View/edit
             </Button>
           </div>
@@ -225,7 +208,8 @@ const UserSearch = ({
           <Button
             className="toolbar-button-small primary"
             onClick={() => history.push(`/user/${selectedUserRowId}`)}
-            icon="edit">
+            icon="edit"
+          >
             View/edit
           </Button>
         )}
@@ -235,13 +219,15 @@ const UserSearch = ({
             disabled={deleteButtonDisabled}
             onClick={() => deleteSelectedUser()}
             className="toolbar-button-small primary"
-            icon="trash">
+            icon="trash"
+          >
             Delete
           </Button>
         </div>
         <div className="UserSearch-filteringToggle">
           <label>Show filtering</label>
-          <Checkbox
+          <Toggle
+            icons={false}
             checked={isFilteringEnabled}
             onChange={event => setFilteringEnabled(event.target.checked)}
           />
@@ -255,9 +241,9 @@ const UserSearch = ({
             columns={getColumnFormat(selectedUserRowId)}
             defaultSorted={[
               {
-                id: 'email',
-                desc: true,
-              },
+                id: "email",
+                desc: true
+              }
             ]}
             filterable={isFilteringEnabled}
             showPagination
@@ -267,16 +253,16 @@ const UserSearch = ({
               // We use 'calc' because we want full height but need
               // to account for the header. Obviously if the header height
               // changes this offset will need to change too.
-              height: 'calc(100vh - 50px)',
+              height: "calc(100vh - 50px)"
             }}
             getTheadTrProps={() => {
               return {
-                className: 'table-header-small',
+                className: "table-header-small"
               };
             }}
             getTheadProps={() => {
               return {
-                className: 'table-row-small',
+                className: "table-row-small"
               };
             }}
             getTrProps={(state, rowInfo) => {
@@ -289,8 +275,8 @@ const UserSearch = ({
                   selectRow(rowInfo.row.id);
                 },
                 className: selected
-                  ? 'table-row-small table-row-selected'
-                  : 'table-row-small',
+                  ? "table-row-small table-row-selected"
+                  : "table-row-small"
               };
             }}
           />

@@ -20,6 +20,12 @@ export interface User {
   comments: string;
   never_expires: boolean;
   force_password_change: boolean;
+  login_count?: number;
+  last_login?: any;
+  created_on?: any;
+  created_by_user?: any;
+  updated_on?: any;
+  updated_by_user?: any;
 }
 export interface ChangePasswordRequest {
   email: string;

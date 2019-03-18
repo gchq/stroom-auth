@@ -1,6 +1,9 @@
 import { Action } from "redux";
 import { StoreState, Token } from "./types";
-import { genUseActionCreators, prepareReducer } from "src/lib/redux-actions-ts";
+import {
+  genUseActionCreators,
+  prepareReducer
+} from "../..//lib/redux-actions-ts";
 import { any } from "prop-types";
 
 const CHANGE_VISIBLE_CONTAINER = "token/CHANGE_VISIBLE_CONTAINER";
@@ -36,7 +39,7 @@ const defaultState: StoreState = {
   matchingAutoCompleteResults: [],
   errorMessage: "",
   isCreating: false,
-  show: ''
+  show: ""
 };
 
 export const useActionCreators = genUseActionCreators({

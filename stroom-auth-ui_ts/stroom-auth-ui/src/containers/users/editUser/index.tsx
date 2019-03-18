@@ -17,124 +17,28 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
-import * as queryString from "qs";
-import * as PropTypes from 'prop-types';
-import { object } from "prop-types";
-// import {
-//   withProps,
-//   branch,
-//   lifecycle,
-//   compose,
-//   renderComponent,
-//   withState,
-//   withHandlers,
-// } from 'recompose';
-import BackConfirmation from "../BackConfirmation";
 
 import "./EditUser.css";
-import UserFields from "../UserFields";
-// import {
-//   saveChanges as onSubmit,
-//   toggleAlertVisibility,
-//   fetchUser,
-//   clearUserBeingEdited,
-// } from '../../../modules/user';
-import { hasAnyProps } from "../../../lang";
-import { UserValidationSchema, validateAsync } from "../validation";
+import BackConfirmation from "../BackConfirmation";
 import Button from "../../Button";
+import ErrorPage from "../../../components/ErrorPage";
 import Loader from "../../Loader";
-import { useActionCreators, useApi } from "../../../api/users";
+import UserFields from "../UserFields";
+import useHttpQueryParam from "../../../lib/useHttpQueryParam";
 import useReduxState from "../../../lib/useReduxState";
-
 import useRouter from "../../../lib/useRouter";
-import ErrorPage from "src/components/ErrorPage";
-// const enhance = compose(
-//   withRouter,
-// connect(
-//   ({
-//     user: {userBeingEdited, isSaving, showAlert, alertText},
-//     authentication: {idToken},
-//     config: {authenticationServiceUrl},
-//   }) => ({
-//     userBeingEdited,
-//     showAlert,
-//     alertText,
-//     isSaving,
-//     idToken,
-//     authenticationServiceUrl,
-//   }),
-//   {
-//     // onSubmit,
-//     // clearUserBeingEdited,
-//     // fetchUser,
-//     // toggleAlertVisibility,
-//     push,
-//   },
-// ),
-// lifecycle({
-//   componentDidMount() {
-//     const userId = this.props.match.params.userId;
-//     this.props.clearUserBeingEdited();
-//     this.props.fetchUser(userId);
-//   },
-// }),
-// branch(
-//   ({userBeingEdited}) => !userBeingEdited,
-//   renderComponent(() => <Loader />),
-// ),
-// withState('showBackConfirmation', 'setShowBackConfirmation', false),
-// withHandlers({
-//   handleBack: ({setShowBackConfirmation, push}) => isPristine => {
-//     if (isPristine) {
-//       push('/userSearch');
-//     } else {
-//       setShowBackConfirmation(true);
-//     }
-//   },
-// }),
-// withProps(({userBeingEdited}) => {
-//   // Formik needs every field to have an initialValue, otherwise
-//   // the field won't be controlled and we'll get console errors.
-//   return {
-//     initialValues: {
-//       ...userBeingEdited,
-//       email: userBeingEdited.email || '',
-//       first_name: userBeingEdited.first_name || '',
-//       last_name: userBeingEdited.last_name || '',
-//       state: userBeingEdited.state || 'enabled',
-//       password: '',
-//       verifyPassword: '',
-//       comments: userBeingEdited.comments || '',
-//       never_expires: userBeingEdited.never_expires || false,
-//       force_password_change: userBeingEdited.force_password_change || false,
-//     },
-//   };
-// }),
-// );
+import { UserValidationSchema, validateAsync } from "../validation";
+import { hasAnyProps } from "../../../lang";
+import { useActionCreators, useApi } from "../../../api/users";
 
-const UserEditForm = (
-  {
-    // userBeingEdited,
-    // initialValues,
-    // idToken,
-    // isSaving,
-    // authenticationServiceUrl,
-    // onSubmit,
-    // handleBack,
-    // showBackConfirmation,
-    // setShowBackConfirmation,
-    // push,
-    // match
-  }
-) => {
+const UserEditForm = () => {
   const { fetchUser, saveChanges } = useApi();
-  const { toggleAlertVisibility, clearUserBeingEdited } = useActionCreators();
+  const { clearUserBeingEdited } = useActionCreators();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
+  const userId = useHttpQueryParam("userId");
   const {
     userBeingEdited,
-    showAlert,
-    alertText,
     isSaving,
     idToken,
     authenticationServiceUrl
@@ -170,10 +74,9 @@ const UserEditForm = (
       force_password_change: userBeingEdited.force_password_change || false
     };
 
-    const userId = queryString.parse(history.location.search).userId;
     useEffect(() => {
       clearUserBeingEdited();
-      fetchUser(userId);
+      if (!!userId) fetchUser(userId);
     }, []);
 
     const handleBack = (isPristine: boolean) => {
@@ -259,13 +162,6 @@ const UserEditForm = (
   } else {
     return <ErrorPage />;
   }
-};
-
-UserEditForm.contextTypes = {
-  store: PropTypes.object.isRequired,
-  router: PropTypes.shape({
-    history: object.isRequired
-  })
 };
 
 export default UserEditForm;

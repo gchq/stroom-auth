@@ -17,7 +17,7 @@ import { push } from "react-router-redux";
 
 import { HttpError } from "../../ErrorTypes";
 import { FormikBag } from "formik";
-import { GlobalStoreState } from "src/modules/GlobalStoreState";
+import { GlobalStoreState } from "../../modules/GlobalStoreState";
 
 //FIXME: make a type for editedUser
 interface Api {

@@ -14,23 +14,31 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Field, ErrorMessage} from 'formik';
-import Checkbox from 'rc-checkbox';
+import * as React from "react";
+import { Field, ErrorMessage, FormikErrors, FormikTouched } from "formik";
+import Toggle from "react-toggle";
 
-import '../../styles/form.css';
-import {AuditCopy, LoginStatsCopy} from '../auditCopy';
+import "../../styles/form.css";
+import { AuditCopy, LoginStatsCopy } from "../auditCopy";
+import { User } from "../../api/users";
 
-const LoginFailureCopy = ({attemptCount}) => (
+const LoginFailureCopy = ({ attemptCount }: { attemptCount: number }) => (
   <div className="copy">
     Login attempts with an incorrect password: {attemptCount}
   </div>
 );
 
-const CheckboxField = ({field, form: {touched, errors}, ...props}) => {
+const CheckboxField = ({
+  field,
+  form: { touched, errors },
+  ...props
+}: {
+  field: any; //FIXME
+  form: any; //FIXME
+}) => {
   return (
-    <Checkbox
+    <Toggle
+      icons={false}
       defaultChecked={field.value}
       checked={field.value}
       onChange={field.onChange}
@@ -46,7 +54,14 @@ const UserFields = ({
   touched,
   userBeingEdited,
   setFieldTouched,
-  setFieldValue,
+  setFieldValue
+}: {
+  showCalculatedFields: boolean;
+  errors: FormikErrors<User>;
+  touched: FormikTouched<User>;
+  userBeingEdited?: User;
+  setFieldTouched: Function;
+  setFieldValue: Function;
 }) => (
   <div className="container">
     <div className="section">
@@ -92,10 +107,12 @@ const UserFields = ({
             <Field
               name="state"
               component="select"
-              onChange={event => {
-                setFieldValue('state', event.target.value);
-                setFieldTouched('state');
-              }}>
+              onChange={(event: any) => {
+                //FIXME
+                setFieldValue("state", event.target.value);
+                setFieldTouched("state");
+              }}
+            >
               <option value="enabled">Active</option>
               <option value="disabled">Disabled</option>
               <option disabled value="inactive">
@@ -185,22 +202,26 @@ const UserFields = ({
       </div>
     </div>
 
-    {showCalculatedFields ? (
+    {showCalculatedFields && !!userBeingEdited ? (
       <React.Fragment>
-        <div className="section">
-          <div className="section__title">
-            <h3>Recent activity</h3>
-          </div>
-          <div className="section__fields--copy-only">
-            <div className="section__fields_row">
-              <LoginFailureCopy attemptCount={userBeingEdited.login_count} />
-              <LoginStatsCopy
-                lastLogin={userBeingEdited.last_login}
-                loginCount={userBeingEdited.login_count}
-              />
+        {!!userBeingEdited.login_count ? (
+          <div className="section">
+            <div className="section__title">
+              <h3>Recent activity</h3>
+            </div>
+            <div className="section__fields--copy-only">
+              <div className="section__fields_row">
+                <LoginFailureCopy attemptCount={userBeingEdited.login_count} />
+                <LoginStatsCopy
+                  lastLogin={userBeingEdited.last_login}
+                  loginCount={userBeingEdited.login_count}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          undefined
+        )}
 
         <div className="section">
           <div className="section__title">
@@ -223,9 +244,5 @@ const UserFields = ({
     )}
   </div>
 );
-
-UserFields.propTypes = {
-  showCalculatedFields: PropTypes.bool.isRequired,
-};
 
 export default UserFields;

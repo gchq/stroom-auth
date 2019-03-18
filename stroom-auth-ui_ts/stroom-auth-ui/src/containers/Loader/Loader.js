@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import * as ReactLoader from 'react-loader';
+import * as React from "react";
+import * as ReactLoader from "react-loader";
 
-import './Loader.css';
+import "./Loader.css";
 
 var options = {
   lines: 13,
@@ -26,7 +26,7 @@ var options = {
   radius: 30,
   scale: 0.5,
   corners: 1,
-  color: '#000',
+  color: "#000",
   opacity: 0.25,
   rotate: 0,
   direction: 1,
@@ -34,18 +34,18 @@ var options = {
   trail: 60,
   fps: 20,
   zIndex: 2e9,
-  top: '50',
-  left: '50',
+  top: "50",
+  left: "50",
   shadow: false,
   hwaccel: false,
-  position: 'relative',
+  position: "relative"
 };
 
 /**
  * Configures and wraps react-loader, which itself wraps spin.js. Isn't 2018 great?
  * Adds a message.
  */
-const Loader = ({message}) => (
+const Loader = ({ message }: { message?: String }) => (
   <div className="loader__container">
     <ReactLoader loaded={false} options={options} />
     <p>{message}</p>
