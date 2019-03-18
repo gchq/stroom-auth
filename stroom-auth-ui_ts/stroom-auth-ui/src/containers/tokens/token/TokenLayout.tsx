@@ -15,76 +15,105 @@
  */
 
 import * as React from 'react';
-import {Component} from 'react';
-import {connect} from 'react-redux';
+import { Component, useState } from 'react';
+import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 
 import TokenSearch from '../tokenSearch';
 import TokenCreate from '../tokenCreate';
 import TokenEdit from '../tokenEdit';
-import {useApi as useTokenApi} from '../../../api/tokens'
-// import {deleteSelectedToken} from '../../../modules/token';
+import { useApi as useTokenApi } from '../../../api/tokens'
+import { useReduxState } from '../../../lib/useReduxState';
 
 import '../../../styles/index.css';
 import '../../../styles/toolbar-small.css';
 import '../../../styles/toggle-small.css';
 
-class TokenLayout extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isHelpDialogOpen: false,
-    };
-  }
+const TokenLayout = () => {
+  const { show, selectedTokenRowId } = useReduxState(({
+    token: { show },
+    tokenSearch: { selectedTokenRowId }
+  }) => ({ show, selectedTokenRowId }));
 
-  handleHelpDialogOpen() {
-    this.setState({isHelpDialogOpen: true});
-  }
+  const { deleteSelectedToken } = useTokenApi();
+  const [isHelpDialogOpen, setHelpDialogOpen] = useState(false);
+  const [isFilteringEnabled, setFilteringEnabled] = useState(false);
+  const showSearch = show === 'search';
+  const showCreate = show === 'create';
+  const showEdit = show === 'edit';
 
-  handleHelpDialogClose() {
-    this.setState({isHelpDialogOpen: false});
-  }
-
-  render() {
-    const {show} = this.props;
-    const showSearch = show === 'search';
-    const showCreate = show === 'create';
-    const showEdit = show === 'edit';
-    return (
-      <div className="Layout-main">
-        <div className="User-content" id="User-content">
-          {showSearch ? (
-            <TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />
-          ) : (
+  return (
+    <div className="Layout-main">
+      <div className="User-content" id="User-content">
+        {showSearch ? (
+          <TokenSearch isFilteringEnabled={isFilteringEnabled} />
+        ) : (
             undefined
           )}
-          {showCreate ? <TokenCreate /> : undefined}
-          {showEdit ? <TokenEdit /> : undefined}
-        </div>
+        {showCreate ? <TokenCreate /> : undefined}
+        {showEdit ? <TokenEdit /> : undefined}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-TokenLayout.contextTypes = {
-  store: PropTypes.object.isRequired,
-};
+export default TokenLayout;
+// class TokenLayout extends Component {
+// constructor() {
+//   super();
+//   this.state = {
+//     isHelpDialogOpen: false,
+//   };
+// }
 
-const mapStateToProps = state => ({
-  show: state.token.show,
-  selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
-});
+// handleHelpDialogOpen() {
+//   this.setState({isHelpDialogOpen: true});
+// }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      deleteSelectedToken,
-    },
-    dispatch,
-  );
+// handleHelpDialogClose() {
+//   this.setState({isHelpDialogOpen: false});
+// }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TokenLayout);
+//   render() {
+//     const {show} = this.props;
+//     const showSearch = show === 'search';
+//     const showCreate = show === 'create';
+//     const showEdit = show === 'edit';
+//     return (
+//       <div className="Layout-main">
+//         <div className="User-content" id="User-content">
+//           {showSearch ? (
+//             <TokenSearch isFilteringEnabled={this.state.isFilteringEnabled} />
+//           ) : (
+//             undefined
+//           )}
+//           {showCreate ? <TokenCreate /> : undefined}
+//           {showEdit ? <TokenEdit /> : undefined}
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+
+// TokenLayout.contextTypes = {
+//   store: PropTypes.object.isRequired,
+// };
+
+// const mapStateToProps = state => ({
+//   show: state.token.show,
+//   selectedTokenRowId: state.tokenSearch.selectedTokenRowId,
+// });
+
+// const mapDispatchToProps = dispatch =>
+//   bindActionCreators(
+//     {
+//       deleteSelectedToken,
+//     },
+//     dispatch,
+//   );
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps,
+// )(TokenLayout);

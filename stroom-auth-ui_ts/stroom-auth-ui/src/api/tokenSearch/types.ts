@@ -4,6 +4,10 @@ export interface StoreState {
     showSearchLoader: boolean;
     selectedTokenRowId: String | undefined;
     results: Token[];
+    totalPages: Number;
+    errorStatus: String;
+    errorText: String,
+    lastUsedPageSize: Number;
 }
 
 export interface Token {

@@ -15,26 +15,31 @@
  */
 
 import React from 'react';
-import {connect} from 'react-redux';
+import {useState} from 'react';
+import { connect } from 'react-redux';
 import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
-import {compose, withState} from 'recompose';
-import {push} from 'react-router-redux';
+import { compose, withState } from 'recompose';
+import { push } from 'react-router-redux';
 
 import Button from '../../Button';
 import './TokenSearch.css';
 import '../../../styles/table-small.css';
 import '../../../styles/toggle-small.css';
-import {
-  performTokenSearch,
-  changeSelectedRow,
-  setEnabledStateOnToken,
-} from '../../../modules/tokenSearch';
+import { useApi, useActionCreators } from '../../../api/tokens';
+// import {
+  import {useApi as useTokenSearchApi} from '../../../api/tokenSearch';
+import { useReduxState } from '../../../lib/useReduxState';
+import { useRouter } from '../../../lib/useRouter';
+//   performTokenSearch,
+//   changeSelectedRow,
+//   setEnabledStateOnToken,
+// } from '../../../modules/tokenSearch';
 
-import {deleteSelectedToken} from '../../../modules/token';
+// import {deleteSelectedToken} from '../../../modules/token';
 
 function getColumnFormat(selectedTokenRowId, setEnabledStateOnToken) {
   return [
@@ -59,20 +64,20 @@ function getColumnFormat(selectedTokenRowId, setEnabledStateOnToken) {
       accessor: 'enabled',
       maxWidth: 80,
       Cell: row => getEnabledCellRenderer(row, setEnabledStateOnToken),
-      Filter: ({filter, onChange}) => getEnabledCellFilter(filter, onChange),
+      Filter: ({ filter, onChange }) => getEnabledCellFilter(filter, onChange),
     },
     {
       Header: 'Expires on',
       accessor: 'expires_on',
       Cell: row => formatDate(row.value),
-      Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+      Filter: ({ filter, onChange }) => undefined, // Disable filtering by this column - how do we filter on dates?
       maxWidth: 165,
     },
     {
       Header: 'Issued on',
       accessor: 'issued_on',
       Cell: row => formatDate(row.value),
-      Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
+      Filter: ({ filter, onChange }) => undefined, // Disable filtering by this column - how do we filter on dates?
       maxWidth: 165,
     },
   ];
@@ -94,7 +99,7 @@ function getEnabledCellFilter(filter, onChange) {
   return (
     <select
       onChange={event => onChange(event.target.value)}
-      style={{width: '100%'}}
+      style={{ width: '100%' }}
       value={filter ? filter.value : 'all'}>
       <option value="">Show all</option>
       <option value="true">Enabled only</option>
@@ -108,10 +113,66 @@ function formatDate(dateString) {
   return dateString ? dateFormat(dateString, dateFormatString) : '';
 }
 
-const enhance = compose(
-  connect(
-    ({
-      authentication: {idToken},
+// const enhance = compose(
+//   connect(
+//     ({
+//       authentication: { idToken },
+//       tokenSearch: {
+//         showSearchLoader,
+//         results,
+//         totalPages,
+//         errorStatus,
+//         errorText,
+//         selectedTokenRowId,
+//         lastUsedPageSize,
+//       },
+//     }) => ({
+//       idToken,
+//       showSearchLoader,
+//       results,
+//       totalPages,
+//       errorStatus,
+//       errorText,
+//       selectedTokenRowId,
+//       pageSize: lastUsedPageSize,
+//     }),
+//     {
+//       performTokenSearch,
+//       deleteSelectedToken,
+//       changeSelectedRow,
+//       setEnabledStateOnToken,
+//       push,
+//     },
+//   ),
+//   withState('isFilteringEnabled', 'toggleFiltering', false),
+// );
+
+const TokenSearch = ({
+  // vars
+  // selectedTokenRowId,
+  // results,
+  // totalPages,
+  // showSearchLoader,
+  // pageSize,
+  // isFilteringEnabled,
+  // idToken,
+  //funcs
+  // performTokenSearch,
+  // setEnabledStateOnToken,
+  // changeSelectedRow,
+  // deleteSelectedToken,
+  // toggleFiltering,
+  // push,
+}) => {
+  const { idToken,
+    showSearchLoader,
+    results,
+    totalPages,
+    errorStatus,
+    errorText,
+    selectedTokenRowId,
+    pageSize, } = useReduxState(({
+      authentication: { idToken },
       tokenSearch: {
         showSearchLoader,
         results,
@@ -120,52 +181,29 @@ const enhance = compose(
         errorText,
         selectedTokenRowId,
         lastUsedPageSize,
-      },
-    }) => ({
-      idToken,
+      }
+    }) => ({idToken,
       showSearchLoader,
       results,
       totalPages,
       errorStatus,
       errorText,
       selectedTokenRowId,
-      pageSize: lastUsedPageSize,
-    }),
-    {
-      performTokenSearch,
-      deleteSelectedToken,
-      changeSelectedRow,
-      setEnabledStateOnToken,
-      push,
-    },
-  ),
-  withState('isFilteringEnabled', 'toggleFiltering', false),
-);
+      pageSize: lastUsedPageSize
+    }));
+  const [isFilteringEnabled, toggleFiltering] = useState(false);
+  const { history } = useRouter();
+    const {performTokenSearch} = useTokenSearchApi();
+  const { deleteSelectedToken } = useApi();
+  const { selectRow, setEnabledStateOnToken } = useActionCreators();
 
-const TokenSearch = ({
-  // vars
-  selectedTokenRowId,
-  results,
-  totalPages,
-  showSearchLoader,
-  pageSize,
-  isFilteringEnabled,
-  idToken,
-  //funcs
-  performTokenSearch,
-  setEnabledStateOnToken,
-  changeSelectedRow,
-  deleteSelectedToken,
-  toggleFiltering,
-  push,
-}) => {
   const noTokenSelected = !selectedTokenRowId;
   return (
     <div className="UserSearch-main">
       <div className="header">
         <Button
           className="toolbar-button-small primary"
-          onClick={() => push('/token/newApiToken')}
+          onClick={() => history.push('/token/newApiToken')}
           icon="plus">
           Create
         </Button>
@@ -180,14 +218,14 @@ const TokenSearch = ({
             </Button>
           </div>
         ) : (
-          <Button
-            className="toolbar-button-small primary"
-            disabled={noTokenSelected}
-            onClick={() => push(`/token/${selectedTokenRowId}`)}
-            icon="edit">
-            View/edit
+            <Button
+              className="toolbar-button-small primary"
+              disabled={noTokenSelected}
+              onClick={() => history.push(`/token/${selectedTokenRowId}`)}
+              icon="edit">
+              View/edit
           </Button>
-        )}
+          )}
 
         <div>
           <Button
@@ -248,7 +286,7 @@ const TokenSearch = ({
               className += enabled ? '' : ' table-row-dimmed';
               return {
                 onClick: (target, event) => {
-                  changeSelectedRow(rowInfo.row.id);
+                  selectRow(rowInfo.row.id);
                 },
                 className,
               };
@@ -269,4 +307,4 @@ const TokenSearch = ({
   );
 };
 
-export default enhance(TokenSearch);
+export default TokenSearch;

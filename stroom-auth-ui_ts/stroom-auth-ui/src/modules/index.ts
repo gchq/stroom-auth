@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-import {combineReducers} from 'redux';
-import {routerReducer} from 'react-router-redux';
-// import {reducer as formReducer} from 'redux-form';
-import {authorisationReducer as authorisation, authenticationReducer as authentication} from '../startup/authentication';
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 
-import { reducer as config} from "../startup/config";
-import { reducer as errorPage} from "../components/ErrorPage";
-import { reducer as user} from "../api/users"
-//import {
-// authenticationReducer as authentication,
-// authorisationReducer as authorisation,
-// } from 'stroom-js';
+import { authorisationReducer as authorisation, authenticationReducer as authentication } from '../startup/authentication';
+import { reducer as config } from "../startup/config";
 
- import login from './login';
-//  import user from './user';
- import userSearch from './userSearch';
- import token from './token';
- import tokenSearch from './tokenSearch';
+import { reducer as errorPage } from "../components/ErrorPage";
 
-
+import { reducer as user } from "../api/users"
+import { reducer as login } from "../api/users"
+import { reducer as userSearch } from '../api/userSearch';
+import { reducer as token } from '../api/tokens';
+import { reducer as tokenSearch } from '../api/tokenSearch';
 
 export default combineReducers({
   routing: routerReducer,

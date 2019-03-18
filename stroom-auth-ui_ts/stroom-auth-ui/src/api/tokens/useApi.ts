@@ -26,6 +26,11 @@ import useRouter from "../../lib/useRouter";
 import { performUserSearch } from 'src/modules/userSearch_old';
 
 interface Api {
+    deleteSelectedToken: (tokenId:String) => void;
+   createToken: (email:String, setSubmitting: any) => void;
+ fetchApiKey: (apiKeyId: String) => void;
+userAutoCompleteChange: (autocompleteText:String, securityToken:String) => void;
+toggleEnabledState:() => void;
 }
 
 export const useApi = (): Api => {
@@ -59,7 +64,7 @@ export const useApi = (): Api => {
                 .catch(error => handleErrors(error));//FIXME
         }, [selectRow, performTokenSearch]);
 
-    const createToken = useCallback((email, setSubmitting) => {
+    const createToken = useCallback(({email, setSubmitting}) => {
             toggleIsCreating();
             hideErrorMessage();
             const jwsToken = store.authentication.idToken;
@@ -119,7 +124,7 @@ export const useApi = (): Api => {
                 .catch(error => handleErrors(error));//FIXME
     },[changeReadCreatedToken]);
 
-    const userAutoCompleteChange = useCallback((autocompleteText, securityToken) => {
+    const userAutoCompleteChange = useCallback(({autocompleteText, securityToken}) => {
             performUserSearch(securityToken);
             let matchingAutoCompleteResults = [];
             const autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
