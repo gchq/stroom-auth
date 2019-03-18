@@ -16,46 +16,50 @@
 import { useContext, useCallback } from "react";
 import { StoreContext } from "redux-react-hook";
 import { useActionCreators } from "./redux";
-import useHttpClient from "../useHttpClient"
+import useHttpClient from "../useHttpClient";
 import { HttpError } from "../../ErrorTypes";
 import { handleErrors, getJsonBody } from "../../modules/fetchFunctions";
 
 interface Api {
-    performUserSearch: () => void;
+  performUserSearch: () => void;
 }
 
 export const useApi = (): Api => {
-    const store = useContext(StoreContext);
-    const { showSearchLoader, updateResults } = useActionCreators();
+  const store = useContext(StoreContext);
+  const { showSearchLoader, updateResults } = useActionCreators();
 
-    const performUserSearch = useCallback(() => {
-        showSearchLoader(true);
-        const url = `${store.config.userServiceUrl}/?fromEmail=&usersPerPage=100&orderBy=id`;
-        const { httpGetJson } = useHttpClient();
-        httpGetJson(url)
-            .then(handleStatus)
-            .then(getJsonBody)
-            .then(data => {
-                showSearchLoader(false);
-                updateResults(data);
-            })
-            .catch(error => handleErrors(error)); //FIXME: this still needs fixing
-    }, [showSearchLoader, updateResults]);
-}
+  return {
+    performUserSearch: useCallback(() => {
+      showSearchLoader(true);
+      const url = `${
+        store.config.userServiceUrl
+      }/?fromEmail=&usersPerPage=100&orderBy=id`;
+      const { httpGetJson } = useHttpClient();
+      httpGetJson(url)
+        .then(handleStatus)
+        .then(getJsonBody)
+        .then(data => {
+          showSearchLoader(false);
+          updateResults(data);
+        })
+        .catch(error => handleErrors(error)); //FIXME: this still needs fixing
+    }, [showSearchLoader, updateResults])
+  };
+};
 
 export default useApi;
 
-function handleStatus(response) {
-    if (response.status === 200) {
-        return Promise.resolve(response);
-    } else if (response.status === 409) {
-        return Promise.reject(
-            new HttpError(
-                response.status,
-                "This user already exists - please use a different email address."
-            )
-        );
-    } else {
-        return Promise.reject(new HttpError(response.status, response.statusText));
-    }
+function handleStatus(response: any) {
+  if (response.status === 200) {
+    return Promise.resolve(response);
+  } else if (response.status === 409) {
+    return Promise.reject(
+      new HttpError(
+        response.status,
+        "This user already exists - please use a different email address."
+      )
+    );
+  } else {
+    return Promise.reject(new HttpError(response.status, response.statusText));
+  }
 }

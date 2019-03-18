@@ -21,7 +21,8 @@ interface SelectRowAction extends Action<"userSearch/SELECT_ROW"> {
 const defaultState: StoreState = {
   users: [],
   showSearchLoader: false,
-  selectedUserRowId: undefined
+  selectedUserRowId: undefined,
+  results: []
 };
 // const initialState = {
 //   users: [],

@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import {useEffect} from 'react';
-import {connect} from 'react-redux';
-import {NavLink} from 'react-router-dom';
+import * as React from "react";
+import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
 // import {compose, lifecycle} from 'recompose';
-import {Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import * as queryString from "qs";
 
-import Button from '../Button';
-import {hasAnyProps} from '../../lang';
-import './Login.css';
-import '../Layout.css';
-import icon from '../../icon.png';
+import Button from "../Button";
+import { hasAnyProps } from "../../lang";
+import "./Login.css";
+import "../Layout.css";
+import icon from "../../icon.png";
 // import {login as onSubmit} from '../../modules/login';
-import {useActionCreators, useApi} from '../../api/authentication';
+import { useActionCreators, useApi } from "../../api/authentication";
 import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
 
@@ -40,8 +39,8 @@ import useRouter from "../../lib/useRouter";
 // } from '../../modules/login';
 
 const LoginValidationSchema = Yup.object().shape({
-  email: Yup.string().required('Required'),
-  password: Yup.string().required('Required'),
+  email: Yup.string().required("Required"),
+  password: Yup.string().required("Required")
 });
 
 // const enhance = compose(
@@ -73,44 +72,52 @@ const LoginValidationSchema = Yup.object().shape({
 //   }),
 // );
 
-const LoginForm = ({
-  // handleSubmit,
-  // pristine,
-  // submitting,
-  // allowPasswordResets,
-  // onSubmit,
-}) => {
-  const {allowPasswordResets, idToken} = useReduxState(({
-    config: {values:{allowPasswordResets}}, authentication: {idToken}}) => ({
-      allowPasswordResets,
-      idToken,
-    }));
-  const {login} = useApi();
-  const {setRedirectUrl, setClientId, setSessionId } = useActionCreators();
-  const {router: { location }} = useRouter()
+const LoginForm = (
+  {
+    // handleSubmit,
+    // pristine,
+    // submitting,
+    // allowPasswordResets,
+    // onSubmit,
+  }
+) => {
+  const { allowPasswordResets } = useReduxState(
+    ({
+      config: {
+        values: { allowPasswordResets }
+      }
+    }) => ({
+      allowPasswordResets
+    })
+  );
+  const { login } = useApi();
+  const { setRedirectUrl, setClientId, setSessionId } = useActionCreators();
+  const {
+    router: { location }
+  } = useRouter();
 
   useEffect(() => {
-    if(location !== undefined){
+    if (location !== undefined) {
       const queryParams = queryString.parse(location.search);
-      const redirectUrl = queryParams['redirectUrl'];
-      const clientId = queryParams['clientId'];
-      const sessionId = queryParams['sessionId'];
+      const redirectUrl = queryParams["redirectUrl"];
+      const clientId = queryParams["clientId"];
+      const sessionId = queryParams["sessionId"];
 
       setRedirectUrl(redirectUrl);
       setClientId(clientId);
-      setSessionId(sessionId); 
+      setSessionId(sessionId);
+    } else {
+      console.log("TODO: location not being found!");
     }
-    else {
-      console.log("TODO: location not being found!")
-    }
-  }, [])
+  }, []);
 
   return (
     <Formik
       onSubmit={login}
-      initialValues={{email: '', password: ''}}
-      validationSchema={LoginValidationSchema}>
-      {({errors, touched, submitForm, isSubmitting, status}) => {
+      initialValues={{ email: "", password: "" }}
+      validationSchema={LoginValidationSchema}
+    >
+      {({ errors, touched, submitForm, isSubmitting, status }) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (
@@ -149,12 +156,13 @@ const LoginForm = ({
                     {status ? (
                       <div className="validation-error">{status}</div>
                     ) : (
-                      <div/>
+                      <div />
                     )}
                     {allowPasswordResets ? (
                       <NavLink
                         className="Login__reset-password"
-                        to={'/resetPasswordRequest'}>
+                        to={"/resetPasswordRequest"}
+                      >
                         Reset password?
                       </NavLink>
                     ) : (
@@ -166,7 +174,8 @@ const LoginForm = ({
                       className="toolbar-button-full primary"
                       disabled={isPristine || hasErrors}
                       type="submit"
-                      isLoading={isSubmitting}>
+                      isLoading={isSubmitting}
+                    >
                       Sign in
                     </Button>
                   </div>

@@ -37,15 +37,23 @@ interface Api {
 export const useApi = (): Api => {
   const store: GlobalStoreState = useContext(StoreContext);
 
+  const { httpDeleteJsonResponse, httpPostEmptyResponse } = useHttpClient();
   const { performUserSearch } = useUserSearchApi();
   const { selectRow } = useUserSearchActionCreators();
 
-  const { httpPutJsonResponse } = useHttpClient();
+  const {
+    showChangePasswordErrorMessage,
+    hideChangePasswordErrorMessage
+  } = useActionCreators();
+  const { httpPostJsonResponse } = useHttpClient();
+  const { showCreateLoader } = useActionCreators();
+  const { httpPutJsonResponse, httpGetJson } = useHttpClient();
   const {
     toggleIsSaving,
     saveUserBeingEdited,
     toggleAlertVisibility
   } = useActionCreators();
+
   const saveChanges = useCallback(
     editedUser => {
       toggleIsSaving(true);
@@ -96,8 +104,6 @@ export const useApi = (): Api => {
     ]
   );
 
-  const { httpPostJsonResponse } = useHttpClient();
-  const { showCreateLoader } = useActionCreators();
   const createUser = useCallback(
     newUser => {
       toggleIsSaving(true);
@@ -161,7 +167,6 @@ export const useApi = (): Api => {
     [toggleIsSaving, showCreateLoader, toggleAlertVisibility]
   );
 
-  const { httpDeleteJsonResponse, httpPostEmptyResponse } = useHttpClient();
   const deleteSelectedUser = useCallback(() => {
     const userIdToDelete = store.userSearch.selectedUserRowId;
     const user = store.userSearch.results.find(
@@ -187,10 +192,6 @@ export const useApi = (): Api => {
       .catch(error => handleErrors(error)); //FIXME as above
   }, [selectRow, performUserSearch, toggleAlertVisibility]);
 
-  const {
-    showChangePasswordErrorMessage,
-    hideChangePasswordErrorMessage
-  } = useActionCreators();
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
       hideChangePasswordErrorMessage();
@@ -275,8 +276,7 @@ export const useApi = (): Api => {
     [showChangePasswordErrorMessage]
   );
 
-  const { httpGetJson } = useHttpClient();
-  const changePasswordForCurrentUser = () => {
+  const changePasswordForCurrentUser = useCallback(() => {
     const url = `${store.config.values.userServiceUrl}/me`;
     httpGetJson(url, {})
       .then(handleStatus)
@@ -285,10 +285,10 @@ export const useApi = (): Api => {
       .then(user => {
         changePassword(user.email);
       });
-  };
+  }, [changePassword]);
 
-  //FIXME: formikbag types
   const submitPasswordChangeRequest = useCallback(
+    //FIXME: formikbag types
     (formData: any, formikBag: FormikBag<any, any>) => {
       const { setSubmitting } = formikBag;
       const url = `${store.config.values.authenticationServiceUrl}/reset/${
@@ -319,15 +319,15 @@ export const useApi = (): Api => {
   );
 
   return {
-    submitPasswordChangeRequest,
     saveChanges,
     createUser,
     deleteSelectedUser,
     changePasswordForCurrentUser,
+    resetPassword,
     changePassword,
-    fetchUser,
-    resetPassword
-  };
+    submitPasswordChangeRequest,
+    fetchUser
+  } as Api;
 };
 
 export default useApi;
