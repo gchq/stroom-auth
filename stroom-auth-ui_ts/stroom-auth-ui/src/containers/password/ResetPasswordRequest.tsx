@@ -14,40 +14,31 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import {connect} from 'react-redux';
+import * as React from 'react';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
-import {compose} from 'recompose';
-import {push} from 'react-router-redux';
 import * as Yup from 'yup';
 
 import Button from '../Button';
 import '../Layout.css';
-import {submitPasswordChangeRequest as onSubmit} from '../../modules/user';
 import {hasAnyProps} from '../../lang';
 import '../../styles/index.css';
+import {useApi} from '../../api/users';
+import useReduxState from '../../lib/useReduxState';
 
 const ValidationSchema = Yup.object().shape({
   email: Yup.string().required('Required'),
 });
 
-const enhance = compose(
-  connect(
-    ({config: {stroomUiUrl}}) => ({
-      stroomUiUrl,
-    }),
-    {push, onSubmit},
-  ),
-);
-
-const ResetPasswordRequest = ({onSubmit, stroomUiUrl}) => {
+const ResetPasswordRequest = () => {
+  const {stroomUiUrl} = useReduxState(({config: {values:{stroomUiUrl}}}) => ({stroomUiUrl}));
+  const { submitPasswordChangeRequest} = useApi();
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
         email: '',
       }}
-      onSubmit={onSubmit}
+      onSubmit={submitPasswordChangeRequest}
       validationSchema={ValidationSchema}>
       {({errors, touched, submitForm, isSubmitting}) => {
         const isPristine = !hasAnyProps(touched);
@@ -96,4 +87,4 @@ const ResetPasswordRequest = ({onSubmit, stroomUiUrl}) => {
   );
 };
 
-export default enhance(ResetPasswordRequest);
+export default ResetPasswordRequest;

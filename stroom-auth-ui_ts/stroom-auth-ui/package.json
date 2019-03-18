@@ -10,6 +10,7 @@
     "@types/jquery": "^3.3.29",
     "@types/jwt-decode": "^2.2.1",
     "@types/qs": "^6.5.2",
+    "@types/react-copy-to-clipboard": "^4.2.6",
     "@types/react-loader": "^2.4.3",
     "@types/react-redux": "7.0.1",
     "@types/react-router-dom": "^4.3.1",

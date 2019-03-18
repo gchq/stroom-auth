@@ -14,32 +14,14 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import {connect} from 'react-redux';
-import {compose} from 'recompose';
-import {withRouter} from 'react-router';
+import * as React from 'react';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 
 import Button from '../Button';
 import {validateAsync} from '../users/validation';
 import '../Layout.css';
 import {hasAnyProps} from '../../lang';
-
-const enhance = compose(
-  withRouter,
-  connect(
-    ({
-      user: {changePasswordErrorMessage},
-      config: {authenticationServiceUrl},
-      authentication: {idToken},
-    }) => ({
-      changePasswordErrorMessage,
-      authenticationServiceUrl,
-      idToken,
-    }),
-    {},
-  ),
-);
+import useReduxState from '../../lib/useReduxState';
 
 const ChangePasswordFields = ({
   // Props
@@ -48,10 +30,17 @@ const ChangePasswordFields = ({
   showOldPasswordField,
   onSubmit,
   // Redux
-  changePasswordErrorMessage,
-  idToken,
-  authenticationServiceUrl,
+  // changePasswordErrorMessage,
+  // idToken,
+  // authenticationServiceUrl,
 }) => {
+  const {changePasswordErrorMessage,
+      authenticationServiceUrl,
+      idToken} = useReduxState(({user: {changePasswordErrorMessage},
+      config: {authenticationServiceUrl},
+      authentication: {idToken}}) => ({changePasswordErrorMessage,
+      authenticationServiceUrl,
+      idToken}))
   return (
     <Formik
       enableReinitialize={true}

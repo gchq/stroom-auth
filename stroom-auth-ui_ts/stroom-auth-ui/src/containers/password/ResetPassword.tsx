@@ -15,82 +15,111 @@
  */
 
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {push} from 'react-router-redux';
-import {withRouter} from 'react-router';
-import {compose, withState, lifecycle} from 'recompose';
+import { useState, useEffect } from 'react';
 import * as queryString from "qs";
 import * as jwtDecode from 'jwt-decode';
 
+import {useApi} from '../../api/users';
+
+import { useReduxState } from '../../../lib/useReduxState';
 import ChangePasswordFields from './ChangePasswordFields';
-// import {changeToken} from '../../modules/login';
-import {resetPassword as onSubmit} from '../../modules/user';
-import {useActionCreators} from '../../api/authentication';
+import { useActionCreators } from '../../api/authentication';
+import useRouter from '../../lib/useRouter';
 
+// const enhance = compose(
+  // withRouter,
+  // connect(
+  //   ({ user: { showAlert }, config: { stroomUiUrl } }) => ({ showAlert, stroomUiUrl }),
+  //   {
+  //     changeToken,
+  //     onSubmit,
+  //     push,
+  //   },
+  // ),
+  // withState('missingToken', 'setMissingToken', false),
+  // withState('invalidToken', 'setInvalidToken', false),
+  // withState('expiredToken', 'setExpiredToken', false),
+//   lifecycle({
+//     componentDidMount() {
+//       const {
+//         setMissingToken,
+//         setInvalidToken,
+//         setExpiredToken,
+//         changeToken,
+//       } = this.props;
+//       let missingToken = false;
+//       let invalidToken = false;
+//       let expiredToken = false;
 
-const enhance = compose(
-  withRouter,
-  connect(
-    ({user: {showAlert}, config: {stroomUiUrl}}) => ({showAlert, stroomUiUrl}),
-    {
-      changeToken,
-      onSubmit,
-      push,
-    },
-  ),
-  withState('missingToken', 'setMissingToken', false),
-  withState('invalidToken', 'setInvalidToken', false),
-  withState('expiredToken', 'setExpiredToken', false),
-  lifecycle({
-    componentDidMount() {
-      const {
-        setMissingToken,
-        setInvalidToken,
-        setExpiredToken,
-        changeToken,
-      } = this.props;
-      let missingToken = false;
-      let invalidToken = false;
-      let expiredToken = false;
+//       const token = queryString.parse(this.props.location.search).token;
 
-      const token = queryString.parse(this.props.location.search).token;
+//       // Validate token
+//       if (!token) {
+//         missingToken = true;
+//       } else {
+//         try {
+//           const decodedToken = jwtDecode(token);
+//           const now = new Date().getTime() / 1000;
+//           expiredToken = decodedToken.exp <= now;
+//         } catch (err) {
+//           invalidToken = true;
+//         }
+//       }
 
-      // Validate token
-      if (!token) {
-        missingToken = true;
-      } else {
-        try {
-          const decodedToken = jwtDecode(token);
-          const now = new Date().getTime() / 1000;
-          expiredToken = decodedToken.exp <= now;
-        } catch (err) {
-          invalidToken = true;
-        }
+//       setMissingToken(missingToken);
+//       setInvalidToken(invalidToken);
+//       setExpiredToken(expiredToken);
+
+//       if (!missingToken && !invalidToken && !expiredToken) {
+//         // If we have a valid token we're going to save it, so we can easily
+//         // use it with getState when requesting the change.
+//         changeToken(token);
+//       }
+//     },
+//   }),
+// );
+
+const ResetPassword = () => {
+  const {resetPassword} = useApi();
+  const { history, router } = useRouter();
+  const { showAlert, stroomUiUrl } = useReduxState(({
+    user: { showAlert }, config: { stroomUiUrl }
+  }) => ({ showAlert, stroomUiUrl }));
+  const [missingToken, setMissingToken] = useState(false);
+  const [invalidToken, setInvalidToken] = useState(false);
+  const [expiredToken, setExpiredToken] = useState(false);
+  const { changeToken } = useActionCreators();
+
+  useEffect(() => {
+    let missingToken = false;
+    let invalidToken = false;
+    let expiredToken = false;
+
+    const token = queryString.parse(router.location).token;
+
+    // Validate token
+    if (!token) {
+      missingToken = true;
+    } else {
+      try {
+        const decodedToken = jwtDecode(token);
+        const now = new Date().getTime() / 1000;
+        expiredToken = decodedToken.exp <= now;
+      } catch (err) {
+        invalidToken = true;
       }
+    }
 
-      setMissingToken(missingToken);
-      setInvalidToken(invalidToken);
-      setExpiredToken(expiredToken);
+    setMissingToken(missingToken);
+    setInvalidToken(invalidToken);
+    setExpiredToken(expiredToken);
 
-      if (!missingToken && !invalidToken && !expiredToken) {
-        // If we have a valid token we're going to save it, so we can easily
-        // use it with getState when requesting the change.
-        changeToken(token);
-      }
-    },
-  }),
-);
-
-const ResetPassword = ({
-  onSubmit,
-  missingToken,
-  invalidToken,
-  expiredToken,
-  showAlert,
-  push,
-  stroomUiUrl,
-}) => {
-  const {changeToken} = useActionCreators();
+    if (!missingToken && !invalidToken && !expiredToken) {
+      // If we have a valid token we're going to save it, so we can easily
+      // use it with getState when requesting the change.
+      changeToken(token);
+    }
+  }, [changeToken, setMissingToken, setInvalidToken, setExpiredToken]);
 
   const failure = (
     <div>
@@ -98,13 +127,13 @@ const ResetPassword = ({
       {missingToken || invalidToken ? (
         <p>I'm afraid this password reset link is broken.</p>
       ) : (
-        undefined
-      )}
+          undefined
+        )}
       {expiredToken ? (
         <p>I'm afraid this password reset link has expired.</p>
       ) : (
-        undefined
-      )}
+          undefined
+        )}
     </div>
   );
 
@@ -120,14 +149,14 @@ const ResetPassword = ({
         {showChangePasswordFields ? (
           <ChangePasswordFields
             showOldPasswordField={false}
-            onSubmit={onSubmit}
+            onSubmit={resetPassword}
           />
         ) : (
-          undefined
-        )}
+            undefined
+          )}
       </div>
     </div>
   );
 };
 
-export default enhance(ResetPassword);
+export default ResetPassword;

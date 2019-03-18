@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import {connect} from 'react-redux';
-import {compose} from 'recompose';
+import * as React from 'react';
 
 import Button from '../Button';
 import '../Layout.css';
+import useReduxState from '../../lib/useReduxState';
+// const enhance = compose(
+//   connect(
+//     ({config: {stroomUiUrl}}) => ({stroomUiUrl}),
+//     {},
+//   ),
+// );
 
-const enhance = compose(
-  connect(
-    ({config: {stroomUiUrl}}) => ({stroomUiUrl}),
-    {},
-  ),
-);
-
-const ConfirmPasswordResetEmail = ({stroomUiUrl}) => {
+const ConfirmPasswordResetEmail = () => {
+  const {stroomUiUrl} = useReduxState(({config:{values:{stroomUiUrl}}}) => ({stroomUiUrl}));
   return (
     <div className="container">
       <h3>Password reset</h3>
