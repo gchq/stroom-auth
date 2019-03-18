@@ -15,14 +15,10 @@
  */
 
 import * as React from 'react';
-import { Component } from "react";
-import PropTypes from "prop-types";
 
 import TokenLayout from "./TokenLayout";
-import {useApi as useUserSearchApi, 
-  useActionCreators as useUserSearchActionCreators} from "../../../api/userSearch";
-  import {useActionCreators as useTokenActionCreators} from '../../../api/tokens';
-
+import {useApi as useUserSearchApi} from "../../../api/userSearch";
+import {useActionCreators as useTokenActionCreators} from '../../../api/tokens';
 
 export const TokenCreate = () => {
   const {performUserSearch} = useUserSearchApi();    

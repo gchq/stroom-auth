@@ -16,7 +16,7 @@
 
 import * as React from "react";
 import { useState, useEffect } from "react";
-import * as queryString from "qs";
+// import * as queryString from "qs";
 import * as jwtDecode from "jwt-decode";
 
 import { useApi } from "../../api/users";
@@ -24,7 +24,8 @@ import { useApi } from "../../api/users";
 import { useReduxState } from "../../lib/useReduxState";
 import ChangePasswordFields from "./ChangePasswordFields";
 import { useActionCreators } from "../../api/authentication";
-import useRouter from "../../lib/useRouter";
+import useHttpQueryParam from 'src/lib/useHttpQueryParam';
+// import useRouter from "../../lib/useRouter";
 
 // const enhance = compose(
 // withRouter,
@@ -81,11 +82,10 @@ import useRouter from "../../lib/useRouter";
 
 const ResetPassword = () => {
   const { resetPassword } = useApi();
-  const { history, router } = useRouter();
-  const { showAlert, stroomUiUrl } = useReduxState(
-    ({ user: { showAlert }, config: { stroomUiUrl } }) => ({
+
+  const { showAlert } = useReduxState(
+    ({ user: { showAlert } }) => ({
       showAlert,
-      stroomUiUrl
     })
   );
   const [missingToken, setMissingToken] = useState(false);
@@ -97,15 +97,14 @@ const ResetPassword = () => {
     let missingToken = false;
     let invalidToken = false;
     let expiredToken = false;
-
-    const token = queryString.parse(router.location).token;
+    const token = useHttpQueryParam("token");
 
     // Validate token
     if (!token) {
       missingToken = true;
     } else {
       try {
-        const decodedToken = jwtDecode(token);
+        const decodedToken:{exp:number} = jwtDecode(token);
         const now = new Date().getTime() / 1000;
         expiredToken = decodedToken.exp <= now;
       } catch (err) {
@@ -117,7 +116,7 @@ const ResetPassword = () => {
     setInvalidToken(invalidToken);
     setExpiredToken(expiredToken);
 
-    if (!missingToken && !invalidToken && !expiredToken) {
+    if (!missingToken && !invalidToken && !expiredToken && token) {
       // If we have a valid token we're going to save it, so we can easily
       // use it with getState when requesting the change.
       changeToken(token);
@@ -130,13 +129,13 @@ const ResetPassword = () => {
       {missingToken || invalidToken ? (
         <p>I'm afraid this password reset link is broken.</p>
       ) : (
-        undefined
-      )}
+          undefined
+        )}
       {expiredToken ? (
         <p>I'm afraid this password reset link has expired.</p>
       ) : (
-        undefined
-      )}
+          undefined
+        )}
     </div>
   );
 
@@ -155,8 +154,8 @@ const ResetPassword = () => {
             onSubmit={resetPassword}
           />
         ) : (
-          undefined
-        )}
+            undefined
+          )}
       </div>
     </div>
   );

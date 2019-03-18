@@ -154,7 +154,7 @@ const TokenSearch = ({
   // totalPages,
   // showSearchLoader,
   // pageSize,
-  // isFilteringEnabled,
+  isFilteringEnabled,
   // idToken,
   //funcs
   // performTokenSearch,
@@ -163,7 +163,7 @@ const TokenSearch = ({
   // deleteSelectedToken,
   // toggleFiltering,
   // push,
-}) => {
+}:{isFilteringEnabled: boolean}) => {
   const { idToken,
     showSearchLoader,
     results,
@@ -191,7 +191,6 @@ const TokenSearch = ({
       selectedTokenRowId,
       pageSize: lastUsedPageSize
     }));
-  const [isFilteringEnabled, toggleFiltering] = useState(false);
   const { history } = useRouter();
     const {performTokenSearch} = useTokenSearchApi();
   const { deleteSelectedToken } = useApi();

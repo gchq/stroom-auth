@@ -16,11 +16,10 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
 import { Formik, Form } from "formik";
 import * as queryString from "qs";
-import PropTypes, { object } from "prop-types";
+import * as PropTypes from 'prop-types';
+import { object } from "prop-types";
 // import {
 //   withProps,
 //   branch,
@@ -31,7 +30,6 @@ import PropTypes, { object } from "prop-types";
 //   withHandlers,
 // } from 'recompose';
 import BackConfirmation from "../BackConfirmation";
-import { push } from "react-router-redux";
 
 import "./EditUser.css";
 import UserFields from "../UserFields";
@@ -159,8 +157,6 @@ const UserEditForm = (
 
   if (!!userBeingEdited) {
     //TODO: the error page uses redux. Make it use hooks instead.
-    return <ErrorPage />;
-  } else {
     let initialValues = {
       ...userBeingEdited,
       email: userBeingEdited.email || "",
@@ -260,6 +256,8 @@ const UserEditForm = (
         }}
       </Formik>
     );
+  } else {
+    return <ErrorPage />;
   }
 };
 

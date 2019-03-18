@@ -23,6 +23,21 @@ import '../Layout.css';
 import {hasAnyProps} from '../../lang';
 import useReduxState from '../../lib/useReduxState';
 
+// const enhance = compose(
+//   withRouter,
+//   connect(
+//     ({
+//       user: {changePasswordErrorMessage},
+//       config: {authenticationServiceUrl},
+//       authentication: {idToken},
+//     }) => ({
+//       changePasswordErrorMessage,
+//       authenticationServiceUrl,
+//       idToken,
+//     }),
+//     {},
+//   ),
+// );
 const ChangePasswordFields = ({
   // Props
   email,
@@ -33,11 +48,16 @@ const ChangePasswordFields = ({
   // changePasswordErrorMessage,
   // idToken,
   // authenticationServiceUrl,
+}:{
+  email?: string,
+  redirectUrl?: string,
+  showOldPasswordField: boolean,
+  onSubmit: Function
 }) => {
   const {changePasswordErrorMessage,
       authenticationServiceUrl,
       idToken} = useReduxState(({user: {changePasswordErrorMessage},
-      config: {authenticationServiceUrl},
+      config: {values:{ authenticationServiceUrl}},
       authentication: {idToken}}) => ({changePasswordErrorMessage,
       authenticationServiceUrl,
       idToken}))
@@ -119,7 +139,7 @@ const ChangePasswordFields = ({
 
               <div className="ChangePassword-controls">
                 <div>
-                  {changePasswordErrorMessage.map((error, index) => (
+                  {changePasswordErrorMessage.map((error:string, index:string) => (
                     <p key={index} className="ChangePassword-errorMessage">
                       {error}
                     </p>
@@ -147,4 +167,4 @@ const ChangePasswordFields = ({
   );
 };
 
-export default enhance(ChangePasswordFields);
+export default ChangePasswordFields;

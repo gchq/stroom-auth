@@ -15,18 +15,16 @@
  */
 
 import * as React from 'react';
-import {connect} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import Checkbox from 'rc-checkbox';
+import * as CopyToClipboard from 'react-copy-to-clipboard';
+import * as Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
-import {push} from 'react-router-redux';
 
 import Button from '../../Button';
 import Loader from '../../Loader';
 import './TokenEdit.css';
 import '../../../styles/form.css';
-import {useActionCreators as useTokenActionCreators, useApi} from '../../../api/tokens';
+import { useApi} from '../../../api/tokens';
 // import {toggleEnabledState} from '../../../modules/token';
 import {OnCopy, ByCopy} from '../../auditCopy';
 

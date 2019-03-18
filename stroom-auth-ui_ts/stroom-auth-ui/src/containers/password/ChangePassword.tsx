@@ -24,7 +24,7 @@ import "../Layout.css";
 // import { changePassword as onSubmit } from '../../modules/user';
 import ChangePasswordFields from "./ChangePasswordFields";
 
-import { useActionCreators } from "../../api/users";
+import { useApi } from "../../api/users";
 import useRouter from "../../lib/useRouter";
 import useReduxState from "../../lib/useReduxState";
 
@@ -106,33 +106,38 @@ const ChangePassword = (
       idToken
     })
   );
-  const { changePassword } = useActionCreators();
+  const { changePassword } = useApi();
   const { router } = useRouter();
-  const [redirectUrl, setRedirectUrl] = useState(undefined);
-  const [email, setEmail] = useState(undefined);
+  const [redirectUrl, setRedirectUrl] = useState('');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
-    const query = queryString.parse(router.location);
+    if (!!router.location) {
+      const query = queryString.parse(router.location.search);
 
-    if (query.redirect_url) {
-      const redirectUrl = decodeURIComponent(query.redirect_url);
-      setRedirectUrl(redirectUrl);
+      const redirectUrl: string = query.redirect_url as string;
+      if (!!redirectUrl) {
+        const decodedRedirectUrl: string = decodeURIComponent(redirectUrl);
+        setRedirectUrl(decodedRedirectUrl);
+      }
+
+      let email: string = query.email as string;
+      if (email === undefined) {
+        email = Cookies.get("username");
+      }
+
+      if (email) {
+        setEmail(email);
+      } else {
+        console.error(
+          "Unable to display the change password page because we could not get the user's email address from either the query string or a cookie!"
+        );
+      }
+
     }
+
 
     // Try and get the user's email from the query string, and fall back on a cookie.
-    let email;
-    if (query.email) {
-      email = query.email;
-    } else {
-      email = Cookies.get("username");
-    }
-    if (email) {
-      setEmail(email);
-    } else {
-      console.error(
-        "Unable to display the change password page because we could not get the user's email address from either the query string or a cookie!"
-      );
-    }
   }, [setRedirectUrl, setEmail]);
 
   let title = "Change your password";
@@ -154,13 +159,13 @@ const ChangePassword = (
             onSubmit={changePassword}
           />
         ) : (
-          undefined
-        )}
+            undefined
+          )}
         {showAlert && !redirectUrl ? (
           <p>Your password has been changed.</p>
         ) : (
-          undefined
-        )}
+            undefined
+          )}
         }
       </div>
     </div>

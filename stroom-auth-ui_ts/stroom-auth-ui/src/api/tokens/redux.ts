@@ -14,18 +14,18 @@ const TOGGLE_IS_CREATING = "token/TOGGLE_IS_CREATING";
 
 interface ChangeVisibleContainerAction
   extends Action<"token/CHANGE_VISIBLE_CONTAINER"> {
-  show: String;
+  show: string;
 }
 interface UpdateMatchingAutoCompleteResultsAction
   extends Action<"token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS"> {
-  matchingAutoCompleteResults: String[];
+  matchingAutoCompleteResults: string[];
 }
 interface ChangeReadCreatedTokenAction
   extends Action<"token/CHANGE_READ_CREATED_TOKEN"> {
   lastReadToken: Token;
 }
 interface ShowErrorMessageAction extends Action<"token/SHOW_ERROR_MESSAGE"> {
-  errorMessage: String;
+  errorMessage: string;
 }
 interface HideErrorMessageAction extends Action<"token/HIDE_ERROR_MESSAGE"> {}
 interface ToggleStateAction extends Action<"token/TOGGLE_STATE"> {}
@@ -35,16 +35,17 @@ const defaultState: StoreState = {
   lastReadToken: any,
   matchingAutoCompleteResults: [],
   errorMessage: "",
-  isCreating: false
+  isCreating: false,
+  show: ''
 };
 
 export const useActionCreators = genUseActionCreators({
-  changeVisibleContainer: (show: String): ChangeVisibleContainerAction => ({
+  changeVisibleContainer: (show: string): ChangeVisibleContainerAction => ({
     type: CHANGE_VISIBLE_CONTAINER,
     show
   }),
   updateMatchingAutoCompleteResults: (
-    matchingAutoCompleteResults: String[]
+    matchingAutoCompleteResults: string[]
   ): UpdateMatchingAutoCompleteResultsAction => ({
     type: UPDATE_MATCHING_AUTO_COMPLETE_RESULTS,
     matchingAutoCompleteResults
@@ -55,7 +56,7 @@ export const useActionCreators = genUseActionCreators({
     type: CHANGE_READ_CREATED_TOKEN,
     lastReadToken
   }),
-  showErrorMessage: (errorMessage: String): ShowErrorMessageAction => ({
+  showErrorMessage: (errorMessage: string): ShowErrorMessageAction => ({
     type: SHOW_ERROR_MESSAGE,
     errorMessage
   }),

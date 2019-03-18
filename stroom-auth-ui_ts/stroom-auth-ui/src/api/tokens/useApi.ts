@@ -143,7 +143,7 @@ export const useApi = (): Api => {
     userAutoCompleteChange: useCallback(
       ({ autocompleteText, securityToken }) => {
         performUserSearch();
-        let matchingAutoCompleteResults: String[] = [];
+        let matchingAutoCompleteResults: string[] = [];
         const autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
         store.userSearch.results.forEach(result => {
           if (

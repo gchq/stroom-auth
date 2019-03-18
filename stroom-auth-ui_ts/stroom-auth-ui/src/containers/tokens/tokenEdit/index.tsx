@@ -15,54 +15,21 @@
  */
 
 import * as React from 'react';
-import { Component } from "react";
-import * as PropTypes from "prop-types";
-
 import TokenEditUi from "./TokenEditUi";
 import { useApi as useTokenApi } from '../../../api/tokens';
-import { useRouter } from '../../../lib/useRouter';
-// import { fetchApiKey } from "../../../modules/token";
+import useHttpQueryParam from 'src/lib/useHttpQueryParam';
 
-import * as queryString from "qs";
+//TODO: merge this into the main token edit page
 const TokenEditForm = () => {
   const { fetchApiKey } = useTokenApi();
-  const { router } = useRouter();
+  const tokenId = useHttpQueryParam("tokenId");
   React.useEffect(() => {
-    if (router.path !== undefined) {
-      const queryParams = queryString.parse(router.path);
-      const tokenId = queryParams['tokenId'];
+    if (!!tokenId) {
       fetchApiKey(tokenId);
     }
   }, []);
 
   return <TokenEditUi />;
 }
-
-
-// class TokenEditForm extends Component {
-//   constructor() {
-//     super();
-//     this.state = {};
-//   }
-
-//   async componentDidMount() {
-//     const tokenId = this.context.router.route.match.params.tokenId;
-//     this.context.store.dispatch(fetchApiKey(tokenId));
-
-//     // TODO get user from API and put into store
-//     // TODO Load from store? How?
-//   }
-
-//   render() {
-//     return <TokenEditUi />;
-//   }
-// }
-
-// TokenEditForm.contextTypes = {
-//   store: PropTypes.object.isRequired,
-//   router: PropTypes.shape({
-//     history: object.isRequired
-//   })
-// };
 
 export default TokenEditForm;

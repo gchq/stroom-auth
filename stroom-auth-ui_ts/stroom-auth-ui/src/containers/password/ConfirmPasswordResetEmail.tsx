@@ -47,4 +47,4 @@ const ConfirmPasswordResetEmail = () => {
   );
 };
 
-export default enhance(ConfirmPasswordResetEmail);
+export default ConfirmPasswordResetEmail;

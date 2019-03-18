@@ -15,7 +15,6 @@
  */
 
 import * as React from 'react';
-import { compose } from 'recompose';
 import { Formik } from 'formik';
 
 import { AsyncUserSelect } from '../../users';
@@ -23,35 +22,27 @@ import '../../../styles/form.css';
 import './CreateTokenForm.css';
 import '../../Layout.css';
 import Button from '../../Button';
-import { useApi, useActionCreators } from '../../../api/tokens';
+import { useApi } from '../../../api/tokens';
 import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
 
 
 const TokenCreateForm = () => {
   const { history } = useRouter();
-  const { idToken,
-    matchingAutoCompleteResults,
-    errorMessage,
-    isCreating, } = useReduxState(({
-      authentication: { idToken },
-      token: { matchingAutoCompleteResults, errorMessage, isCreating },
-    }) => ({
-      idToken,
-      matchingAutoCompleteResults,
-      errorMessage,
-      isCreating,
-    }));
-  const { creatToken, userAutoCompleteChange } = useApi();
+  const { isCreating , errorMessage} = useReduxState(({ token: {errorMessage, isCreating } }) => ({ isCreating , errorMessage}));
+  const { createToken } = useApi();
 
   return (
     <div className="CreateTokenForm-card">
       <Formik
+      initialValues={{user:''} as {user: string}}
         onSubmit={(values, actions) => {
-          onSubmit(values.user.label, actions.setSubmitting);
+          //FIXME: what's label?
+          // createToken(values.user.label, actions.setSubmitting);
+          createToken(values.user, actions.setSubmitting);
           actions.setSubmitting(false);
         }}
-        render={({ handleSubmit, setFieldValue, errorMessage, values }) => {
+        render={({ handleSubmit, setFieldValue, values }) => {
           const submitIsDisabled = values.user === undefined
           return (
             <form onSubmit={handleSubmit}>

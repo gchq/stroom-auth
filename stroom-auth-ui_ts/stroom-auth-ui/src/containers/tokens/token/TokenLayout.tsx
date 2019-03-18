@@ -15,15 +15,12 @@
  */
 
 import * as React from 'react';
-import { Component, useState } from 'react';
-import { connect } from 'react-redux';
-import * as PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import { useState } from 'react';
 
 import TokenSearch from '../tokenSearch';
 import TokenCreate from '../tokenCreate';
 import TokenEdit from '../tokenEdit';
-import { useApi as useTokenApi } from '../../../api/tokens'
+// import { useApi as useTokenApi } from '../../../api/tokens'
 import { useReduxState } from '../../../lib/useReduxState';
 
 import '../../../styles/index.css';
@@ -31,14 +28,14 @@ import '../../../styles/toolbar-small.css';
 import '../../../styles/toggle-small.css';
 
 const TokenLayout = () => {
-  const { show, selectedTokenRowId } = useReduxState(({
+  const { show/*, selectedTokenRowId */} = useReduxState(({
     token: { show },
     tokenSearch: { selectedTokenRowId }
   }) => ({ show, selectedTokenRowId }));
 
-  const { deleteSelectedToken } = useTokenApi();
-  const [isHelpDialogOpen, setHelpDialogOpen] = useState(false);
-  const [isFilteringEnabled, setFilteringEnabled] = useState(false);
+  // const { deleteSelectedToken } = useTokenApi();
+  // const [isHelpDialogOpen, setHelpDialogOpen] = useState(false);
+  const [isFilteringEnabled,/* setFilteringEnabled*/] = useState(false);
   const showSearch = show === 'search';
   const showCreate = show === 'create';
   const showEdit = show === 'edit';

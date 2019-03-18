@@ -3,6 +3,7 @@ export interface StoreState {
   isCreating: any;
   errorMessage: String;
   matchingAutoCompleteResults: String[];
+  show: string;
 }
 
 export interface Token {

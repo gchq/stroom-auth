@@ -9,7 +9,7 @@ export interface Config {
   authTokensUiUrl?: string;
   allowPasswordResets?: string;
   appClientId?: string;
-  stroomUiUrl?: string;
+  stroomUiUrl: string;
   userServiceUrl: string;
 }
 
