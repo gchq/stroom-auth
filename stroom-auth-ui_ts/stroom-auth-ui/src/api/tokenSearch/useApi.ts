@@ -3,27 +3,47 @@ import { StoreContext } from "redux-react-hook";
 import { useActionCreators } from "./redux";
 import { HttpError } from "../../ErrorTypes";
 import { handleErrors, getJsonBody } from "../../modules/fetchFunctions";
-import { useActionCreators as useUserSearchActionCreators } from '../userSearch';
-import { useApi as useTokenSearchApi, useActionCreators as useTokenSearchActionCreators } from '../tokenSearch';
-import useRouter from "../../lib/useRouter";
+import useHttpClient from "../useHttpClient";
+// import { useActionCreators as useUserSearchActionCreators } from "../userSearch";
+import {
+  useApi as useTokenApi
+  // useActionCreators as useTokenActionCreators
+} from "../tokens";
+import {
+  // useApi as useTokenSearchApi,
+  useActionCreators as useTokenSearchActionCreators
+} from "../tokenSearch";
+// import useRouter from "../../lib/useRouter";
 
 interface Api {
+  performTokenSearch: (
+    pageSize?: Number,
+    page?: Number,
+    sorted?: String,
+    filtered?: String
+  ) => void;
+  setEnabledStateOnToken: (tokenId: String, isEnabled: boolean) => void;
 }
 
-export const useApi = (): Api => {
-    const store = useContext(StoreContext);
-    const { } = useActionCreators();
-    const { selectRow } = useUserSearchActionCreators();
-    const { showSearchLoader, updateResults, changeLastUsedPageSize, changeLastUsedPage, changeLastUsedSorted, changeLastUsedFiltered } = useTokenSearchActionCreators();
-    const { history } = useRouter();
+const useApi = (): Api => {
+  const store = useContext(StoreContext);
+  const {} = useActionCreators();
+  //   const { selectRow } = useUserSearchActionCreators();
+  const {
+    showSearchLoader,
+    updateResults,
+    changeLastUsedPageSize,
+    changeLastUsedPage,
+    changeLastUsedSorted,
+    changeLastUsedFiltered
+  } = useTokenSearchActionCreators();
+  //   const { history } = useRouter();
+  const { httpPostJsonResponse } = useHttpClient();
+  const { toggleEnabledState } = useTokenApi();
 
-    const performTokenSearch = useCallback((
-        jwsToken,
-        pageSize,
-        page,
-        sorted,
-        filtered,
-    ) => {
+  return {
+    performTokenSearch: useCallback(
+      (pageSize, page, sorted, filtered) => {
         showSearchLoader(true);
 
         // if (pageSize === undefined) {
@@ -39,127 +59,122 @@ export const useApi = (): Api => {
         changeLastUsedPageSize(pageSize);
 
         if (page === undefined) {
-            page = store.tokenSearch.lastUsedPage;
+          page = store.tokenSearch.lastUsedPage;
         } else {
-            changeLastUsedPage(page)
+          changeLastUsedPage(page);
         }
 
         if (sorted === undefined) {
-            sorted = store.tokenSearch.lastUsedSorted;
+          sorted = store.tokenSearch.lastUsedSorted;
         } else {
-            changeLastUsedSorted(sorted);
+          changeLastUsedSorted(sorted);
         }
 
         if (filtered === undefined) {
-            filtered = store.tokenSearch.lastUsedFiltered;
+          filtered = store.tokenSearch.lastUsedFiltered;
         } else {
-            changeLastUsedFiltered(filtered);
+          changeLastUsedFiltered(filtered);
         }
 
         // Default ordering and direction
-        let orderBy = 'issued_on';
-        let orderDirection = 'desc';
+        let orderBy = "issued_on";
+        let orderDirection = "desc";
 
         if (sorted.length > 0) {
-            orderBy = sorted[0].id;
-            orderDirection = sorted[0].desc ? 'desc' : 'asc';
+          orderBy = sorted[0].id;
+          orderDirection = sorted[0].desc ? "desc" : "asc";
         }
 
-        let filters = {};
+        let filters = {} as { token_type: String };
         if (filtered.length > 0) {
-            filtered.forEach(filter => {
-                filters[filter.id] = filter.value;
-            });
+          filtered.forEach((filter: { id: string | number; value: any }) => {
+            filters[filter.id] = filter.value;
+          });
         }
 
         // We only want to see API keys, not user keys.
-        filters.token_type = 'API';
+        filters.token_type = "API";
 
-        const body = filters
-            ? JSON.stringify({
-                page,
-                limit: pageSize,
-                orderBy,
-                orderDirection,
-                filters,
-            })
-            : JSON.stringify({
-                page,
-                limit: pageSize,
-                orderBy,
-                orderDirection,
-            });
-
-        fetch(`${store.config.tokenServiceUrl}/search`, {
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + jwsToken,
-            },
-            method: 'post',
-            mode: 'cors',
-            body,
+        const url = `${store.config.tokenServiceUrl}/search`;
+        httpPostJsonResponse(url, {
+          body: JSON.stringify({
+            page,
+            limit: pageSize,
+            orderBy,
+            orderDirection,
+            filters
+          })
         })
-            .then(handleStatus)
-            .then(getJsonBody)
-            .then(data => {
-                showSearchLoader(false);
-                updateResults(data);
-            })
-            .catch(error => handleErrors(error));//FIXME
-    }, [updateResults, showSearchLoader, changeLastUsedFiltered, changeLastUsedPage, changeLastUsedPageSize, changeLastUsedSorted]);
+          .then(handleStatus)
+          .then(getJsonBody)
+          .then(data => {
+            showSearchLoader(false);
+            const { results, totalPages } = data;
+            updateResults(results, totalPages);
+          })
+          .catch(error => handleErrors(error)); //FIXME
+      },
+      [
+        updateResults,
+        showSearchLoader,
+        changeLastUsedFiltered,
+        changeLastUsedPage,
+        changeLastUsedPageSize,
+        changeLastUsedSorted
+      ]
+    ),
 
-    const { toggleEnabled } = useTokenSearchApi();
-    const setEnabledStateOnToken = useCallback((tokenId, isEnabled) => {
-        toggleEnabled(tokenId);
+    setEnabledStateOnToken: useCallback(
+      (tokenId, isEnabled) => {
+        toggleEnabledState();
         const securityToken = store.authentication.idToken;
         fetch(
-            `${
+          `${
             store.config.tokenServiceUrl
-            }/${tokenId}/state/?enabled=${isEnabled}`,
-            {
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + securityToken,
-                },
-                method: 'get',
-                mode: 'cors',
+          }/${tokenId}/state/?enabled=${isEnabled}`,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + securityToken
             },
+            method: "get",
+            mode: "cors"
+          }
         )
-            .then(handleStatus)
-            .catch(() => {
-                // TODO Display alert to the user that changing the state failed 
-            });
-    }, [toggleEnabled]);
+          .then(handleStatus)
+          .catch(() => {
+            // TODO Display alert to the user that changing the state failed
+          });
+      },
+      [toggleEnabledState]
+    )
+  };
 };
 
+export default useApi;
 
-
-
-
-function handleStatus(response) {
-    if (response.status === 200) {
-        return Promise.resolve(response);
-    } else if (response.status === 409) {
-        return Promise.reject(
-            new HttpError(response.status, 'This token already exists.'),
-        );
-    } else {
-        return Promise.reject(new HttpError(response.status, response.statusText));
-    }
+function handleStatus(response: any) {
+  if (response.status === 200) {
+    return Promise.resolve(response);
+  } else if (response.status === 409) {
+    return Promise.reject(
+      new HttpError(response.status, "This token already exists.")
+    );
+  } else {
+    return Promise.reject(new HttpError(response.status, response.statusText));
+  }
 }
 
-
 export const getRowsPerPage = () => {
-    const viewport = document.getElementById('User-content');
-    let rowsInViewport = 20;
-    if (viewport) {
-        const viewportHeight = viewport.offsetHeight;
-        const rowsHeight = viewportHeight - 60;
-        rowsInViewport = Math.floor(rowsHeight / 26);
-    }
-    return rowsInViewport;
+  const viewport = document.getElementById("User-content");
+  let rowsInViewport = 20;
+  if (viewport) {
+    const viewportHeight = viewport.offsetHeight;
+    const rowsHeight = viewportHeight - 60;
+    rowsInViewport = Math.floor(rowsHeight / 26);
+  }
+  return rowsInViewport;
 };
 
 // import { useContext, useCallback } from "react";
@@ -184,7 +199,6 @@ export const getRowsPerPage = () => {
 //     const {performTokenSearch} = useTokenSearchApi();
 //     const {history} = useRouter();
 //     const {toggleState, toggleIsCreating, updateMatchingAutoCompleteResults, hideErrorMessage, showErrorMessage, changeReadCreatedToken} = useTokenActionCreators();
-
 
 //     const deleteSelectedToken = useCallback((tokenId) => {
 //             const jwsToken = store.authentication.idToken;
@@ -282,7 +296,6 @@ export const getRowsPerPage = () => {
 //             });
 //             updateMatchingAutoCompleteResults(matchingAutoCompleteResults);
 //     },[performUserSearch, updateMatchingAutoCompleteResults]);
-
 
 //     const toggleEnabledState = useCallback(() => {
 //             const tokenId = store.token.lastReadToken.id;

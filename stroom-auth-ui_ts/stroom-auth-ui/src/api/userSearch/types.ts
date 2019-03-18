@@ -1,8 +1,8 @@
-import { User } from '../users/types';
+import { User } from "../users/types";
 
 export interface StoreState {
-    selectedUserRowId: String | undefined;
-   users: User[]; 
-showSearchLoader: boolean;
-    results: User[];
+  selectedUserRowId: string | undefined;
+  users: User[];
+  showSearchLoader: boolean;
+  results: User[];
 }

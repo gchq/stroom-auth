@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import * as React from "react";
+import { useState, useEffect } from "react";
 import * as queryString from "qs";
-import * as jwtDecode from 'jwt-decode';
+import * as jwtDecode from "jwt-decode";
 
-import {useApi} from '../../api/users';
+import { useApi } from "../../api/users";
 
-import { useReduxState } from '../../../lib/useReduxState';
-import ChangePasswordFields from './ChangePasswordFields';
-import { useActionCreators } from '../../api/authentication';
-import useRouter from '../../lib/useRouter';
+import { useReduxState } from "../../lib/useReduxState";
+import ChangePasswordFields from "./ChangePasswordFields";
+import { useActionCreators } from "../../api/authentication";
+import useRouter from "../../lib/useRouter";
 
 // const enhance = compose(
-  // withRouter,
-  // connect(
-  //   ({ user: { showAlert }, config: { stroomUiUrl } }) => ({ showAlert, stroomUiUrl }),
-  //   {
-  //     changeToken,
-  //     onSubmit,
-  //     push,
-  //   },
-  // ),
-  // withState('missingToken', 'setMissingToken', false),
-  // withState('invalidToken', 'setInvalidToken', false),
-  // withState('expiredToken', 'setExpiredToken', false),
+// withRouter,
+// connect(
+//   ({ user: { showAlert }, config: { stroomUiUrl } }) => ({ showAlert, stroomUiUrl }),
+//   {
+//     changeToken,
+//     onSubmit,
+//     push,
+//   },
+// ),
+// withState('missingToken', 'setMissingToken', false),
+// withState('invalidToken', 'setInvalidToken', false),
+// withState('expiredToken', 'setExpiredToken', false),
 //   lifecycle({
 //     componentDidMount() {
 //       const {
@@ -80,11 +80,14 @@ import useRouter from '../../lib/useRouter';
 // );
 
 const ResetPassword = () => {
-  const {resetPassword} = useApi();
+  const { resetPassword } = useApi();
   const { history, router } = useRouter();
-  const { showAlert, stroomUiUrl } = useReduxState(({
-    user: { showAlert }, config: { stroomUiUrl }
-  }) => ({ showAlert, stroomUiUrl }));
+  const { showAlert, stroomUiUrl } = useReduxState(
+    ({ user: { showAlert }, config: { stroomUiUrl } }) => ({
+      showAlert,
+      stroomUiUrl
+    })
+  );
   const [missingToken, setMissingToken] = useState(false);
   const [invalidToken, setInvalidToken] = useState(false);
   const [expiredToken, setExpiredToken] = useState(false);
@@ -127,13 +130,13 @@ const ResetPassword = () => {
       {missingToken || invalidToken ? (
         <p>I'm afraid this password reset link is broken.</p>
       ) : (
-          undefined
-        )}
+        undefined
+      )}
       {expiredToken ? (
         <p>I'm afraid this password reset link has expired.</p>
       ) : (
-          undefined
-        )}
+        undefined
+      )}
     </div>
   );
 
@@ -152,8 +155,8 @@ const ResetPassword = () => {
             onSubmit={resetPassword}
           />
         ) : (
-            undefined
-          )}
+          undefined
+        )}
       </div>
     </div>
   );

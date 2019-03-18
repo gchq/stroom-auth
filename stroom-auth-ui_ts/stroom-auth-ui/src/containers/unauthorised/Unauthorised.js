@@ -14,42 +14,41 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import queryString from 'query-string';
-import {connect} from 'react-redux';
-import {compose, withState, lifecycle} from 'recompose';
-import {withRouter} from 'react-router';
+import React, { useEffect, useState } from "react";
+import queryString from "query-string";
+import { compose, withState, lifecycle } from "recompose";
+import { withRouter } from "react-router";
 
-import Button from '../Button';
-import './Unauthorised.css';
-import '../Layout.css';
+import Button from "../Button";
+import { useReduxState } from "../../lib/useReduxState";
+import { useActionCreators } from "../../api/authentication";
+import useRouter from "../../lib/useRouter";
+import "./Unauthorised.css";
+import "../Layout.css";
 
-const enhance = compose(
-  connect(
-    ({config: {stroomUiUrl}}) => ({stroomUiUrl}),
-    {},
-  ),
-  withRouter,
-  withState('isExpiredToken', 'setIsExpiredToken', false),
-  withState('isAccountLocked', 'setIsAccountLocked', false),
-  lifecycle({
-    componentDidMount() {
-      const query = queryString.parse(this.props.location.search);
-      if (query.reason === 'expired_token') {
-        this.props.setIsExpiredToken(true);
-      } else if (query.reason === 'account_locked') {
-        this.props.setIsAccountLocked(true);
-      }
-    },
-  }),
-);
+const Unauthorised = () => {
+  const [isExpiredToken, setIsExpiredToken] = useState(false);
+  const [isAccountLocked, setIsAccountLocked] = useState(false);
 
-const Unauthorised = ({isExpiredToken, isAccountLocked, stroomUiUrl}) => {
-  const backToStroomButton = (url) => (
+  const { stroomUiUrl } = useReduxState(({ config: { stroomUiUrl } }) => ({
+    stroomUi
+  }));
+
+  useEffect(() => {
+    const query = queryString.parse(this.props.location.search);
+    if (query.reason === "expired_token") {
+      this.props.setIsExpiredToken(true);
+    } else if (query.reason === "account_locked") {
+      this.props.setIsAccountLocked(true);
+    }
+  }, []);
+
+  const backToStroomButton = url => (
     <div className="Unauthorised__actions">
       <Button
         className="toolbar-button-medium primary"
-        onClick={() => (window.location.href = url)}>
+        onClick={() => (window.location.href = url)}
+      >
         Back to Stroom
       </Button>
     </div>

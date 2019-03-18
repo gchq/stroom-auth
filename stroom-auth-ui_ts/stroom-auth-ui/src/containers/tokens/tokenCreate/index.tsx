@@ -15,7 +15,6 @@
  */
 
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { Formik } from 'formik';
 
@@ -28,23 +27,6 @@ import { useApi, useActionCreators } from '../../../api/tokens';
 import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
 
-const enhance = compose(
-  connect(
-    ({
-      authentication: { idToken },
-      token: { matchingAutoCompleteResults, errorMessage, isCreating },
-    }) => ({
-      idToken,
-      matchingAutoCompleteResults,
-      errorMessage,
-      isCreating,
-    }),
-    {
-      userAutoCompleteChange,
-      onSubmit,
-    },
-  ),
-);
 
 const TokenCreateForm = () => {
   const { history } = useRouter();
@@ -120,4 +102,4 @@ const TokenCreateForm = () => {
   );
 };
 
-export default enhance(TokenCreateForm);
+export default TokenCreateForm;

@@ -1,128 +1,128 @@
-import {Action} from "redux";
-import {StoreState, Token } from './types';
-import {genUseActionCreators, prepareReducer} from 'src/lib/redux-actions-ts';
+import { Action } from "redux";
+import { StoreState, Token } from "./types";
+import { genUseActionCreators, prepareReducer } from "src/lib/redux-actions-ts";
+import { any } from "prop-types";
 
-import { User } from '../users/types';
+const CHANGE_VISIBLE_CONTAINER = "token/CHANGE_VISIBLE_CONTAINER";
+const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS =
+  "token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS";
+const CHANGE_READ_CREATED_TOKEN = "token/CHANGE_READ_CREATED_TOKEN";
+const SHOW_ERROR_MESSAGE = "token/SHOW_ERROR_MESSAGE";
+const HIDE_ERROR_MESSAGE = "token/HIDE_ERROR_MESSAGE";
+const TOGGLE_STATE = "token/TOGGLE_STATE";
+const TOGGLE_IS_CREATING = "token/TOGGLE_IS_CREATING";
 
-const CHANGE_VISIBLE_CONTAINER = 'token/CHANGE_VISIBLE_CONTAINER';
-const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = 'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS';
-const CHANGE_READ_CREATED_TOKEN = 'token/CHANGE_READ_CREATED_TOKEN';
-const SHOW_ERROR_MESSAGE = 'token/SHOW_ERROR_MESSAGE';
-const HIDE_ERROR_MESSAGE = 'token/HIDE_ERROR_MESSAGE';
-const TOGGLE_STATE = 'token/TOGGLE_STATE';
-const TOGGLE_IS_CREATING = 'token/TOGGLE_IS_CREATING';
-
-
-interface ChangeVisibleContainerAction extends Action<'token/CHANGE_VISIBLE_CONTAINER'>{
-   show: String; 
+interface ChangeVisibleContainerAction
+  extends Action<"token/CHANGE_VISIBLE_CONTAINER"> {
+  show: String;
 }
-interface UpdateMatchingAutoCompleteResultsAction extends Action<'token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS'>{
-   matchingAutoCompleteResults: Token[]; 
+interface UpdateMatchingAutoCompleteResultsAction
+  extends Action<"token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS"> {
+  matchingAutoCompleteResults: String[];
 }
-interface ChangeReadCreatedTokenAction extends Action<'token/CHANGE_READ_CREATED_TOKEN'>{
-   lastReadToken: Token; 
+interface ChangeReadCreatedTokenAction
+  extends Action<"token/CHANGE_READ_CREATED_TOKEN"> {
+  lastReadToken: Token;
 }
-interface ShowErrorMessageAction extends Action<'token/SHOW_ERROR_MESSAGE'>{
-    errorMessage: String;
+interface ShowErrorMessageAction extends Action<"token/SHOW_ERROR_MESSAGE"> {
+  errorMessage: String;
 }
-interface HideErrorMessageAction extends Action<'token/HIDE_ERROR_MESSAGE'>{
-}
-interface ToggleStateAction extends Action<'token/TOGGLE_STATE'>{
-}
-interface ToggleIsCreatingAction extends Action<'token/TOGGLE_IS_CREATING'>{
-}
-
+interface HideErrorMessageAction extends Action<"token/HIDE_ERROR_MESSAGE"> {}
+interface ToggleStateAction extends Action<"token/TOGGLE_STATE"> {}
+interface ToggleIsCreatingAction extends Action<"token/TOGGLE_IS_CREATING"> {}
 
 const defaultState: StoreState = {
+  lastReadToken: any,
   matchingAutoCompleteResults: [],
-  errorMessage: '',
-  isCreating: false,
+  errorMessage: "",
+  isCreating: false
 };
 
-
 export const useActionCreators = genUseActionCreators({
-    changeVisibleContainer: (show: String): ChangeVisibleContainerAction => ({
-        type: CHANGE_VISIBLE_CONTAINER,
-        show
-    }),
-    updateMatchingAutoCompleteResults: (matchingAutoCompleteResults:Token[]): UpdateMatchingAutoCompleteResultsAction => ({
-        type: UPDATE_MATCHING_AUTO_COMPLETE_RESULTS,
-        matchingAutoCompleteResults
-    }),
-    changeReadCreatedToken: (lastReadToken: Token): ChangeReadCreatedTokenAction => ({
-        type:CHANGE_READ_CREATED_TOKEN,
-        lastReadToken
-    }),
-    showErrorMessage: (errorMessage:String): ShowErrorMessageAction => ({
-        type: SHOW_ERROR_MESSAGE,
-        errorMessage
-    }),
-    hideErrorMessage:():HideErrorMessageAction => ({
-        type: HIDE_ERROR_MESSAGE
-    }),
-    toggleState:():ToggleStateAction => ({
-        type:TOGGLE_STATE
-    }),
-    toggleIsCreating:():ToggleIsCreatingAction => ({
-        type:TOGGLE_IS_CREATING
-    })
+  changeVisibleContainer: (show: String): ChangeVisibleContainerAction => ({
+    type: CHANGE_VISIBLE_CONTAINER,
+    show
+  }),
+  updateMatchingAutoCompleteResults: (
+    matchingAutoCompleteResults: String[]
+  ): UpdateMatchingAutoCompleteResultsAction => ({
+    type: UPDATE_MATCHING_AUTO_COMPLETE_RESULTS,
+    matchingAutoCompleteResults
+  }),
+  changeReadCreatedToken: (
+    lastReadToken: Token
+  ): ChangeReadCreatedTokenAction => ({
+    type: CHANGE_READ_CREATED_TOKEN,
+    lastReadToken
+  }),
+  showErrorMessage: (errorMessage: String): ShowErrorMessageAction => ({
+    type: SHOW_ERROR_MESSAGE,
+    errorMessage
+  }),
+  hideErrorMessage: (): HideErrorMessageAction => ({
+    type: HIDE_ERROR_MESSAGE
+  }),
+  toggleState: (): ToggleStateAction => ({
+    type: TOGGLE_STATE
+  }),
+  toggleIsCreating: (): ToggleIsCreatingAction => ({
+    type: TOGGLE_IS_CREATING
+  })
 });
 
 export const reducer = prepareReducer(defaultState)
-    .handleAction<ChangeVisibleContainerAction>(
-        CHANGE_VISIBLE_CONTAINER,
-        (state = defaultState, {show}) => ({
-            ...state,
-            show
-        })
-    )
-    .handleAction<UpdateMatchingAutoCompleteResultsAction>(
-        UPDATE_MATCHING_AUTO_COMPLETE_RESULTS,
-        (state = defaultState, {matchingAutoCompleteResults}) => ({
-            ...state,
-            matchingAutoCompleteResults
-        })
-    )
-    .handleAction<ChangeReadCreatedTokenAction>(
-        CHANGE_READ_CREATED_TOKEN,
-        (state = defaultState, {lastReadToken}) => ({
-            ...state,
-            lastReadToken
-        })
-    )
-    .handleAction<ShowErrorMessageAction>(
-        SHOW_ERROR_MESSAGE,
-        (state = defaultState, {errorMessage}) => ({
-            ...state,
-            errorMessage
-        })
-    )
-    .handleAction<HideErrorMessageAction>(
-        HIDE_ERROR_MESSAGE,
-        (state = defaultState, {}) => ({
-            ...state,
-            errorMessage: ''
-        })
-    )
-    .handleAction<ToggleStateAction>(
-        TOGGLE_STATE,
-        (state = defaultState, {}) => ({
-            ...state,
-            lastReadToken: {
-                ...state.lastReadToken,
-                enabled: !state.lastReadToken.enabled
-            }
-        })
-    )
-    .handleAction<ToggleIsCreatingAction>(
-        TOGGLE_IS_CREATING,
-        (state = defaultState, {}) => ({
-            ...state,
-            isCreating: !state.isCreating
-        })
-    )
-
-
+  .handleAction<ChangeVisibleContainerAction>(
+    CHANGE_VISIBLE_CONTAINER,
+    (state = defaultState, { show }) => ({
+      ...state,
+      show
+    })
+  )
+  .handleAction<UpdateMatchingAutoCompleteResultsAction>(
+    UPDATE_MATCHING_AUTO_COMPLETE_RESULTS,
+    (state = defaultState, { matchingAutoCompleteResults }) => ({
+      ...state,
+      matchingAutoCompleteResults
+    })
+  )
+  .handleAction<ChangeReadCreatedTokenAction>(
+    CHANGE_READ_CREATED_TOKEN,
+    (state = defaultState, { lastReadToken }) => ({
+      ...state,
+      lastReadToken
+    })
+  )
+  .handleAction<ShowErrorMessageAction>(
+    SHOW_ERROR_MESSAGE,
+    (state = defaultState, { errorMessage }) => ({
+      ...state,
+      errorMessage
+    })
+  )
+  .handleAction<HideErrorMessageAction>(
+    HIDE_ERROR_MESSAGE,
+    (state = defaultState, {}) => ({
+      ...state,
+      errorMessage: ""
+    })
+  )
+  .handleAction<ToggleStateAction>(
+    TOGGLE_STATE,
+    (state = defaultState, {}) => ({
+      ...state,
+      lastReadToken: {
+        ...state.lastReadToken,
+        enabled: !state.lastReadToken.enabled
+      }
+    })
+  )
+  .handleAction<ToggleIsCreatingAction>(
+    TOGGLE_IS_CREATING,
+    (state = defaultState, {}) => ({
+      ...state,
+      isCreating: !state.isCreating
+    })
+  );
 
 // export default (state = initialState, action) => {
 //   switch (action.type) {
@@ -208,7 +208,6 @@ export const reducer = prepareReducer(defaultState)
 // const UPDATE_RESULTS = "userSearch/UPDATE_RESULTS";
 // const SELECT_ROW = "userSearch/SELECT_ROW";
 
-
 // interface ShowSearchLoaderAction extends Action< "userSearch/SHOW_SEARCH_LOADER">{
 //    showSearchLoader: boolean;
 // }
@@ -216,7 +215,7 @@ export const reducer = prepareReducer(defaultState)
 //    results: User[];
 // }
 // interface SelectRowAction extends Action< "userSearch/SELECT_ROW">{
-//    selectedUserRowId: String; 
+//    selectedUserRowId: String;
 // }
 
 // const defaultState: StoreState = {
@@ -245,7 +244,6 @@ export const reducer = prepareReducer(defaultState)
 //     })
 // });
 
-
 // export const reducer = prepareReducer(defaultState)
 //     .handleAction<ShowSearchLoaderAction>(
 //         SHOW_SEARCH_LOADER,
@@ -273,8 +271,6 @@ export const reducer = prepareReducer(defaultState)
 //            return ({
 //                ...state,
 //                selectedUserRowId
-//            }) 
+//            })
 //         }
 //     });
-    
-

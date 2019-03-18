@@ -13,92 +13,95 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Action} from "redux";
-import { StoreState } from "./types";
-import { genUseActionCreators, prepareReducer } from 'src/lib/redux-actions-ts';
+import { Action } from "redux";
+import { StoreState, User } from "./types";
+import { genUseActionCreators, prepareReducer } from "src/lib/redux-actions-ts";
 
 // const CREATE_REQUEST = 'user/CREATE_REQUEST';
 // const CREATE_RESPONSE = 'user/CREATE_RESPONSE';
-const SHOW_CREATE_LOADER = 'user/SHOW_CREATE_LOADER';
-const SAVE_USER_BEING_EDITED = 'user/SAVE_USER_BEING_EDITED';
-const CHANGE_VISIBLE_CONTAINER = 'user/CHANGE_VISIBLE_CONTAINER';
-const TOGGLE_ALERT_VISIBILITY = 'user/TOGGLE_ALERT_VISIBILITY';
-const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE = 'user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE';
-const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE = 'user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE';
-const CLEAR_USER_BEING_EDITED = 'user/CLEAR_USER_BEING_EDITED';
-const TOGGLE_IS_SAVING = 'user/TOGGLE_IS_SAVING';
+const SHOW_CREATE_LOADER = "user/SHOW_CREATE_LOADER";
+const SAVE_USER_BEING_EDITED = "user/SAVE_USER_BEING_EDITED";
+const CHANGE_VISIBLE_CONTAINER = "user/CHANGE_VISIBLE_CONTAINER";
+const TOGGLE_ALERT_VISIBILITY = "user/TOGGLE_ALERT_VISIBILITY";
+const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE =
+  "user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE";
+const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE =
+  "user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE";
+const CLEAR_USER_BEING_EDITED = "user/CLEAR_USER_BEING_EDITED";
+const TOGGLE_IS_SAVING = "user/TOGGLE_IS_SAVING";
 
 // interface createRequestAction extends Action<'user/CREATE_REQUEST'> {
-  
+
 // }
 // interface createResponseAction extends Action<'user/CREATE_RESPONSE'> {
-  
+
 // }
-interface ShowCreateLoaderAction extends Action<'user/SHOW_CREATE_LOADER'> {
+interface ShowCreateLoaderAction extends Action<"user/SHOW_CREATE_LOADER"> {
   showCreateLoader: boolean;
 }
-interface SaveUserBeingEditedAction extends Action<'user/SAVE_USER_BEING_EDITED'> {
-  userBeingEdited: String | undefined; 
+interface SaveUserBeingEditedAction
+  extends Action<"user/SAVE_USER_BEING_EDITED"> {
+  userBeingEdited: User | undefined;
 }
-interface ChangeVisibleContainerAction extends Action<'user/CHANGE_VISIBLE_CONTAINER'> {
-  show: boolean;  
+interface ChangeVisibleContainerAction
+  extends Action<"user/CHANGE_VISIBLE_CONTAINER"> {
+  show: boolean;
 }
-interface ToggleAlertVisibilityAction extends Action<'user/TOGGLE_ALERT_VISIBILITY'> {
+interface ToggleAlertVisibilityAction
+  extends Action<"user/TOGGLE_ALERT_VISIBILITY"> {
   showAlert: boolean;
-  alertText: String; 
+  alertText: string;
 }
-interface ShowChangePasswordErrorMessageAction extends Action<'user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE'> {
-  changePasswordErrorMessage: String[]; 
+interface ShowChangePasswordErrorMessageAction
+  extends Action<"user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE"> {
+  changePasswordErrorMessage: string[];
 }
-interface HideChangePasswordErrorMessageAction extends Action<'user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE'> {
-  
-}
-interface ClearUserBeingEditedAction extends Action<'user/CLEAR_USER_BEING_EDITED'> {
-  
-}
-interface ToggleIsSavingAction extends Action<'user/TOGGLE_IS_SAVING'> {
+interface HideChangePasswordErrorMessageAction
+  extends Action<"user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE"> {}
+interface ClearUserBeingEditedAction
+  extends Action<"user/CLEAR_USER_BEING_EDITED"> {}
+interface ToggleIsSavingAction extends Action<"user/TOGGLE_IS_SAVING"> {
   isSaving: boolean;
 }
 
-const defaultState: StoreState ={
-  user: '',
-  password: '',
+const defaultState: StoreState = {
+  user: "",
+  password: "",
   showCreateLoader: false,
-  alertText: '',
+  alertText: "",
   showAlert: false,
   changePasswordErrorMessage: [],
   isSaving: false,
-}
+  userBeingEdited: undefined,
+  errorStatus: undefined,
+  errorText: undefined
+};
 
 export const useActionCreators = genUseActionCreators({
-  showCreateLoader: (
-    showCreateLoader: boolean
-  ): ShowCreateLoaderAction => ({
+  showCreateLoader: (showCreateLoader: boolean): ShowCreateLoaderAction => ({
     type: SHOW_CREATE_LOADER,
     showCreateLoader
   }),
   saveUserBeingEdited: (
-    userBeingEdited: String | undefined
+    userBeingEdited: User | undefined
   ): SaveUserBeingEditedAction => ({
     type: SAVE_USER_BEING_EDITED,
     userBeingEdited
   }),
-  changeVisibleContainer: (
-    show: boolean
-  ): ChangeVisibleContainerAction => ({
+  changeVisibleContainer: (show: boolean): ChangeVisibleContainerAction => ({
     type: CHANGE_VISIBLE_CONTAINER,
     show
   }),
   toggleAlertVisibility: (
     showAlert: boolean,
-    alertText: String
+    alertText: string
   ): ToggleAlertVisibilityAction => ({
     type: TOGGLE_ALERT_VISIBILITY,
     alertText,
     showAlert
   }),
   showChangePasswordErrorMessage: (
-    changePasswordErrorMessage: String[]
+    changePasswordErrorMessage: string[]
   ): ShowChangePasswordErrorMessageAction => ({
     type: SHOW_CHANGE_PASSWORD_ERROR_MESSAGE,
     changePasswordErrorMessage
@@ -109,9 +112,7 @@ export const useActionCreators = genUseActionCreators({
   clearUserBeingEdited: (): ClearUserBeingEditedAction => ({
     type: CLEAR_USER_BEING_EDITED
   }),
-  toggleIsSaving: (
-    isSaving: boolean
-  ): ToggleIsSavingAction => ({
+  toggleIsSaving: (isSaving: boolean): ToggleIsSavingAction => ({
     type: TOGGLE_IS_SAVING,
     isSaving
   })
@@ -120,28 +121,28 @@ export const useActionCreators = genUseActionCreators({
 export const reducer = prepareReducer(defaultState)
   .handleAction<ShowCreateLoaderAction>(
     SHOW_CREATE_LOADER,
-    (state = defaultState, {showCreateLoader}) => ({
+    (state = defaultState, { showCreateLoader }) => ({
       ...state,
       showCreateLoader
     })
   )
   .handleAction<SaveUserBeingEditedAction>(
     SAVE_USER_BEING_EDITED,
-    (state = defaultState, {userBeingEdited}) => ({
+    (state = defaultState, { userBeingEdited }) => ({
       ...state,
       userBeingEdited
     })
   )
   .handleAction<ChangeVisibleContainerAction>(
     CHANGE_VISIBLE_CONTAINER,
-    (state = defaultState, {show}) => ({
+    (state = defaultState, { show }) => ({
       ...state,
       show
     })
   )
   .handleAction<ToggleAlertVisibilityAction>(
     TOGGLE_ALERT_VISIBILITY,
-    (state = defaultState, {showAlert, alertText}) => ({
+    (state = defaultState, { showAlert, alertText }) => ({
       ...state,
       showAlert,
       alertText
@@ -149,7 +150,7 @@ export const reducer = prepareReducer(defaultState)
   )
   .handleAction<ShowChangePasswordErrorMessageAction>(
     SHOW_CHANGE_PASSWORD_ERROR_MESSAGE,
-    (state = defaultState, {changePasswordErrorMessage}) => ({
+    (state = defaultState, { changePasswordErrorMessage }) => ({
       ...state,
       changePasswordErrorMessage
     })
@@ -170,7 +171,7 @@ export const reducer = prepareReducer(defaultState)
   )
   .handleAction<ToggleIsSavingAction>(
     TOGGLE_ALERT_VISIBILITY,
-    (state = defaultState, {isSaving}) => ({
+    (state = defaultState, { isSaving }) => ({
       ...state,
       isSaving
     })

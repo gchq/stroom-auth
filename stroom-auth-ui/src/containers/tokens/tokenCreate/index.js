@@ -15,7 +15,6 @@
  */
 
 import React from 'react';
-import {connect} from 'react-redux';
 import {compose} from 'recompose';
 import {Formik} from 'formik';
 import {push} from 'react-router-redux';
