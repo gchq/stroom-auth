@@ -21,7 +21,6 @@ import IconHeader from "../IconHeader";
 import ErrorSection from "./ErrorSection";
 
 const ErrorPage = () => {
-  // Redux
   const { errorMessage, stackTrace, httpErrorCode } = useReduxState(
     ({ errorPage: { errorMessage, stackTrace, httpErrorCode } }) => ({
       errorMessage,

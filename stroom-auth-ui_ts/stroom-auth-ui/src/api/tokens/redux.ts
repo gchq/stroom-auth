@@ -126,7 +126,8 @@ export const reducer = prepareReducer(defaultState)
       ...state,
       isCreating: !state.isCreating
     })
-  );
+  )
+  .getReducer();
 
 // export default (state = initialState, action) => {
 //   switch (action.type) {

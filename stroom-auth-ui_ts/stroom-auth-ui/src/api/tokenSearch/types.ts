@@ -9,4 +9,7 @@ export interface StoreState {
   errorStatus?: string;
   errorText?: string;
   lastUsedPageSize?: number;
+  lastUsedSorted?: any;
+  lastUsedPage?: any;
+  lastUsedFiltered?: any;
 }

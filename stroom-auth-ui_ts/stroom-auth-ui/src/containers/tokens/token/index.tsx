@@ -17,14 +17,14 @@
 import * as React from 'react';
 
 import TokenLayout from "./TokenLayout";
-import {useApi as useUserSearchApi} from "../../../api/userSearch";
+// import {useApi as useUserSearchApi} from "../../../api/userSearch";
 import {useActionCreators as useTokenActionCreators} from '../../../api/tokens';
 
 export const TokenCreate = () => {
-  const {performUserSearch} = useUserSearchApi();    
+  // const {performUserSearch} = useUserSearchApi();    
   const {changeVisibleContainer} = useTokenActionCreators();
   changeVisibleContainer("create");
-  performUserSearch();
+  // performUserSearch();
   return <TokenLayout/>;
 }
 

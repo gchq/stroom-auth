@@ -14,6 +14,7 @@ export interface Config {
 }
 
 export interface StoreState {
+  tokenServiceUrl: any;
   isReady: boolean;
   values: Config;
 }

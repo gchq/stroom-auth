@@ -29,6 +29,7 @@ import {
 } from '../../../modules/token';
 import Button from '../../Button';
 
+
 const enhance = compose(
   connect(
     ({

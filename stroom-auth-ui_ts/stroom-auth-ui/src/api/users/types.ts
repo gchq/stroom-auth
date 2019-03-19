@@ -30,7 +30,7 @@ export interface User {
 export interface ChangePasswordRequest {
   email: string;
   oldPassword: string;
-  newPassword: string;
+  password: string;
   redirectUrl: string;
 }
 

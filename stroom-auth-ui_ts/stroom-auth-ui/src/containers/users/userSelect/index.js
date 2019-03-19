@@ -42,7 +42,7 @@ const loadOptions = (inputValue, callback, idToken, url) => {
 
 const mapState = state => ({
   idToken: state.authentication.idToken,
-  url: state.config.userServiceUrl,
+  url: state.config.values.userServiceUrl,
 });
 
 const customStyles = {

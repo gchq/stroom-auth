@@ -27,7 +27,9 @@ import { reducer as login } from "../api/users"
 import { reducer as userSearch } from '../api/userSearch';
 import { reducer as token } from '../api/tokens';
 import { reducer as tokenSearch } from '../api/tokenSearch';
+import {GlobalStoreState }from './GlobalStoreState';
 
+export {GlobalStoreState};
 export default combineReducers({
   routing: routerReducer,
   login,

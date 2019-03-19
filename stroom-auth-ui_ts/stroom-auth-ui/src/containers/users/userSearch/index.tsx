@@ -15,26 +15,27 @@
  */
 
 import * as React from "react";
+// import {useMemo} from 'react';
+// import { useContext } from "react";
+// import { StoreContext } from "redux-react-hook";
 import Toggle from "react-toggle";
 import "rc-checkbox/assets/index.css";
-import ReactTable, { RowInfo } from "react-table";
+import ReactTable, { RowInfo, ReactTableFunction } from "react-table";
 import "react-table/react-table.css";
 import * as dateFormat from "dateformat";
 
 import Button from "../../Button";
 import "./UserSearch.css";
 import "../../../styles/table-small.css";
-import {
-  useActionCreators as useUsersActionCreators,
-  useApi as useUsersApi
-} from "../../../api/users";
+import { useApi as useUsersApi } from "../../../api/users";
 import {
   useActionCreators as useUserSearchActionCreators,
-  useApi as useUserSearchApi
+  // useApi as useUserSearchApi
 } from "../../../api/userSearch";
 import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
 import { useState } from "react";
+import useUsers from '../../../api/userSearch/useUsers';
 
 // FIXME: Not sure why the actual filter props isn't working
 type FilterProps = {
@@ -59,14 +60,14 @@ const getColumnFormat = (selectedUserRowId: string | undefined) => {
       Header: "Email",
       accessor: "email",
       maxWidth: 190,
-      filterMethod: (filter, row) => filterRow(row, filter)
+      filterMethod: (filter:any, row:any) => filterRow(row, filter)
     },
     {
       Header: "Account status",
       accessor: "state",
       maxWidth: 100,
       Cell: (row: RowInfo) => renderStateCell(row.row.value),
-      Filter: ({ filter, onChange }) => getStateCellFilter(filter, onChange)
+      Filter: ({ filter, onChange }: FilterProps) => getStateCellFilter(filter, onChange)
     },
     {
       Header: "Last login",
@@ -83,16 +84,17 @@ const getColumnFormat = (selectedUserRowId: string | undefined) => {
     {
       Header: "Comments",
       accessor: "comments",
-      filterMethod: (filter, row) => filterRow(row, filter)
+      filterMethod: (filter:any, row:any) => filterRow(row, filter)
     }
   ];
 };
-const filterRow = (row, filter) => {
+
+const filterRow = (row:any, filter:any) => {
   var index = row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase());
   return index >= 0;
 };
 
-const renderStateCell = state => {
+const renderStateCell = (state:string) => {
   let stateColour, stateText;
   switch (state) {
     case "enabled":
@@ -130,7 +132,7 @@ const renderStateCell = state => {
   );
 };
 
-const getStateCellFilter = (filter, onChange) => {
+const getStateCellFilter = (filter:any, onChange:Function) => {
   return (
     <select
       onChange={event => onChange(event.target.value)}
@@ -145,7 +147,7 @@ const getStateCellFilter = (filter, onChange) => {
   );
 };
 
-const formatDate = dateString => {
+const formatDate = (dateString:string) => {
   const dateFormatString = "ddd mmm d yyyy, hh:MM:ss";
   return dateString ? dateFormat(dateString, dateFormatString) : "";
 };
@@ -153,23 +155,18 @@ const formatDate = dateString => {
 const UserSearch = () => {
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
   const { deleteSelectedUser } = useUsersApi();
-  const { performUserSearch } = useUserSearchApi();
+  // const { performUserSearch } = useUserSearchApi();
   const { selectRow } = useUserSearchActionCreators();
   const { history } = useRouter();
   const {
-    idToken,
     showSearchLoader,
     results,
     selectedUserRowId,
-    errorStatus,
-    errorText
   } = useReduxState(
     ({
-      authentication: { idToken },
       userSearch: { showSearchLoader, results, selectedUserRowId },
       user: { errorStatus, errorText }
     }) => ({
-      idToken,
       showSearchLoader,
       results,
       selectedUserRowId,
@@ -178,10 +175,15 @@ const UserSearch = () => {
     })
   );
 
-  React.useEffect(() => {
-    performUserSearch();
-  }, []);
-
+  const {users} = useUsers();
+console.log({users});
+  // const store = useContext(StoreContext);
+  // const thing = React.useCallback(() => {
+    // React.useEffect(() => 
+    // performUserSearch(store.getState()), [performUserSearch]);
+  // }, []);
+  // React.useMemo(() => thing(), [thing]);
+  // useMemo(() => performUserSearch(), [performUserSearch]);
   const deleteButtonDisabled = !selectedUserRowId;
 
   return (
@@ -205,14 +207,14 @@ const UserSearch = () => {
             </Button>
           </div>
         ) : (
-          <Button
-            className="toolbar-button-small primary"
-            onClick={() => history.push(`/user/${selectedUserRowId}`)}
-            icon="edit"
-          >
-            View/edit
+            <Button
+              className="toolbar-button-small primary"
+              onClick={() => history.push(`/user/${selectedUserRowId}`)}
+              icon="edit"
+            >
+              View/edit
           </Button>
-        )}
+          )}
 
         <div>
           <Button
@@ -265,13 +267,13 @@ const UserSearch = () => {
                 className: "table-row-small"
               };
             }}
-            getTrProps={(state, rowInfo) => {
+            getTrProps={(state:any, rowInfo:RowInfo) => {
               let selected = false;
               if (rowInfo) {
                 selected = rowInfo.row.id === selectedUserRowId;
               }
               return {
-                onClick: (target, event) => {
+                onClick: (target:any, event:any) => {
                   selectRow(rowInfo.row.id);
                 },
                 className: selected

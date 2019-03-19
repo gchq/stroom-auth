@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import React, {useEffect} from 'react';
-import {compose, lifecycle} from 'recompose';
-// import {connect} from 'react-redux';
+import * as React from 'react';
+import {useEffect} from 'react';
 
 import {useActionCreators} from '../../api/authentication'
 import Button from '../Button';
@@ -25,13 +24,15 @@ import '../Layout.css';
 import useReduxState from "../../lib/useReduxState";
 
 const LoggedOut = () => {
-  const stroomUiUrl = useReduxState(({config: {stroomUiUrl}}) => {stroomUiUrl});
+  const {stroomUiUrl} = useReduxState(
+    ({config: {values:{stroomUiUrl}}
+    }) => ({stroomUiUrl}));
   const {changeLoggedInUser, deleteToken} = useActionCreators();
 
   useEffect(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
-    changeLoggedInUser(undefined),
+    changeLoggedInUser(''),
     deleteToken()
   }, [])
 
@@ -39,10 +40,10 @@ const LoggedOut = () => {
     <div className="content-floating-without-appbar">
       <div className="LoggedOut">
         <h3>You have been logged out</h3>
-        <div class="LoggedOut__actions">
+        <div className="LoggedOut__actions">
           <Button
             className="toolbar-button-medium primary"
-            onClick={() => (window.location.href = stroomUiUrl)}>
+            onClick={() => window.location.href = stroomUiUrl }>
             Return to Stroom
           </Button>
         </div>
@@ -51,4 +52,4 @@ const LoggedOut = () => {
   );
 };
 
-export default enhance(LoggedOut);
+export default LoggedOut;

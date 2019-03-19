@@ -3,11 +3,7 @@ import { StoreContext } from "redux-react-hook";
 import { useActionCreators } from "./redux";
 import useHttpClient from "../useHttpClient";
 
-import {
-  handleErrors,
-  getBody,
-  getJsonBody
-} from "../../modules/fetchFunctions";
+// import { handleErrors } from "../../modules/fetchFunctions";
 import {
   useApi as useUserSearchApi,
   useActionCreators as useUserSearchActionCreators
@@ -35,7 +31,7 @@ interface Api {
 }
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
 export const useApi = (): Api => {
-  const store: GlobalStoreState = useContext(StoreContext);
+  const store = useContext(StoreContext);
 
   const { httpDeleteJsonResponse, httpPostEmptyResponse } = useHttpClient();
   const { performUserSearch } = useUserSearchApi();
@@ -56,8 +52,8 @@ export const useApi = (): Api => {
 
   const saveChanges = useCallback(
     editedUser => {
+      const reduxState:GlobalStoreState = store.getState();
       toggleIsSaving(true);
-      const jwsToken = store.authentication.idToken;
       const {
         id,
         email,
@@ -70,7 +66,7 @@ export const useApi = (): Api => {
         force_password_change
       } = editedUser;
 
-      const url = `${store.config.values.userServiceUrl}/${id}`;
+      const url = `${reduxState.config.values.userServiceUrl}/${id}`;
       httpPutJsonResponse(url, {
         body: JSON.stringify({
           email,
@@ -92,7 +88,7 @@ export const useApi = (): Api => {
         })
         .catch(error => {
           toggleIsSaving(false);
-          handleErrors(error, jwsToken); //FIXME: needs dispatch, needs updating
+          // handleErrors(error); 
         });
     },
     [
@@ -106,8 +102,8 @@ export const useApi = (): Api => {
 
   const createUser = useCallback(
     newUser => {
+      const reduxState:GlobalStoreState = store.getState();
       toggleIsSaving(true);
-      const jwsToken = store.authentication.idToken;
       const {
         email,
         password,
@@ -121,7 +117,7 @@ export const useApi = (): Api => {
 
       showCreateLoader(true);
 
-      const url = store.config.values.userServiceUrl;
+      const url = reduxState.config.values.userServiceUrl;
       httpPostJsonResponse(url, {
         body: JSON.stringify({
           email,
@@ -135,7 +131,6 @@ export const useApi = (): Api => {
         })
       })
         .then(handleStatus)
-        .then(getBody)
         .then(newUserId => {
           //   createAuthorisationUser(email, dispatch);
           toggleIsSaving(true);
@@ -144,9 +139,7 @@ export const useApi = (): Api => {
            * a user here but that user having to log into Stroom before permissions
            * can be assigned to them.
            */
-          const url = `${
-            store.config.values.authorisationServiceUrl
-          }/createUser?id=${email}`;
+          const url = `${ reduxState.config.values.authorisationServiceUrl }/createUser?id=${email}`;
           httpPostJsonResponse(url, {})
             .then(handleStatus)
             .then(newUserId => {
@@ -156,11 +149,11 @@ export const useApi = (): Api => {
               toggleIsSaving(false);
             })
             .catch(error => {
-              handleErrors(error, jwsToken); //FIXME as above
+              // handleErrors(error); 
             });
         })
         .catch(error => {
-          handleErrors(error, jwsToken); // FIXME, as above
+          // handleErrors(error);
           toggleIsSaving(false);
         });
     },
@@ -168,46 +161,44 @@ export const useApi = (): Api => {
   );
 
   const deleteSelectedUser = useCallback(() => {
-    const userIdToDelete = store.userSearch.selectedUserRowId;
-    const user = store.userSearch.results.find(
+    const state:GlobalStoreState = store.getState();
+    const userIdToDelete = state.userSearch.selectedUserRowId;
+    const user = state.userSearch.results.find(
       result => result.id === userIdToDelete
     );
-    const url = `${store.config.values.userServiceUrl}/${userIdToDelete}`;
+    const url = `${state.config.values.userServiceUrl}/${userIdToDelete}`;
     httpDeleteJsonResponse(url, {})
       .then(handleStatus)
-      .then(getBody)
       .then(() => {
         if (user !== undefined && userIdToDelete !== undefined) {
           const url = `${
-            store.config.values.authorisationServiceUrl
+            state.config.values.authorisationServiceUrl
           }/setUserStatus?id=${user.email}&status=disabled`;
           httpPostEmptyResponse(url, {}).then(handleStatus);
           selectRow(userIdToDelete);
-          performUserSearch();
+          performUserSearch(state);
           toggleAlertVisibility(true, "User has been deleted");
         } else {
           console.error("No access to user or user id!");
         }
       })
-      .catch(error => handleErrors(error)); //FIXME as above
+      // .catch(error => handleErrors(error)); 
   }, [selectRow, performUserSearch, toggleAlertVisibility]);
 
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
+      const state:GlobalStoreState = store.getState();
       hideChangePasswordErrorMessage();
-      const url = `${
-        store.config.values.authenticationServiceUrl
-      }/changePassword/`;
+      const url = `${ state.config.values.authenticationServiceUrl }/changePassword/`;
       const {
-        newPassword,
+        password,
         oldPassword,
         email,
         redirectUrl
       } = changePasswordRequest;
       httpPostJsonResponse(url, {
-        body: JSON.stringify({ newPassword, oldPassword, email })
+        body: JSON.stringify({ newPassword: password , oldPassword, email })
       })
-        .then(getJsonBody)
         .then(response => {
           if (response.changeSucceeded) {
             // If we successfully changed the password then we want to redirect if there's a redirection URL
@@ -245,13 +236,13 @@ export const useApi = (): Api => {
 
   const resetPassword = useCallback(
     (resetPasswordRequest: ResetPasswordRequest) => {
+      const state:GlobalStoreState = store.getState();
       const newPassword = resetPasswordRequest.password;
-      const stroomUiUrl = store.config.values.stroomUiUrl;
+      const stroomUiUrl = state.config.values.stroomUiUrl;
       const url = `${
-        store.config.values.authenticationServiceUrl
+        state.config.values.authenticationServiceUrl
       }/resetPassword/`;
       httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) })
-        .then(getJsonBody)
         .then(response => {
           if (response.changeSucceeded) {
             if (stroomUiUrl !== undefined) {
@@ -277,10 +268,10 @@ export const useApi = (): Api => {
   );
 
   const changePasswordForCurrentUser = useCallback(() => {
-    const url = `${store.config.values.userServiceUrl}/me`;
+    const state:GlobalStoreState = store.getState();
+    const url = `${state.config.values.userServiceUrl}/me`;
     httpGetJson(url, {})
       .then(handleStatus)
-      .then(getJsonBody)
       .then(users => users[0])
       .then(user => {
         changePassword(user.email);
@@ -290,8 +281,9 @@ export const useApi = (): Api => {
   const submitPasswordChangeRequest = useCallback(
     //FIXME: formikbag types
     (formData: any, formikBag: FormikBag<any, any>) => {
+      const state:GlobalStoreState  = store.getState();
       const { setSubmitting } = formikBag;
-      const url = `${store.config.values.authenticationServiceUrl}/reset/${
+      const url = `${state.config.values.authenticationServiceUrl}/reset/${
         formData.email
       }`;
       httpGetJson(url, {}).then(() => {
@@ -304,16 +296,16 @@ export const useApi = (): Api => {
 
   const fetchUser = useCallback(
     (userId: String) => {
-      const url = `${store.config.values.userServiceUrl}/${userId}`;
+      const state:GlobalStoreState = store.getState();
+      const url = `${state.config.values.userServiceUrl}/${userId}`;
       httpGetJson(url)
         .then(handleStatus)
-        .then(getJsonBody)
         .then(users => users[0])
         .then(user => {
           showCreateLoader(false);
           saveUserBeingEdited(user);
         })
-        .catch(error => handleErrors(error)); //FIXME: as above
+        // .catch(error => handleErrors(error)); 
     },
     [showCreateLoader, saveUserBeingEdited]
   );

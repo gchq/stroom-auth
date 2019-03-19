@@ -13,53 +13,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useContext, useCallback } from "react";
+import { useCallback , useContext} from "react";
 import { StoreContext } from "redux-react-hook";
 import { useActionCreators } from "./redux";
 import useHttpClient from "../useHttpClient";
-import { HttpError } from "../../ErrorTypes";
-import { handleErrors, getJsonBody } from "../../modules/fetchFunctions";
+import {User} from '../users';
+// import { HttpError } from "../../ErrorTypes";
+// import { getJsonBody } from "../../modules/fetchFunctions";
+import { GlobalStoreState } from '../../modules';
 
 interface Api {
-  performUserSearch: () => void;
+  performUserSearch: (state:GlobalStoreState) => void;
+    getUsers: () => Promise<Array<User>>;
 }
 
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
   const { showSearchLoader, updateResults } = useActionCreators();
 
+      const { httpGetJson } = useHttpClient();
   return {
-    performUserSearch: useCallback(() => {
+    performUserSearch: useCallback((state:GlobalStoreState) => {
+      // const state:GlobalStoreState = store.getState();
       showSearchLoader(true);
       const url = `${
-        store.config.userServiceUrl
+        state.config.values.userServiceUrl
       }/?fromEmail=&usersPerPage=100&orderBy=id`;
       const { httpGetJson } = useHttpClient();
       httpGetJson(url)
-        .then(handleStatus)
-        .then(getJsonBody)
+        // .then(handleStatus)
+        // .then(getJsonBody)
         .then(data => {
           showSearchLoader(false);
           updateResults(data);
         })
-        .catch(error => handleErrors(error)); //FIXME: this still needs fixing
-    }, [showSearchLoader, updateResults])
+        // .catch(error => {throw new Error(error)}); 
+    }, [showSearchLoader, updateResults]),
+    getUsers: useCallback(() => {
+      const state:GlobalStoreState = store.getState();
+      // showSearchLoader(true);
+      const url = `${
+        state.config.values.userServiceUrl
+      }/?fromEmail=&usersPerPage=100&orderBy=id`;
+      return httpGetJson(url)
+        // .then(handleStatus)
+        // .then(getJsonBody)
+        // .then(data => {
+          // showSearchLoader(false);
+          // updateResults(data);
+        // })
+        // .catch(error => {throw new Error(error)}); 
+    },[httpGetJson])
   };
 };
 
 export default useApi;
 
-function handleStatus(response: any) {
-  if (response.status === 200) {
-    return Promise.resolve(response);
-  } else if (response.status === 409) {
-    return Promise.reject(
-      new HttpError(
-        response.status,
-        "This user already exists - please use a different email address."
-      )
-    );
-  } else {
-    return Promise.reject(new HttpError(response.status, response.statusText));
-  }
-}
+// function handleStatus(response: any) {
+//   if (response.status === 200) {
+//     return Promise.resolve(response);
+//   } else if (response.status === 409) {
+//     return Promise.reject(
+//       new HttpError(
+//         response.status,
+//         "This user already exists - please use a different email address."
+//       )
+//     );
+//   } else {
+//     return Promise.reject(new HttpError(response.status, response.statusText));
+//   }
+// }

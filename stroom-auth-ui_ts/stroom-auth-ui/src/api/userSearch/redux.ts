@@ -78,7 +78,8 @@ export const reducer = prepareReducer(defaultState)
         };
       }
     }
-  );
+  )
+  .getReducer();
 
 // export default (state = initialState, action) => {
 //   switch (action.type) {

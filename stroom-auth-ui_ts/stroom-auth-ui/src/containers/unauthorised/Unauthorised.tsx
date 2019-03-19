@@ -14,36 +14,31 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from "react";
-import queryString from "query-string";
-import { compose, withState, lifecycle } from "recompose";
-import { withRouter } from "react-router";
+import * as React from 'react';
+import { useEffect, useState } from "react";
 
 import Button from "../Button";
 import { useReduxState } from "../../lib/useReduxState";
-import { useActionCreators } from "../../api/authentication";
-import useRouter from "../../lib/useRouter";
 import "./Unauthorised.css";
 import "../Layout.css";
+import useHttpQueryParam from '../../lib/useHttpQueryParam';
 
 const Unauthorised = () => {
   const [isExpiredToken, setIsExpiredToken] = useState(false);
   const [isAccountLocked, setIsAccountLocked] = useState(false);
-
-  const { stroomUiUrl } = useReduxState(({ config: { stroomUiUrl } }) => ({
-    stroomUi
+  const { stroomUiUrl } = useReduxState(({ config: { values: { stroomUiUrl } } }) => ({
+    stroomUiUrl
   }));
-
+  const reason = useHttpQueryParam("reason");
   useEffect(() => {
-    const query = queryString.parse(this.props.location.search);
-    if (query.reason === "expired_token") {
-      this.props.setIsExpiredToken(true);
-    } else if (query.reason === "account_locked") {
-      this.props.setIsAccountLocked(true);
+    if (reason === "expired_token") {
+      setIsExpiredToken(true);
+    } else if (reason === "account_locked") {
+      setIsAccountLocked(true);
     }
-  }, []);
+  }, [setIsExpiredToken, setIsAccountLocked]);
 
-  const backToStroomButton = url => (
+  const backToStroomButton = (url:string) => (
     <div className="Unauthorised__actions">
       <Button
         className="toolbar-button-medium primary"
@@ -100,4 +95,4 @@ const Unauthorised = () => {
   );
 };
 
-export default enhance(Unauthorised);
+export default Unauthorised;

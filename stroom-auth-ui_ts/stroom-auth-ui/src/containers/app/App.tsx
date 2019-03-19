@@ -15,8 +15,8 @@
  */
 
 import * as React from "react";
-import {Route, withRouter, Switch } from 'react-router-dom';
-import {compose} from 'recompose';
+import { Route, withRouter, Switch } from 'react-router-dom';
+import { compose } from 'recompose';
 
 import './App.css';
 import Login from '../../containers/login';
@@ -27,7 +27,7 @@ import {
   UserSearch,
   NewUser,
 } from '../../containers/users';
-import {TokenCreate, TokenSearch, TokenEdit} from '../../containers/tokens';
+import { TokenCreate, TokenSearch, TokenEdit } from '../../containers/tokens';
 import PathNotFound from '../../containers/pathNotFound';
 import {
   ResetPassword,
@@ -41,6 +41,7 @@ import HandleAuthenticationResponse from '../../startup/authentication/HandleAut
 import useReduxState from "../../lib/useReduxState";
 import Loader from "../../components/Loader";
 import useConfig from "../../startup/config/useConfig";
+import ErrorPage from "../../components/ErrorPage";
 
 const enhance = compose(
   withRouter,
@@ -52,11 +53,11 @@ const App = () => {
 
   const {
     isReady,
-    values: { 
-      authenticationServiceUrl, 
+    values: {
+      authenticationServiceUrl,
       authorisationServiceUrl,
       advertisedUrl,
-      appClientId}
+      appClientId }
   } = config;
 
   if (
@@ -122,15 +123,15 @@ const App = () => {
                 isLoggedIn ? (
                   <UserSearch />
                 ) : (
-                  <AuthenticationRequest
-                    referrer="/userSearch"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={
-                      authenticationServiceUrl
-                    }
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer="/userSearch"
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={
+                        authenticationServiceUrl
+                      }
+                    />
+                  )
               }
             />
 
@@ -141,15 +142,15 @@ const App = () => {
                 isLoggedIn ? (
                   <UserCreate />
                 ) : (
-                  <AuthenticationRequest
-                    referrer="/user"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={
-                      authenticationServiceUrl
-                    }
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer="/user"
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={
+                        authenticationServiceUrl
+                      }
+                    />
+                  )
               }
             />
 
@@ -160,15 +161,15 @@ const App = () => {
                 isLoggedIn ? (
                   <UserEdit />
                 ) : (
-                  <AuthenticationRequest
-                    referrer={route.location.pathname}
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={
-                      authenticationServiceUrl
-                    }
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer={route.location.pathname}
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={
+                        authenticationServiceUrl
+                      }
+                    />
+                  )
               }
             />
 
@@ -179,15 +180,15 @@ const App = () => {
                 isLoggedIn ? (
                   <TokenSearch />
                 ) : (
-                  <AuthenticationRequest
-                    referrer="/tokens"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={
-                      authenticationServiceUrl
-                    }
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer="/tokens"
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={
+                        authenticationServiceUrl
+                      }
+                    />
+                  )
               }
             />
 
@@ -198,15 +199,15 @@ const App = () => {
                 isLoggedIn ? (
                   <TokenCreate />
                 ) : (
-                  <AuthenticationRequest
-                    referrer="/token/newApiToken"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={
-                      authenticationServiceUrl
-                    }
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer="/token/newApiToken"
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={
+                        authenticationServiceUrl
+                      }
+                    />
+                  )
               }
             />
 
@@ -217,17 +218,22 @@ const App = () => {
                 isLoggedIn ? (
                   <TokenEdit />
                 ) : (
-                  <AuthenticationRequest
-                    referrer={route.location.pathname}
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={
-                      authenticationServiceUrl
-                    }
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer={route.location.pathname}
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={
+                        authenticationServiceUrl
+                      }
+                    />
+                  )
               }
             />
+
+            <Route
+              exact
+              path={"/error"}
+              component={ErrorPage} />
 
             {/* Fall through to 404 */}
             <Route component={PathNotFound} />

@@ -1,10 +1,12 @@
-import { useContext, useCallback } from "react";
+import * as Cookies from 'cookies-js';
 import { StoreContext } from "redux-react-hook";
-import { useActionCreators } from "./redux";
+import { useContext, useCallback } from "react";
+
 import useHttpClient from "../useHttpClient";
 import { Credentials } from "./types";
 import { FormikBag } from "formik";
-// import { AbstractFetchDataResult } from "../../types";
+import { useActionCreators } from "./redux";
+import { GlobalStoreState } from '../..//modules';
 
 interface Api {
   // FIXME: Not sure if the FormikBag types are correct
@@ -23,14 +25,14 @@ export const useApi = (): Api => {
   const login = useCallback(
     (credentials: Credentials, { setStatus, setSubmitting }) => {
       const { email, password } = credentials;
-      const state = store.getState();
+      const state:GlobalStoreState = store.getState();
       // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
       showLoader(true);
 
-      const authenticationServiceUrl = state.config.authenticationServiceUrl;
+      const authenticationServiceUrl = state.config.values.authenticationServiceUrl;
       const loginServiceUrl = `${authenticationServiceUrl}/authenticate`;
-      const clientId = state.login.clientId;
-      const stroomUiUrl = state.config.stroomUiUrl;
+      const clientId = state.config.values.appClientId;
+      // const stroomUiUrl = state.config.values.stroomUiUrl;
 
       // We need to post the sessionId in the credentials, otherwise the
       // authenticationService will have no way of marking the session as valid.
@@ -48,33 +50,32 @@ export const useApi = (): Api => {
         })
       }).then(response => {
         // We'll check for a 422, which we know might indicate there's no session
-        if (response.status === 422) {
-          setStatus(
-            "There is no session on the authentication service! This might be caused " +
-              "by incorrectly configured service URLs."
-          );
-          window.location.href = stroomUiUrl;
-        } else {
-          response
-            .json()
-            .then(
-              (loginResponse: {
-                loginSuccessful: any;
-                redirectUrl: string;
-                message: any;
-              }) => {
-                if (loginResponse.loginSuccessful) {
+        // if (response.status === 422) {
+        //   setStatus(
+        //     "There is no session on the authentication service! This might be caused " +
+        //       "by incorrectly configured service URLs."
+        //   );
+        //   window.location.href = stroomUiUrl;
+        // } else {
+        //   response
+        //     .then(
+        //       (loginResponse: {
+        //         loginSuccessful: any;
+        //         redirectUrl: string;
+        //         message: any;
+        //       }) => {
+                if (response.loginSuccessful) {
                   // Otherwise we'll extract what we expect to be the successful login redirect URL
                   Cookies.set("username", email);
-                  window.location.href = loginResponse.redirectUrl;
+                  window.location.href = response.redirectUrl;
                 } else {
-                  setStatus(loginResponse.message);
+                  setStatus(response.message);
                   setSubmitting(false);
                 }
                 return;
-              }
-            );
-        }
+              // }
+            // );
+        // }
       });
     },
     [httpPostJsonResponse, showLoader]

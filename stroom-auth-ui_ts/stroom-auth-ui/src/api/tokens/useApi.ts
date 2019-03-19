@@ -17,9 +17,8 @@ import { useContext, useCallback } from "react";
 import { StoreContext } from "redux-react-hook";
 import { HttpError } from "../../ErrorTypes";
 import {
-  handleErrors,
+  // handleErrors,
   getJsonBody,
-  getBody
 } from "../../modules/fetchFunctions";
 import {
   useApi as useUserSearchApi,
@@ -44,7 +43,7 @@ interface Api {
 }
 
 export const useApi = (): Api => {
-  const store: GlobalStoreState = useContext(StoreContext);
+  const store = useContext(StoreContext);
   const { performUserSearch } = useUserSearchApi();
   const { selectRow } = useUserSearchActionCreators();
   const { performTokenSearch } = useTokenSearchApi();
@@ -61,26 +60,27 @@ export const useApi = (): Api => {
 
   return {
     deleteSelectedToken: useCallback(() => {
-      const tokenIdToDelete = store.tokenSearch.selectedTokenRowId;
-      const url = `${store.config.values.tokenServiceUrl}/${tokenIdToDelete}`;
+      const state:GlobalStoreState = store.getState();
+      const tokenIdToDelete = state.tokenSearch.selectedTokenRowId;
+      const url = `${state.config.values.tokenServiceUrl}/${tokenIdToDelete}`;
       httpDeleteJsonResponse(url)
         .then(handleStatus)
-        .then(getBody)
         .then(() => {
           selectRow("");
           performTokenSearch();
         })
-        .catch(error => handleErrors(error)); //FIXME
+        // .catch(error => handleErrors(error)); 
     }, [selectRow, performTokenSearch]),
 
     createToken: useCallback(
       ({ email, setSubmitting }) => {
+        const state:GlobalStoreState = store.getState();
         toggleIsCreating();
         hideErrorMessage();
-        const jwsToken = store.authentication.idToken;
+        const jwsToken = state.authentication.idToken;
 
         //TODO: Replace with helper
-        fetch(store.config.values.tokenServiceUrl, {
+        fetch(state.config.values.tokenServiceUrl, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export const useApi = (): Api => {
           })
           .catch(error => {
             toggleIsCreating();
-            handleErrors(error); //FIXME
+            // handleErrors(error);
             if (error.status === 400) {
               showErrorMessage(
                 "There is no such user! Please select one from the dropdown."
@@ -115,11 +115,12 @@ export const useApi = (): Api => {
     ),
     fetchApiKey: useCallback(
       apiKeyId => {
-        const jwsToken = store.authentication.idToken;
+        const state:GlobalStoreState = store.getState();
+        const jwsToken = state.authentication.idToken;
         // TODO: remove any errors
         // TODO: show loading spinner
         //TODO: Replace with helper
-        fetch(`${store.config.values.tokenServiceUrl}/${apiKeyId}`, {
+        fetch(`${state.config.values.tokenServiceUrl}/${apiKeyId}`, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -133,16 +134,17 @@ export const useApi = (): Api => {
           .then(apiKey => {
             changeReadCreatedToken(apiKey);
           })
-          .catch(error => handleErrors(error)); //FIXME
+          // .catch(error => handleErrors(error)); 
       },
       [changeReadCreatedToken]
     ),
     userAutoCompleteChange: useCallback(
       ({ autocompleteText, securityToken }) => {
-        performUserSearch();
+        const state:GlobalStoreState = store.getState();
+        performUserSearch(state);
         let matchingAutoCompleteResults: string[] = [];
         const autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
-        store.userSearch.results.forEach(result => {
+        state.userSearch.results.forEach(result => {
           if (
             result.email.indexOf(autocompleteText) !== -1 &&
             matchingAutoCompleteResults.length <= autoCompleteSuggestionLimit
@@ -155,13 +157,14 @@ export const useApi = (): Api => {
       [performUserSearch, updateMatchingAutoCompleteResults]
     ),
     toggleEnabledState: useCallback(() => {
-      const tokenId = store.token.lastReadToken.id;
-      const nextState = store.token.lastReadToken.enabled ? "false" : "true";
-      const securityToken = store.authentication.idToken;
+      const state:GlobalStoreState = store.getState();
+      const tokenId = state.token.lastReadToken.id;
+      const nextState = state.token.lastReadToken.enabled ? "false" : "true";
+      const securityToken = state.authentication.idToken;
       //TODO: Replace with helper
       fetch(
         `${
-          store.config.values.tokenServiceUrl
+          state.config.values.tokenServiceUrl
         }/${tokenId}/state/?enabled=${nextState}`,
         {
           headers: {

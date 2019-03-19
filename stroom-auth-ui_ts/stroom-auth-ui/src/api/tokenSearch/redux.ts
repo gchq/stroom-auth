@@ -170,4 +170,5 @@ export const reducer = prepareReducer(defaultState)
       ...state,
       lastUsedFiltered
     })
-  );
+  )
+  .getReducer();

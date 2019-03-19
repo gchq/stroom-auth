@@ -151,10 +151,10 @@ export const login = (credentials, {setStatus, setSubmitting}) => {
     // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
     dispatch(showLoader(true));
     const state = getState();
-    const authenticationServiceUrl = state.config.authenticationServiceUrl;
+    const authenticationServiceUrl = state.config.values.authenticationServiceUrl;
     const loginServiceUrl = `${authenticationServiceUrl}/authenticate`;
     const clientId = state.login.clientId;
-    const stroomUiUrl = state.config.stroomUiUrl;
+    const stroomUiUrl = state.config.values.stroomUiUrl;
 
     // We need to post the sessionId in the credentials, otherwise the
     // authenticationService will have no way of marking the session as valid.

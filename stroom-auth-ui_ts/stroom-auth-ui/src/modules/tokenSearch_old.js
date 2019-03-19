@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {HttpError} from '../ErrorTypes';
-import {handleErrors, getJsonBody} from './fetchFunctions';
+import {getJsonBody} from './fetchFunctions';
 
 export const SHOW_SEARCH_LOADER = 'tokenSearch/SHOW_SEARCH_LOADER';
 export const UPDATE_RESULTS = 'tokenSearch/UPDATE_RESULTS';
@@ -217,7 +217,7 @@ export const performTokenSearch = (
         dispatch(showSearchLoader(false));
         dispatch(updateResults(data));
       })
-      .catch(error => handleErrors(error, dispatch, jwsToken));
+      // .catch(error => handleErrors(error));
   };
 };
 
