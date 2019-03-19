@@ -62,7 +62,7 @@
     "yup": "^0.26.10"
   },
   "scripts": {
-    "start": "./config.template.sh && BROWSER=NONE PORT=5001 react-scripts-ts start",
+    "start": "./config.template.sh && BROWSER=NONE PORT=5000 react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"

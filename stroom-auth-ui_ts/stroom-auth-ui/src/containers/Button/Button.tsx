@@ -19,6 +19,7 @@ import { useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 import { ButtonProps } from "./types";
+import './Button.css';
 
 export const Button = ({
   text,
