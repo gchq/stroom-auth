@@ -100,7 +100,7 @@ const useApi = (): Api => {
             filters
           })
         })
-          .then(handleStatus)
+          // .then(handleStatus)
           // .then(getJsonBody)
           .then(data => {
             showSearchLoader(false);
@@ -138,7 +138,7 @@ const useApi = (): Api => {
             mode: "cors"
           }
         )
-          .then(handleStatus)
+          // .then(handleStatus)
           .catch(() => {
             // TODO Display alert to the user that changing the state failed
           });
@@ -150,17 +150,17 @@ const useApi = (): Api => {
 
 export default useApi;
 
-function handleStatus(response: any) {
-  if (response.status === 200) {
-    return Promise.resolve(response);
-  } else if (response.status === 409) {
-    return Promise.reject(
-      new HttpError(response.status, "This token already exists.")
-    );
-  } else {
-    return Promise.reject(new HttpError(response.status, response.statusText));
-  }
-}
+// function handleStatus(response: any) {
+//   if (response.status === 200) {
+//     return Promise.resolve(response);
+//   } else if (response.status === 409) {
+//     return Promise.reject(
+//       new HttpError(response.status, "This token already exists.")
+//     );
+//   } else {
+//     return Promise.reject(new HttpError(response.status, response.statusText));
+//   }
+// }
 
 export const getRowsPerPage = () => {
   const viewport = document.getElementById("User-content");

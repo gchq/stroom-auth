@@ -172,14 +172,6 @@ const UserSearch = () => {
   );
 
   const {users} = useUsers();
-console.log({users});
-  // const store = useContext(StoreContext);
-  // const thing = React.useCallback(() => {
-    // React.useEffect(() => 
-    // performUserSearch(store.getState()), [performUserSearch]);
-  // }, []);
-  // React.useMemo(() => thing(), [thing]);
-  // useMemo(() => performUserSearch(), [performUserSearch]);
   const deleteButtonDisabled = !selectedUserRowId;
 
   return (

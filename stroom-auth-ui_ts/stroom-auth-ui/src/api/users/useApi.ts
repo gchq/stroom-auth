@@ -28,7 +28,7 @@ interface Api {
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
  const {history} = useRouter();
-  const { httpDeleteJsonResponse, httpPostEmptyResponse } = useHttpClient();
+  const { httpDeleteJsonResponse, httpDeleteEmptyResponse, httpPostEmptyResponse } = useHttpClient();
   // const { performUserSearch } = useUserSearchApi();
   const { selectRow } = useUserSearchActionCreators();
 
@@ -123,7 +123,7 @@ export const useApi = (): Api => {
           force_password_change
         })
       })
-        .then(handleStatus)
+        // .then(handleStatus)
         .then(newUserId => {
           //   createAuthorisationUser(email, dispatch);
           toggleIsSaving(true);
@@ -133,8 +133,8 @@ export const useApi = (): Api => {
            * can be assigned to them.
            */
           const url = `${ reduxState.config.values.authorisationServiceUrl }/createUser?id=${email}`;
-          httpPostJsonResponse(url, {})
-            .then(handleStatus)
+          httpPostEmptyResponse(url, {})
+            // .then(handleStatus)
             .then(newUserId => {
               showCreateLoader(false);
               toggleAlertVisibility(true, "User has been created");
@@ -156,14 +156,15 @@ export const useApi = (): Api => {
       result => result.id === userIdToDelete
     );
     const url = `${state.config.values.userServiceUrl}/${userIdToDelete}`;
-    httpDeleteJsonResponse(url, {})
-      .then(handleStatus)
+    httpDeleteEmptyResponse(url, {})
+      // .then(handleStatus)
       .then(() => {
         if (user !== undefined && userIdToDelete !== undefined) {
           const url = `${
             state.config.values.authorisationServiceUrl
           }/setUserStatus?id=${user.email}&status=disabled`;
-          httpPostEmptyResponse(url, {}).then(handleStatus);
+          httpPostEmptyResponse(url, {});
+            //  .then(handleStatus);
           selectRow(userIdToDelete);
           // performUserSearch(state);
           toggleAlertVisibility(true, "User has been deleted");
@@ -260,7 +261,7 @@ export const useApi = (): Api => {
     const state:GlobalStoreState = store.getState();
     const url = `${state.config.values.userServiceUrl}/me`;
     httpGetJson(url, {})
-      .then(handleStatus)
+      // .then(handleStatus)
       .then(users => users[0])
       .then(user => {
         changePassword(user.email);
@@ -313,18 +314,18 @@ export const useApi = (): Api => {
 
 export default useApi;
 
-function handleStatus(response: any) {
-  //FIXME improve this type
-  if (response.status === 200) {
-    return Promise.resolve(response);
-  } else if (response.status === 409) {
-    return Promise.reject(
-      new HttpError(
-        response.status,
-        "This user already exists - please use a different email address."
-      )
-    );
-  } else {
-    return Promise.reject(new HttpError(response.status, response.statusText));
-  }
-}
+// function handleStatus(response: any) {
+//   //FIXME improve this type
+//   if (response.status === 200) {
+//     return Promise.resolve(response);
+//   } else if (response.status === 409) {
+//     return Promise.reject(
+//       new HttpError(
+//         response.status,
+//         "This user already exists - please use a different email address."
+//       )
+//     );
+//   } else {
+//     return Promise.reject(new HttpError(response.status, response.statusText));
+//   }
+// }
