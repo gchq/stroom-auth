@@ -174,7 +174,7 @@ const LoginForm = (
                       className="toolbar-button-full primary"
                       disabled={isPristine || hasErrors}
                       type="submit"
-                      isLoading={isSubmitting}
+                      // isLoading={isSubmitting}
                     >
                       Sign in
                     </Button>

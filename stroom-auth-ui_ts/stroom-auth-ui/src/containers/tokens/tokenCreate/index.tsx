@@ -29,7 +29,7 @@ import useRouter from "../../../lib/useRouter";
 
 const TokenCreateForm = () => {
   const { history } = useRouter();
-  const { isCreating , errorMessage} = useReduxState(({ token: {errorMessage, isCreating } }) => ({ isCreating , errorMessage}));
+  const { /*isCreating ,*/ errorMessage} = useReduxState(({ token: {errorMessage, isCreating } }) => ({ isCreating , errorMessage}));
   const { createToken } = useApi();
 
   return (
@@ -81,7 +81,8 @@ const TokenCreateForm = () => {
                   disabled={submitIsDisabled}
                   icon="plus"
                   type="submit"
-                  isLoading={isCreating}>
+                  // isLoading={isCreating}>
+                  >
                   Create
               </Button>
               </div>

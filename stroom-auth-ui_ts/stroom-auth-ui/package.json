@@ -6,6 +6,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
     "@fortawesome/free-solid-svg-icons": "^5.7.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
+    "@storybook/addon-actions": "^5.0.3",
+    "@storybook/react": "^5.0.3",
     "@types/dateformat": "^3.0.0",
     "@types/jquery": "^3.3.29",
     "@types/jwt-decode": "^2.2.1",
@@ -20,6 +22,8 @@
     "@types/recompose": "^0.30.5",
     "@types/redux-logger": "^3.0.7",
     "@types/sjcl": "^1.0.28",
+    "@types/storybook__addon-actions": "^3.4.2",
+    "@types/storybook__react": "^4.0.1",
     "@types/uuid": "^3.4.4",
     "@types/yup": "^0.26.12",
     "cookies-js": "^1.2.3",
@@ -58,7 +62,7 @@
     "yup": "^0.26.10"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
+    "start": "./config.template.sh && BROWSER=NONE PORT=5001 react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"

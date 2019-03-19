@@ -150,10 +150,10 @@ const ChangePasswordFields = ({
                 <div className="ChangePassword-actions">
                   <Button
                     className="ChangePassword-button primary"
-                    isLoading={isSubmitting}
+                    // isLoading={isSubmitting}
                     disabled={isPristine || hasErrors}
                     type="submit"
-                    label=""
+                    // label=""
                     icon="save">
                     Change password
                   </Button>

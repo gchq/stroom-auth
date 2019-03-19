@@ -69,8 +69,8 @@ const ResetPasswordRequest = () => {
                 <Button
                   className="toolbar-button-small primary"
                   type="submit"
-                  disabled={isPristine || hasErrors}
-                  isLoading={isSubmitting}>
+                  disabled={isPristine || hasErrors}>
+                  // isLoading={isSubmitting}>
                   Send
                 </Button>
                 <Button

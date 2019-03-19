@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import * as React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {compose, withProps} from 'recompose';
 
 import SpinnerIcon from './small_spinner.svg';
 import './Button.css';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-const enhance = compose(
-  withProps(({isLoading, icon, className, type, disabled}) => {
-    className = icon || isLoading ? className : 'no-icon ' + className;
+const Button = ({
+  icon,
+  isLoading,
+  label,
+  type,
+  className,
+  disabled,
+  ...rest
+}:{icon:IconProp | undefined, label:string, 
+  isLoading:boolean, type:string, className:string, disabled:boolean}) => {
+  className = icon || isLoading ? className : 'no-icon ' + className;
     className = 'Button ' + (className || '');
     
     // We're going to default to the button type being 'button' instead of 'submit'. That's more appropriate for an SPA.
@@ -33,24 +41,6 @@ const enhance = compose(
     icon = isLoading ? undefined : icon;
     // If is Loading is true then we want the button disabled
     disabled = isLoading ? true : disabled;
-    return {
-      icon,
-      className,
-      type,
-        disabled
-    };
-  }),
-);
-
-const Button = ({
-  icon,
-  isLoading,
-  type,
-  className,
-  disabled,
-  children,
-  ...rest
-}) => {
   return (
     <button type={type} className={className} disabled={disabled} {...rest}>
       {/* Wrap in a span to get spacing between the icon and the other children. */}
@@ -62,9 +52,9 @@ const Button = ({
         undefined
       )}
       {isLoading ? <img alt="Loading..." src={SpinnerIcon} /> : undefined}
-      <div className="Button__contents">{children}</div>
+      <div className="Button__contents">{label}</div>
     </button>
-  );
+  ) //as React.ReactElement;
 };
 
-export default enhance(Button);
+export default Button;

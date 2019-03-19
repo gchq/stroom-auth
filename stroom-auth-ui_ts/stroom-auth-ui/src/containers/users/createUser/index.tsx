@@ -71,7 +71,7 @@ const UserCreateForm = (
   // const {createUser} = useActionCreators();
   const { createUser } = useApi();
   const { history } = useRouter();
-  const { idToken, authenticationServiceUrl, isSaving } = useReduxState(
+  const { idToken, authenticationServiceUrl/*, isSaving */} = useReduxState(
     ({
       authentication: { idToken },
       user: { isSaving },
@@ -118,7 +118,7 @@ const UserCreateForm = (
                 disabled={isPristine || hasErrors}
                 type="submit"
                 icon="save"
-                isLoading={isSaving}
+                // isLoading={isSaving}
               >
                 Save
               </Button>

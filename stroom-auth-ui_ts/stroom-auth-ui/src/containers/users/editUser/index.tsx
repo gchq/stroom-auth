@@ -39,7 +39,7 @@ const UserEditForm = () => {
   const userId = useHttpQueryParam("userId");
   const {
     userBeingEdited,
-    isSaving,
+    // isSaving,
     idToken,
     authenticationServiceUrl
   } = useReduxState(
@@ -131,7 +131,7 @@ const UserEditForm = () => {
                     className="toolbar-button-small primary"
                     disabled={isPristine || hasErrors}
                     icon="save"
-                    isLoading={isSaving}
+                    // isLoading={isSaving}
                   >
                     Save
                   </Button>
