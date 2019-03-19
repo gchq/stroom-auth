@@ -10,9 +10,6 @@ import useReduxState from "../../lib/useReduxState";
  */
 interface UseUsers {
   users: Array<User>;
-//   createIndexVolume: (nodeName: string, path: string) => void;
-//   deleteIndexVolume: (id: string) => void;
-//   addVolumeToGroup: (indexVolumeId: string, groupName: string) => void;
 }
 
 export default (): UseUsers => {
@@ -31,22 +28,5 @@ export default (): UseUsers => {
 
   return {
     users,
-    // createIndexVolume: useCallback((nodeName: string, path: string) => {
-    //   createIndexVolume(nodeName, path).then(indexVolumeCreated);
-    // }, []),
-    // deleteIndexVolume: useCallback(
-    //   (id: string) => {
-    //     deleteIndexVolume(id).then(() => indexVolumeDeleted(id));
-    //   },
-    //   [deleteIndexVolume]
-    // ),
-    // addVolumeToGroup: useCallback(
-    //   (volumeId: string, groupName: string) => {
-    //     addVolumeToGroup(volumeId, groupName).then(() =>
-    //       indexVolumeAddedToGroup(volumeId, groupName)
-    //     );
-    //   },
-    //   [addVolumeToGroup, indexVolumeAddedToGroup]
-    // )
   };
 };

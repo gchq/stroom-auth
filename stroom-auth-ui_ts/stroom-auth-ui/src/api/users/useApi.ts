@@ -1,19 +1,14 @@
-import { useContext, useCallback } from "react";
-import { StoreContext } from "redux-react-hook";
-import { useActionCreators } from "./redux";
-import useHttpClient from "../useHttpClient";
-
-// import { handleErrors } from "../../modules/fetchFunctions";
-import {
-  useApi as useUserSearchApi,
-  useActionCreators as useUserSearchActionCreators
-} from "../userSearch";
-import { ChangePasswordRequest, ResetPasswordRequest } from "./types";
-import { push } from "react-router-redux";
-
-import { HttpError } from "../../ErrorTypes";
 import { FormikBag } from "formik";
+import { StoreContext } from "redux-react-hook";
+import { useContext, useCallback } from "react";
+
+import useHttpClient from "../useHttpClient";
+import { ChangePasswordRequest, ResetPasswordRequest } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
+import { HttpError } from "../../ErrorTypes";
+import { useActionCreators as useUserSearchActionCreators } from "../userSearch";
+import { useActionCreators } from "./redux";
+import useRouter from '../../lib/useRouter';
 
 //FIXME: make a type for editedUser
 interface Api {
@@ -32,9 +27,9 @@ interface Api {
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
-
+ const {history} = useRouter();
   const { httpDeleteJsonResponse, httpPostEmptyResponse } = useHttpClient();
-  const { performUserSearch } = useUserSearchApi();
+  // const { performUserSearch } = useUserSearchApi();
   const { selectRow } = useUserSearchActionCreators();
 
   const {
@@ -43,7 +38,7 @@ export const useApi = (): Api => {
   } = useActionCreators();
   const { httpPostJsonResponse } = useHttpClient();
   const { showCreateLoader } = useActionCreators();
-  const { httpPutJsonResponse, httpGetJson } = useHttpClient();
+  const { httpPutJsonResponse, httpPutEmptyResponse, httpGetJson } = useHttpClient();
   const {
     toggleIsSaving,
     saveUserBeingEdited,
@@ -67,7 +62,7 @@ export const useApi = (): Api => {
       } = editedUser;
 
       const url = `${reduxState.config.values.userServiceUrl}/${id}`;
-      httpPutJsonResponse(url, {
+      httpPutEmptyResponse(url, {
         body: JSON.stringify({
           email,
           password,
@@ -79,22 +74,20 @@ export const useApi = (): Api => {
           force_password_change
         })
       })
-        .then(handleStatus)
+        // .then(handleStatus)
         .then(response => {
           saveUserBeingEdited(undefined);
-          push("/userSearch");
           toggleAlertVisibility(true, "User has been updated");
           toggleIsSaving(false);
+          history.push("/userSearch");
         })
         .catch(error => {
           toggleIsSaving(false);
-          // handleErrors(error); 
         });
     },
     [
       toggleIsSaving,
       saveUserBeingEdited,
-      push,
       toggleAlertVisibility,
       toggleIsSaving
     ]
@@ -144,16 +137,12 @@ export const useApi = (): Api => {
             .then(handleStatus)
             .then(newUserId => {
               showCreateLoader(false);
-              push("/userSearch");
               toggleAlertVisibility(true, "User has been created");
               toggleIsSaving(false);
+              history.push("/userSearch");
             })
-            .catch(error => {
-              // handleErrors(error); 
-            });
         })
         .catch(error => {
-          // handleErrors(error);
           toggleIsSaving(false);
         });
     },
@@ -176,14 +165,14 @@ export const useApi = (): Api => {
           }/setUserStatus?id=${user.email}&status=disabled`;
           httpPostEmptyResponse(url, {}).then(handleStatus);
           selectRow(userIdToDelete);
-          performUserSearch(state);
+          // performUserSearch(state);
           toggleAlertVisibility(true, "User has been deleted");
         } else {
           console.error("No access to user or user id!");
         }
       })
       // .catch(error => handleErrors(error)); 
-  }, [selectRow, performUserSearch, toggleAlertVisibility]);
+  }, [selectRow, toggleAlertVisibility]);
 
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
@@ -288,7 +277,7 @@ export const useApi = (): Api => {
       }`;
       httpGetJson(url, {}).then(() => {
         setSubmitting(false);
-        push("/confirmPasswordResetEmail");
+        history.push("/confirmPasswordResetEmail");
       });
     },
     []
@@ -299,11 +288,11 @@ export const useApi = (): Api => {
       const state:GlobalStoreState = store.getState();
       const url = `${state.config.values.userServiceUrl}/${userId}`;
       httpGetJson(url)
-        .then(handleStatus)
-        .then(users => users[0])
-        .then(user => {
+        // .then(handleStatus)
+        // .then(users => users[0])
+        .then(users => {
           showCreateLoader(false);
-          saveUserBeingEdited(user);
+          saveUserBeingEdited(users[0]);
         })
         // .catch(error => handleErrors(error)); 
     },

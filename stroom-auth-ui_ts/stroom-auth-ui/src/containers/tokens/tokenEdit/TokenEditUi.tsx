@@ -82,7 +82,6 @@ const TokenEditUi = () => {
                   </div>
                   <Toggle
                     icons={false}
-                    defaultChecked={token.enabled}
                     checked={token.enabled}
                     onChange={toggleEnabledState}
                   />

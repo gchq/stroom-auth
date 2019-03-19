@@ -15,7 +15,6 @@
  */
 
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
 
 import { authorisationReducer as authorisation, authenticationReducer as authentication } from '../startup/authentication';
 import { reducer as config } from "../startup/config";
@@ -31,7 +30,6 @@ import {GlobalStoreState }from './GlobalStoreState';
 
 export {GlobalStoreState};
 export default combineReducers({
-  routing: routerReducer,
   login,
   errorPage,
   user,

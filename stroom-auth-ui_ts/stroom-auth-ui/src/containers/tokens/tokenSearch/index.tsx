@@ -103,7 +103,7 @@ const getEnabledCellRenderer = (
       className="TokenSearch__table__checkbox"
       onClick={() => setEnabledStateOnToken(tokenId, !state)}
     >
-      <Toggle icons={false} defaultChecked={state} checked={state} />
+      <Toggle icons={false} checked={state} />
     </div>
   );
 };

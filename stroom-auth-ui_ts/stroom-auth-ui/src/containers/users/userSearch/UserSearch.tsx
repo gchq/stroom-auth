@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-import * as React from "react";
-// import {useMemo} from 'react';
-// import { useContext } from "react";
-// import { StoreContext } from "redux-react-hook";
-import Toggle from "react-toggle";
 import "rc-checkbox/assets/index.css";
-import ReactTable, { RowInfo, ReactTableFunction } from "react-table";
 import "react-table/react-table.css";
+import * as React from "react";
 import * as dateFormat from "dateformat";
+import ReactTable, { RowInfo, ReactTableFunction } from "react-table";
+import Toggle from "react-toggle";
 
-import Button from "../../Button";
-import "./UserSearch.css";
 import "../../../styles/table-small.css";
-import { useApi as useUsersApi } from "../../../api/users";
-import {
-  useActionCreators as useUserSearchActionCreators,
-  // useApi as useUserSearchApi
-} from "../../../api/userSearch";
+import "./UserSearch.css";
+import Button from "../../Button";
 import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
-import { useState } from "react";
 import useUsers from '../../../api/userSearch/useUsers';
+import { useActionCreators as useUserSearchActionCreators } from "../../../api/userSearch";
+import { useApi as useUsersApi } from "../../../api/users";
+import { useState } from "react";
 
 // FIXME: Not sure why the actual filter props isn't working
 type FilterProps = {
@@ -66,7 +60,7 @@ const getColumnFormat = (selectedUserRowId: string | undefined) => {
       Header: "Account status",
       accessor: "state",
       maxWidth: 100,
-      Cell: (row: RowInfo) => renderStateCell(row.row.value),
+      Cell: (row: RowInfo) => renderStateCell(row.row.state),
       Filter: ({ filter, onChange }: FilterProps) => getStateCellFilter(filter, onChange)
     },
     {
@@ -155,6 +149,7 @@ const formatDate = (dateString:string) => {
 const UserSearch = () => {
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
   const { deleteSelectedUser } = useUsersApi();
+  // const { getUsers } = useUserSearchApi();
   // const { performUserSearch } = useUserSearchApi();
   const { selectRow } = useUserSearchActionCreators();
   const { history } = useRouter();
@@ -219,7 +214,10 @@ console.log({users});
         <div>
           <Button
             disabled={deleteButtonDisabled}
-            onClick={() => deleteSelectedUser()}
+            onClick={() => {
+              deleteSelectedUser();
+              history.push('/userSearch');
+            }}
             className="toolbar-button-small primary"
             icon="trash"
           >

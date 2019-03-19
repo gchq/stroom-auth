@@ -21,7 +21,6 @@ import { Formik, Form } from "formik";
 import "./EditUser.css";
 import BackConfirmation from "../BackConfirmation";
 import Button from "../../Button";
-import ErrorPage from "../../../components/ErrorPage";
 import Loader from "../../Loader";
 import UserFields from "../UserFields";
 import useHttpQueryParam from "../../../lib/useHttpQueryParam";
@@ -30,13 +29,15 @@ import useRouter from "../../../lib/useRouter";
 import { UserValidationSchema, validateAsync } from "../validation";
 import { hasAnyProps } from "../../../lang";
 import { useActionCreators, useApi } from "../../../api/users";
+import useIdFromPath from '../../../lib/useIdFromPath';
 
 const UserEditForm = () => {
   const { fetchUser, saveChanges } = useApi();
   const { clearUserBeingEdited } = useActionCreators();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
-  const userId = useHttpQueryParam("userId");
+  // const userId = useHttpQueryParam("userId");
+  const userId = useIdFromPath("user/");
   const {
     userBeingEdited,
     // isSaving,
@@ -59,6 +60,12 @@ const UserEditForm = () => {
     })
   );
 
+
+  useEffect(() => {
+    clearUserBeingEdited();
+    if (!!userId) fetchUser(userId);
+  }, [fetchUser]);
+
   if (!!userBeingEdited) {
     //TODO: the error page uses redux. Make it use hooks instead.
     let initialValues = {
@@ -74,10 +81,6 @@ const UserEditForm = () => {
       force_password_change: userBeingEdited.force_password_change || false
     };
 
-    useEffect(() => {
-      clearUserBeingEdited();
-      if (!!userId) fetchUser(userId);
-    }, []);
 
     const handleBack = (isPristine: boolean) => {
       if (isPristine) {
@@ -87,9 +90,6 @@ const UserEditForm = () => {
       }
     };
 
-    if (!userBeingEdited) {
-      return <Loader message="" />;
-    }
     return (
       <Formik
         onSubmit={(values, actions) => {
@@ -131,7 +131,7 @@ const UserEditForm = () => {
                     className="toolbar-button-small primary"
                     disabled={isPristine || hasErrors}
                     icon="save"
-                    // isLoading={isSaving}
+                  // isLoading={isSaving}
                   >
                     Save
                   </Button>
@@ -159,8 +159,9 @@ const UserEditForm = () => {
         }}
       </Formik>
     );
-  } else {
-    return <ErrorPage />;
+  }
+  else {
+    return <Loader message="" />;
   }
 };
 

@@ -15,8 +15,7 @@
  */
 
 import * as React from "react";
-import { Route, withRouter, Switch } from 'react-router-dom';
-import { compose } from 'recompose';
+import { Route, Switch } from 'react-router-dom';
 
 import './App.css';
 import Login from '../../containers/login';
@@ -42,10 +41,6 @@ import useReduxState from "../../lib/useReduxState";
 import Loader from "../../components/Loader";
 import useConfig from "../../startup/config/useConfig";
 import ErrorPage from "../../components/ErrorPage";
-
-const enhance = compose(
-  withRouter,
-);
 
 const App = () => {
   const config = useConfig();
@@ -235,7 +230,7 @@ const App = () => {
               path={"/error"}
               component={ErrorPage} />
 
-            {/* Fall through to 404 */}
+            {/* Fall through to 404-ish */}
             <Route component={PathNotFound} />
           </Switch>
         </div>
@@ -244,32 +239,4 @@ const App = () => {
   );
 };
 
-//App.contextTypes = {
-//  store: PropTypes.object,
-//  router: PropTypes.shape({
-//    history: object.isRequired,
-//  }),
-//};
-//
-//App.propTypes = {
-//  idToken: PropTypes.string.isRequired,
-//};
-//
-//const mapStateToProps = state => ({
-//  idToken: state.authentication.idToken,
-//  advertisedUrl: state.config.advertisedUrl,
-//  appClientId: state.config.appClientId,
-//  authenticationServiceUrl: state.config.authenticationServiceUrl,
-//  authorisationServiceUrl: state.config.authorisationServiceUrl,
-//});
-
-//const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
-//
-//export default withRouter(
-//  connect(
-//    mapStateToProps,
-//    mapDispatchToProps,
-//  )(App),
-//);
-
-export default enhance(App);
+export default App;

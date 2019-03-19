@@ -39,10 +39,9 @@ const CheckboxField = ({
   return (
     <Toggle
       icons={false}
-      defaultChecked={field.value}
       checked={field.value}
       onChange={field.onChange}
-      {...field}
+      // {...field}
       {...props}
     />
   );

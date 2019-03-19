@@ -1,8 +1,8 @@
 {
   "extends": [],
   "rules":{
-    "no-unused-variable": false
   },
+  "defaultSeverity": "warning",
   "linterOptions": {
     "exclude": [
       "config/**/*.js",

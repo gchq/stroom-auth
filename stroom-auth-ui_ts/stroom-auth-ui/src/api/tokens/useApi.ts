@@ -21,7 +21,7 @@ import {
   getJsonBody,
 } from "../../modules/fetchFunctions";
 import {
-  useApi as useUserSearchApi,
+  // useApi as useUserSearchApi,
   useActionCreators as useUserSearchActionCreators
 } from "../userSearch";
 import useHttpClient from "../useHttpClient";
@@ -35,16 +35,15 @@ interface Api {
   deleteSelectedToken: () => void;
   createToken: (email: String, setSubmitting: any) => void;
   fetchApiKey: (apiKeyId: String) => void;
-  userAutoCompleteChange: (
-    autocompleteText: String,
-    securityToken: String
-  ) => void;
+  // userAutoCompleteChange: (
+    // autocompleteText: String,
+    // securityToken: String
+  // ) => void;
   toggleEnabledState: () => void;
 }
 
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
-  const { performUserSearch } = useUserSearchApi();
   const { selectRow } = useUserSearchActionCreators();
   const { performTokenSearch } = useTokenSearchApi();
   const { history } = useRouter();
@@ -52,7 +51,7 @@ export const useApi = (): Api => {
   const {
     toggleState,
     toggleIsCreating,
-    updateMatchingAutoCompleteResults,
+    // updateMatchingAutoCompleteResults,
     hideErrorMessage,
     showErrorMessage,
     changeReadCreatedToken
@@ -138,24 +137,23 @@ export const useApi = (): Api => {
       },
       [changeReadCreatedToken]
     ),
-    userAutoCompleteChange: useCallback(
-      ({ autocompleteText, securityToken }) => {
-        const state:GlobalStoreState = store.getState();
-        performUserSearch(state);
-        let matchingAutoCompleteResults: string[] = [];
-        const autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
-        state.userSearch.results.forEach(result => {
-          if (
-            result.email.indexOf(autocompleteText) !== -1 &&
-            matchingAutoCompleteResults.length <= autoCompleteSuggestionLimit
-          ) {
-            matchingAutoCompleteResults.push(result.email);
-          }
-        });
-        updateMatchingAutoCompleteResults(matchingAutoCompleteResults);
-      },
-      [performUserSearch, updateMatchingAutoCompleteResults]
-    ),
+    // userAutoCompleteChange: useCallback(
+    //   ({ autocompleteText, securityToken }) => {
+    //     const state:GlobalStoreState = store.getState();
+    //     let matchingAutoCompleteResults: string[] = [];
+    //     const autoCompleteSuggestionLimit = 10; // We want to avoid having a vast drop-down box
+    //     state.userSearch.results.forEach(result => {
+    //       if (
+    //         result.email.indexOf(autocompleteText) !== -1 &&
+    //         matchingAutoCompleteResults.length <= autoCompleteSuggestionLimit
+    //       ) {
+    //         matchingAutoCompleteResults.push(result.email);
+    //       }
+    //     });
+    //     updateMatchingAutoCompleteResults(matchingAutoCompleteResults);
+    //   },
+    //   [updateMatchingAutoCompleteResults]
+    // ),
     toggleEnabledState: useCallback(() => {
       const state:GlobalStoreState = store.getState();
       const tokenId = state.token.lastReadToken.id;
