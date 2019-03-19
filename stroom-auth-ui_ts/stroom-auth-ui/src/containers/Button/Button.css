@@ -27,6 +27,10 @@ button {
   background-color: #e4e4e4;
   color: #4d5250;
   padding: 0 10px 0 10px;
+
+}
+button svg {
+  padding-right: 1em;
 }
 
 button:focus {

@@ -154,9 +154,8 @@ const ChangePasswordFields = ({
                     disabled={isPristine || hasErrors}
                     type="submit"
                     // label=""
-                    icon="save">
-                    Change password
-                  </Button>
+                    icon="save"
+                    text="Change password"/>
                 </div>
               </div>
             </div>

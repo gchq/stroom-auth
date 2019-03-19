@@ -43,9 +43,8 @@ const LoggedOut = () => {
         <div className="LoggedOut__actions">
           <Button
             className="toolbar-button-medium primary"
-            onClick={() => window.location.href = stroomUiUrl }>
-            Return to Stroom
-          </Button>
+            onClick={() => window.location.href = stroomUiUrl }
+            text="Return to Stroom"/>
         </div>
       </div>
     </div>

@@ -101,9 +101,8 @@ const UserCreateForm = (
                 className="primary toolbar-button-small"
                 icon="arrow-left"
                 onClick={() => history.push("/userSearch")}
-              >
-                Back
-              </Button>
+                text="Back"
+              />
             </div>
             <UserFields
               showCalculatedFields={false}
@@ -119,16 +118,14 @@ const UserCreateForm = (
                 type="submit"
                 icon="save"
                 // isLoading={isSaving}
-              >
-                Save
-              </Button>
+                text="Save"
+              />
               <Button
                 className="toolbar-button-small secondary"
                 icon="times"
                 onClick={() => history.push("/userSearch")}
-              >
-                Cancel
-              </Button>
+                text="Cancel"
+              />
             </div>
           </Form>
         );

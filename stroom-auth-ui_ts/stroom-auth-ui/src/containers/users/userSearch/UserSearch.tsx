@@ -20,6 +20,7 @@ import * as React from "react";
 import * as dateFormat from "dateformat";
 import ReactTable, { RowInfo, ReactTableFunction } from "react-table";
 import Toggle from "react-toggle";
+import "react-toggle/style.css"
 
 import "../../../styles/table-small.css";
 import "./UserSearch.css";
@@ -188,27 +189,24 @@ console.log({users});
           className="toolbar-button-small primary"
           onClick={() => history.push("/newUser")}
           icon="plus"
-        >
-          Create
-        </Button>
+          text="Create"
+        />
         {deleteButtonDisabled ? (
           <div>
             <Button
               className="toolbar-button-small primary"
               disabled
               icon="edit"
-            >
-              View/edit
-            </Button>
+              text="View/edit"
+            />
           </div>
         ) : (
             <Button
               className="toolbar-button-small primary"
               onClick={() => history.push(`/user/${selectedUserRowId}`)}
               icon="edit"
-            >
-              View/edit
-          </Button>
+              text="View/edit"
+            />
           )}
 
         <div>
@@ -220,9 +218,8 @@ console.log({users});
             }}
             className="toolbar-button-small primary"
             icon="trash"
-          >
-            Delete
-          </Button>
+            text="Delete"
+          />
         </div>
         <div className="UserSearch-filteringToggle">
           <label>Show filtering</label>

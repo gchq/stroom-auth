@@ -39,9 +39,8 @@ const ConfirmPasswordResetEmail = () => {
       <div className="footer">
         <Button
           className="toolbar-button-medium primary"
-          onClick={() => (window.location.href = stroomUiUrl)}>
-          Back to Stroom
-        </Button>
+          onClick={() => (window.location.href = stroomUiUrl)}
+          text="Back to Stroom"/>
       </div>
     </div>
   );

@@ -112,9 +112,8 @@ const UserEditForm = () => {
                   onClick={() => handleBack(isPristine)}
                   className="primary toolbar-button-small"
                   icon="arrow-left"
-                >
-                  Back
-                </Button>
+                  text="Back"
+                />
               </div>
               <div>
                 <UserFields
@@ -131,17 +130,15 @@ const UserEditForm = () => {
                     className="toolbar-button-small primary"
                     disabled={isPristine || hasErrors}
                     icon="save"
+                    text="Save"
                   // isLoading={isSaving}
-                  >
-                    Save
-                  </Button>
+                  />
                   <Button
                     className="toolbar-button-small secondary"
                     icon="times"
                     onClick={() => history.push("/userSearch/")}
-                  >
-                    Cancel
-                  </Button>
+                    text="Cancel"
+                  />
                 </div>
                 <BackConfirmation
                   isOpen={showBackConfirmation}

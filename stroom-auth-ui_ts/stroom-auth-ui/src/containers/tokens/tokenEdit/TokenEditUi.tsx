@@ -18,6 +18,7 @@ import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as CopyToClipboard from "react-copy-to-clipboard";
 import Toggle from "react-toggle";
+import "react-toggle/style.css"
 import "rc-checkbox/assets/index.css";
 
 import Button from "../../Button";
@@ -109,9 +110,7 @@ const TokenEditUi = () => {
             <div className="section__fields--copy-only constrained">
               <textarea value={token.token} disabled />
               <CopyToClipboard text={token.token}>
-                <Button className="primary" icon="copy">
-                  Copy key
-                </Button>
+                <Button className="primary" icon="copy" text="Copy key"/>
               </CopyToClipboard>
             </div>
           </div>

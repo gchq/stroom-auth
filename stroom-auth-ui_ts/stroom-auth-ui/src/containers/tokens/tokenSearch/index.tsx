@@ -17,6 +17,7 @@
 import * as React from "react";
 import { useState } from "react";
 import Toggle from "react-toggle";
+import "react-toggle/style.css"
 import "rc-checkbox/assets/index.css";
 import ReactTable, {
   RowRenderProps,
@@ -165,9 +166,8 @@ const TokenSearch = () => {
           className="toolbar-button-small primary"
           onClick={() => history.push("/token/newApiToken")}
           icon="plus"
-        >
-          Create
-        </Button>
+          text="Create"
+        />
 
         {noTokenSelected ? (
           <div>
@@ -175,9 +175,8 @@ const TokenSearch = () => {
               className="toolbar-button-small primary"
               disabled={noTokenSelected}
               icon="edit"
-            >
-              View/edit
-            </Button>
+              text="View/edit"
+            />
           </div>
         ) : (
           <Button
@@ -185,9 +184,8 @@ const TokenSearch = () => {
             disabled={noTokenSelected}
             onClick={() => history.push(`/token/${selectedTokenRowId}`)}
             icon="edit"
-          >
-            View/edit
-          </Button>
+            text="View/edit"
+          />
         )}
 
         <div>
@@ -196,9 +194,8 @@ const TokenSearch = () => {
             onClick={() => deleteSelectedToken()}
             className="toolbar-button-small primary"
             icon="trash"
-          >
-            Delete
-          </Button>
+            text="Delete"
+          />
         </div>
 
         <div className="UserSearch-filteringToggle">

@@ -69,15 +69,14 @@ const ResetPasswordRequest = () => {
                 <Button
                   className="toolbar-button-small primary"
                   type="submit"
-                  disabled={isPristine || hasErrors}>
-                  // isLoading={isSubmitting}>
-                  Send
-                </Button>
+                  disabled={isPristine || hasErrors}
+                  //isLoading={isSubmitting}
+                  text="Send"
+                  />
                 <Button
                   className="toolbar-button-medium secondary"
-                  onClick={() => (window.location.href = stroomUiUrl)}>
-                  Back to Stroom
-                </Button>
+                  onClick={() => (window.location.href = stroomUiUrl)}
+                  text="Back to Stroom"/>
               </div>
             </div>
           </Form>

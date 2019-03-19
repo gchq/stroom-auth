@@ -50,9 +50,8 @@ const TokenCreateForm = () => {
                 <Button
                   icon="arrow-left"
                   className="primary toolbar-button-small"
-                  onClick={() => history.push('/tokens')}>
-                  Back
-                </Button>
+                  onClick={() => history.push('/tokens')} 
+                  text="Back"/>
               </div>
               <div className="container">
                 <div className="section">
@@ -82,9 +81,8 @@ const TokenCreateForm = () => {
                   icon="plus"
                   type="submit"
                   // isLoading={isCreating}>
-                  >
-                  Create
-              </Button>
+                  text="Create"
+                  />
               </div>
             </form>
           )

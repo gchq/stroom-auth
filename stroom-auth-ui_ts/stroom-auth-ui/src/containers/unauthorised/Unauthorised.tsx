@@ -43,9 +43,8 @@ const Unauthorised = () => {
       <Button
         className="toolbar-button-medium primary"
         onClick={() => (window.location.href = url)}
-      >
-        Back to Stroom
-      </Button>
+        text="Back to Stroom"
+      />
     </div>
   );
 

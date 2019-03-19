@@ -175,9 +175,8 @@ const LoginForm = (
                       disabled={isPristine || hasErrors}
                       type="submit"
                       // isLoading={isSubmitting}
-                    >
-                      Sign in
-                    </Button>
+                      text="Sign in"
+                    />
                   </div>
                 </div>
               </Form>
