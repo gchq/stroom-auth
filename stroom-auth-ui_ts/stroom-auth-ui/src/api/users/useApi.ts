@@ -1,3 +1,18 @@
+/*
+ * Copyright 2019 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { FormikBag } from "formik";
 import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
@@ -5,7 +20,6 @@ import { useContext, useCallback } from "react";
 import useHttpClient from "../useHttpClient";
 import { ChangePasswordRequest, ResetPasswordRequest } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
-import { HttpError } from "../../ErrorTypes";
 import { useApi as useUserSearchApi, useActionCreators as useUserSearchActionCreators } from "../userSearch";
 import { useActionCreators } from "./redux";
 import useRouter from '../../lib/useRouter';
@@ -23,14 +37,12 @@ interface Api {
     formikBag: FormikBag<any, any>
   ) => void;
   fetchUser: (userId: String) => void;
-  // deleteUserAndRefreshUsers: () => void;
 }
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
   const { history } = useRouter();
-  const { httpDeleteJsonResponse, httpDeleteEmptyResponse, httpPostEmptyResponse } = useHttpClient();
-  // const { performUserSearch } = useUserSearchApi();
+  const { httpDeleteEmptyResponse, httpPostEmptyResponse } = useHttpClient();
   const { selectRow, updateResults } = useUserSearchActionCreators();
   const {getUsers} = useUserSearchApi();
 
@@ -40,7 +52,7 @@ export const useApi = (): Api => {
   } = useActionCreators();
   const { httpPostJsonResponse } = useHttpClient();
   const { showCreateLoader } = useActionCreators();
-  const { httpPutJsonResponse, httpPutEmptyResponse, httpGetJson } = useHttpClient();
+  const { httpPutEmptyResponse, httpGetJson } = useHttpClient();
   const {
     toggleIsSaving,
     saveUserBeingEdited,
@@ -76,7 +88,6 @@ export const useApi = (): Api => {
           force_password_change
         })
       })
-        // .then(handleStatus)
         .then(response => {
           saveUserBeingEdited(undefined);
           toggleAlertVisibility(true, "User has been updated");
@@ -125,9 +136,7 @@ export const useApi = (): Api => {
           force_password_change
         })
       })
-        // .then(handleStatus)
         .then(newUserId => {
-          //   createAuthorisationUser(email, dispatch);
           toggleIsSaving(true);
           /**
            * This function creates a user within Stroom. This avoids the problem of creating
@@ -136,7 +145,6 @@ export const useApi = (): Api => {
            */
           const url = `${reduxState.config.values.authorisationServiceUrl}/createUser?id=${email}`;
           httpPostEmptyResponse(url, {})
-            // .then(handleStatus)
             .then(newUserId => {
               showCreateLoader(false);
               toggleAlertVisibility(true, "User has been created");
@@ -159,29 +167,19 @@ export const useApi = (): Api => {
     );
     const url = `${state.config.values.userServiceUrl}/${userIdToDelete}`;
     httpDeleteEmptyResponse(url, {})
-      // .then(handleStatus)
       .then(() => {
         if (user !== undefined && userIdToDelete !== undefined) {
           const url = `${
             state.config.values.authorisationServiceUrl
             }/setUserStatus?userId=${user.email}&status=disabled`;
           httpPutEmptyResponse(url);
-          //  .then(handleStatus); selectRow(userIdToDelete);
-          // performUserSearch(state);
           getUsers().then((data) => updateResults(data));
           toggleAlertVisibility(true, "User has been deleted");
         } else {
           console.error("No access to user or user id!");
         }
       })
-    // .catch(error => handleErrors(error)); 
   }, [selectRow, toggleAlertVisibility]);
-
-  // const deleteUserAndRefreshUsers = useCallback(() => {
-  //   const state: GlobalStoreState = store.getState();
-  //   deleteSelectedUser();
-  //   getUsers();
-  // }, [deleteSelectedUser, getUsers]);
 
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
@@ -269,7 +267,6 @@ export const useApi = (): Api => {
     const state: GlobalStoreState = store.getState();
     const url = `${state.config.values.userServiceUrl}/me`;
     httpGetJson(url, {})
-      // .then(handleStatus)
       .then(users => users[0])
       .then(user => {
         changePassword(user.email);
@@ -277,7 +274,6 @@ export const useApi = (): Api => {
   }, [changePassword]);
 
   const submitPasswordChangeRequest = useCallback(
-    //FIXME: formikbag types
     (formData: any, formikBag: FormikBag<any, any>) => {
       const state: GlobalStoreState = store.getState();
       const { setSubmitting } = formikBag;
@@ -297,13 +293,10 @@ export const useApi = (): Api => {
       const state: GlobalStoreState = store.getState();
       const url = `${state.config.values.userServiceUrl}/${userId}`;
       httpGetJson(url)
-        // .then(handleStatus)
-        // .then(users => users[0])
         .then(users => {
           showCreateLoader(false);
           saveUserBeingEdited(users[0]);
         })
-      // .catch(error => handleErrors(error)); 
     },
     [showCreateLoader, saveUserBeingEdited]
   );
@@ -317,24 +310,7 @@ export const useApi = (): Api => {
     changePassword,
     submitPasswordChangeRequest,
     fetchUser,
-    // deleteUserAndRefreshUsers
   } as Api;
 };
 
 export default useApi;
-
-// function handleStatus(response: any) {
-//   //FIXME improve this type
-//   if (response.status === 200) {
-//     return Promise.resolve(response);
-//   } else if (response.status === 409) {
-//     return Promise.reject(
-//       new HttpError(
-//         response.status,
-//         "This user already exists - please use a different email address."
-//       )
-//     );
-//   } else {
-//     return Promise.reject(new HttpError(response.status, response.statusText));
-//   }
-// }
