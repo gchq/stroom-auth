@@ -20,15 +20,15 @@ import { Formik, Form } from "formik";
 // import {connect} from 'react-redux';
 // import {push} from 'react-router-redux';
 
-import "../../Layout.css";
+import "../Layout.css";
 import "./CreateUserForm.css";
-import Button from "../../Button";
-import UserFields from "../UserFields";
-import useReduxState from "../../../lib/useReduxState";
-import { NewUserValidationSchema, validateAsync } from "../validation";
-import { hasAnyProps } from "../../../lang";
-import { useApi , useUsers, User} from "../../../api/users";
-import useRouter from "../../../lib/useRouter";
+import Button from "../Button";
+import UserFields from "./UserFields";
+import useReduxState from "../../lib/useReduxState";
+import { NewUserValidationSchema, validateAsync } from "./validation";
+import { hasAnyProps } from "../../lang";
+import { useApi , useUsers, User} from "../../api/users";
+import useRouter from "../../lib/useRouter";
 
 
 // If we don't pass initialValues to Formik then they won't be controlled

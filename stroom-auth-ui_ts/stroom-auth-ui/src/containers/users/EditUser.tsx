@@ -19,16 +19,16 @@ import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 
 import "./EditUser.css";
-import BackConfirmation from "../BackConfirmation";
-import Button from "../../Button";
-import Loader from "../../Loader";
-import UserFields from "../UserFields";
-import useReduxState from "../../../lib/useReduxState";
-import useRouter from "../../../lib/useRouter";
-import { UserValidationSchema, validateAsync } from "../validation";
-import { hasAnyProps } from "../../../lang";
-import { useActionCreators, useUsers } from "../../../api/users";
-import useIdFromPath from '../../../lib/useIdFromPath';
+import BackConfirmation from "./BackConfirmation";
+import Button from "../Button";
+import Loader from "../Loader";
+import UserFields from "./UserFields";
+import useReduxState from "../../lib/useReduxState";
+import useRouter from "../../lib/useRouter";
+import { UserValidationSchema, validateAsync } from "./validation";
+import { hasAnyProps } from "../../lang";
+import { useActionCreators, useUsers } from "../../api/users";
+import useIdFromPath from '../../lib/useIdFromPath';
 
 const UserEditForm = () => {
   const {updateUser, fetchUser } = useUsers();

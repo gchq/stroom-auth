@@ -22,14 +22,14 @@ import ReactTable, { RowInfo, ReactTableFunction } from "react-table";
 import Toggle from "react-toggle";
 import "react-toggle/style.css"
 
-import "../../../styles/table-small.css";
+import "../../styles/table-small.css";
 import "./UserSearch.css";
-import Button from "../../Button";
-import useReduxState from "../../../lib/useReduxState";
-import useRouter from "../../../lib/useRouter";
-import useUserSearch from '../../../api/userSearch/useUsers';
-import { useActionCreators as useUserSearchActionCreators } from "../../../api/userSearch";
-import { useUsers } from "../../../api/users";
+import Button from "../Button";
+import useReduxState from "../../lib/useReduxState";
+import useRouter from "../../lib/useRouter";
+import useUserSearch from '../../api/userSearch/useUsers';
+import { useActionCreators as useUserSearchActionCreators } from "../../api/userSearch";
+import { useUsers } from "../../api/users";
 import { useState } from "react";
 
 // FIXME: Not sure why the actual filter props isn't working
