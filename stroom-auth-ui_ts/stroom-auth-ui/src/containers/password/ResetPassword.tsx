@@ -20,7 +20,7 @@ import * as jwtDecode from "jwt-decode";
 
 import { useReduxState } from "../../lib/useReduxState";
 import ChangePasswordFields from "./ChangePasswordFields";
-import {useApi, useActionCreators } from "../../api/authentication";
+import { useApi, useActionCreators } from "../../api/authentication";
 import useHttpQueryParam from "../../lib/useHttpQueryParam";
 
 const ResetPassword = () => {
@@ -34,11 +34,12 @@ const ResetPassword = () => {
   const [expiredToken, setExpiredToken] = useState(false);
   const { changeToken } = useActionCreators();
 
+  const token = useHttpQueryParam("token");
+
   useEffect(() => {
     let missingToken = false;
     let invalidToken = false;
     let expiredToken = false;
-    const token = useHttpQueryParam("token");
 
     // Validate token
     if (!token) {

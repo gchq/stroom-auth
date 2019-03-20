@@ -22,7 +22,7 @@ export const wrapDispatch = function<T extends (...args: any[]) => Action>(
  *
  * @param actionCreators The map of action creators
  */
-export const genUseActionCreators = function<
+export const useGenUseActionCreators = function<
   T extends { [k: string]: (...args: any[]) => Action }
 >(actionCreators: T): () => T {
   return () => {
@@ -44,4 +44,4 @@ export const genUseActionCreators = function<
   };
 };
 
-export default genUseActionCreators;
+export default useGenUseActionCreators;

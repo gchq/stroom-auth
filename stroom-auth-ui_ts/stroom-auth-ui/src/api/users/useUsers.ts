@@ -9,21 +9,12 @@ import {
 import { useActionCreators as useAuthenticationActionCreators } from "../authentication";
 import { useApi as useAuthorisationApi } from "../authorisation";
 import { User } from "../users/types";
-import useReduxState from "../../lib/useReduxState";
 import { useRouter } from "../../lib/useRouter";
 
 /**
  * This hook connects the REST API calls to the Redux Store.
  */
-interface UseUsers {
-  deleteUser: (userId: string) => void;
-  updateUser: (user: User) => void;
-  createUser: (user: User) => void;
-  fetchUser: (userId: string) => void;
-  fetchCurrentUser: () => void;
-}
-
-export default (): UseUsers => {
+const useUsers = () => {
   const {
     toggleIsSaving,
     saveUserBeingEdited,
@@ -135,3 +126,4 @@ export default (): UseUsers => {
     fetchCurrentUser
   };
 };
+export default useUsers;

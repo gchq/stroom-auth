@@ -63,7 +63,7 @@ import {
   faChevronRight
 } from "@fortawesome/free-solid-svg-icons";
 
-export default () => {
+const useFontAwesome = () => {
   useEffect(() => {
     library.add(
       faFolder,
@@ -112,3 +112,5 @@ export default () => {
     );
   }, []);
 };
+
+export default useFontAwesome;

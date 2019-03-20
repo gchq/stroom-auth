@@ -11,14 +11,9 @@ import useReduxState from "../../lib/useReduxState";
 interface UseUsers {
   users: Array<User>;
 }
-
-export default (): UseUsers => {
-  const users = useReduxState(
-    ({ userSearch: { users } }) => users
-  );
-  const {
-    getUsers,
-  } = useApi();
+const useUsers = () => {
+  const users = useReduxState(({ userSearch: { users } }) => users);
+  const { getUsers } = useApi();
 
   const { updateResults } = useActionCreators();
 
@@ -27,6 +22,8 @@ export default (): UseUsers => {
   }, [updateResults]);
 
   return {
-    users,
+    users
   };
 };
+
+export default useUsers;
