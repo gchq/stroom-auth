@@ -1,4 +1,5 @@
 export interface StoreState {
+  idToken: string;
   token: String;
   showLoader: boolean;
   loggedInUserEmail: String | undefined;

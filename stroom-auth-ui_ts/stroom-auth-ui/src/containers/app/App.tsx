@@ -47,6 +47,15 @@ const App = () => {
   const config = useConfig();
   const idToken = useReduxState(({ authentication: { idToken } }) => idToken);
 
+  const isLoggedIn = !!idToken;
+  const { fetchCurrentUser } = useUsers();
+
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      fetchCurrentUser();
+    }
+  }, [isLoggedIn, fetchCurrentUser]);
+
   const {
     isReady,
     values: {
@@ -68,11 +77,7 @@ const App = () => {
   ) {
     return <Loader message="Waiting for config" />;
   }
-  const isLoggedIn = !!idToken;
-  // const { fetchCurrentUser } = useUsers();
-  // if (isLoggedIn) {
-  //   React.useEffect(() => fetchCurrentUser(), [fetchCurrentUser]);
-  // }
+
   return (
     <div className="App">
       <main className="main">

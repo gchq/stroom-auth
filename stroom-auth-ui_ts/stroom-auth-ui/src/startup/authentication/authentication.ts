@@ -16,37 +16,37 @@
 import * as jwtDecode from "jwt-decode";
 import * as uuidv4 from "uuid";
 import * as sjcl from "sjcl";
-import { Action } from "redux";
+// import { Action } from "redux";
 import { History } from "history";
-import { AuthenticationStoreState } from "./types";
-import {
-  prepareReducer,
-  genUseActionCreators
-} from "../../lib/redux-actions-ts";
+// import { AuthenticationStoreState } from "./types";
+// import {
+//   prepareReducer,
+//   genUseActionCreators
+// } from "../../lib/redux-actions-ts";
 
-const TOKEN_ID_CHANGE = "TOKEN_ID_CHANGE";
+// const TOKEN_ID_CHANGE = "TOKEN_ID_CHANGE";
 
-interface TokenIdChangeAction extends Action<"TOKEN_ID_CHANGE"> {
-  idToken: string;
-}
+// interface TokenIdChangeAction extends Action<"TOKEN_ID_CHANGE"> {
+//   idToken: string;
+// }
 
-export const useActionCreators = genUseActionCreators({
-  tokenIdChange: (idToken: string): TokenIdChangeAction => ({
-    type: TOKEN_ID_CHANGE,
-    idToken
-  })
-});
+// export const useActionCreators = genUseActionCreators({
+//   tokenIdChange: (idToken: string): TokenIdChangeAction => ({
+//     type: TOKEN_ID_CHANGE,
+//     idToken
+//   })
+// });
 
-const defaultState: AuthenticationStoreState = {
-  idToken: ""
-};
+// const defaultState: AuthenticationStoreState = {
+//   idToken: ""
+// };
 
-export const reducer = prepareReducer(defaultState)
-  .handleAction<TokenIdChangeAction>(TOKEN_ID_CHANGE, (state, { idToken }) => ({
-    ...state,
-    idToken
-  }))
-  .getReducer();
+// export const reducer = prepareReducer(defaultState)
+//   .handleAction<TokenIdChangeAction>(TOKEN_ID_CHANGE, (state, { idToken }) => ({
+//     ...state,
+//     idToken
+//   }))
+//   .getReducer();
 
 export const sendAuthenticationRequest = (
   referrer: string,

@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
-import { authorisationReducer as authorisation, authenticationReducer as authentication } from '../startup/authentication';
+import {
+  authorisationReducer as authorisation
+  // authenticationReducer as authentication
+} from "../startup/authentication";
+import { reducer as authentication } from "../api/authentication";
 import { reducer as config } from "../startup/config";
 
 import { reducer as errorPage } from "../components/ErrorPage";
 
-import { reducer as user } from "../api/users"
-import { reducer as login } from "../api/users"
-import { reducer as userSearch } from '../api/userSearch';
-import { reducer as token } from '../api/tokens';
-import { reducer as tokenSearch } from '../api/tokenSearch';
-import {GlobalStoreState }from './GlobalStoreState';
+import { reducer as user } from "../api/users";
+import { reducer as login } from "../api/users";
+import { reducer as userSearch } from "../api/userSearch";
+import { reducer as token } from "../api/tokens";
+import { reducer as tokenSearch } from "../api/tokenSearch";
+import { GlobalStoreState } from "./GlobalStoreState";
 
-export {GlobalStoreState};
+export { GlobalStoreState };
 export default combineReducers({
   login,
   errorPage,
@@ -38,6 +42,6 @@ export default combineReducers({
   tokenSearch,
   authentication,
   authorisation,
-  config,
+  config
   // form: formReducer,
 });

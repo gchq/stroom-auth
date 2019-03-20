@@ -7,7 +7,8 @@ import {
 import { StoreState } from "./types";
 import { User } from "../users";
 
-const SET_CURRENT_USER = "authentication/SET_CURRENT_USER";
+const TOKEN_ID_CHANGE = "TOKEN_ID_CHANGE";
+const SET_CURRENT_USER = "login/SET_CURRENT_USER";
 const EMAIL_CHANGE = "login/EMAIL_CHANGE";
 const TOKEN_CHANGE = "login/TOKEN_CHANGE";
 const TOKEN_DELETE = "login/TOKEN_DELETE";
@@ -17,8 +18,10 @@ const SET_REDIRECT_URL = "login/SET_REDIRECT_URL";
 const SET_CLIENT_ID = "login/SET_CLIENT_ID";
 const SET_SESSION_ID = "login/SET_SESSION_ID";
 
-interface SetCurrentUserAction
-  extends Action<"authentication/SET_CURRENT_USER"> {
+interface TokenIdChangeAction extends Action<"TOKEN_ID_CHANGE"> {
+  idToken: string;
+}
+interface SetCurrentUserAction extends Action<"login/SET_CURRENT_USER"> {
   user: User;
 }
 interface EmailChangeAction extends Action<"login/EMAIL_CHANGE"> {
@@ -53,12 +56,17 @@ interface SetSessionIdAction extends Action<"login/SET_SESSION_ID"> {
 }
 
 const defaultState: StoreState = {
+  idToken: "",
   token: "",
   showLoader: false,
   loggedInUserEmail: undefined
 };
 
 export const useActionCreators = genUseActionCreators({
+  tokenIdChange: (idToken: string): TokenIdChangeAction => ({
+    type: TOKEN_ID_CHANGE,
+    idToken
+  }),
   setCurrentUser: (user: User): SetCurrentUserAction => ({
     type: SET_CURRENT_USER,
     user
@@ -99,6 +107,13 @@ export const useActionCreators = genUseActionCreators({
 });
 
 export const reducer = prepareReducer(defaultState)
+  .handleAction<TokenIdChangeAction>(
+    TOKEN_ID_CHANGE,
+    (state = defaultState, { idToken }) => ({
+      ...state,
+      idToken
+    })
+  )
   .handleAction<SetCurrentUserAction>(
     SET_CURRENT_USER,
     (state = defaultState, { user }) => ({
