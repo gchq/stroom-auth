@@ -20,25 +20,19 @@ import useHttpClient from "../useHttpClient";
 import { User } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
 import { useActionCreators } from "./redux";
-import useRouter from '../../lib/useRouter';
 
 //FIXME: make a type for editedUser
 interface Api {
-  createUser: (user: User) => Promise<void>;
-  deleteUser: (userId:string) => Promise<void>;
-  fetchUser: (userId: String) => void;
-  updateUser: (user:User) => Promise<void>;
+  add: (user: User) => Promise<void>;
+  remove: (userId:string) => Promise<void>;
+  fetch: (userId: String) => Promise<User[]>;
+  change: (user:User) => Promise<void>;
 }
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
-  const { history } = useRouter();
-  const { httpDeleteEmptyResponse, httpPostEmptyResponse } = useHttpClient();
+  const { httpDeleteEmptyResponse } = useHttpClient();
 
-  const {
-    showChangePasswordErrorMessage,
-    hideChangePasswordErrorMessage
-  } = useActionCreators();
   const { httpPostJsonResponse } = useHttpClient();
   const { showCreateLoader } = useActionCreators();
   const { httpPutEmptyResponse, httpGetJson } = useHttpClient();
@@ -48,7 +42,7 @@ export const useApi = (): Api => {
     toggleAlertVisibility
   } = useActionCreators();
 
-  const updateUser = useCallback(
+  const change = useCallback(
     user => {
       const reduxState: GlobalStoreState = store.getState();
       toggleIsSaving(true);
@@ -69,7 +63,7 @@ export const useApi = (): Api => {
     [ toggleIsSaving ]
   );
 
-  const createUser = useCallback(
+  const add = useCallback(
     user => {
       const reduxState: GlobalStoreState = store.getState();
       toggleIsSaving(true);
@@ -92,32 +86,32 @@ export const useApi = (): Api => {
     [toggleIsSaving, showCreateLoader, toggleAlertVisibility]
   );
 
-  const deleteUser = useCallback((userId:string) => {
+  /**
+   * Delete user
+   */
+  const remove = useCallback((userId:string) => {
     const state: GlobalStoreState = store.getState();
     const url = `${state.config.values.userServiceUrl}/${userId}`;
     return httpDeleteEmptyResponse(url, {});
   }, []);
 
 
-
-  const fetchUser = useCallback(
+  /**
+   * Fetch a user
+   */
+  const fetch = useCallback(
     (userId: String) => {
       const state: GlobalStoreState = store.getState();
       const url = `${state.config.values.userServiceUrl}/${userId}`;
-      httpGetJson(url)
-        .then(users => {
-          showCreateLoader(false);
-          saveUserBeingEdited(users[0]);
-        })
-    },
-    [showCreateLoader, saveUserBeingEdited]
+      return httpGetJson(url);
+    }, []
   );
 
   return {
-    createUser,
-    fetchUser,
-    deleteUser,
-    updateUser,
+    add,
+    fetch,
+    remove,
+    change,
   } as Api;
 };
 

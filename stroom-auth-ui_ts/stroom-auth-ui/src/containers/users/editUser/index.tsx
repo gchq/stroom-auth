@@ -27,12 +27,11 @@ import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
 import { UserValidationSchema, validateAsync } from "../validation";
 import { hasAnyProps } from "../../../lang";
-import { useActionCreators, useApi, useUsers } from "../../../api/users";
+import { useActionCreators, useUsers } from "../../../api/users";
 import useIdFromPath from '../../../lib/useIdFromPath';
 
 const UserEditForm = () => {
-  const { fetchUser } = useApi();
-  const {updateUser} = useUsers();
+  const {updateUser, fetchUser } = useUsers();
   const { clearUserBeingEdited } = useActionCreators();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);

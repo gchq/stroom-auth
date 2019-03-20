@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 import useApi from "./useApi";
 import { useActionCreators } from './redux';
@@ -15,13 +15,15 @@ interface UseUsers {
     deleteUser: (userId: string) => void;
     updateUser: (user: User) => void;
     createUser: (user: User) => void;
+    fetchUser: (userId: string) => void;
 }
 
 export default (): UseUsers => {
     const {
-        deleteUser: deleteUserUsingApi,
-        updateUser: updateUserUsingApi,
-        createUser: createUserUsingApi,
+        add: createUserUsingApi,
+        remove: deleteUserUsingApi,
+        fetch: fetchUserUsingApi,
+        change: updateUserUsingApi,
     } = useApi();
 
     const { history } = useRouter();
@@ -86,9 +88,17 @@ export default (): UseUsers => {
 
     }, [createUserUsingApi, createAuthorisationUser, showCreateLoader, toggleAlertVisibility, toggleIsSaving]);
 
+    const fetchUser = useCallback((userId:string) => {
+        fetchUserUsingApi(userId)
+        .then(users => {
+          showCreateLoader(false);
+          saveUserBeingEdited(users[0]);
+        })
+    }, [showCreateLoader, saveUserBeingEdited])
     return {
         deleteUser,
         updateUser,
-        createUser
+        createUser,
+        fetchUser
     };
 };
