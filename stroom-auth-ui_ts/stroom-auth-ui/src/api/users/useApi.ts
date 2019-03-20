@@ -6,7 +6,7 @@ import useHttpClient from "../useHttpClient";
 import { ChangePasswordRequest, ResetPasswordRequest } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
 import { HttpError } from "../../ErrorTypes";
-import { useActionCreators as useUserSearchActionCreators } from "../userSearch";
+import { useApi as useUserSearchApi, useActionCreators as useUserSearchActionCreators } from "../userSearch";
 import { useActionCreators } from "./redux";
 import useRouter from '../../lib/useRouter';
 
@@ -23,14 +23,16 @@ interface Api {
     formikBag: FormikBag<any, any>
   ) => void;
   fetchUser: (userId: String) => void;
+  // deleteUserAndRefreshUsers: () => void;
 }
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
- const {history} = useRouter();
+  const { history } = useRouter();
   const { httpDeleteJsonResponse, httpDeleteEmptyResponse, httpPostEmptyResponse } = useHttpClient();
   // const { performUserSearch } = useUserSearchApi();
-  const { selectRow } = useUserSearchActionCreators();
+  const { selectRow, updateResults } = useUserSearchActionCreators();
+  const {getUsers} = useUserSearchApi();
 
   const {
     showChangePasswordErrorMessage,
@@ -47,7 +49,7 @@ export const useApi = (): Api => {
 
   const saveChanges = useCallback(
     editedUser => {
-      const reduxState:GlobalStoreState = store.getState();
+      const reduxState: GlobalStoreState = store.getState();
       toggleIsSaving(true);
       const {
         id,
@@ -95,7 +97,7 @@ export const useApi = (): Api => {
 
   const createUser = useCallback(
     newUser => {
-      const reduxState:GlobalStoreState = store.getState();
+      const reduxState: GlobalStoreState = store.getState();
       toggleIsSaving(true);
       const {
         email,
@@ -132,7 +134,7 @@ export const useApi = (): Api => {
            * a user here but that user having to log into Stroom before permissions
            * can be assigned to them.
            */
-          const url = `${ reduxState.config.values.authorisationServiceUrl }/createUser?id=${email}`;
+          const url = `${reduxState.config.values.authorisationServiceUrl}/createUser?id=${email}`;
           httpPostEmptyResponse(url, {})
             // .then(handleStatus)
             .then(newUserId => {
@@ -150,7 +152,7 @@ export const useApi = (): Api => {
   );
 
   const deleteSelectedUser = useCallback(() => {
-    const state:GlobalStoreState = store.getState();
+    const state: GlobalStoreState = store.getState();
     const userIdToDelete = state.userSearch.selectedUserRowId;
     const user = state.userSearch.results.find(
       result => result.id === userIdToDelete
@@ -162,24 +164,30 @@ export const useApi = (): Api => {
         if (user !== undefined && userIdToDelete !== undefined) {
           const url = `${
             state.config.values.authorisationServiceUrl
-          }/setUserStatus?id=${user.email}&status=disabled`;
-          httpPostEmptyResponse(url, {});
-            //  .then(handleStatus);
-          selectRow(userIdToDelete);
+            }/setUserStatus?userId=${user.email}&status=disabled`;
+          httpPutEmptyResponse(url);
+          //  .then(handleStatus); selectRow(userIdToDelete);
           // performUserSearch(state);
+          getUsers().then((data) => updateResults(data));
           toggleAlertVisibility(true, "User has been deleted");
         } else {
           console.error("No access to user or user id!");
         }
       })
-      // .catch(error => handleErrors(error)); 
+    // .catch(error => handleErrors(error)); 
   }, [selectRow, toggleAlertVisibility]);
+
+  // const deleteUserAndRefreshUsers = useCallback(() => {
+  //   const state: GlobalStoreState = store.getState();
+  //   deleteSelectedUser();
+  //   getUsers();
+  // }, [deleteSelectedUser, getUsers]);
 
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
-      const state:GlobalStoreState = store.getState();
+      const state: GlobalStoreState = store.getState();
       hideChangePasswordErrorMessage();
-      const url = `${ state.config.values.authenticationServiceUrl }/changePassword/`;
+      const url = `${state.config.values.authenticationServiceUrl}/changePassword/`;
       const {
         password,
         oldPassword,
@@ -187,7 +195,7 @@ export const useApi = (): Api => {
         redirectUrl
       } = changePasswordRequest;
       httpPostJsonResponse(url, {
-        body: JSON.stringify({ newPassword: password , oldPassword, email })
+        body: JSON.stringify({ newPassword: password, oldPassword, email })
       })
         .then(response => {
           if (response.changeSucceeded) {
@@ -226,12 +234,12 @@ export const useApi = (): Api => {
 
   const resetPassword = useCallback(
     (resetPasswordRequest: ResetPasswordRequest) => {
-      const state:GlobalStoreState = store.getState();
+      const state: GlobalStoreState = store.getState();
       const newPassword = resetPasswordRequest.password;
       const stroomUiUrl = state.config.values.stroomUiUrl;
       const url = `${
         state.config.values.authenticationServiceUrl
-      }/resetPassword/`;
+        }/resetPassword/`;
       httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) })
         .then(response => {
           if (response.changeSucceeded) {
@@ -258,7 +266,7 @@ export const useApi = (): Api => {
   );
 
   const changePasswordForCurrentUser = useCallback(() => {
-    const state:GlobalStoreState = store.getState();
+    const state: GlobalStoreState = store.getState();
     const url = `${state.config.values.userServiceUrl}/me`;
     httpGetJson(url, {})
       // .then(handleStatus)
@@ -271,11 +279,11 @@ export const useApi = (): Api => {
   const submitPasswordChangeRequest = useCallback(
     //FIXME: formikbag types
     (formData: any, formikBag: FormikBag<any, any>) => {
-      const state:GlobalStoreState  = store.getState();
+      const state: GlobalStoreState = store.getState();
       const { setSubmitting } = formikBag;
       const url = `${state.config.values.authenticationServiceUrl}/reset/${
         formData.email
-      }`;
+        }`;
       httpGetJson(url, {}).then(() => {
         setSubmitting(false);
         history.push("/confirmPasswordResetEmail");
@@ -286,7 +294,7 @@ export const useApi = (): Api => {
 
   const fetchUser = useCallback(
     (userId: String) => {
-      const state:GlobalStoreState = store.getState();
+      const state: GlobalStoreState = store.getState();
       const url = `${state.config.values.userServiceUrl}/${userId}`;
       httpGetJson(url)
         // .then(handleStatus)
@@ -295,7 +303,7 @@ export const useApi = (): Api => {
           showCreateLoader(false);
           saveUserBeingEdited(users[0]);
         })
-        // .catch(error => handleErrors(error)); 
+      // .catch(error => handleErrors(error)); 
     },
     [showCreateLoader, saveUserBeingEdited]
   );
@@ -308,7 +316,8 @@ export const useApi = (): Api => {
     resetPassword,
     changePassword,
     submitPasswordChangeRequest,
-    fetchUser
+    fetchUser,
+    // deleteUserAndRefreshUsers
   } as Api;
 };
 

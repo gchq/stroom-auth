@@ -16,8 +16,8 @@
 
 import React from 'react';
 import ReactModal from 'react-modal';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {isEmpty} from 'ramda';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { isEmpty } from 'ramda';
 
 import './BackConfirmation.css';
 
@@ -38,10 +38,10 @@ export default ({
         changes!
       </h3>
       <p>Are you sure you want to go back?</p>
-        {!isEmpty(errors) ? (
-            <p className="warning">There are validation issues with this data and we can't save it.</p>
-        ) : (
-            undefined
+      {!isEmpty(errors) ? (
+        <p className="warning">There are validation issues with this data and we can't save it.</p>
+      ) : (
+          undefined
         )}
       <div className="BackConfirmation__actions">
 
@@ -52,12 +52,12 @@ export default ({
           <FontAwesomeIcon icon="trash" /> Yes, discard changes
         </button>
 
-          <button
-            className="toolbar-button-large primary"
-            type="button"
-            disabled={!isEmpty(errors)}
-            onClick={onSaveAndGoBack}>
-            <FontAwesomeIcon icon="save" /> Yes, save changes 
+        <button
+          className="toolbar-button-large primary"
+          type="button"
+          disabled={!isEmpty(errors)}
+          onClick={onSaveAndGoBack}>
+          <FontAwesomeIcon icon="save" /> Yes, save changes
           </button>
 
         <button

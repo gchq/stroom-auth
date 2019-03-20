@@ -149,11 +149,11 @@ const formatDate = (dateString:string) => {
 
 const UserSearch = () => {
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
-  const { deleteSelectedUser } = useUsersApi();
+  const { deleteSelectedUser  } = useUsersApi();
   // const { getUsers } = useUserSearchApi();
   // const { performUserSearch } = useUserSearchApi();
   const { selectRow } = useUserSearchActionCreators();
-  const { history } = useRouter();
+  const { history , router} = useRouter();
   const {
     showSearchLoader,
     results,
@@ -206,7 +206,9 @@ const UserSearch = () => {
             disabled={deleteButtonDisabled}
             onClick={() => {
               deleteSelectedUser();
-              history.push('/userSearch');
+              // deleteUserAndRefreshUsers();
+              // history.push('/');
+              // history.push('/userSearch');
             }}
             className="toolbar-button-small primary"
             icon="trash"
