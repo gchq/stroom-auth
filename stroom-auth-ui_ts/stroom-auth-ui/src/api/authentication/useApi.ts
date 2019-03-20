@@ -6,7 +6,8 @@ import useHttpClient from "../useHttpClient";
 import {
   Credentials,
   ResetPasswordRequest,
-  ChangePasswordRequest
+  ChangePasswordRequest,
+  LoginResponse
 } from "./types";
 import { FormikBag } from "formik";
 import { useActionCreators } from "./redux";
@@ -16,7 +17,7 @@ import useRouter from "../../lib/useRouter";
 
 interface Api {
   // FIXME: Not sure if the FormikBag types are correct
-  login: (credentials: Credentials, formikBag: FormikBag<any, any>) => void;
+  login: (credentials: Credentials) => Promise<LoginResponse>; // formikBag: FormikBag<any, any>
   changePasswordForCurrentUser: () => void;
   resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
   changePassword: (changePasswordRequest: ChangePasswordRequest) => void;
@@ -42,17 +43,13 @@ export const useApi = (): Api => {
   }
 
   const login = useCallback(
-    (credentials: Credentials, { setStatus, setSubmitting }) => {
+    (credentials: Credentials) => {
       const { email, password } = credentials;
       const state: GlobalStoreState = store.getState();
-      // We want to show a preloader while we're making the request. We turn it off when we receive a response or catch an error.
-      showLoader(true);
-
       const authenticationServiceUrl =
         state.config.values.authenticationServiceUrl;
       const loginServiceUrl = `${authenticationServiceUrl}/authenticate`;
       const clientId = state.config.values.appClientId;
-      // const stroomUiUrl = state.config.values.stroomUiUrl;
 
       // We need to post the sessionId in the credentials, otherwise the
       // authenticationService will have no way of marking the session as valid.
@@ -61,23 +58,13 @@ export const useApi = (): Api => {
       if (fullSessionId.indexOf(".") > -1) {
         sessionId = fullSessionId.slice(0, fullSessionId.indexOf("."));
       }
-      httpPostJsonResponse(loginServiceUrl, {
+      return httpPostJsonResponse(loginServiceUrl, {
         body: JSON.stringify({
           email,
           password,
           sessionId,
           requestingClientId: clientId
         })
-      }).then(response => {
-        if (response.loginSuccessful) {
-          // Otherwise we'll extract what we expect to be the successful login redirect URL
-          Cookies.set("username", email);
-          window.location.href = response.redirectUrl;
-        } else {
-          setStatus(response.message);
-          setSubmitting(false);
-        }
-        return;
       });
     },
     [httpPostJsonResponse, showLoader]

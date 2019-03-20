@@ -1,12 +1,12 @@
 export interface StoreState {
-    token: String;
-    showLoader: boolean;
-    loggedInUserEmail: String | undefined;
-  }
+  token: String;
+  showLoader: boolean;
+  loggedInUserEmail: String | undefined;
+}
 
 export interface Credentials {
-    email: String;
-    password: String;
+  email: String;
+  password: String;
 }
 
 export interface ChangePasswordRequest {
@@ -18,4 +18,10 @@ export interface ChangePasswordRequest {
 
 export interface ResetPasswordRequest {
   password: string;
+}
+
+export interface LoginResponse {
+  loginSuccessful: boolean;
+  redirectUrl: string;
+  message: string;
 }

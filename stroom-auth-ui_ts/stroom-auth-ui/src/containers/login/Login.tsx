@@ -17,7 +17,6 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-// import {compose, lifecycle} from 'recompose';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as queryString from "qs";
@@ -27,60 +26,16 @@ import { hasAnyProps } from "../../lang";
 import "./Login.css";
 import "../Layout.css";
 import icon from "../../icon.png";
-// import {login as onSubmit} from '../../modules/login';
-import { useActionCreators, useApi } from "../../api/authentication";
+import { useActionCreators, useAuthentication } from "../../api/authentication";
 import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
-
-// import {
-//   changeRedirectUrl,
-//   changeClientIdUrl,
-//   changeSessionId,
-// } from '../../modules/login';
 
 const LoginValidationSchema = Yup.object().shape({
   email: Yup.string().required("Required"),
   password: Yup.string().required("Required")
 });
 
-// const enhance = compose(
-//   connect(
-//     ({config: {allowPasswordResets}, authentication: {idToken}}) => ({
-//       allowPasswordResets,
-//       idToken,
-//     }),
-//     {onSubmit, changeRedirectUrl, changeClientIdUrl, changeSessionId},
-//   ),
-//   lifecycle({
-//     componentWillMount() {
-//       const {
-//         setRedirectUrl,
-//         changeClientIdUrl,
-//         changeSessionId,
-//       } = this.props;
-//       const {location} = this.props;
-
-//       const queryParams = queryString.parse(location.search);
-//       const redirectUrl = queryParams['redirectUrl'];
-//       const clientId = queryParams['clientId'];
-//       const sessionId = queryParams['sessionId'];
-
-//       changeRedirectUrl(redirectUrl);
-//       changeClientIdUrl(clientId);
-//       changeSessionId(sessionId);
-//     },
-//   }),
-// );
-
-const LoginForm = (
-  {
-    // handleSubmit,
-    // pristine,
-    // submitting,
-    // allowPasswordResets,
-    // onSubmit,
-  }
-) => {
+const LoginForm = () => {
   const { allowPasswordResets } = useReduxState(
     ({
       config: {
@@ -90,7 +45,7 @@ const LoginForm = (
       allowPasswordResets
     })
   );
-  const { login } = useApi();
+  const { login } = useAuthentication();
   const { setRedirectUrl, setClientId, setSessionId } = useActionCreators();
   const {
     router: { location }
