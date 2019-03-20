@@ -22,8 +22,6 @@
     "@types/recompose": "^0.30.5",
     "@types/redux-logger": "^3.0.7",
     "@types/sjcl": "^1.0.28",
-    "@types/storybook__addon-actions": "^3.4.2",
-    "@types/storybook__react": "^4.0.1",
     "@types/uuid": "^3.4.4",
     "@types/yup": "^0.26.12",
     "cookies-js": "^1.2.3",
@@ -71,6 +69,9 @@
     "@types/node": "^11.11.0",
     "@types/react": "^16.8.7",
     "@types/react-dom": "^16.8.2",
+    "@types/storybook__addon-actions": "^3.4.2",
+    "@types/storybook__react": "^4.0.1",
+    "tslint-react-hooks": "^2.0.0",
     "typescript": "^3.3.3333"
   }
 }

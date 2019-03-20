@@ -12,13 +12,13 @@ import {
 import { FormikBag } from "formik";
 import { useActionCreators } from "./redux";
 import { GlobalStoreState } from "../..//modules";
-import { useActionCreators as useUserActionCreators } from "../users";
+import { useActionCreators as useUserActionCreators, User } from "../users";
 import useRouter from "../../lib/useRouter";
 
 interface Api {
   // FIXME: Not sure if the FormikBag types are correct
-  login: (credentials: Credentials) => Promise<LoginResponse>; // formikBag: FormikBag<any, any>
-  changePasswordForCurrentUser: () => void;
+  apiLogin: (credentials: Credentials) => Promise<LoginResponse>; // formikBag: FormikBag<any, any>
+  changePasswordForCurrentUser: () => Promise<User[]>;
   resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
   changePassword: (changePasswordRequest: ChangePasswordRequest) => void;
   submitPasswordChangeRequest: (
@@ -42,7 +42,7 @@ export const useApi = (): Api => {
     throw new Error("Could not get Redux Store for processing Thunks");
   }
 
-  const login = useCallback(
+  const apiLogin = useCallback(
     (credentials: Credentials) => {
       const { email, password } = credentials;
       const state: GlobalStoreState = store.getState();
@@ -157,11 +157,7 @@ export const useApi = (): Api => {
   const changePasswordForCurrentUser = useCallback(() => {
     const state: GlobalStoreState = store.getState();
     const url = `${state.config.values.userServiceUrl}/me`;
-    httpGetJson(url, {})
-      .then(users => users[0])
-      .then(user => {
-        changePassword(user.email);
-      });
+    return httpGetJson(url);
   }, [changePassword]);
 
   const submitPasswordChangeRequest = useCallback(
@@ -179,7 +175,7 @@ export const useApi = (): Api => {
     []
   );
   return {
-    login,
+    apiLogin,
     submitPasswordChangeRequest,
     changePasswordForCurrentUser,
     resetPassword,

@@ -10,13 +10,15 @@ interface UseAuthentication {
     credentials: Credentials,
     formikActions: FormikActions<Credentials>
   ) => void;
+  changePasswordForCurrentUser: () => void;
 }
 
-export default (): UseAuthentication => {
-  const { login: apiLogin } = useApi();
-  const { showLoader } = useActionCreators();
+const useAuthentication = () => {
+  const { apiLogin } = useApi();
+  const { showLoader, changeEmail } = useActionCreators();
   const login = useCallback(
-    (credentials: Credentials, { setStatus, setSubmitting }) => {
+    (credentials: Credentials, formikActions: FormikActions<Credentials>) => {
+      const { setStatus, setSubmitting } = formikActions;
       showLoader(true);
       apiLogin(credentials).then(response => {
         if (response.loginSuccessful) {
@@ -33,7 +35,22 @@ export default (): UseAuthentication => {
     [apiLogin]
   );
 
+  const {
+    changePasswordForCurrentUser: apiChangePasswordForCurrentUser,
+    changePassword: apiChangePassword
+  } = useApi();
+  const changePasswordForCurrentUser = useCallback(() => {
+    apiChangePasswordForCurrentUser()
+      .then(users => users[0])
+      .then(user => {
+        // apiChangePassword(user.email);
+      });
+  }, [apiChangePassword]);
+
   return {
-    login
+    login,
+    changePasswordForCurrentUser
   };
 };
+
+export default useAuthentication;

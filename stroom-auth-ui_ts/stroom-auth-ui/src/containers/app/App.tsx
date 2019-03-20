@@ -15,32 +15,33 @@
  */
 
 import * as React from "react";
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch } from "react-router-dom";
 
-import './App.css';
-import Login from '../../containers/login';
-import LoggedOut from '../../containers/loggedOut';
+import "./App.css";
+import Login from "../../containers/login";
+import LoggedOut from "../../containers/loggedOut";
 import {
   UserCreate,
   UserEdit,
   UserSearch,
-  NewUser,
-} from '../../containers/users';
-import { TokenCreate, TokenSearch, TokenEdit } from '../../containers/tokens';
-import PathNotFound from '../../containers/pathNotFound';
+  NewUser
+} from "../../containers/users";
+import { TokenCreate, TokenSearch, TokenEdit } from "../../containers/tokens";
+import PathNotFound from "../../containers/pathNotFound";
 import {
   ResetPassword,
   ChangePassword,
   ConfirmPasswordResetEmail,
-  ResetPasswordRequest,
-} from '../../containers/password';
-import Unauthorised from '../../containers/unauthorised';
-import AuthenticationRequest from '../../startup/authentication/AuthenticationRequest';
-import HandleAuthenticationResponse from '../../startup/authentication/HandleAuthenticationResponse';
+  ResetPasswordRequest
+} from "../../containers/password";
+import Unauthorised from "../../containers/unauthorised";
+import AuthenticationRequest from "../../startup/authentication/AuthenticationRequest";
+import HandleAuthenticationResponse from "../../startup/authentication/HandleAuthenticationResponse";
 import useReduxState from "../../lib/useReduxState";
 import Loader from "../../components/Loader";
 import useConfig from "../../startup/config/useConfig";
 import ErrorPage from "../../components/ErrorPage";
+import { useApi as useUserApi, useUsers } from "../../api/users";
 
 const App = () => {
   const config = useConfig();
@@ -52,16 +53,26 @@ const App = () => {
       authenticationServiceUrl,
       authorisationServiceUrl,
       advertisedUrl,
-      appClientId }
+      appClientId
+    }
   } = config;
 
   if (
-    !(isReady && !!advertisedUrl && !!appClientId && !!authenticationServiceUrl && !!authorisationServiceUrl)
+    !(
+      isReady &&
+      !!advertisedUrl &&
+      !!appClientId &&
+      !!authenticationServiceUrl &&
+      !!authorisationServiceUrl
+    )
   ) {
     return <Loader message="Waiting for config" />;
   }
-
   const isLoggedIn = !!idToken;
+  // const { fetchCurrentUser } = useUsers();
+  // if (isLoggedIn) {
+  //   React.useEffect(() => fetchCurrentUser(), [fetchCurrentUser]);
+  // }
   return (
     <div className="App">
       <main className="main">
@@ -71,7 +82,7 @@ const App = () => {
             {/* Authentication routes */}
             <Route
               exact={true}
-              path={'/handleAuthentication'}
+              path={"/handleAuthentication"}
               render={() => (
                 <HandleAuthenticationResponse
                   authenticationServiceUrl={authenticationServiceUrl}
@@ -81,7 +92,7 @@ const App = () => {
             />
             <Route
               exact
-              path={'/handleAuthenticationResponse'}
+              path={"/handleAuthenticationResponse"}
               render={() => (
                 <HandleAuthenticationResponse
                   authenticationServiceUrl={authenticationServiceUrl}
@@ -91,144 +102,129 @@ const App = () => {
             />
 
             {/* Routes not requiring authentication */}
-            <Route exact path={'/login'} component={Login} />
-            <Route exact path={'/logout'} component={LoggedOut} />
-            <Route exact path={'/loggedOut'} component={LoggedOut} />
-            <Route exact path={'/newUser'} component={NewUser} />
-            <Route exact path={'/resetPassword'} component={ResetPassword} />
-            <Route exact path={'/resetpassword'} component={ResetPassword} />
-            <Route exact path={'/changepassword'} component={ChangePassword} />
+            <Route exact path={"/login"} component={Login} />
+            <Route exact path={"/logout"} component={LoggedOut} />
+            <Route exact path={"/loggedOut"} component={LoggedOut} />
+            <Route exact path={"/newUser"} component={NewUser} />
+            <Route exact path={"/resetPassword"} component={ResetPassword} />
+            <Route exact path={"/resetpassword"} component={ResetPassword} />
+            <Route exact path={"/changepassword"} component={ChangePassword} />
             <Route
               exact
-              path={'/confirmPasswordResetEmail'}
+              path={"/confirmPasswordResetEmail"}
               component={ConfirmPasswordResetEmail}
             />
             <Route
               exact
-              path={'/resetPasswordRequest'}
+              path={"/resetPasswordRequest"}
               component={ResetPasswordRequest}
             />
-            <Route exact path={'/Unauthorised'} component={Unauthorised} />
+            <Route exact path={"/Unauthorised"} component={Unauthorised} />
 
             {/* Routes requiring authentication */}
             <Route
               exact
-              path={'/userSearch'}
+              path={"/userSearch"}
               render={() =>
                 isLoggedIn ? (
                   <UserSearch />
                 ) : (
-                    <AuthenticationRequest
-                      referrer="/userSearch"
-                      uiUrl={advertisedUrl}
-                      appClientId={appClientId}
-                      authenticationServiceUrl={
-                        authenticationServiceUrl
-                      }
-                    />
-                  )
+                  <AuthenticationRequest
+                    referrer="/userSearch"
+                    uiUrl={advertisedUrl}
+                    appClientId={appClientId}
+                    authenticationServiceUrl={authenticationServiceUrl}
+                  />
+                )
               }
             />
 
             <Route
               exact
-              path={'/user'}
+              path={"/user"}
               render={() =>
                 isLoggedIn ? (
                   <UserCreate />
                 ) : (
-                    <AuthenticationRequest
-                      referrer="/user"
-                      uiUrl={advertisedUrl}
-                      appClientId={appClientId}
-                      authenticationServiceUrl={
-                        authenticationServiceUrl
-                      }
-                    />
-                  )
+                  <AuthenticationRequest
+                    referrer="/user"
+                    uiUrl={advertisedUrl}
+                    appClientId={appClientId}
+                    authenticationServiceUrl={authenticationServiceUrl}
+                  />
+                )
               }
             />
 
             <Route
               exact
-              path={'/user/:userId'}
+              path={"/user/:userId"}
               render={route =>
                 isLoggedIn ? (
                   <UserEdit />
                 ) : (
-                    <AuthenticationRequest
-                      referrer={route.location.pathname}
-                      uiUrl={advertisedUrl}
-                      appClientId={appClientId}
-                      authenticationServiceUrl={
-                        authenticationServiceUrl
-                      }
-                    />
-                  )
+                  <AuthenticationRequest
+                    referrer={route.location.pathname}
+                    uiUrl={advertisedUrl}
+                    appClientId={appClientId}
+                    authenticationServiceUrl={authenticationServiceUrl}
+                  />
+                )
               }
             />
 
             <Route
               exact
-              path={'/tokens'}
+              path={"/tokens"}
               render={() =>
                 isLoggedIn ? (
                   <TokenSearch />
                 ) : (
-                    <AuthenticationRequest
-                      referrer="/tokens"
-                      uiUrl={advertisedUrl}
-                      appClientId={appClientId}
-                      authenticationServiceUrl={
-                        authenticationServiceUrl
-                      }
-                    />
-                  )
+                  <AuthenticationRequest
+                    referrer="/tokens"
+                    uiUrl={advertisedUrl}
+                    appClientId={appClientId}
+                    authenticationServiceUrl={authenticationServiceUrl}
+                  />
+                )
               }
             />
 
             <Route
               exact
-              path={'/token/newApiToken'}
+              path={"/token/newApiToken"}
               render={() =>
                 isLoggedIn ? (
                   <TokenCreate />
                 ) : (
-                    <AuthenticationRequest
-                      referrer="/token/newApiToken"
-                      uiUrl={advertisedUrl}
-                      appClientId={appClientId}
-                      authenticationServiceUrl={
-                        authenticationServiceUrl
-                      }
-                    />
-                  )
+                  <AuthenticationRequest
+                    referrer="/token/newApiToken"
+                    uiUrl={advertisedUrl}
+                    appClientId={appClientId}
+                    authenticationServiceUrl={authenticationServiceUrl}
+                  />
+                )
               }
             />
 
             <Route
               exact
-              path={'/token/:tokenId'}
+              path={"/token/:tokenId"}
               render={route =>
                 isLoggedIn ? (
                   <TokenEdit />
                 ) : (
-                    <AuthenticationRequest
-                      referrer={route.location.pathname}
-                      uiUrl={advertisedUrl}
-                      appClientId={appClientId}
-                      authenticationServiceUrl={
-                        authenticationServiceUrl
-                      }
-                    />
-                  )
+                  <AuthenticationRequest
+                    referrer={route.location.pathname}
+                    uiUrl={advertisedUrl}
+                    appClientId={appClientId}
+                    authenticationServiceUrl={authenticationServiceUrl}
+                  />
+                )
               }
             />
 
-            <Route
-              exact
-              path={"/error"}
-              component={ErrorPage} />
+            <Route exact path={"/error"} component={ErrorPage} />
 
             {/* Fall through to 404-ish */}
             <Route component={PathNotFound} />

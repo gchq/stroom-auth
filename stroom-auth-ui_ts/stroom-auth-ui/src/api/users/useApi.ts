@@ -26,6 +26,7 @@ interface Api {
   add: (user: User) => Promise<void>;
   remove: (userId: string) => Promise<void>;
   fetch: (userId: String) => Promise<User[]>;
+  fetchCurrentUser: () => Promise<User[]>; // FIXME: get rid of array. Ditto for fetch.
   change: (user: User) => Promise<void>;
 }
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
@@ -91,9 +92,16 @@ export const useApi = (): Api => {
     return httpGetJson(url);
   }, []);
 
+  const fetchCurrentUser = useCallback(() => {
+    const state: GlobalStoreState = store.getState();
+    const url = `${state.config.values.userServiceUrl}/me`;
+    return httpGetJson(url);
+  }, []);
+
   return {
     add,
     fetch,
+    fetchCurrentUser,
     remove,
     change
   } as Api;

@@ -6,6 +6,7 @@ import {
   useApi as useUserSearchApi,
   useActionCreators as useUserSearchActionCreators
 } from "../userSearch";
+import { useActionCreators as useAuthenticationActionCreators } from "../authentication";
 import { useApi as useAuthorisationApi } from "../authorisation";
 import { User } from "../users/types";
 import useReduxState from "../../lib/useReduxState";
@@ -19,6 +20,7 @@ interface UseUsers {
   updateUser: (user: User) => void;
   createUser: (user: User) => void;
   fetchUser: (userId: string) => void;
+  fetchCurrentUser: () => void;
 }
 
 export default (): UseUsers => {
@@ -114,10 +116,22 @@ export default (): UseUsers => {
     [showCreateLoader, saveUserBeingEdited]
   );
 
+  /**
+   * Fetches a user by id/email, and puts it into the redux state.
+   */
+  const { fetchCurrentUser: apiFetchCurrentUser } = useApi();
+  const { setCurrentUser } = useAuthenticationActionCreators();
+  const fetchCurrentUser = useCallback(() => {
+    apiFetchCurrentUser().then(users => {
+      setCurrentUser(users[0]);
+    });
+  }, [setCurrentUser, apiFetchCurrentUser]);
+
   return {
     deleteUser,
     updateUser,
     createUser,
-    fetchUser
+    fetchUser,
+    fetchCurrentUser
   };
 };

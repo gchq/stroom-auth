@@ -5,7 +5,9 @@ import {
   genUseActionCreators
 } from "../../lib/redux-actions-ts";
 import { StoreState } from "./types";
+import { User } from "../users";
 
+const SET_CURRENT_USER = "authentication/SET_CURRENT_USER";
 const EMAIL_CHANGE = "login/EMAIL_CHANGE";
 const TOKEN_CHANGE = "login/TOKEN_CHANGE";
 const TOKEN_DELETE = "login/TOKEN_DELETE";
@@ -15,6 +17,10 @@ const SET_REDIRECT_URL = "login/SET_REDIRECT_URL";
 const SET_CLIENT_ID = "login/SET_CLIENT_ID";
 const SET_SESSION_ID = "login/SET_SESSION_ID";
 
+interface SetCurrentUserAction
+  extends Action<"authentication/SET_CURRENT_USER"> {
+  user: User;
+}
 interface EmailChangeAction extends Action<"login/EMAIL_CHANGE"> {
   email: String;
 }
@@ -53,6 +59,10 @@ const defaultState: StoreState = {
 };
 
 export const useActionCreators = genUseActionCreators({
+  setCurrentUser: (user: User): SetCurrentUserAction => ({
+    type: SET_CURRENT_USER,
+    user
+  }),
   changeEmail: (email: String): EmailChangeAction => ({
     type: EMAIL_CHANGE,
     email
@@ -89,6 +99,13 @@ export const useActionCreators = genUseActionCreators({
 });
 
 export const reducer = prepareReducer(defaultState)
+  .handleAction<SetCurrentUserAction>(
+    SET_CURRENT_USER,
+    (state = defaultState, { user }) => ({
+      ...state,
+      currentUser: user
+    })
+  )
   .handleAction<EmailChangeAction>(
     EMAIL_CHANGE,
     (state = defaultState, { email }) => ({
