@@ -23,20 +23,19 @@ import BackConfirmation from "../BackConfirmation";
 import Button from "../../Button";
 import Loader from "../../Loader";
 import UserFields from "../UserFields";
-import useHttpQueryParam from "../../../lib/useHttpQueryParam";
 import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
 import { UserValidationSchema, validateAsync } from "../validation";
 import { hasAnyProps } from "../../../lang";
-import { useActionCreators, useApi } from "../../../api/users";
+import { useActionCreators, useApi, useUsers } from "../../../api/users";
 import useIdFromPath from '../../../lib/useIdFromPath';
 
 const UserEditForm = () => {
-  const { fetchUser, saveChanges } = useApi();
+  const { fetchUser } = useApi();
+  const {updateUser} = useUsers();
   const { clearUserBeingEdited } = useActionCreators();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
-  // const userId = useHttpQueryParam("userId");
   const userId = useIdFromPath("user/");
   const {
     userBeingEdited,
@@ -93,7 +92,7 @@ const UserEditForm = () => {
     return (
       <Formik
         onSubmit={(values, actions) => {
-          saveChanges(values);
+          updateUser(values);
         }}
         initialValues={initialValues}
         validateOnBlur

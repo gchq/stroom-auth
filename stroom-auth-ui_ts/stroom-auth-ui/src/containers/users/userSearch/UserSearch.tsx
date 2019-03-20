@@ -27,9 +27,9 @@ import "./UserSearch.css";
 import Button from "../../Button";
 import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
-import useUsers from '../../../api/userSearch/useUsers';
+import useUserSearch from '../../../api/userSearch/useUsers';
 import { useActionCreators as useUserSearchActionCreators } from "../../../api/userSearch";
-import { useApi as useUsersApi } from "../../../api/users";
+import { useUsers } from "../../../api/users";
 import { useState } from "react";
 
 // FIXME: Not sure why the actual filter props isn't working
@@ -55,7 +55,7 @@ const getColumnFormat = (selectedUserRowId: string | undefined) => {
       Header: "Email",
       accessor: "email",
       maxWidth: 190,
-      filterMethod: (filter:any, row:any) => filterRow(row, filter)
+      filterMethod: (filter: any, row: any) => filterRow(row, filter)
     },
     {
       Header: "Account status",
@@ -79,17 +79,17 @@ const getColumnFormat = (selectedUserRowId: string | undefined) => {
     {
       Header: "Comments",
       accessor: "comments",
-      filterMethod: (filter:any, row:any) => filterRow(row, filter)
+      filterMethod: (filter: any, row: any) => filterRow(row, filter)
     }
   ];
 };
 
-const filterRow = (row:any, filter:any) => {
+const filterRow = (row: any, filter: any) => {
   var index = row[filter.id].toLowerCase().indexOf(filter.value.toLowerCase());
   return index >= 0;
 };
 
-const renderStateCell = (state:string) => {
+const renderStateCell = (state: string) => {
   let stateColour, stateText;
   switch (state) {
     case "enabled":
@@ -127,7 +127,7 @@ const renderStateCell = (state:string) => {
   );
 };
 
-const getStateCellFilter = (filter:any, onChange:Function) => {
+const getStateCellFilter = (filter: any, onChange: Function) => {
   return (
     <select
       onChange={event => onChange(event.target.value)}
@@ -142,18 +142,16 @@ const getStateCellFilter = (filter:any, onChange:Function) => {
   );
 };
 
-const formatDate = (dateString:string) => {
+const formatDate = (dateString: string) => {
   const dateFormatString = "ddd mmm d yyyy, hh:MM:ss";
   return dateString ? dateFormat(dateString, dateFormatString) : "";
 };
 
 const UserSearch = () => {
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
-  const { deleteSelectedUser  } = useUsersApi();
-  // const { getUsers } = useUserSearchApi();
-  // const { performUserSearch } = useUserSearchApi();
+  const { deleteUser } = useUsers();
   const { selectRow } = useUserSearchActionCreators();
-  const { history , router} = useRouter();
+  const { history  } = useRouter();
   const {
     showSearchLoader,
     results,
@@ -171,7 +169,7 @@ const UserSearch = () => {
     })
   );
 
-  const {users} = useUsers();
+  useUserSearch();
   const deleteButtonDisabled = !selectedUserRowId;
 
   return (
@@ -205,10 +203,9 @@ const UserSearch = () => {
           <Button
             disabled={deleteButtonDisabled}
             onClick={() => {
-              deleteSelectedUser();
-              // deleteUserAndRefreshUsers();
-              // history.push('/');
-              // history.push('/userSearch');
+              if (!!selectedUserRowId) {
+                deleteUser(selectedUserRowId);
+              }
             }}
             className="toolbar-button-small primary"
             icon="trash"
@@ -256,13 +253,13 @@ const UserSearch = () => {
                 className: "table-row-small"
               };
             }}
-            getTrProps={(state:any, rowInfo:RowInfo) => {
+            getTrProps={(state: any, rowInfo: RowInfo) => {
               let selected = false;
               if (rowInfo) {
                 selected = rowInfo.row.id === selectedUserRowId;
               }
               return {
-                onClick: (target:any, event:any) => {
+                onClick: (target: any, event: any) => {
                   selectRow(rowInfo.row.id);
                 },
                 className: selected

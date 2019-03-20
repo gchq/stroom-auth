@@ -18,17 +18,15 @@ import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useHttpClient from "../useHttpClient";
-import { ChangePasswordRequest, ResetPasswordRequest } from "./types";
+import { ChangePasswordRequest, ResetPasswordRequest, User } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
-import { useApi as useUserSearchApi, useActionCreators as useUserSearchActionCreators } from "../userSearch";
 import { useActionCreators } from "./redux";
 import useRouter from '../../lib/useRouter';
 
 //FIXME: make a type for editedUser
 interface Api {
-  saveChanges: (editedUser: any) => void;
   createUser: (editedUser: any) => void;
-  deleteSelectedUser: () => void;
+  deleteUser: (userId:string) => Promise<void>;
   changePasswordForCurrentUser: () => void;
   resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
   changePassword: (changePasswordRequest: ChangePasswordRequest) => void;
@@ -37,14 +35,13 @@ interface Api {
     formikBag: FormikBag<any, any>
   ) => void;
   fetchUser: (userId: String) => void;
+  updateUser: (user:User) => Promise<void>;
 }
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
   const { history } = useRouter();
   const { httpDeleteEmptyResponse, httpPostEmptyResponse } = useHttpClient();
-  const { selectRow, updateResults } = useUserSearchActionCreators();
-  const {getUsers} = useUserSearchApi();
 
   const {
     showChangePasswordErrorMessage,
@@ -59,8 +56,8 @@ export const useApi = (): Api => {
     toggleAlertVisibility
   } = useActionCreators();
 
-  const saveChanges = useCallback(
-    editedUser => {
+  const updateUser = useCallback(
+    user => {
       const reduxState: GlobalStoreState = store.getState();
       toggleIsSaving(true);
       const {
@@ -73,10 +70,10 @@ export const useApi = (): Api => {
         state,
         never_expires,
         force_password_change
-      } = editedUser;
+      } = user;
 
       const url = `${reduxState.config.values.userServiceUrl}/${id}`;
-      httpPutEmptyResponse(url, {
+      return httpPutEmptyResponse(url, {
         body: JSON.stringify({
           email,
           password,
@@ -88,22 +85,8 @@ export const useApi = (): Api => {
           force_password_change
         })
       })
-        .then(response => {
-          saveUserBeingEdited(undefined);
-          toggleAlertVisibility(true, "User has been updated");
-          toggleIsSaving(false);
-          history.push("/userSearch");
-        })
-        .catch(error => {
-          toggleIsSaving(false);
-        });
     },
-    [
-      toggleIsSaving,
-      saveUserBeingEdited,
-      toggleAlertVisibility,
-      toggleIsSaving
-    ]
+    [ toggleIsSaving ]
   );
 
   const createUser = useCallback(
@@ -159,27 +142,11 @@ export const useApi = (): Api => {
     [toggleIsSaving, showCreateLoader, toggleAlertVisibility]
   );
 
-  const deleteSelectedUser = useCallback(() => {
+  const deleteUser = useCallback((userId:string) => {
     const state: GlobalStoreState = store.getState();
-    const userIdToDelete = state.userSearch.selectedUserRowId;
-    const user = state.userSearch.results.find(
-      result => result.id === userIdToDelete
-    );
-    const url = `${state.config.values.userServiceUrl}/${userIdToDelete}`;
-    httpDeleteEmptyResponse(url, {})
-      .then(() => {
-        if (user !== undefined && userIdToDelete !== undefined) {
-          const url = `${
-            state.config.values.authorisationServiceUrl
-            }/setUserStatus?userId=${user.email}&status=disabled`;
-          httpPutEmptyResponse(url);
-          getUsers().then((data) => updateResults(data));
-          toggleAlertVisibility(true, "User has been deleted");
-        } else {
-          console.error("No access to user or user id!");
-        }
-      })
-  }, [selectRow, toggleAlertVisibility]);
+    const url = `${state.config.values.userServiceUrl}/${userId}`;
+    return httpDeleteEmptyResponse(url, {});
+  }, []);
 
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
@@ -302,14 +269,14 @@ export const useApi = (): Api => {
   );
 
   return {
-    saveChanges,
     createUser,
-    deleteSelectedUser,
     changePasswordForCurrentUser,
     resetPassword,
     changePassword,
     submitPasswordChangeRequest,
     fetchUser,
+    deleteUser,
+    updateUser,
   } as Api;
 };
 
