@@ -16,10 +16,8 @@
 import * as queryString from "qs";
 import { useEffect, useMemo } from "react";
 
-import {
-  handleAuthenticationResponse,
-  useActionCreators
-} from "./authentication";
+import { handleAuthenticationResponse } from "./authentication";
+import { useActionCreators } from "../../api/authentication";
 import useRouter from "../../lib/useRouter";
 
 interface Props {
