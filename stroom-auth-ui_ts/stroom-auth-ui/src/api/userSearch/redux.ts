@@ -27,11 +27,6 @@ const defaultState: StoreState = {
   selectedUserRowId: undefined,
   results: []
 };
-// const initialState = {
-//   users: [],
-//   showSearchLoader: false,
-//   selectedUserRowId: undefined
-// };
 
 export const useActionCreators = genUseActionCreators({
   showSearchLoader: (showSearchLoader: boolean): ShowSearchLoaderAction => ({
@@ -80,55 +75,3 @@ export const reducer = prepareReducer(defaultState)
     }
   )
   .getReducer();
-
-// export default (state = initialState, action) => {
-//   switch (action.type) {
-//     case SHOW_SEARCH_LOADER:
-//       return {
-//         ...state,
-//         showSearchLoader: action.showSearchLoader
-//       };
-//     case UPDATE_RESULTS:
-//       return {
-//         ...state,
-//         results: action.results
-//       };
-//     case SELECT_ROW:
-//       if (state.selectedUserRowId === action.selectedUserRowId) {
-//         return {
-//           ...state,
-//           selectedUserRowId: undefined
-//         };
-//       } else {
-//         return {
-//           ...state,
-//           selectedUserRowId: action.selectedUserRowId
-//         };
-//       }
-//     default:
-//       return state;
-//   }
-// };
-
-// export function showSearchLoader(showSearchLoader) {
-//   return {
-//     type: SHOW_SEARCH_LOADER,
-//     showSearchLoader
-//   };
-// }
-
-// export function updateResults(results) {
-//   return {
-//     type: UPDATE_RESULTS,
-//     results
-//   };
-// }
-
-// export const changeSelectedRow = userId => {
-//   return dispatch => {
-//     dispatch({
-//       type: SELECT_ROW,
-//       selectedUserRowId: userId
-//     });
-//   };
-// };

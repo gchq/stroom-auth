@@ -20,8 +20,6 @@ import {
   prepareReducer
 } from "../../lib/redux-actions-ts";
 
-// const CREATE_REQUEST = 'user/CREATE_REQUEST';
-// const CREATE_RESPONSE = 'user/CREATE_RESPONSE';
 const SHOW_CREATE_LOADER = "user/SHOW_CREATE_LOADER";
 const SAVE_USER_BEING_EDITED = "user/SAVE_USER_BEING_EDITED";
 const CHANGE_VISIBLE_CONTAINER = "user/CHANGE_VISIBLE_CONTAINER";
@@ -33,12 +31,6 @@ const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE =
 const CLEAR_USER_BEING_EDITED = "user/CLEAR_USER_BEING_EDITED";
 const TOGGLE_IS_SAVING = "user/TOGGLE_IS_SAVING";
 
-// interface createRequestAction extends Action<'user/CREATE_REQUEST'> {
-
-// }
-// interface createResponseAction extends Action<'user/CREATE_RESPONSE'> {
-
-// }
 interface ShowCreateLoaderAction extends Action<"user/SHOW_CREATE_LOADER"> {
   showCreateLoader: boolean;
 }
@@ -180,130 +172,3 @@ export const reducer = prepareReducer(defaultState)
     })
   )
   .getReducer();
-// const initialState = {
-//   user: '',
-//   password: '',
-//   showCreateLoader: false,
-//   alertText: '',
-//   showAlert: false,
-//   changePasswordErrorMessage: [],
-//   isSaving: false,
-// };
-
-// export default (state = initialState, action) => {
-//   switch (action.type) {
-//     case CREATE_REQUEST:
-//       return {
-//         ...state,
-//         // TODO mark something as 'creating'
-//       };
-//     case CREATE_RESPONSE:
-//       return {
-//         ...state,
-//         // TODO change creating to 'created' or something similar
-//       };
-//     case SHOW_CREATE_LOADER:
-//       return {
-//         ...state,
-//         showCreateLoader: action.showCreateLoader,
-//       };
-
-//     case SAVE_USER_BEING_EDITED:
-//       return {
-//         ...state,
-//         userBeingEdited: action.user,
-//       };
-
-//     case CLEAR_USER_BEING_EDITED:
-//       return {
-//         ...state,
-//         userBeingEdited: undefined,
-//       };
-
-//     case CHANGE_VISIBLE_CONTAINER:
-//       return {
-//         ...state,
-//         show: action.show,
-//       };
-
-//     case TOGGLE_ALERT_VISIBILITY:
-//       const showAlert = !state.showAlert;
-//       return {
-//         ...state,
-//         showAlert: showAlert,
-//         alertText: action.alertText,
-//       };
-
-//     case SHOW_CHANGE_PASSWORD_ERROR_MESSAGE:
-//       return {
-//         ...state,
-//         changePasswordErrorMessage: action.message,
-//       };
-
-//     case HIDE_CHANGE_PASSWORD_ERROR_MESSAGE:
-//       return {
-//         ...state,
-//         changePasswordErrorMessage: [],
-//       };
-
-//     case TOGGLE_IS_SAVING:
-//       return {
-//         ...state,
-//         isSaving: !state.isSaving,
-//       };
-
-//     default:
-//       return state;
-//   }
-// };
-
-// export function showCreateLoader(showCreateLoader) {
-//   return {
-//     type: SHOW_CREATE_LOADER,
-//     showCreateLoader,
-//   };
-// }
-
-// export function changeVisibleContainer(container) {
-//   return {
-//     type: CHANGE_VISIBLE_CONTAINER,
-//     show: container,
-//   };
-// }
-
-// export function toggleAlertVisibility(alertText) {
-//   return {
-//     type: TOGGLE_ALERT_VISIBILITY,
-//     alertText: alertText,
-//   };
-// }
-
-// function showChangePasswordErrorMessage(message) {
-//   return {
-//     type: SHOW_CHANGE_PASSWORD_ERROR_MESSAGE,
-//     message,
-//   };
-// }
-
-// function hideChangePasswordErrorMessage() {
-//   return {
-//     type: HIDE_CHANGE_PASSWORD_ERROR_MESSAGE,
-//   };
-// }
-
-// function saveUserBeingEdited(user) {
-//   return {
-//     type: SAVE_USER_BEING_EDITED,
-//     user,
-//   };
-// }
-
-// function toggleIsSaving() {
-//   return {type: TOGGLE_IS_SAVING};
-// }
-
-// export function clearUserBeingEdited() {
-//   return {
-//     type: CLEAR_USER_BEING_EDITED,
-//   };
-// }

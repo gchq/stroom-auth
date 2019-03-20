@@ -31,46 +31,47 @@ interface Api {
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
-  const { httpPutEmptyResponse, httpGetJson, httpPostJsonResponse, httpDeleteEmptyResponse } = useHttpClient();
+  const {
+    httpPutEmptyResponse,
+    httpGetJson,
+    httpPostJsonResponse,
+    httpDeleteEmptyResponse
+  } = useHttpClient();
 
-  const change = useCallback(
-    user => {
-      const reduxState: GlobalStoreState = store.getState();
-      const url = `${reduxState.config.values.userServiceUrl}/${user.id}`;
-      return httpPutEmptyResponse(url, {
-        body: JSON.stringify({
-          email: user.email,
-          password: user.password,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          comments: user.comments,
-          state: user.state,
-          never_expires: user.never_expires,
-          force_password_change: user.force_password_change
-        })
+  const change = useCallback(user => {
+    const reduxState: GlobalStoreState = store.getState();
+    const url = `${reduxState.config.values.userServiceUrl}/${user.id}`;
+    return httpPutEmptyResponse(url, {
+      body: JSON.stringify({
+        email: user.email,
+        password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        comments: user.comments,
+        state: user.state,
+        never_expires: user.never_expires,
+        force_password_change: user.force_password_change
       })
-    }, []
-  );
+    });
+  }, []);
 
-  const add = useCallback(
-    user => {
-      const reduxState: GlobalStoreState = store.getState();
+  const add = useCallback(user => {
+    const reduxState: GlobalStoreState = store.getState();
 
-      const url = reduxState.config.values.userServiceUrl;
-      return httpPostJsonResponse(url, {
-        body: JSON.stringify({
-          email: user.email,
-          password: user.password,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          comments: user.comments,
-          state: user.state,
-          never_expires: user.never_expires,
-          force_password_change: user.force_password_change
-        })
+    const url = reduxState.config.values.userServiceUrl;
+    return httpPostJsonResponse(url, {
+      body: JSON.stringify({
+        email: user.email,
+        password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        comments: user.comments,
+        state: user.state,
+        never_expires: user.never_expires,
+        force_password_change: user.force_password_change
       })
-    }, []
-  );
+    });
+  }, []);
 
   /**
    * Delete user
@@ -81,23 +82,20 @@ export const useApi = (): Api => {
     return httpDeleteEmptyResponse(url, {});
   }, []);
 
-
   /**
    * Fetch a user
    */
-  const fetch = useCallback(
-    (userId: String) => {
-      const state: GlobalStoreState = store.getState();
-      const url = `${state.config.values.userServiceUrl}/${userId}`;
-      return httpGetJson(url);
-    }, []
-  );
+  const fetch = useCallback((userId: String) => {
+    const state: GlobalStoreState = store.getState();
+    const url = `${state.config.values.userServiceUrl}/${userId}`;
+    return httpGetJson(url);
+  }, []);
 
   return {
     add,
     fetch,
     remove,
-    change,
+    change
   } as Api;
 };
 

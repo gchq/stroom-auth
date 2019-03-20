@@ -13,44 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useCallback , useContext} from "react";
+import { useCallback, useContext } from "react";
 import { StoreContext } from "redux-react-hook";
 
 import useHttpClient from "../useHttpClient";
-import { GlobalStoreState } from '../../modules';
-// import { useActionCreators } from "./redux";
-import {User} from '../users';
+import { GlobalStoreState } from "../../modules";
+import { User } from "../users";
 
 interface Api {
-  // performUserSearch: (state:GlobalStoreState) => void;
-    getUsers: () => Promise<Array<User>>;
+  getUsers: () => Promise<Array<User>>;
 }
 
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
-  // const { showSearchLoader, updateResults } = useActionCreators();
+  const { httpGetJson } = useHttpClient();
 
-      const { httpGetJson } = useHttpClient();
   return {
-    // performUserSearch: useCallback((state:GlobalStoreState) => {
-    //   showSearchLoader(true);
-    //   const url = `${
-    //     state.config.values.userServiceUrl
-    //   }/?fromEmail=&usersPerPage=100&orderBy=id`;
-    //   const { httpGetJson } = useHttpClient();
-    //   httpGetJson(url)
-    //     .then(data => {
-    //       showSearchLoader(false);
-    //       updateResults(data);
-    //     })
-    // }, [showSearchLoader, updateResults]),
     getUsers: useCallback(() => {
-      const state:GlobalStoreState = store.getState();
+      const state: GlobalStoreState = store.getState();
       const url = `${
         state.config.values.userServiceUrl
       }/?fromEmail=&usersPerPage=100&orderBy=id`;
-      return httpGetJson(url)
-    },[httpGetJson])
+      return httpGetJson(url);
+    }, [httpGetJson])
   };
 };
 
