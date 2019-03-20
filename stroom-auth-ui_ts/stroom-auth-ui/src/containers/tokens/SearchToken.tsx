@@ -28,17 +28,19 @@ import ReactTable, {
 import "react-table/react-table.css";
 import * as dateFormat from "dateformat";
 
-import Button from "../../Button";
+import Button from "../Button";
 import "./TokenSearch.css";
-import "../../../styles/table-small.css";
-import "../../../styles/toggle-small.css";
-import { useApi as useTokenApi } from "../../../api/tokens";
+import "../../styles/index.css";
+import "../../styles/toolbar-small.css";
+import "../../styles/table-small.css";
+import "../../styles/toggle-small.css";
+import { useApi as useTokenApi } from "../../api/tokens";
 import {
   useApi as useTokenSearchApi,
   useActionCreators as useTokenSearchActionCreators
-} from "../../../api/tokenSearch";
-import { useReduxState } from "../../../lib/useReduxState";
-import { useRouter } from "../../../lib/useRouter";
+} from "../../api/tokenSearch";
+import { useReduxState } from "../../lib/useReduxState";
+import { useRouter } from "../../lib/useRouter";
 
 // FIXME: Not sure why the actual filter props isn't working
 type FilterProps = {
@@ -160,6 +162,8 @@ const TokenSearch = () => {
   const [isFilteringEnabled, toggleFiltering] = useState(false);
   const noTokenSelected = !selectedTokenRowId;
   return (
+     <div className="Layout-main">
+       <div className="User-content" id="User-content">
     <div className="UserSearch-main">
       <div className="header">
         <Button
@@ -265,6 +269,8 @@ const TokenSearch = () => {
         </div>
       </div>
     </div>
+       </div>
+     </div>
   );
 };
 

@@ -21,16 +21,16 @@ import Toggle from "react-toggle";
 import "react-toggle/style.css"
 import "rc-checkbox/assets/index.css";
 
-import Button from "../../Button";
-import Loader from "../../Loader";
+import Button from "../Button";
+import Loader from "../Loader";
 import "./TokenEdit.css";
-import "../../../styles/form.css";
-import { useApi } from "../../../api/tokens";
+import "../../styles/form.css";
+import { useApi } from "../../api/tokens";
 // import {toggleEnabledState} from '../../../modules/token';
-import { OnCopy, ByCopy } from "../../auditCopy";
+import { OnCopy, ByCopy } from "../auditCopy";
 
-import { useRouter } from "../../../lib/useRouter";
-import { useReduxState } from "../../../lib/useReduxState";
+import { useRouter } from "../../lib/useRouter";
+import { useReduxState } from "../../lib/useReduxState";
 
 // const enhance = compose(
 //   connect(

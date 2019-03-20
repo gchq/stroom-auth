@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Crown Copyright
+ * Copyright 2018 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,8 @@
  * limitations under the License.
  */
 
-import * as React from "react";
-import TokenEditUi from "./TokenEditUi";
-import { useApi as useTokenApi } from "../../../api/tokens";
-import useHttpQueryParam from "../../../lib/useHttpQueryParam";
+import TokenCreate from './CreateToken';
+import TokenEdit from './EditToken';
+import TokenSearch from './SearchToken';
 
-//TODO: merge this into the main token edit page
-const TokenEditForm = () => {
-  const { fetchApiKey } = useTokenApi();
-  const tokenId = useHttpQueryParam("tokenId");
-  React.useEffect(() => {
-    if (!!tokenId) {
-      fetchApiKey(tokenId);
-    }
-  }, []);
-
-  return <TokenEditUi />;
-};
-
-export default TokenEditForm;
+export { TokenCreate, TokenEdit, TokenSearch }
