@@ -24,28 +24,18 @@ import { useActionCreators } from "./redux";
 //FIXME: make a type for editedUser
 interface Api {
   add: (user: User) => Promise<void>;
-  remove: (userId:string) => Promise<void>;
+  remove: (userId: string) => Promise<void>;
   fetch: (userId: String) => Promise<User[]>;
-  change: (user:User) => Promise<void>;
+  change: (user: User) => Promise<void>;
 }
 // TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
-  const { httpDeleteEmptyResponse } = useHttpClient();
-
-  const { httpPostJsonResponse } = useHttpClient();
-  const { showCreateLoader } = useActionCreators();
-  const { httpPutEmptyResponse, httpGetJson } = useHttpClient();
-  const {
-    toggleIsSaving,
-    saveUserBeingEdited,
-    toggleAlertVisibility
-  } = useActionCreators();
+  const { httpPutEmptyResponse, httpGetJson, httpPostJsonResponse, httpDeleteEmptyResponse } = useHttpClient();
 
   const change = useCallback(
     user => {
       const reduxState: GlobalStoreState = store.getState();
-      toggleIsSaving(true);
       const url = `${reduxState.config.values.userServiceUrl}/${user.id}`;
       return httpPutEmptyResponse(url, {
         body: JSON.stringify({
@@ -59,15 +49,12 @@ export const useApi = (): Api => {
           force_password_change: user.force_password_change
         })
       })
-    },
-    [ toggleIsSaving ]
+    }, []
   );
 
   const add = useCallback(
     user => {
       const reduxState: GlobalStoreState = store.getState();
-      toggleIsSaving(true);
-      showCreateLoader(true);
 
       const url = reduxState.config.values.userServiceUrl;
       return httpPostJsonResponse(url, {
@@ -82,14 +69,13 @@ export const useApi = (): Api => {
           force_password_change: user.force_password_change
         })
       })
-    },
-    [toggleIsSaving, showCreateLoader, toggleAlertVisibility]
+    }, []
   );
 
   /**
    * Delete user
    */
-  const remove = useCallback((userId:string) => {
+  const remove = useCallback((userId: string) => {
     const state: GlobalStoreState = store.getState();
     const url = `${state.config.values.userServiceUrl}/${userId}`;
     return httpDeleteEmptyResponse(url, {});

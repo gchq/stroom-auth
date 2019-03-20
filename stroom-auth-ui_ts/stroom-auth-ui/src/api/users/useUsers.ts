@@ -20,37 +20,33 @@ interface UseUsers {
 
 export default (): UseUsers => {
     const {
-        add: createUserUsingApi,
-        remove: deleteUserUsingApi,
-        fetch: fetchUserUsingApi,
-        change: updateUserUsingApi,
-    } = useApi();
-
+        toggleIsSaving,
+        saveUserBeingEdited,
+        toggleAlertVisibility
+    } = useActionCreators();
     const { history } = useRouter();
-    const { updateResults } = useUserSearchActionCreators();
-    const { getUsers } = useUserSearchApi();
+
 
     /**
      * Deletes the user and then refreshes our browser cache of users.
      */
+    const { updateResults } = useUserSearchActionCreators();
+    const { getUsers } = useUserSearchApi();
+    const {remove: removeUserUsingApi} = useApi();
     const deleteUser = useCallback(
         (userId: string) => {
-            deleteUserUsingApi(userId).then(() =>
+            removeUserUsingApi(userId).then(() =>
                 getUsers().then((results) => updateResults(results))
             );
         },
-        [deleteUserUsingApi, getUsers, updateResults]
+        [removeUserUsingApi, getUsers, updateResults]
     );
 
 
     /**
      * Updates the user
      */
-    const {
-        toggleIsSaving,
-        saveUserBeingEdited,
-        toggleAlertVisibility
-    } = useActionCreators();
+    const { change: updateUserUsingApi, } = useApi();
     const updateUser = useCallback((user: User) => {
         updateUserUsingApi(user)
             .then(response => {
@@ -62,7 +58,7 @@ export default (): UseUsers => {
             .catch(error => {
                 toggleIsSaving(false);
             });
-    }, [saveUserBeingEdited, toggleAlertVisibility, toggleIsSaving]);
+    }, [updateUserUsingApi, saveUserBeingEdited, toggleAlertVisibility, toggleIsSaving]);
 
 
     /**
@@ -70,6 +66,7 @@ export default (): UseUsers => {
      */
     const { showCreateLoader } = useActionCreators();
     const { createUser: createAuthorisationUser } = useAuthorisationApi();
+    const { add: createUserUsingApi, } = useApi();
     const createUser = useCallback((user: User) => {
         createUserUsingApi(user)
             .then(newUserId => {
@@ -88,6 +85,11 @@ export default (): UseUsers => {
 
     }, [createUserUsingApi, createAuthorisationUser, showCreateLoader, toggleAlertVisibility, toggleIsSaving]);
 
+
+    /**
+     * Fetches a user by id/email, and puts it into the redux state.
+     */
+    const { fetch: fetchUserUsingApi } = useApi();
     const fetchUser = useCallback((userId:string) => {
         fetchUserUsingApi(userId)
         .then(users => {
@@ -95,6 +97,8 @@ export default (): UseUsers => {
           saveUserBeingEdited(users[0]);
         })
     }, [showCreateLoader, saveUserBeingEdited])
+
+
     return {
         deleteUser,
         updateUser,
