@@ -19,6 +19,7 @@
     "@types/react-redux": "7.0.1",
     "@types/react-router-dom": "^4.3.1",
     "@types/react-router-redux": "^5.0.18",
+    "@types/react-select": "^2.0.15",
     "@types/react-table": "^6.7.23",
     "@types/react-toggle": "^4.0.2",
     "@types/recompose": "^0.30.5",

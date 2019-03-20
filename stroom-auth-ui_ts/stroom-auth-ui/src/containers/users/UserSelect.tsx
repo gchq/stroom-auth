@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import React, {useState} from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
-import {useMappedState} from 'redux-react-hook';
+import { useMappedState } from 'redux-react-hook';
 
 import './asyncUserSelect.css';
 
-const loadOptions = (inputValue, callback, idToken, url) => {
+const loadOptions = (inputValue: string, callback: Function, idToken: string, url: string) => {
   const email = inputValue || '';
   fetch(`${url}/search?email=${email}`, {
     headers: {
@@ -34,7 +35,7 @@ const loadOptions = (inputValue, callback, idToken, url) => {
     .then(response => response.json())
     .then(body => {
       const options = body.map(result => {
-        return {value: result.id, label: result.email};
+        return { value: result.id, label: result.email };
       });
       callback(options);
     });
@@ -64,27 +65,27 @@ const customStyles = {
 };
 
 function AsyncUserSelect(props) {
-  const {onChange} = props;
+  const { onChange } = props;
   // eslint-disable-next-line
   const [_, setInputValue] = useState('');
-  const {idToken, url} = useMappedState(mapState);
+  const { idToken, url } = useMappedState(mapState);
 
   return (
     <AsyncSelect
-      placeholder=''
-      styles={customStyles}
-      className="AsyncUserSelect"
-      cacheOptions
-      defaultOptions
-      loadOptions={(inputValue, callback) =>
-        loadOptions(inputValue, callback, idToken, url)
-      }
-      onInputChange={value => {
-        setInputValue(value);
-        return value;
-      }}
-      onChange={value => onChange('user', value)}
-    />
+      placeholder= ''
+  styles = { customStyles }
+  className = "AsyncUserSelect"
+  cacheOptions
+  defaultOptions
+  loadOptions = {(inputValue, callback) =>
+  loadOptions(inputValue, callback, idToken, url)
+}
+onInputChange = { value => {
+  setInputValue(value);
+  return value;
+}}
+onChange = { value => onChange('user', value) }
+  />
   );
 }
 

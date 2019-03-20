@@ -1394,7 +1394,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-dom@^16.8.2":
+"@types/react-dom@*", "@types/react-dom@^16.8.2":
   version "16.8.2"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.8.2.tgz#9bd7d33f908b243ff0692846ef36c81d4941ad12"
   dependencies:
@@ -1444,6 +1444,15 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-select@^2.0.15":
+  version "2.0.15"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-2.0.15.tgz#51d607667f59a12e980abcc5bbf9636307293e44"
+  integrity sha512-lbtGCfZ82lKAU0KPoO6M81ZqoT3cOOLWTNkwgmPlBekNBt95ccWItAIKiGZnoO7+gzk413biIxetRSM2CoLL8w==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-dom" "*"
+    "@types/react-transition-group" "*"
+
 "@types/react-table@^6.7.23":
   version "6.7.23"
   resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-6.7.23.tgz#c42a249c2d1ba5a157ae7e65a9cd5459006feb85"
@@ -1453,6 +1462,13 @@
 "@types/react-toggle@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/react-toggle/-/react-toggle-4.0.2.tgz#46ffa5af1a55de5f25d0aa78ef0b557b5c8bf276"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-transition-group@*":
+  version "2.0.16"
+  resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-2.0.16.tgz#2dcb9e396ab385ee19c4af1c9caa469a14cd042f"
+  integrity sha512-FUJEx2BGJPU1qVQoWd9v7wpOwnCPTWhcE4iTaU5prry9SvwiI11lCXOci8Nz9cM/Fuf650l7Skg6nlVeCYjPFA==
   dependencies:
     "@types/react" "*"
 

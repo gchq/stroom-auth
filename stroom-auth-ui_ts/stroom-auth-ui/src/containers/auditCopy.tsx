@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from "react";
+import * as React from "react";
 import * as moment from "moment";
 
 const DISPLAY_DATE_TIME_FORMAT = "MMMM Do YYYY, h:mm:ss a";
