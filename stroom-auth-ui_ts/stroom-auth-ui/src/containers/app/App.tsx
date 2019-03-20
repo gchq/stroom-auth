@@ -27,7 +27,7 @@ import {
   NewUser
 } from "../../containers/users";
 import { TokenCreate, TokenSearch, TokenEdit } from "../../containers/tokens";
-import PathNotFound from "../../containers/pathNotFound";
+import {PathNotFound }from "../../containers/pathNotFound";
 import {
   ResetPassword,
   ChangePassword,

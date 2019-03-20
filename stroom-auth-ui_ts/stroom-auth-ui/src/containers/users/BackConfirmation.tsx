@@ -14,19 +14,28 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import ReactModal from 'react-modal';
+import * as React from 'react';
+import * as ReactModal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isEmpty } from 'ramda';
 
 import './BackConfirmation.css';
+import Button from '../Button';
+import { FormikErrors } from 'formik';
+import { User } from '../../api/users';
 
-export default ({
+const BackConfirmation = ({
   isOpen,
   onGoBack,
   onContinueEditing,
   onSaveAndGoBack,
   errors,
+}: {
+  isOpen: boolean,
+  onGoBack: Function, 
+  onContinueEditing: Function, 
+  onSaveAndGoBack: Function,
+  errors:FormikErrors<User>
 }) => {
   return (
     <ReactModal
@@ -45,29 +54,31 @@ export default ({
         )}
       <div className="BackConfirmation__actions">
 
-        <button
+        <Button
           className="toolbar-button-large primary"
           type="button"
-          onClick={onGoBack}>
-          <FontAwesomeIcon icon="trash" /> Yes, discard changes
-        </button>
+          onClick={() => onGoBack()}
+          icon="trash"
+          text="Yes, discard changes"/>
 
-        <button
+        <Button
           className="toolbar-button-large primary"
           type="button"
           disabled={!isEmpty(errors)}
-          onClick={onSaveAndGoBack}>
-          <FontAwesomeIcon icon="save" /> Yes, save changes
-          </button>
+          onClick={() => onSaveAndGoBack()}
+          icon="save"
+          text="Yes, save changes"/>
 
-        <button
+        <Button
           className="toolbar-button-large primary"
           type="button"
-          onClick={onContinueEditing}>
-          <FontAwesomeIcon icon="times" /> No, continue editing
-        </button>
+          onClick={() => onContinueEditing()}
+          icon="times"
+          text="No, continue editing"/>
 
       </div>
     </ReactModal>
   );
 };
+
+export default BackConfirmation;
