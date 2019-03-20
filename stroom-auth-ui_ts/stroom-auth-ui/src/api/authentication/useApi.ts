@@ -18,7 +18,7 @@ import useRouter from "../../lib/useRouter";
 interface Api {
   // FIXME: Not sure if the FormikBag types are correct
   apiLogin: (credentials: Credentials) => Promise<LoginResponse>; // formikBag: FormikBag<any, any>
-  changePasswordForCurrentUser: () => Promise<User[]>;
+  // changePasswordForCurrentUser: () => Promise<User[]>;
   resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
   changePassword: (changePasswordRequest: ChangePasswordRequest) => void;
   submitPasswordChangeRequest: (
@@ -154,11 +154,11 @@ export const useApi = (): Api => {
     [showChangePasswordErrorMessage]
   );
 
-  const changePasswordForCurrentUser = useCallback(() => {
-    const state: GlobalStoreState = store.getState();
-    const url = `${state.config.values.userServiceUrl}/me`;
-    return httpGetJson(url);
-  }, [changePassword]);
+  // const changePasswordForCurrentUser = useCallback(() => {
+  //   const state: GlobalStoreState = store.getState();
+  //   const url = `${state.config.values.userServiceUrl}/me`;
+  //   return httpGetJson(url);
+  // }, [changePassword]);
 
   const submitPasswordChangeRequest = useCallback(
     (formData: any, formikBag: FormikBag<any, any>) => {
@@ -177,7 +177,7 @@ export const useApi = (): Api => {
   return {
     apiLogin,
     submitPasswordChangeRequest,
-    changePasswordForCurrentUser,
+    // changePasswordForCurrentUser,
     resetPassword,
     changePassword
   };

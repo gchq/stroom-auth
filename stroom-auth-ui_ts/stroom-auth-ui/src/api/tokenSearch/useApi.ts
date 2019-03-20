@@ -104,8 +104,8 @@ const useApi = (): Api => {
           // .then(getJsonBody)
           .then(data => {
             showSearchLoader(false);
-            const { results, totalPages } = data;
-            updateResults(results, totalPages);
+            const { tokens, totalPages } = data;
+            updateResults(tokens, totalPages);
           })
           // .catch(error => handleErrors(error));
       },

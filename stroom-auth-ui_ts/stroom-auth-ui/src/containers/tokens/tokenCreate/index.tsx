@@ -26,7 +26,10 @@ import { useApi } from '../../../api/tokens';
 import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
 
-
+type DropDownValues = {
+  label: string;
+  value: number;
+}
 const TokenCreateForm = () => {
   const { history } = useRouter();
   const { /*isCreating ,*/ errorMessage} = useReduxState(({ token: {errorMessage, isCreating } }) => ({ isCreating , errorMessage}));
@@ -35,11 +38,9 @@ const TokenCreateForm = () => {
   return (
     <div className="CreateTokenForm-card">
       <Formik
-      initialValues={{user:''} as {user: string}}
+      initialValues={{user: {label:'', value:-1}} as {user: DropDownValues}}
         onSubmit={(values, actions) => {
-          //FIXME: what's label?
-          // createToken(values.user.label, actions.setSubmitting);
-          createToken(values.user, actions.setSubmitting);
+          createToken(values.user.label, actions.setSubmitting);
           actions.setSubmitting(false);
         }}
         render={({ handleSubmit, setFieldValue, values }) => {

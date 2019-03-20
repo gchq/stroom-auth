@@ -25,7 +25,6 @@ import {
   useActionCreators as useUserSearchActionCreators
 } from "../userSearch";
 import useHttpClient from "../useHttpClient";
-import { useApi as useTokenSearchApi } from "../tokenSearch";
 import { useActionCreators as useTokenActionCreators } from "./redux";
 import useRouter from "../../lib/useRouter";
 // import { User } from "../users";
@@ -45,7 +44,6 @@ interface Api {
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
   const { selectRow } = useUserSearchActionCreators();
-  const { performTokenSearch } = useTokenSearchApi();
   const { history } = useRouter();
   const { httpDeleteJsonResponse } = useHttpClient();
   const {
@@ -66,13 +64,12 @@ export const useApi = (): Api => {
         .then(handleStatus)
         .then(() => {
           selectRow("");
-          performTokenSearch();
         })
         // .catch(error => handleErrors(error)); 
-    }, [selectRow, performTokenSearch]),
+    }, [selectRow]),
 
     createToken: useCallback(
-      ({ email, setSubmitting }) => {
+      ( email, setSubmitting ) => {
         const state:GlobalStoreState = store.getState();
         toggleIsCreating();
         hideErrorMessage();
