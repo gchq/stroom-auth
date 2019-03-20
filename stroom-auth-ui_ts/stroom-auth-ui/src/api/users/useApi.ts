@@ -22,10 +22,11 @@ import { ChangePasswordRequest, ResetPasswordRequest, User } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
 import { useActionCreators } from "./redux";
 import useRouter from '../../lib/useRouter';
+import { userInfo } from 'os';
 
 //FIXME: make a type for editedUser
 interface Api {
-  createUser: (editedUser: any) => void;
+  createUser: (user: User) => Promise<void>;
   deleteUser: (userId:string) => Promise<void>;
   changePasswordForCurrentUser: () => void;
   resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
@@ -60,29 +61,17 @@ export const useApi = (): Api => {
     user => {
       const reduxState: GlobalStoreState = store.getState();
       toggleIsSaving(true);
-      const {
-        id,
-        email,
-        password,
-        first_name,
-        last_name,
-        comments,
-        state,
-        never_expires,
-        force_password_change
-      } = user;
-
-      const url = `${reduxState.config.values.userServiceUrl}/${id}`;
+      const url = `${reduxState.config.values.userServiceUrl}/${user.id}`;
       return httpPutEmptyResponse(url, {
         body: JSON.stringify({
-          email,
-          password,
-          first_name,
-          last_name,
-          comments,
-          state,
-          never_expires,
-          force_password_change
+          email: user.email,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          comments: user.comments,
+          state: user.state,
+          never_expires: user.never_expires,
+          force_password_change: user.force_password_change
         })
       })
     },
@@ -90,54 +79,24 @@ export const useApi = (): Api => {
   );
 
   const createUser = useCallback(
-    newUser => {
+    user => {
       const reduxState: GlobalStoreState = store.getState();
       toggleIsSaving(true);
-      const {
-        email,
-        password,
-        first_name,
-        last_name,
-        comments,
-        state,
-        never_expires,
-        force_password_change
-      } = newUser;
-
       showCreateLoader(true);
 
       const url = reduxState.config.values.userServiceUrl;
-      httpPostJsonResponse(url, {
+      return httpPostJsonResponse(url, {
         body: JSON.stringify({
-          email,
-          password,
-          first_name,
-          last_name,
-          comments,
-          state,
-          never_expires,
-          force_password_change
+          email: user.email,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          comments: user.comments,
+          state: user.state,
+          never_expires: user.never_expires,
+          force_password_change: user.force_password_change
         })
       })
-        .then(newUserId => {
-          toggleIsSaving(true);
-          /**
-           * This function creates a user within Stroom. This avoids the problem of creating
-           * a user here but that user having to log into Stroom before permissions
-           * can be assigned to them.
-           */
-          const url = `${reduxState.config.values.authorisationServiceUrl}/createUser?id=${email}`;
-          httpPostEmptyResponse(url, {})
-            .then(newUserId => {
-              showCreateLoader(false);
-              toggleAlertVisibility(true, "User has been created");
-              toggleIsSaving(false);
-              history.push("/userSearch");
-            })
-        })
-        .catch(error => {
-          toggleIsSaving(false);
-        });
     },
     [toggleIsSaving, showCreateLoader, toggleAlertVisibility]
   );

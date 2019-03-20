@@ -26,25 +26,10 @@ import Button from "../../Button";
 import UserFields from "../UserFields";
 import useReduxState from "../../../lib/useReduxState";
 import { NewUserValidationSchema, validateAsync } from "../validation";
-// import {createUser as onSubmit} from '../../../modules/user';
 import { hasAnyProps } from "../../../lang";
-import { useApi } from "../../../api/users";
+import { useApi , useUsers, User} from "../../../api/users";
 import useRouter from "../../../lib/useRouter";
 
-// const enhance = compose(
-//   connect(
-//     ({
-//       authentication: {idToken},
-//       user: {isSaving},
-//       config: {authenticationServiceUrl},
-//     }) => ({
-//       idToken,
-//       authenticationServiceUrl,
-//       isSaving,
-//     }),
-//     {onSubmit, push},
-//   ),
-// );
 
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.
@@ -69,7 +54,8 @@ const UserCreateForm = (
   }
 ) => {
   // const {createUser} = useActionCreators();
-  const { createUser } = useApi();
+  const {createUser} = useUsers();
+  // const { createUser } = useApi();
   const { history } = useRouter();
   const { idToken, authenticationServiceUrl/*, isSaving */} = useReduxState(
     ({
@@ -84,7 +70,8 @@ const UserCreateForm = (
     <Formik
       initialValues={initialValues}
       onSubmit={(values, actions) => {
-        createUser(values);
+        const user:User = values;
+        createUser(user);
       }}
       validate={values =>
         validateAsync(values, idToken, authenticationServiceUrl)

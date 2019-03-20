@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import useApi from "./useApi";
 import { useActionCreators } from './redux';
 import { useApi as useUserSearchApi, useActionCreators as useUserSearchActionCreators } from "../userSearch";
+import { useApi as useAuthorisationApi } from '../authorisation';
 import { User } from "../users/types";
 import useReduxState from "../../lib/useReduxState";
 import { useRouter } from '../../lib/useRouter';
@@ -12,13 +13,15 @@ import { useRouter } from '../../lib/useRouter';
  */
 interface UseUsers {
     deleteUser: (userId: string) => void;
-    updateUser:(user:User) => void;
+    updateUser: (user: User) => void;
+    createUser: (user: User) => void;
 }
 
 export default (): UseUsers => {
     const {
         deleteUser: deleteUserUsingApi,
-        updateUser: updateUserUsingApi
+        updateUser: updateUserUsingApi,
+        createUser: createUserUsingApi,
     } = useApi();
     const { history } = useRouter();
     const { updateResults } = useUserSearchActionCreators();
@@ -36,11 +39,15 @@ export default (): UseUsers => {
         [deleteUserUsingApi, getUsers, updateResults]
     );
 
+
     const {
         toggleIsSaving,
         saveUserBeingEdited,
         toggleAlertVisibility
     } = useActionCreators();
+    /**
+     * Updates the user
+     */
     const updateUser = useCallback((user: User) => {
         updateUserUsingApi(user)
             .then(response => {
@@ -54,8 +61,29 @@ export default (): UseUsers => {
             });
     }, [saveUserBeingEdited, toggleAlertVisibility, toggleIsSaving]);
 
+
+    const { showCreateLoader } = useActionCreators();
+    const { createUser: createAuthorisationUser } = useAuthorisationApi();
+    const createUser = useCallback((user: User) => {
+        createUserUsingApi(user)
+            .then(newUserId => {
+                toggleIsSaving(true);
+                createAuthorisationUser(user.email)
+                    .then(newUserId => {
+                        showCreateLoader(false);
+                        toggleAlertVisibility(true, "User has been created");
+                        toggleIsSaving(false);
+                        history.push("/userSearch");
+                    })
+            })
+            .catch(error => {
+                toggleIsSaving(false);
+            });
+
+    }, [createUserUsingApi, createAuthorisationUser, showCreateLoader, toggleAlertVisibility, toggleIsSaving]);
     return {
         deleteUser,
-        updateUser
+        updateUser,
+        createUser
     };
 };

@@ -12,13 +12,13 @@ export interface StoreState {
 }
 
 export interface User {
-  id: string;
+  id?: string;
   email: string;
   first_name: string;
   last_name: string;
   state: string;
   comments: string;
-  never_expires: boolean;
+  never_expires?: boolean;
   force_password_change: boolean;
   login_count?: number;
   last_login?: any;
