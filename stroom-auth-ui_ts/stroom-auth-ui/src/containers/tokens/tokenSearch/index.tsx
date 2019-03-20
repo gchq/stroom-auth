@@ -102,9 +102,9 @@ const getEnabledCellRenderer = (
   return (
     <div
       className="TokenSearch__table__checkbox"
-      onClick={() => setEnabledStateOnToken(tokenId, !state)}
+      // onClick={() => setEnabledStateOnToken(tokenId, !state)}
     >
-      <Toggle icons={false} checked={state} />
+      <Toggle icons={false} checked={state} onChange={() => setEnabledStateOnToken(tokenId, !state)}/>
     </div>
   );
 };
@@ -153,9 +153,9 @@ const TokenSearch = () => {
     })
   );
   const { history } = useRouter();
-  const { performTokenSearch, setEnabledStateOnToken } = useTokenSearchApi();
+  const { performTokenSearch } = useTokenSearchApi();
   const { selectRow } = useTokenSearchActionCreators();
-  const { deleteSelectedToken } = useTokenApi();
+  const { deleteSelectedToken, toggleEnabledState } = useTokenApi();
 
   const [isFilteringEnabled, toggleFiltering] = useState(false);
   const noTokenSelected = !selectedTokenRowId;
@@ -216,7 +216,7 @@ const TokenSearch = () => {
             className="-striped -highlight UserSearch-table"
             columns={getColumnFormat(
               selectedTokenRowId,
-              setEnabledStateOnToken
+              toggleEnabledState
             )}
             filterable={isFilteringEnabled}
             showPagination

@@ -38,14 +38,14 @@ interface Api {
     // autocompleteText: String,
     // securityToken: String
   // ) => void;
-  toggleEnabledState: () => void;
+  toggleEnabledState: (tokenId:string) => void;
 }
 
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
   const { selectRow } = useUserSearchActionCreators();
   const { history } = useRouter();
-  const { httpDeleteJsonResponse } = useHttpClient();
+  const { httpDeleteJsonResponse, httpGetJson, httpGetEmptyResponse } = useHttpClient();
   const {
     toggleState,
     toggleIsCreating,
@@ -151,33 +151,14 @@ export const useApi = (): Api => {
     //   },
     //   [updateMatchingAutoCompleteResults]
     // ),
-    toggleEnabledState: useCallback(() => {
+    toggleEnabledState: useCallback((tokenId) => {
       const state:GlobalStoreState = store.getState();
-      const tokenId = state.token.lastReadToken.id;
+      // const tokenId = state.token.lastReadToken.id;
       const nextState = state.token.lastReadToken.enabled ? "false" : "true";
       const securityToken = state.authentication.idToken;
-      //TODO: Replace with helper
-      fetch(
-        `${
-          state.config.values.tokenServiceUrl
-        }/${tokenId}/state/?enabled=${nextState}`,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + securityToken
-          },
-          method: "get",
-          mode: "cors"
-        }
-      )
-        .then(handleStatus)
-        .then(() => {
-          toggleState();
-        })
-        .catch(() => {
-          // TODO Show the user an error
-        });
+      const url = `${ state.config.values.tokenServiceUrl }/${tokenId}/state/?enabled=${nextState}`
+      httpGetEmptyResponse(url)
+          .then(() => toggleState());
     }, [toggleState])
   };
 };

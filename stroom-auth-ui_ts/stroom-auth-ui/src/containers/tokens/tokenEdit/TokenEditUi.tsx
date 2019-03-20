@@ -84,7 +84,7 @@ const TokenEditUi = () => {
                   <Toggle
                     icons={false}
                     checked={token.enabled}
-                    onChange={toggleEnabledState}
+                    // onChange={toggleEnabledState}//FIXME
                   />
                 </div>
               </div>

@@ -38,6 +38,7 @@ interface HttpClient {
   httpPutJsonResponse: HttpCall;
   httpDeleteJsonResponse: HttpCall;
   httpPatchJsonResponse: HttpCall;
+  httpGetEmptyResponse: HttpCall;
   httpPostEmptyResponse: HttpCall;
   httpPutEmptyResponse: HttpCall;
   httpDeleteEmptyResponse: HttpCall;
@@ -179,6 +180,7 @@ export const useHttpClient = (): HttpClient => {
     httpPutJsonResponse: useWrappedFetchWithBodyAndJsonResponse("put"),
     httpDeleteJsonResponse: useWrappedFetchWithBodyAndJsonResponse("delete"),
     httpPatchJsonResponse: useWrappedFetchWithBodyAndJsonResponse("patch"),
+    httpGetEmptyResponse: useWrappedFetchWithBodyAndEmptyResponse("get"),
     httpPostEmptyResponse: useWrappedFetchWithBodyAndEmptyResponse("post"),
     httpPutEmptyResponse: useWrappedFetchWithBodyAndEmptyResponse("put"),
     httpDeleteEmptyResponse: useWrappedFetchWithBodyAndEmptyResponse("delete"),

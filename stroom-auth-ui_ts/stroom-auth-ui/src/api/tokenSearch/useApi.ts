@@ -16,7 +16,7 @@ interface Api {
     sorted?: String,
     filtered?: String
   ) => void;
-  setEnabledStateOnToken: (tokenId: String, isEnabled: boolean) => void;
+  // setEnabledStateOnToken: (tokenId: String, isEnabled: boolean) => void;
 }
 
 const useApi = (): Api => {
@@ -32,8 +32,8 @@ const useApi = (): Api => {
     changeLastUsedFiltered
   } = useTokenSearchActionCreators();
   //   const { history } = useRouter();
-  const { httpPostJsonResponse } = useHttpClient();
-  const { toggleEnabledState } = useTokenApi();
+  const { httpPostJsonResponse, httpGetJson } = useHttpClient();
+  // const { toggleEnabledState } = useTokenApi();
 
   return {
     performTokenSearch: useCallback(
@@ -119,32 +119,18 @@ const useApi = (): Api => {
       ]
     ),
 
-    setEnabledStateOnToken: useCallback(
-      (tokenId, isEnabled) => {
-        const state:GlobalStoreState = store.getState();
-        toggleEnabledState();
-        const securityToken = state.authentication.idToken;
-        fetch(
-          `${
-            state.config.values.tokenServiceUrl
-          }/${tokenId}/state/?enabled=${isEnabled}`,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + securityToken
-            },
-            method: "get",
-            mode: "cors"
-          }
-        )
-          // .then(handleStatus)
-          .catch(() => {
-            // TODO Display alert to the user that changing the state failed
-          });
-      },
-      [toggleEnabledState]
-    )
+    // setEnabledStateOnToken: useCallback(
+    //   (tokenId, isEnabled) => {
+    //     const state:GlobalStoreState = store.getState();
+    //     toggleEnabledState();
+    //     const securityToken = state.authentication.idToken;
+    //     const url = `${
+    //         state.config.values.tokenServiceUrl
+    //       }/${tokenId}/state/?enabled=${isEnabled}`;
+    //     return httpGetJson(url);
+    //   },
+    //   [toggleEnabledState]
+    // )
   };
 };
 
