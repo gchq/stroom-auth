@@ -6,7 +6,7 @@ import handleStatus from "./handleStatus";
 import { useContext } from "react";
 import { StoreContext } from "redux-react-hook";
 import useRouter from "../../lib/useRouter";
-import { GlobalStoreState } from '../..//modules';
+import { GlobalStoreState } from "../..//modules";
 
 /**
  * A wrapper around fetch that can be used to de-duplicate GET calls to the same resources.
@@ -69,7 +69,7 @@ export const useHttpClient = (): HttpClient => {
       } = {},
       forceGet: boolean = true // default to true, take care with settings this to false, old promises can override the updated picture with old information if this is mis-used
     ): Promise<T | void> => {
-      const state:GlobalStoreState = store.getState();
+      const state: GlobalStoreState = store.getState();
       const jwsToken = state.authentication.idToken;
 
       // If we do not have an entry in the cache or we are forcing GET, create a new call
@@ -102,7 +102,7 @@ export const useHttpClient = (): HttpClient => {
     [setErrorMessage, setHttpErrorCode, setStackTrace]
   );
 
-  const wrappedFetchWithBodyAndJsonResponse = (method: string) =>
+  const useWrappedFetchWithBodyAndJsonResponse = (method: string) =>
     useCallback(
       <T>(
         url: string,
@@ -110,7 +110,7 @@ export const useHttpClient = (): HttpClient => {
           [s: string]: any;
         }
       ): Promise<T | void> => {
-        const state:GlobalStoreState = store.getState();
+        const state: GlobalStoreState = store.getState();
         const jwsToken = state.authentication.idToken;
 
         const headers = {
@@ -138,7 +138,7 @@ export const useHttpClient = (): HttpClient => {
       [setErrorMessage, setStackTrace, setHttpErrorCode]
     );
 
-  const wrappedFetchWithBodyAndEmptyResponse = (method: string) =>
+  const useWrappedFetchWithBodyAndEmptyResponse = (method: string) =>
     useCallback(
       (
         url: string,
@@ -146,7 +146,7 @@ export const useHttpClient = (): HttpClient => {
           [s: string]: any;
         }
       ): Promise<string | void> => {
-        const state:GlobalStoreState = store.getState();
+        const state: GlobalStoreState = store.getState();
         const jwsToken = state.authentication.idToken;
 
         const headers = {
@@ -175,14 +175,14 @@ export const useHttpClient = (): HttpClient => {
 
   return {
     httpGetJson,
-    httpPostJsonResponse: wrappedFetchWithBodyAndJsonResponse("post"),
-    httpPutJsonResponse: wrappedFetchWithBodyAndJsonResponse("put"),
-    httpDeleteJsonResponse: wrappedFetchWithBodyAndJsonResponse("delete"),
-    httpPatchJsonResponse: wrappedFetchWithBodyAndJsonResponse("patch"),
-    httpPostEmptyResponse: wrappedFetchWithBodyAndEmptyResponse("post"),
-    httpPutEmptyResponse: wrappedFetchWithBodyAndEmptyResponse("put"),
-    httpDeleteEmptyResponse: wrappedFetchWithBodyAndEmptyResponse("delete"),
-    httpPatchEmptyResponse: wrappedFetchWithBodyAndEmptyResponse("patch"),
+    httpPostJsonResponse: useWrappedFetchWithBodyAndJsonResponse("post"),
+    httpPutJsonResponse: useWrappedFetchWithBodyAndJsonResponse("put"),
+    httpDeleteJsonResponse: useWrappedFetchWithBodyAndJsonResponse("delete"),
+    httpPatchJsonResponse: useWrappedFetchWithBodyAndJsonResponse("patch"),
+    httpPostEmptyResponse: useWrappedFetchWithBodyAndEmptyResponse("post"),
+    httpPutEmptyResponse: useWrappedFetchWithBodyAndEmptyResponse("put"),
+    httpDeleteEmptyResponse: useWrappedFetchWithBodyAndEmptyResponse("delete"),
+    httpPatchEmptyResponse: useWrappedFetchWithBodyAndEmptyResponse("patch"),
     clearCache: () => {
       cache = {};
     }
