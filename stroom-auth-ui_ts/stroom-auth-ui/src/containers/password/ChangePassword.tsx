@@ -21,77 +21,15 @@ import * as queryString from "query-string";
 
 import "./ChangePassword.css";
 import "../Layout.css";
-// import { changePassword as onSubmit } from '../../modules/user';
 import ChangePasswordFields from "./ChangePasswordFields";
 
-import { useApi } from "../../api/users";
 import useRouter from "../../lib/useRouter";
 import useReduxState from "../../lib/useReduxState";
+import {useApi as useAuthenticationApi} from '../../api/authentication';
 
-// const enhance = compose(
-// withRouter,
-// connect(
-//   ({
-//     user: { showAlert, changePasswordErrorMessage },
-//     config: { authenticationServiceUrl },
-//     authentication: { idToken },
-//   }) => ({
-//     showAlert,
-//     changePasswordErrorMessage,
-//     authenticationServiceUrl,
-//     idToken,
-//   }),
-//   { onSubmit },
-// ),
-// withState('redirectUrl', 'setRedirectUrl', undefined),
-// withState('email', 'setEmail', undefined),
-//   lifecycle({
-//     componentDidMount() {
-//       const { setRedirectUrl, setEmail } = this.props;
-//       const query = queryString.parse(this.props.location.search);
-
-//       if (query.redirect_url) {
-//         const redirectUrl = decodeURIComponent(query.redirect_url);
-//         setRedirectUrl(redirectUrl);
-//       }
-
-//       // Try and get the user's email from the query string, and fall back on a cookie.
-//       let email;
-//       if (query.email) {
-//         email = query.email;
-//       } else {
-//         email = Cookies.get('username');
-//       }
-//       if (email) {
-//         setEmail(email);
-//       } else {
-//         console.error(
-//           "Unable to display the change password page because we could not get the user's email address from either the query string or a cookie!",
-//         );
-//       }
-//     },
-//   }),
-// );
-
-const ChangePassword = (
-  {
-    // handleSubmit,
-    // pristine,
-    // submitting,
-    // showAlert,
-    // changePasswordErrorMessage,
-    // redirectUrl,
-    // email,
-    // idToken,
-    // authenticationServiceUrl,
-    // onSubmit,
-  }
-) => {
+const ChangePassword = () => {
   const {
     showAlert
-    // changePasswordErrorMessage,
-    // authenticationServiceUrl,
-    // idToken
   } = useReduxState(
     ({
       user: { showAlert, changePasswordErrorMessage },
@@ -106,7 +44,7 @@ const ChangePassword = (
       idToken
     })
   );
-  const { changePassword } = useApi();
+  const { changePassword } = useAuthenticationApi();
   const { router } = useRouter();
   const [redirectUrl, setRedirectUrl] = useState('');
   const [email, setEmail] = useState('');

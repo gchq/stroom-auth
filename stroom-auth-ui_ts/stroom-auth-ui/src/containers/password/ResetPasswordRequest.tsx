@@ -22,7 +22,7 @@ import Button from '../Button';
 import '../Layout.css';
 import {hasAnyProps} from '../../lang';
 import '../../styles/index.css';
-import {useApi} from '../../api/users';
+import {useApi} from '../../api/authentication';
 import useReduxState from '../../lib/useReduxState';
 
 const ValidationSchema = Yup.object().shape({

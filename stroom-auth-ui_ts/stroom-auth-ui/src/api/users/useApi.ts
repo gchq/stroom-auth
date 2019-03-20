@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { FormikBag } from "formik";
 import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useHttpClient from "../useHttpClient";
-import { ChangePasswordRequest, ResetPasswordRequest, User } from "./types";
+import { User } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
 import { useActionCreators } from "./redux";
 import useRouter from '../../lib/useRouter';
-import { userInfo } from 'os';
 
 //FIXME: make a type for editedUser
 interface Api {
   createUser: (user: User) => Promise<void>;
   deleteUser: (userId:string) => Promise<void>;
-  changePasswordForCurrentUser: () => void;
-  resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
-  changePassword: (changePasswordRequest: ChangePasswordRequest) => void;
-  submitPasswordChangeRequest: (
-    formData: any,
-    formikBag: FormikBag<any, any>
-  ) => void;
   fetchUser: (userId: String) => void;
   updateUser: (user:User) => Promise<void>;
 }
@@ -107,112 +98,7 @@ export const useApi = (): Api => {
     return httpDeleteEmptyResponse(url, {});
   }, []);
 
-  const changePassword = useCallback(
-    (changePasswordRequest: ChangePasswordRequest) => {
-      const state: GlobalStoreState = store.getState();
-      hideChangePasswordErrorMessage();
-      const url = `${state.config.values.authenticationServiceUrl}/changePassword/`;
-      const {
-        password,
-        oldPassword,
-        email,
-        redirectUrl
-      } = changePasswordRequest;
-      httpPostJsonResponse(url, {
-        body: JSON.stringify({ newPassword: password, oldPassword, email })
-      })
-        .then(response => {
-          if (response.changeSucceeded) {
-            // If we successfully changed the password then we want to redirect if there's a redirection URL
-            if (redirectUrl !== undefined) {
-              window.location.href = redirectUrl;
-            } else {
-              toggleAlertVisibility(true, "Your password has been changed");
-            }
-          } else {
-            let errorMessage = [];
-            if (response.failedOn.includes("BAD_OLD_PASSWORD")) {
-              errorMessage.push("Your new old password is not correct");
-            }
-            if (response.failedOn.includes("COMPLEXITY")) {
-              errorMessage.push(
-                "Your new password does not meet the complexity requirements"
-              );
-            }
-            if (response.failedOn.includes("REUSE")) {
-              errorMessage.push("You may not reuse your previous password");
-            }
-            if (response.failedOn.includes("LENGTH")) {
-              errorMessage.push("Your new password is too short");
-            }
-            showChangePasswordErrorMessage(errorMessage);
-          }
-        });
-    },
-    [
-      hideChangePasswordErrorMessage,
-      toggleAlertVisibility,
-      showChangePasswordErrorMessage
-    ]
-  );
 
-  const resetPassword = useCallback(
-    (resetPasswordRequest: ResetPasswordRequest) => {
-      const state: GlobalStoreState = store.getState();
-      const newPassword = resetPasswordRequest.password;
-      const stroomUiUrl = state.config.values.stroomUiUrl;
-      const url = `${
-        state.config.values.authenticationServiceUrl
-        }/resetPassword/`;
-      httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) })
-        .then(response => {
-          if (response.changeSucceeded) {
-            if (stroomUiUrl !== undefined) {
-              window.location.href = stroomUiUrl;
-            } else {
-              console.error("No stroom UI url available for redirect!");
-            }
-          } else {
-            let errorMessage = [];
-            if (response.failedOn.includes("COMPLEXITY")) {
-              errorMessage.push(
-                "Your new password does not meet the complexity requirements"
-              );
-            }
-            if (response.failedOn.includes("LENGTH")) {
-              errorMessage.push("Your new password is too short");
-            }
-            showChangePasswordErrorMessage(errorMessage);
-          }
-        });
-    },
-    [showChangePasswordErrorMessage]
-  );
-
-  const changePasswordForCurrentUser = useCallback(() => {
-    const state: GlobalStoreState = store.getState();
-    const url = `${state.config.values.userServiceUrl}/me`;
-    httpGetJson(url, {})
-      .then(users => users[0])
-      .then(user => {
-        changePassword(user.email);
-      });
-  }, [changePassword]);
-
-  const submitPasswordChangeRequest = useCallback(
-    (formData: any, formikBag: FormikBag<any, any>) => {
-      const state: GlobalStoreState = store.getState();
-      const { setSubmitting } = formikBag;
-      const url = `${state.config.values.authenticationServiceUrl}/reset/${
-        formData.email
-        }`;
-      httpGetJson(url, {}).then(() => {
-        setSubmitting(false);
-        history.push("/confirmPasswordResetEmail");
-      });
-    },
-    []
-  );
 
   const fetchUser = useCallback(
     (userId: String) => {
@@ -229,10 +115,6 @@ export const useApi = (): Api => {
 
   return {
     createUser,
-    changePasswordForCurrentUser,
-    resetPassword,
-    changePassword,
-    submitPasswordChangeRequest,
     fetchUser,
     deleteUser,
     updateUser,

@@ -23,6 +23,7 @@ export default (): UseUsers => {
         updateUser: updateUserUsingApi,
         createUser: createUserUsingApi,
     } = useApi();
+
     const { history } = useRouter();
     const { updateResults } = useUserSearchActionCreators();
     const { getUsers } = useUserSearchApi();
@@ -40,14 +41,14 @@ export default (): UseUsers => {
     );
 
 
+    /**
+     * Updates the user
+     */
     const {
         toggleIsSaving,
         saveUserBeingEdited,
         toggleAlertVisibility
     } = useActionCreators();
-    /**
-     * Updates the user
-     */
     const updateUser = useCallback((user: User) => {
         updateUserUsingApi(user)
             .then(response => {
@@ -62,6 +63,9 @@ export default (): UseUsers => {
     }, [saveUserBeingEdited, toggleAlertVisibility, toggleIsSaving]);
 
 
+    /**
+     * Creates a user
+     */
     const { showCreateLoader } = useActionCreators();
     const { createUser: createAuthorisationUser } = useAuthorisationApi();
     const createUser = useCallback((user: User) => {
@@ -81,6 +85,7 @@ export default (): UseUsers => {
             });
 
     }, [createUserUsingApi, createAuthorisationUser, showCreateLoader, toggleAlertVisibility, toggleIsSaving]);
+
     return {
         deleteUser,
         updateUser,

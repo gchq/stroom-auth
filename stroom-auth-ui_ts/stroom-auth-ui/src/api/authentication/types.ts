@@ -8,3 +8,14 @@ export interface Credentials {
     email: String;
     password: String;
 }
+
+export interface ChangePasswordRequest {
+  email: string;
+  oldPassword: string;
+  password: string;
+  redirectUrl: string;
+}
+
+export interface ResetPasswordRequest {
+  password: string;
+}

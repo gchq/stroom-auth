@@ -16,69 +16,12 @@
 
 import * as React from "react";
 import { useState, useEffect } from "react";
-// import * as queryString from "qs";
 import * as jwtDecode from "jwt-decode";
-
-import { useApi } from "../../api/users";
 
 import { useReduxState } from "../../lib/useReduxState";
 import ChangePasswordFields from "./ChangePasswordFields";
-import { useActionCreators } from "../../api/authentication";
+import {useApi, useActionCreators } from "../../api/authentication";
 import useHttpQueryParam from "../../lib/useHttpQueryParam";
-// import useRouter from "../../lib/useRouter";
-
-// const enhance = compose(
-// withRouter,
-// connect(
-//   ({ user: { showAlert }, config: { stroomUiUrl } }) => ({ showAlert, stroomUiUrl }),
-//   {
-//     changeToken,
-//     onSubmit,
-//     push,
-//   },
-// ),
-// withState('missingToken', 'setMissingToken', false),
-// withState('invalidToken', 'setInvalidToken', false),
-// withState('expiredToken', 'setExpiredToken', false),
-//   lifecycle({
-//     componentDidMount() {
-//       const {
-//         setMissingToken,
-//         setInvalidToken,
-//         setExpiredToken,
-//         changeToken,
-//       } = this.props;
-//       let missingToken = false;
-//       let invalidToken = false;
-//       let expiredToken = false;
-
-//       const token = queryString.parse(this.props.location.search).token;
-
-//       // Validate token
-//       if (!token) {
-//         missingToken = true;
-//       } else {
-//         try {
-//           const decodedToken = jwtDecode(token);
-//           const now = new Date().getTime() / 1000;
-//           expiredToken = decodedToken.exp <= now;
-//         } catch (err) {
-//           invalidToken = true;
-//         }
-//       }
-
-//       setMissingToken(missingToken);
-//       setInvalidToken(invalidToken);
-//       setExpiredToken(expiredToken);
-
-//       if (!missingToken && !invalidToken && !expiredToken) {
-//         // If we have a valid token we're going to save it, so we can easily
-//         // use it with getState when requesting the change.
-//         changeToken(token);
-//       }
-//     },
-//   }),
-// );
 
 const ResetPassword = () => {
   const { resetPassword } = useApi();

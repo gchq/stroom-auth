@@ -27,13 +27,3 @@ export interface User {
   updated_on?: any;
   updated_by_user?: any;
 }
-export interface ChangePasswordRequest {
-  email: string;
-  oldPassword: string;
-  password: string;
-  redirectUrl: string;
-}
-
-export interface ResetPasswordRequest {
-  password: string;
-}
