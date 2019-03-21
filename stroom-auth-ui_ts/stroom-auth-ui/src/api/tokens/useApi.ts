@@ -38,7 +38,7 @@ interface Api {
     // autocompleteText: String,
     // securityToken: String
   // ) => void;
-  toggleEnabledState: (tokenId:string) => void;
+  toggleEnabledState: (tokenId:string) => Promise<void>;
 }
 
 export const useApi = (): Api => {
@@ -157,9 +157,9 @@ export const useApi = (): Api => {
       const nextState = state.token.lastReadToken.enabled ? "false" : "true";
       const securityToken = state.authentication.idToken;
       const url = `${ state.config.values.tokenServiceUrl }/${tokenId}/state/?enabled=${nextState}`
-      httpGetEmptyResponse(url)
-          .then(() => toggleState());
-    }, [toggleState])
+      return httpGetEmptyResponse(url);
+          // .then(() => toggleState());
+    }, [])
   };
 };
 

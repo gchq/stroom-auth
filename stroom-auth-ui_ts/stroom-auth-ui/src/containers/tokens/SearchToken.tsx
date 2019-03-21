@@ -27,6 +27,7 @@ import ReactTable, {
 } from "react-table";
 import "react-table/react-table.css";
 import * as dateFormat from "dateformat";
+// import { Checkbox } from 'pretty-checkbox-react';
 
 import Button from "../Button";
 import "./TokenSearch.css";
@@ -34,14 +35,13 @@ import "../../styles/index.css";
 import "../../styles/toolbar-small.css";
 import "../../styles/table-small.css";
 import "../../styles/toggle-small.css";
-import { useApi as useTokenApi } from "../../api/tokens";
+import { useTokens, useApi as useTokenApi } from "../../api/tokens";
 import {
   useApi as useTokenSearchApi,
   useActionCreators as useTokenSearchActionCreators
 } from "../../api/tokenSearch";
 import { useReduxState } from "../../lib/useReduxState";
 import { useRouter } from "../../lib/useRouter";
-
 // FIXME: Not sure why the actual filter props isn't working
 type FilterProps = {
   filter: any;
@@ -99,14 +99,15 @@ const getEnabledCellRenderer = (
   row: RowRenderProps,
   setEnabledStateOnToken: Function
 ) => {
-  const state = row.value !== undefined;
+  const state = row.original.enabled;
   const tokenId = row.original.id;
   return (
     <div
       className="TokenSearch__table__checkbox"
       // onClick={() => setEnabledStateOnToken(tokenId, !state)}
     >
-      <Toggle icons={false} checked={state} onChange={() => setEnabledStateOnToken(tokenId, !state)}/>
+    <input type="checkbox" checked={state} onChange={() => setEnabledStateOnToken(tokenId, !state)}/>
+      {/* <Toggle icons={false} checked={state} onChange={() => setEnabledStateOnToken(tokenId, !state)}/> */}
     </div>
   );
 };
@@ -154,10 +155,11 @@ const TokenSearch = () => {
       pageSize: lastUsedPageSize
     })
   );
+  const {toggleEnabledState} = useTokens();
   const { history } = useRouter();
   const { performTokenSearch } = useTokenSearchApi();
   const { selectRow } = useTokenSearchActionCreators();
-  const { deleteSelectedToken, toggleEnabledState } = useTokenApi();
+  const { deleteSelectedToken} = useTokenApi();
 
   const [isFilteringEnabled, toggleFiltering] = useState(false);
   const noTokenSelected = !selectedTokenRowId;
@@ -208,7 +210,7 @@ const TokenSearch = () => {
             icons={false}
             checked={isFilteringEnabled}
             onChange={event => toggleFiltering(event.target.checked)}
-          />
+          /> 
         </div>
       </div>
       <div className="UserSearch-content">
