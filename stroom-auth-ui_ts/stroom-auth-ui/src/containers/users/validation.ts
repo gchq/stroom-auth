@@ -16,7 +16,9 @@
 
 import * as Yup from 'yup';
 
-import {hasAnyProps} from '../../lang';
+import { hasAnyProps } from '../../lang';
+import { useApi } from '../../api/authentication';
+import { PasswordValidationRequest } from '../../api/authentication/types';
 
 export const NewUserValidationSchema = Yup.object().shape({
   email: Yup.string().required('Required'),
@@ -28,31 +30,23 @@ export const UserValidationSchema = Yup.object().shape({
   email: Yup.string().required('Required'),
 });
 
-export const validateAsync = (values, idToken, url) => {
-  if (values.password) {
-    return fetch(`${url}/isPasswordValid`, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + idToken,
-      },
-      method: 'post',
-      mode: 'cors',
-      body: JSON.stringify({
-        email: values.email,
-        newPassword: values.password,
-        oldPassword: values.oldPassword,
-      }),
-    })
-      .then(response => response.json())
-      .then(body => {
-        let errors = {};
+type PasswordValidationErrors = {
+  password: string;
+  oldPassword: string;
+  verifyPassword: string;
+}
 
+export const validateAsync = (passwordValidationRequest: PasswordValidationRequest) => {
+  const { isPasswordValid } = useApi();
+  if (passwordValidationRequest.newPassword) {
+    isPasswordValid(passwordValidationRequest)
+      .then(body => {
+        let errors = <PasswordValidationErrors>{};
         // First sort out async password checks
-        let passwordErrors = [];
-        let oldPasswordErrors = [];
+        let passwordErrors = <string[]>[];
+        let oldPasswordErrors = <string[]>[];
         if (body.failedOn.length > 0) {
-          body.failedOn.forEach(failureType => {
+          body.failedOn.forEach((failureType: string) => {
             if (failureType === 'LENGTH') {
               passwordErrors.push('Your new password is not long enough.');
             } else if (failureType === 'COMPLEXITY') {
@@ -79,16 +73,15 @@ export const validateAsync = (values, idToken, url) => {
         }
 
         // Do password checks
-        if (values.password !== undefined && values.password !== '') {
+        if (passwordValidationRequest.newPassword !== undefined && passwordValidationRequest.newPassword !== '') {
           if (
-            values.verifyPassword !== undefined &&
-            values.verifyPassword !== '' &&
-            values.password !== values.verifyPassword
+            passwordValidationRequest.verifyPassword !== undefined &&
+            passwordValidationRequest.verifyPassword !== '' &&
+            passwordValidationRequest.newPassword !== passwordValidationRequest.verifyPassword
           ) {
             errors.verifyPassword = 'Passwords do not match';
           }
         }
-
         if (hasAnyProps(errors)) {
           throw errors;
         }

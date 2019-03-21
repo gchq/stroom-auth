@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-function hasAnyProps(object) {
+function hasAnyProps(object:any) {
   let hasProps = false;
   for (const prop in object) {
     if (object.hasOwnProperty(prop)) {
