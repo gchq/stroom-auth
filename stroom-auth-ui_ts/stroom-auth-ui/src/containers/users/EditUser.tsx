@@ -29,9 +29,10 @@ import { UserValidationSchema, validateAsync } from "./validation";
 import { hasAnyProps } from "../../lang";
 import { useActionCreators, useUsers } from "../../api/users";
 import useIdFromPath from '../../lib/useIdFromPath';
+import { PasswordValidationRequest } from '../../api/authentication/types';
 
 const UserEditForm = () => {
-  const {updateUser, fetchUser } = useUsers();
+  const { updateUser, fetchUser } = useUsers();
   const { clearUserBeingEdited } = useActionCreators();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
@@ -95,10 +96,14 @@ const UserEditForm = () => {
         }}
         initialValues={initialValues}
         validateOnBlur
-        validate={values =>
-          validateAsync(values, idToken, authenticationServiceUrl)
-        }
-        validationSchema={UserValidationSchema}
+        validate={values => {
+          const passwordValidationRequest: PasswordValidationRequest = {
+            newPassword: values.password,
+            verifyPassword: values.verifyPassword,
+            email: values.email
+          }
+          validateAsync(passwordValidationRequest);
+        }} validationSchema={UserValidationSchema}
       >
         {({ errors, touched, submitForm, setFieldTouched, setFieldValue }) => {
           const isPristine = !hasAnyProps(touched);

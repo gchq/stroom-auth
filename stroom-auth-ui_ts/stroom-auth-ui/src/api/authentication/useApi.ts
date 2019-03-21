@@ -7,7 +7,9 @@ import {
   Credentials,
   ResetPasswordRequest,
   ChangePasswordRequest,
-  LoginResponse
+  LoginResponse,
+  PasswordValidationRequest,
+  PasswordValidationResponse
 } from "./types";
 import { FormikBag } from "formik";
 import { useActionCreators } from "./redux";
@@ -25,6 +27,7 @@ interface Api {
     formData: any,
     formikBag: FormikBag<any, any>
   ) => void;
+  isPasswordValid: (passwordValidationRequest: PasswordValidationRequest) => Promise<PasswordValidationResponse>;
 }
 
 export const useApi = (): Api => {
@@ -174,12 +177,22 @@ export const useApi = (): Api => {
     },
     []
   );
+
+
+
+  const isPasswordValid = useCallback((passwordValidationRequest:PasswordValidationRequest) => {
+      const state: GlobalStoreState = store.getState();
+      const url = `${state.config.values.authenticationServiceUrl}/isPasswordValid`;
+      return httpPostJsonResponse(url, {body: JSON.stringify(passwordValidationRequest)});
+  }, []);
+
   return {
     apiLogin,
     submitPasswordChangeRequest,
     // changePasswordForCurrentUser,
     resetPassword,
-    changePassword
+    changePassword,
+    isPasswordValid
   };
 };
 

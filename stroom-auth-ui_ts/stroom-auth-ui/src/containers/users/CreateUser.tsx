@@ -16,9 +16,6 @@
 
 import * as React from "react";
 import { Formik, Form } from "formik";
-// import {compose} from 'recompose';
-// import {connect} from 'react-redux';
-// import {push} from 'react-router-redux';
 
 import "../Layout.css";
 import "./CreateUserForm.css";
@@ -29,6 +26,7 @@ import { NewUserValidationSchema, validateAsync } from "./validation";
 import { hasAnyProps } from "../../lang";
 import { useApi , useUsers, User} from "../../api/users";
 import useRouter from "../../lib/useRouter";
+import { PasswordValidationRequest } from '../../api/authentication/types';
 
 
 // If we don't pass initialValues to Formik then they won't be controlled
@@ -73,8 +71,14 @@ const UserCreateForm = (
         const user:User = values;
         createUser(user);
       }}
-      validate={values =>
-        validateAsync(values, idToken, authenticationServiceUrl)
+      validate={values =>{
+        const passwordValidationRequest:PasswordValidationRequest = {
+          newPassword: values.password,
+          verifyPassword: values.verifyPassword,
+          email: values.email
+        }
+        validateAsync(passwordValidationRequest);
+      }
       }
       validationSchema={NewUserValidationSchema}
     >

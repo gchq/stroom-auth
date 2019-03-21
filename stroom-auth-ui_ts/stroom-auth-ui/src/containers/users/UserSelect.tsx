@@ -17,9 +17,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
-import { useMappedState } from 'redux-react-hook';
-
+import useReduxState from '../../lib/useReduxState';
 import './asyncUserSelect.css';
+import { User } from '../../api/users';
 
 const loadOptions = (inputValue: string, callback: Function, idToken: string, url: string) => {
   const email = inputValue || '';
@@ -34,58 +34,57 @@ const loadOptions = (inputValue: string, callback: Function, idToken: string, ur
   })
     .then(response => response.json())
     .then(body => {
-      const options = body.map(result => {
+      const options = body.map((result:User) => {
         return { value: result.id, label: result.email };
       });
       callback(options);
     });
 };
 
-const mapState = state => ({
-  idToken: state.authentication.idToken,
-  url: state.config.values.userServiceUrl,
-});
 
 const customStyles = {
-  option: (provided, state) => ({
+  option: (provided:any) => ({
     ...provided,
     fontSize: 14,
   }),
-  placeholder: (provided, state) => ({
+  placeholder: () => ({
     fontSize: 14,
   }),
-  input: (provided, state) => ({
+  input: (provided:any) => ({
     ...provided,
     fontSize: 14,
   }),
-  singleValue: (provided, state) => ({
+  singleValue: (provided:any) => ({
     ...provided,
     fontSize: 14,
   }),
 };
 
-function AsyncUserSelect(props) {
+const AsyncUserSelect = (props: { onChange: Function; }) => {//FIXME: get the right type
+  const { idToken, userServiceUrl } = useReduxState(
+    ({ authentication: { idToken }, config: { values: { userServiceUrl } } }) => ({
+      idToken, userServiceUrl
+    }));
   const { onChange } = props;
   // eslint-disable-next-line
   const [_, setInputValue] = useState('');
-  const { idToken, url } = useMappedState(mapState);
 
   return (
     <AsyncSelect
-      placeholder= ''
-  styles = { customStyles }
-  className = "AsyncUserSelect"
-  cacheOptions
-  defaultOptions
-  loadOptions = {(inputValue, callback) =>
-  loadOptions(inputValue, callback, idToken, url)
-}
-onInputChange = { value => {
-  setInputValue(value);
-  return value;
-}}
-onChange = { value => onChange('user', value) }
-  />
+      placeholder=''
+      styles={customStyles}
+      className="AsyncUserSelect"
+      cacheOptions
+      defaultOptions
+      loadOptions={(inputValue, callback) =>
+        loadOptions(inputValue, callback, idToken, userServiceUrl)
+      }
+      onInputChange={value => {
+        setInputValue(value);
+        return value;
+      }}
+      onChange={value => onChange('user', value)}
+    />
   );
 }
 

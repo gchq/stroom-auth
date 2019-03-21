@@ -26,3 +26,15 @@ export interface LoginResponse {
   redirectUrl: string;
   message: string;
 }
+
+export interface PasswordValidationRequest {
+  email: string,
+  newPassword: string,
+  oldPassword?: string,
+  verifyPassword: string
+}
+
+
+export interface PasswordValidationResponse {
+  failedOn: string[];
+}

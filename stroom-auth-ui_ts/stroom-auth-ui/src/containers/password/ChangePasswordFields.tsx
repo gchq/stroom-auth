@@ -22,6 +22,7 @@ import {validateAsync} from '../users/validation';
 import '../Layout.css';
 import {hasAnyProps} from '../../lang';
 import useReduxState from '../../lib/useReduxState';
+import { PasswordValidationRequest } from '../../api/authentication/types';
 
 // const enhance = compose(
 //   withRouter,
@@ -74,8 +75,15 @@ const ChangePasswordFields = ({
       onSubmit={(values, actions) => {
         onSubmit(values);
       }}
-      validate={values =>
-        validateAsync(values, idToken, authenticationServiceUrl)
+      validate={values =>{
+        const passwordValidationRequest:PasswordValidationRequest = {
+          oldPassword: values.oldPassword,
+          newPassword: values.password,
+          verifyPassword: values.verifyPassword,
+          email: values.email,
+        };
+        validateAsync(passwordValidationRequest);
+      } 
       }>
       {({errors, touched, submitForm, isSubmitting}) => {
         const isPristine = !hasAnyProps(touched);
