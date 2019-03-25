@@ -65,6 +65,8 @@ public final class User {
     private String created_by_user;
     @Nullable
     private boolean never_expires;
+    @Nullable
+    private String reactivatedDate;
 
     public User() {
     }
@@ -218,6 +220,14 @@ public final class User {
         this.never_expires = never_expires;
     }
 
+    public void setReactivatedDate(String reactivatedDate) {
+        this.reactivatedDate = reactivatedDate;
+    }
+
+    public String getReactivatedDate() {
+        return this.reactivatedDate;
+    }
+
     /**
      * This is not the same as getPasswordHash(). That's a getting for the model property,
      * but this method actually creates a new hash.
@@ -285,6 +295,7 @@ public final class User {
                 ", created_on='" + created_on + '\'' +
                 ", created_by_user='" + created_by_user + '\'' +
                 ", never_expire='" + never_expires + '\'' +
+                ", reactivated_date='" + reactivatedDate + '\'' +
                 '}';
     }
 }

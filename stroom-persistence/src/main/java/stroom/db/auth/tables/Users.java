@@ -42,7 +42,7 @@ import stroom.db.auth.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = -369251902;
+    private static final long serialVersionUID = 1756787340;
 
     /**
      * The reference instance of <code>auth.users</code>
@@ -136,6 +136,11 @@ public class Users extends TableImpl<UsersRecord> {
      * The column <code>auth.users.never_expires</code>.
      */
     public final TableField<UsersRecord, Boolean> NEVER_EXPIRES = createField("never_expires", org.jooq.impl.SQLDataType.BIT.defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
+
+    /**
+     * The column <code>auth.users.reactivated_date</code>.
+     */
+    public final TableField<UsersRecord, Timestamp> REACTIVATED_DATE = createField("reactivated_date", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * Create a <code>auth.users</code> table reference

@@ -61,7 +61,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import static stroom.db.auth.Tables.USERS;
 
@@ -430,7 +430,7 @@ public final class UserResource {
         }
 
         user.setUpdated_by_user(authenticatedServiceUser.getName());
-        user.setUpdated_on(ZonedDateTime.now().toString());
+        user.setUpdated_on(LocalDateTime.now().toString());
         UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
         database
                 .update((Table) USERS)

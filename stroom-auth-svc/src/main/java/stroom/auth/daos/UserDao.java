@@ -23,7 +23,7 @@ import org.apache.commons.lang3.Validate;
 import org.jooq.Condition;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
-import org.jooq.Field;
+import org.jooq.Result;
 import org.jooq.Table;
 import org.jooq.impl.DSL;
 import org.mindrot.jbcrypt.BCrypt;
@@ -44,9 +44,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static stroom.db.auth.Tables.USERS;
 
@@ -83,22 +84,14 @@ public class UserDao {
     }
 
     public int create(User newUser, String creatingUsername){
-        UsersRecord usersRecord = (UsersRecord) database
-                .insertInto((Table) USERS)
-                .set(USERS.EMAIL, newUser.getEmail())
-                .set(USERS.PASSWORD_HASH, newUser.generatePasswordHash())
-                .set(USERS.FIRST_NAME, newUser.getFirst_name())
-                .set(USERS.LAST_NAME, newUser.getLast_name())
-                .set(USERS.COMMENTS, newUser.getComments())
-                .set(USERS.STATE, newUser.getState())
-                .set(USERS.CREATED_ON, Timestamp.from(Instant.now(clock)))
-                .set(USERS.CREATED_BY_USER, creatingUsername)
-                .set(USERS.NEVER_EXPIRES, newUser.getNever_expires())
-                .returning(new Field[]{USERS.ID}).fetchOne();
-        return usersRecord.getId();
+        newUser.setCreated_on(UserMapper.toIso(Timestamp.from(Instant.now(clock))));
+        newUser.setCreated_by_user(creatingUsername);
+        newUser.setLogin_count(0);
+        UsersRecord usersRecord = UserMapper.map(newUser);
+        UsersRecord createdUser = database.newRecord(USERS, usersRecord);
+        createdUser.store();
+        return createdUser.getId();
     }
-
-
 
     public void recordSuccessfulLogin(String email) {
         UsersRecord user = (UsersRecord) database
@@ -108,8 +101,9 @@ public class UserDao {
 
         // We reset the failed login count if we have a successful login
         user.setLoginFailures(0);
+        user.setReactivatedDate(null);
         user.setLoginCount(user.getLoginCount() + 1);
-        user.setLastLogin(UserMapper.convertISO8601ToTimestamp(ZonedDateTime.now(clock).toString()));
+        user.setLastLogin(UserMapper.convertISO8601ToTimestamp(LocalDateTime.now(clock).toString()));
         database
                 .update((Table) USERS)
                 .set(user)
@@ -187,9 +181,7 @@ public class UserDao {
                 .selectFrom(USERS)
                 .where(USERS.EMAIL.eq(email)).fetchOptional();
 
-        // Convert the UsersRecord into a User.
-        return userQuery.map(usersRecord ->
-                usersRecord.into(User.class));
+        return userQuery.map(usersRecord -> UserMapper.map(usersRecord));
     }
 
     public void changePassword(String email, String newPassword) {
@@ -242,35 +234,54 @@ public class UserDao {
     public int deactivateNewInactiveUsers(Duration neverUsedAccountDeactivationThreshold){
         Timestamp activityThreshold = convertThresholdToTimestamp(neverUsedAccountDeactivationThreshold);
 
-        int numberOfDisabledAccounts = database
-                .update(Tables.USERS)
-                .set(Tables.USERS.STATE, User.UserState.INACTIVE.getStateText())
-                .where(Tables.USERS.CREATED_ON.lessOrEqual(activityThreshold))
+        Result<UsersRecord> candidatesForDeactivating = database.selectFrom(USERS)
+                .where(USERS.CREATED_ON.lessOrEqual(activityThreshold))
                 // We are only going to deactivate enabled accounts
                 .and(USERS.STATE.eq(User.UserState.ENABLED.getStateText()))
                 // A 'new' user is one who has never logged in.
-                .and(Tables.USERS.LAST_LOGIN.isNull())
-                // We don't want to disable admin because that could lock the users out of the system
-                .and(USERS.NEVER_EXPIRES.ne(true))
+                .and(USERS.LAST_LOGIN.isNull())
+                // We don't want to disable all accounts
+                .and(USERS.NEVER_EXPIRES.ne(true)).fetch();
+
+        List<Integer> usersToDeactivate = candidatesForDeactivating.stream()
+                .filter(usersRecord ->
+                        usersRecord.getReactivatedDate() == null
+                                ||
+                                 usersRecord.getReactivatedDate().before(activityThreshold))
+                .map(usersRecord -> usersRecord.getId())
+                .collect(Collectors.toList());
+
+        database.update(USERS).set(USERS.STATE, User.UserState.INACTIVE.getStateText())
+                .where(USERS.ID.in(usersToDeactivate))
                 .execute();
 
-        return numberOfDisabledAccounts;
+        return usersToDeactivate.size();
     }
 
     public int deactivateInactiveUsers(Duration unusedAccountDeactivationThreshold){
         Timestamp activityThreshold = convertThresholdToTimestamp(unusedAccountDeactivationThreshold);
 
-        int numberOfDisabledAccounts = database
-                .update(Tables.USERS)
-                .set(Tables.USERS.STATE, User.UserState.INACTIVE.getStateText())
-                .where(Tables.USERS.LAST_LOGIN.lessOrEqual(activityThreshold))
+        Result<UsersRecord> candidatesForDeactivating = database.selectFrom(USERS)
+                .where(USERS.LAST_LOGIN.lessOrEqual(activityThreshold))
+                // If we have a reactivated date we'll use that instead of the created_on date.
                 // We are only going to deactivate enabled accounts
                 .and(USERS.STATE.eq(User.UserState.ENABLED.getStateText()))
                 // We don't want to disable admin because that could lock the users out of the system
-                .and(USERS.NEVER_EXPIRES.ne(true))
+                .and(USERS.NEVER_EXPIRES.ne(true)).fetch();
+
+        List<Integer> usersToDeactivate = candidatesForDeactivating.stream()
+                .filter(usersRecord ->
+                        usersRecord.getReactivatedDate() == null
+                                ||
+                                usersRecord.getReactivatedDate().before(activityThreshold))
+                .map(usersRecord -> usersRecord.getId())
+                .collect(Collectors.toList());
+
+        database.update(USERS).set(USERS.STATE, User.UserState.INACTIVE.getStateText())
+                .where(USERS.ID.in(usersToDeactivate))
                 .execute();
 
-        return numberOfDisabledAccounts;
+        return usersToDeactivate.size();
     }
 
     public boolean exists(String id) {
