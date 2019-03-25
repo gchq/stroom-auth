@@ -33,7 +33,7 @@ public abstract class Database_IT {
     protected static final String JDBC_USER = "authuser";
     protected static final String JDBC_PASSWORD = "stroompassword1";
 
-    private static final String MYSQL_DOCKER_IMAGE = "mysql:5.6.41";
+    private static final String MYSQL_DOCKER_IMAGE = "mysql:5.6.43";
 
     @ClassRule
     public static MySQLContainer mysql = new MySQLContainer(MYSQL_DOCKER_IMAGE)
