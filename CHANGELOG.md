@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v1.0-beta.30]
+## [v1.0-beta.30] - 2019-03-25
 
 * Issue #140: Fix user deactivation that can occur soon after reactivation
 
