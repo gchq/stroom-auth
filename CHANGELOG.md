@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.30]
+
+* Issue #140: Fix user deactivation that can occur soon after reactivation
+
 * Uplift base docker image to openjdk:8u191-jdk-alpine3.9, reverting back to JDK for access to diagnostic tools.
 
 ## [v1.0-beta.29] - 2019-02-05
