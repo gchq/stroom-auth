@@ -16,12 +16,16 @@
 
 package stroom.auth.service.resources;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import stroom.auth.daos.UserMapper;
 import stroom.auth.resources.user.v1.User;
 import stroom.db.auth.tables.records.UsersRecord;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.auth.resources.user.v1.User.UserState.DISABLED;
@@ -46,23 +50,9 @@ public final class UserMapperTest {
         usersRecord.setCreatedOn(new Timestamp(System.currentTimeMillis()));
         usersRecord.setCreatedByUser("creating user");
         usersRecord.setNeverExpires(true);
+        usersRecord.setReactivatedDate(new Timestamp(System.currentTimeMillis()));
 
-        User user = new User();
-        user.setId(2);
-        user.setEmail("new email");
-        user.setPassword_hash("new hash");
-        user.setState(DISABLED.getStateText());
-        user.setFirst_name("new first name");
-        user.setLast_name("new last name");
-        user.setComments("new comments");
-        user.setLogin_failures(3);
-        user.setLogin_count(5);
-        user.setLast_login("2017-01-01T00:00:00.000Z");
-        user.setUpdated_on("2017-01-02T00:00:00.000Z");
-        user.setUpdated_by_user("New updating user");
-        user.setCreated_on("2017-01-03T00:00:00.000Z");
-        user.setCreated_by_user("New creating user");
-        user.setNever_expires(false);
+        User user = getUsers().getRight();
 
         UsersRecord updatedRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
         assertThat(updatedRecord.getId()).isEqualTo(2);
@@ -74,12 +64,65 @@ public final class UserMapperTest {
         assertThat(updatedRecord.getComments()).isEqualTo("new comments");
         assertThat(updatedRecord.getLoginFailures()).isEqualTo(3);
         assertThat(updatedRecord.getLoginCount()).isEqualTo(5);
-        assertThat(updatedRecord.getLastLogin()).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-01T00:00:00.000Z"));
-        assertThat(updatedRecord.getUpdatedOn()).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-02T00:00:00.000Z"));
+        assertThat(updatedRecord.getLastLogin()).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-01T00:00:00"));
+        assertThat(updatedRecord.getUpdatedOn()).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-02T00:00:00"));
         assertThat(updatedRecord.getUpdatedByUser()).isEqualTo("New updating user");
-        assertThat(updatedRecord.getCreatedOn()).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-03T00:00:00.000Z"));
+        assertThat(updatedRecord.getCreatedOn()).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-03T00:00:00"));
         assertThat(updatedRecord.getCreatedByUser()).isEqualTo("New creating user");
         assertThat(updatedRecord.getNeverExpires()).isEqualTo(false);
+        // NB: We don't need to map reactivate_date because it's set by this method anyway.
+//        assertThat(updatedRecord.getReactivatedDate()).isEqualTo("2018-01-01T10:10:10");
+    }
+
+    @Test
+    public final void userToRecord() {
+        Pair<UsersRecord, User> users = getUsers();
+        UsersRecord mapped = UserMapper.map(users.getRight());
+        UsersRecord orig = users.getLeft();
+        assertThat(mapped.getId()).isEqualTo(orig.getId());
+        assertThat(mapped.getReactivatedDate()).isEqualTo(orig.getReactivatedDate());
+        assertThat(mapped.getState()).isEqualTo(orig.getState());
+        assertThat(mapped.getCreatedOn()).isEqualTo(orig.getCreatedOn());
+        assertThat(mapped.getUpdatedOn()).isEqualTo(orig.getUpdatedOn());
+        assertThat(mapped.getLoginFailures()).isEqualTo(orig.getLoginFailures());
+        assertThat(mapped.getEmail()).isEqualTo(orig.getEmail());
+        assertThat(mapped.getLastLogin()).isEqualTo(orig.getLastLogin());
+        assertThat(mapped.getLoginCount()).isEqualTo(orig.getLoginCount());
+        assertThat(mapped.getPasswordLastChanged()).isEqualTo(orig.getPasswordLastChanged());
+        assertThat(mapped.getComments()).isEqualTo(orig.getComments());
+        assertThat(mapped.getCreatedByUser()).isEqualTo(orig.getCreatedByUser());
+        assertThat(mapped.getFirstName()).isEqualTo(orig.getFirstName());
+        assertThat(mapped.getLastName()).isEqualTo(orig.getLastName());
+        assertThat(mapped.getNeverExpires()).isEqualTo(orig.getNeverExpires());
+        // NB: We don't assert that the password has is equal because this is generated. We just assert it's not null.
+        assertThat(mapped.getPasswordHash()).isNotNull();
+        assertThat(mapped.getUpdatedByUser()).isEqualTo(orig.getUpdatedByUser());
+    }
+
+    @Test
+    public final void recordToUser() {
+        Pair<UsersRecord, User> users = getUsers();
+        User mapped = UserMapper.map(users.getLeft());
+        User orig = users.getRight();
+        assertThat(mapped.getId()).isEqualTo(orig.getId());
+        assertThat(mapped.getReactivatedDate()).isEqualTo(orig.getReactivatedDate());
+        assertThat(mapped.getState()).isEqualTo(orig.getState());
+        assertThat(mapped.getCreated_on()).isEqualTo(orig.getCreated_on());
+        assertThat(mapped.getUpdated_on()).isEqualTo(orig.getUpdated_on());
+        assertThat(mapped.getLogin_failures()).isEqualTo(orig.getLogin_failures());
+        assertThat(mapped.getEmail()).isEqualTo(orig.getEmail());
+        assertThat(mapped.getLast_login()).isEqualTo(orig.getLast_login());
+        assertThat(mapped.getLogin_count()).isEqualTo(orig.getLogin_count());
+        //TODO Add get password last change to the POJO
+//        assertThat(mapped.getPasswordLastChanged()).isEqualTo(orig.get());
+        assertThat(mapped.getComments()).isEqualTo(orig.getComments());
+        assertThat(mapped.getCreated_by_user()).isEqualTo(orig.getCreated_by_user());
+        assertThat(mapped.getFirst_name()).isEqualTo(orig.getFirst_name());
+        assertThat(mapped.getLast_name()).isEqualTo(orig.getLast_name());
+        assertThat(mapped.getNever_expires()).isEqualTo(orig.getNever_expires());
+        // NB: We don't need to check password hash mapping
+//        assertThat(mapped.getPassword_hash()).isNotNull();
+        assertThat(mapped.getUpdated_by_user()).isEqualTo(orig.getUpdated_by_user());
     }
 
     @Test
@@ -88,7 +131,66 @@ public final class UserMapperTest {
         // To make it pass you'll need to updated the count, below.
         // It exists to remind you to add a mapping in UserMapper.
         // The count is one more than the number in UserRecord, because it has a 'password' property.
-        int currentNumberOfPropertiesOnUser = 16;
+        int currentNumberOfPropertiesOnUser = 17;
         assertThat(User.class.getDeclaredFields().length).isEqualTo(currentNumberOfPropertiesOnUser);
+    }
+
+    public static final Pair<UsersRecord, User> getUsers() {
+        User user = new User();
+        UsersRecord usersRecord = new UsersRecord();
+
+        user.setId(2);
+        usersRecord.setId(2);
+
+        user.setEmail("new email");
+        usersRecord.setEmail("new email");
+
+        user.setPassword_hash("new hash");
+        usersRecord.setPasswordHash(user.generatePasswordHash());
+
+        user.setState(DISABLED.getStateText());
+        usersRecord.setState(DISABLED.getStateText());
+
+        user.setFirst_name("new first name");
+        usersRecord.setFirstName("new first name");
+
+        user.setLast_name("new last name");
+        usersRecord.setLastName("new last name");
+
+        user.setComments("new comments");
+        usersRecord.setComments("new comments");
+
+        user.setLogin_failures(3);
+        usersRecord.setLoginFailures(3);
+
+        user.setLogin_count(5);
+        usersRecord.setLoginCount(5);
+
+        user.setLast_login("2017-01-01T00:00:00");
+        usersRecord.setLastLogin(isoToTimestamp("2017-01-01T00:00:00.000"));
+
+        user.setUpdated_on("2017-01-02T00:00:00");
+        usersRecord.setUpdatedOn(isoToTimestamp("2017-01-02T00:00:00"));
+
+        user.setUpdated_by_user("New updating user");
+        usersRecord.setUpdatedByUser("New updating user");
+
+        user.setCreated_on("2017-01-03T00:00:00");
+        usersRecord.setCreatedOn(isoToTimestamp("2017-01-03T00:00:00"));
+
+        user.setCreated_by_user("New creating user");
+        usersRecord.setCreatedByUser("New creating user");
+
+        user.setNever_expires(false);
+        usersRecord.setNeverExpires(false);
+
+        user.setReactivatedDate("2019-01-01T10:10:10");
+        usersRecord.setReactivatedDate(isoToTimestamp("2019-01-01T10:10:10"));
+
+        return new ImmutablePair(usersRecord, user);
+    }
+
+    private static Timestamp isoToTimestamp(String iso8601) {
+        return Timestamp.from(LocalDateTime.parse(iso8601).toInstant(ZoneOffset.UTC));
     }
 }

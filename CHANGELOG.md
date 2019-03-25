@@ -10,6 +10,32 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#107**: Remove the 'password has been reset, prepare for redirection' page
 
+## [v1.0-beta.31] - 2019-03-25
+
+* FIx issue in an integration test
+
+## [v1.0-beta.30] - 2019-03-25
+
+* Issue #140: Fix user deactivation that can occur soon after reactivation
+
+* Uplift base docker image to openjdk:8u191-jdk-alpine3.9, reverting back to JDK for access to diagnostic tools.
+
+## [v1.0-beta.29] - 2019-02-05
+
+* Change service docker image base to openjdk:8u181-jre-alpine3.8
+
+## [v1.0-beta.28] - 2019-02-05
+
+* Issue **#129**: Update authorisation user's status when authentication user's status is changed
+
+## [v1.0-beta.27] - 2019-01-29
+
+* Improve logging
+
+## [v1.0-beta.26] - 2019-01-15
+
+* Issue #126: Fix new API key page
+
 * Issue **#109**: Button on Change Password page does not disable when clicked
 
 * Issue **#67**: Clear out obsolete dependencies in `public`
@@ -202,7 +228,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.25...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.31...master
+[v1.0-beta.31]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.30...v1.0-beta.31
+[v1.0-beta.30]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.29...v1.0-beta.30
+[v1.0-beta.29]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.28...v1.0-beta.29
+[v1.0-beta.28]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.27...v1.0-beta.28
+[v1.0-beta.27]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.26...v1.0-beta.27
+[v1.0-beta.26]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.25...v1.0-beta.26
 [v1.0-beta.25]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.24...v1.0-beta.25
 [v1.0-beta.24]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.23...v1.0-beta.24
 [v1.0-beta.23]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.22...v1.0-beta.23

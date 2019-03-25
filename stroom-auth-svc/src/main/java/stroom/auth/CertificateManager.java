@@ -30,6 +30,7 @@ public class CertificateManager {
 
     public Optional<String> getCertificate(HttpServletRequest httpServletRequest) {
         String dn = httpServletRequest.getHeader("X-SSL-CLIENT-S-DN");
+        LOGGER.debug("Found X-SSL-CLIENT-S-DN header: {}", dn);
         String cn = null;
         try {
             cn = getCn(dn);

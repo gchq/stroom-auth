@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import React, {useState} from 'react';
+import React from 'react';
+import {connect} from 'react-redux';
+import {compose, withState} from 'recompose';
 import AsyncSelect from 'react-select/lib/Async';
-import {useMappedState} from 'redux-react-hook';
 
 import './asyncUserSelect.css';
 
@@ -40,11 +41,6 @@ const loadOptions = (inputValue, callback, idToken, url) => {
     });
 };
 
-const mapState = state => ({
-  idToken: state.authentication.idToken,
-  url: state.config.userServiceUrl,
-});
-
 const customStyles = {
   option: (provided, state) => ({
     ...provided,
@@ -63,21 +59,29 @@ const customStyles = {
   }),
 };
 
+const enhance = compose(
+  connect(
+    ({authentication: {idToken}, config: {userServiceUrl}}) => ({
+      idToken,
+      userServiceUrl,
+    }),
+    {},
+  ),
+  withState('inputValue', 'setInputValue', ''),
+);
+
 function AsyncUserSelect(props) {
-  const {onChange} = props;
-  // eslint-disable-next-line
-  const [_, setInputValue] = useState('');
-  const {idToken, url} = useMappedState(mapState);
+  const {onChange, inputValue, setInputValue, idToken, userServiceUrl} = props;
 
   return (
     <AsyncSelect
-      placeholder=''
+      placeholder=""
       styles={customStyles}
       className="AsyncUserSelect"
       cacheOptions
       defaultOptions
       loadOptions={(inputValue, callback) =>
-        loadOptions(inputValue, callback, idToken, url)
+        loadOptions(inputValue, callback, idToken, userServiceUrl)
       }
       onInputChange={value => {
         setInputValue(value);
@@ -88,4 +92,4 @@ function AsyncUserSelect(props) {
   );
 }
 
-export default AsyncUserSelect;
+export default enhance(AsyncUserSelect);
