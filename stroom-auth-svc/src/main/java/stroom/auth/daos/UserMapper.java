@@ -26,6 +26,7 @@ import stroom.db.auth.tables.records.UsersRecord;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -33,8 +34,12 @@ import java.util.HashMap;
 
 public final class UserMapper {
 
-    @NotNull
     public static UsersRecord updateUserRecordWithUser(@NotNull User user, @NotNull UsersRecord usersRecord) {
+        return updateUserRecordWithUser(user, usersRecord, Clock.systemDefaultZone());
+    }
+
+    @NotNull
+    public static UsersRecord updateUserRecordWithUser(@NotNull User user, @NotNull UsersRecord usersRecord, Clock clock) {
         Preconditions.checkNotNull(user);
         Preconditions.checkNotNull(usersRecord);
 
@@ -66,7 +71,7 @@ public final class UserMapper {
             if(usersRecord.getState().equals(User.UserState.LOCKED.getStateText())
             && user.getState().equalsIgnoreCase(User.UserState.ENABLED.getStateText())) {
                 userMap.put("login_failures", 0);
-                userMap.put("reactivated_date", LocalDateTime.now());
+                userMap.put("reactivated_date", clock.instant());
             }
             userMap.put("state", user.getState());
         }
@@ -77,23 +82,23 @@ public final class UserMapper {
 
     public static UsersRecord map(User user){
         UsersRecord usersRecord = new UsersRecord();
-        usersRecord.setId(user.getId());
-        usersRecord.setEmail(user.getEmail());
-        usersRecord.setPasswordHash(user.generatePasswordHash());
-        usersRecord.setFirstName(user.getFirst_name());
-        usersRecord.setLastName(user.getLast_name());
         usersRecord.setComments(user.getComments());
-        usersRecord.setState(user.getState());
-        usersRecord.setCreatedOn(convertISO8601ToTimestamp(user.getCreated_on()));
         usersRecord.setCreatedByUser(user.getCreated_by_user());
+        usersRecord.setCreatedOn(convertISO8601ToTimestamp(user.getCreated_on()));
+        usersRecord.setEmail(user.getEmail());
+        usersRecord.setFirstName(user.getFirst_name());
+        usersRecord.setId(user.getId());
+        usersRecord.setLastLogin(convertISO8601ToTimestamp(user.getLast_login()));
+        usersRecord.setLastName(user.getLast_name());
+        usersRecord.setLoginCount(user.getLogin_count());
+        usersRecord.setLoginFailures(user.getLogin_failures());
         usersRecord.setNeverExpires(user.getNever_expires());
+        usersRecord.setPasswordHash(user.generatePasswordHash());
         usersRecord.setReactivatedDate(convertISO8601ToTimestamp(user.getReactivatedDate()));
+        usersRecord.setState(user.getState());
+        usersRecord.setState(user.getState());
         usersRecord.setUpdatedByUser(user.getUpdated_by_user());
         usersRecord.setUpdatedOn(convertISO8601ToTimestamp(user.getUpdated_on()));
-        usersRecord.setLoginFailures(user.getLogin_failures());
-        usersRecord.setLastLogin(convertISO8601ToTimestamp(user.getLast_login()));
-        usersRecord.setLoginCount(user.getLogin_count());
-        usersRecord.setState(user.getState());
         return usersRecord;
     }
 

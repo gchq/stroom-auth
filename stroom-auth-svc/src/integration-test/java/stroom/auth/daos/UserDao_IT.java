@@ -116,9 +116,9 @@ public class UserDao_IT extends Database_IT {
             // GIVEN...
             UserDao userDao = getUserDao(conn);
 
-            final String user01 = UUID.randomUUID().toString();
-            final String user02 = UUID.randomUUID().toString();
-            final String user03 = UUID.randomUUID().toString();
+            final String user01 = "user01_" + UUID.randomUUID().toString();
+            final String user02 = "user02_" + UUID.randomUUID().toString();
+            final String user03 = "user03_" + UUID.randomUUID().toString();
 
             // Create a test user who should be disabled
             createUserAccount(userDao, user01);
@@ -126,11 +126,10 @@ public class UserDao_IT extends Database_IT {
 
 //            // Create a user who would be disabled except their reactivated_date has been set to more recently
             createUserAccount(userDao, user03, false, ENABLED.getStateText(),
-                    UserMapper.toIso(Timestamp.from(ZonedDateTime.now().plusDays(10).toInstant())));
-            userDao.recordSuccessfulLogin(user03);
+                    UserMapper.toIso(Timestamp.from(ZonedDateTime.now().plusDays(40).toInstant())));
 
             // Advance the clock and create a test user who shouldn't be disabled
-            setClockToDaysFromNow(userDao, 10);
+            setClockToDaysFromNow(userDao, 40);
             createUserAccount(userDao, user02);
             userDao.recordSuccessfulLogin(user02);
 
