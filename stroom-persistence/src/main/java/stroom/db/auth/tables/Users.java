@@ -42,7 +42,7 @@ import stroom.db.auth.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = -399118570;
+    private static final long serialVersionUID = 1294105095;
 
     /**
      * The reference instance of <code>auth.users</code>
@@ -141,6 +141,11 @@ public class Users extends TableImpl<UsersRecord> {
      * The column <code>auth.users.force_password_change</code>.
      */
     public final TableField<UsersRecord, Boolean> FORCE_PASSWORD_CHANGE = createField("force_password_change", org.jooq.impl.SQLDataType.BOOLEAN.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>auth.users.reactivated_date</code>.
+     */
+    public final TableField<UsersRecord, Timestamp> REACTIVATED_DATE = createField("reactivated_date", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * Create a <code>auth.users</code> table reference

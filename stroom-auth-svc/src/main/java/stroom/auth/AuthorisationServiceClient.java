@@ -38,6 +38,7 @@ public class AuthorisationServiceClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorisationServiceClient.class);
 
     public static final String UNAUTHORISED_USER_MESSAGE = "This user is not authorised to access this resource";
+    private static final String NOT_FOUND_404_MESSAGE = "Received a 404 when trying to access the authorisation service! I am unable to check authorisation so all requests will be rejected until this is fixed. Is the service location correctly configured? Is the service running? The URL I tried was: {}";
 
     private Config config;
     private Client authorisationService = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
@@ -66,15 +67,47 @@ public class AuthorisationServiceClient {
                 break;
             case HttpStatus.NOT_FOUND_404:
                 isUserAuthorisedToManageUsers = false;
-                LOGGER.error("Received a 404 when trying to access the authorisation service! I am unable to check authorisation so all requests will be rejected until this is fixed. Is the service location correctly configured? Is the service running? The URL I tried was: {}", authorisationUrl);
+                LOGGER.error(NOT_FOUND_404_MESSAGE);
                 break;
             default:
                 isUserAuthorisedToManageUsers = false;
-                LOGGER.error("Tried to check authorisation for a user but got an unknown response! Response code was {}",
-                        response.getStatus());
+                LOGGER.error("Tried to check authorisation for a user but got an unknown response! Response code was {}", response.getStatus());
         }
 
         return isUserAuthorisedToManageUsers;
+    }
+
+    public boolean setUserStatus(String usersJws, String user, String status){
+        String url = String.format("%s%s?userId=%s&status=%s",
+                config.getAuthorisationServiceConfig().getUrl(),
+                config.getAuthorisationServiceConfig().getSetUserStatusPath(),
+                user, status);
+        Response response = authorisationService
+                .target(url)
+                .request()
+                .header("Authorization", "Bearer " + usersJws)
+                .get();
+
+        boolean result;
+
+        switch (response.getStatus()) {
+            case HttpStatus.UNAUTHORIZED_401:
+                result = false;
+                break;
+            case HttpStatus.OK_200:
+                result = true;
+                break;
+            case HttpStatus.NOT_FOUND_404:
+                result = false;
+                LOGGER.error(NOT_FOUND_404_MESSAGE, url);
+                break;
+            default:
+                result = false;
+                LOGGER.error("Tried to change the status for a user but got an unknown response! Response code was {}",
+                        response.getStatus());
+        }
+
+        return result;
     }
 
 

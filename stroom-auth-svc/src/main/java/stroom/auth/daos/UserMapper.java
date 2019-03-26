@@ -26,13 +26,20 @@ import stroom.db.auth.tables.records.UsersRecord;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.time.ZonedDateTime;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public final class UserMapper {
 
-    @NotNull
     public static UsersRecord updateUserRecordWithUser(@NotNull User user, @NotNull UsersRecord usersRecord) {
+        return updateUserRecordWithUser(user, usersRecord, Clock.systemDefaultZone());
+    }
+
+    @NotNull
+    public static UsersRecord updateUserRecordWithUser(@NotNull User user, @NotNull UsersRecord usersRecord, Clock clock) {
         Preconditions.checkNotNull(user);
         Preconditions.checkNotNull(usersRecord);
 
@@ -61,8 +68,11 @@ public final class UserMapper {
         // This is last because if we're going from locked to enabled then we need to reset the login failures.
         // And in this case we'll want to override any other setting for login_failures.
         if (user.getState() != null) {
-            if(usersRecord.getState().equals(User.UserState.LOCKED.getStateText()) && user.getState().equalsIgnoreCase(User.UserState.ENABLED.getStateText())) {
+            // Are we going from locked to active?
+            if(usersRecord.getState().equals(User.UserState.LOCKED.getStateText())
+            && user.getState().equalsIgnoreCase(User.UserState.ENABLED.getStateText())) {
                 userMap.put("login_failures", 0);
+                userMap.put("reactivated_date", clock.instant());
             }
             userMap.put("state", user.getState());
         }
@@ -71,10 +81,69 @@ public final class UserMapper {
         return usersRecord;
     }
 
-    @NotNull
+    public static UsersRecord map(User user){
+        UsersRecord usersRecord = new UsersRecord();
+        //TODO: Need this in the POJO
+//        usersRecord.setForcePasswordChange(user.getForcePasswordChange());
+        usersRecord.setComments(user.getComments());
+        usersRecord.setCreatedByUser(user.getCreated_by_user());
+        usersRecord.setCreatedOn(convertISO8601ToTimestamp(user.getCreated_on()));
+        usersRecord.setEmail(user.getEmail());
+        usersRecord.setFirstName(user.getFirst_name());
+        usersRecord.setId(user.getId());
+        usersRecord.setLastLogin(convertISO8601ToTimestamp(user.getLast_login()));
+        usersRecord.setLastName(user.getLast_name());
+        usersRecord.setLoginCount(user.getLogin_count());
+        usersRecord.setLoginFailures(user.getLogin_failures());
+        usersRecord.setNeverExpires(user.getNever_expires());
+        usersRecord.setPasswordHash(user.generatePasswordHash());
+        usersRecord.setReactivatedDate(convertISO8601ToTimestamp(user.getReactivatedDate()));
+        usersRecord.setState(user.getState());
+        usersRecord.setState(user.getState());
+        usersRecord.setUpdatedByUser(user.getUpdated_by_user());
+        usersRecord.setUpdatedOn(convertISO8601ToTimestamp(user.getUpdated_on()));
+        return usersRecord;
+    }
+
+    public static User map(UsersRecord usersRecord) {
+        User user = new User();
+        user.setEmail(usersRecord.getEmail());
+        user.setState(usersRecord.getState());
+        user.setComments(usersRecord.getComments());
+        user.setId(usersRecord.getId());
+        user.setFirst_name(usersRecord.getFirstName());
+        user.setLast_name(usersRecord.getLastName());
+        user.setNever_expires(usersRecord.getNeverExpires());
+        user.setUpdated_by_user(usersRecord.getUpdatedByUser());
+        if(usersRecord.getUpdatedOn() != null) {
+            user.setUpdated_on(toIso(usersRecord.getUpdatedOn()));
+        }
+        user.setCreated_by_user(usersRecord.getCreatedByUser());
+        if(usersRecord.getCreatedOn() != null) {
+            user.setCreated_on(toIso(usersRecord.getCreatedOn()));
+        }
+        if(usersRecord.getLastLogin() != null) {
+            user.setLast_login(toIso(usersRecord.getLastLogin()));
+        }
+        if(usersRecord.getReactivatedDate() != null) {
+            user.setReactivatedDate(toIso(usersRecord.getReactivatedDate()));
+        }
+        user.setLogin_count(usersRecord.getLoginCount());
+        user.setLogin_failures(usersRecord.getLoginFailures());
+        return user;
+    }
+
+
+    public static String toIso(Timestamp timestamp){
+        return timestamp.toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    }
+
     public static Timestamp convertISO8601ToTimestamp(@Nullable String dateString) {
-        long millis = ZonedDateTime.parse(dateString).toInstant().toEpochMilli();
-        return new Timestamp(millis);
+        if(dateString != null) {
+            long millis = LocalDateTime.parse(dateString).toInstant(ZoneOffset.UTC).toEpochMilli();
+            return new Timestamp(millis);
+        }
+        else return null;
     }
 
 }
