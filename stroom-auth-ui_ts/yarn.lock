@@ -1453,9 +1453,10 @@
     "@types/react-dom" "*"
     "@types/react-transition-group" "*"
 
-"@types/react-table@^6.7.23":
-  version "6.7.23"
-  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-6.7.23.tgz#c42a249c2d1ba5a157ae7e65a9cd5459006feb85"
+"@types/react-table@^6.8.0":
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-6.8.0.tgz#97cd60a119d5a969ff6aa73ca6e55847ce8ae703"
+  integrity sha512-2oIZ8kXGK5Pka2MrdNcPCED0NUVEc3tcOI2/Q4vHjeSghHr470AEEidxG19/KMZfCGl5/ISEcKtCHCiFNAFhyg==
   dependencies:
     "@types/react" "*"
 
@@ -9421,9 +9422,10 @@ react-syntax-highlighter@^8.0.1:
     prismjs "^1.8.4"
     refractor "^2.4.1"
 
-react-table@^6.9.2:
-  version "6.9.2"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-6.9.2.tgz#6a59adfeb8d5deced288241ed1c7847035b5ec5f"
+react-table@6.8.6:
+  version "6.8.6"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-6.8.6.tgz#a0ad8b4839319052d5befc012603fb161e52ede3"
+  integrity sha1-oK2LSDkxkFLVvvwBJgP7Fh5S7eM=
   dependencies:
     classnames "^2.2.5"
 

@@ -15,7 +15,7 @@
  */
 
 import TokenCreate from './CreateToken';
-import TokenEdit from './EditToken';
+import EditToken from './EditToken';
 import TokenSearch from './SearchToken';
 
-export { TokenCreate, TokenEdit, TokenSearch }
+export { TokenCreate, EditToken as TokenEdit, TokenSearch }

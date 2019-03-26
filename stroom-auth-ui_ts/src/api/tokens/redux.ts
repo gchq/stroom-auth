@@ -35,7 +35,7 @@ interface ToggleStateAction extends Action<"token/TOGGLE_STATE"> {}
 interface ToggleIsCreatingAction extends Action<"token/TOGGLE_IS_CREATING"> {}
 
 const defaultState: StoreState = {
-  lastReadToken: any,
+  lastReadToken: undefined,
   matchingAutoCompleteResults: [],
   errorMessage: "",
   isCreating: false,
