@@ -1,22 +1,19 @@
 import { Action } from "redux";
 
-import {
-  prepareReducer,
-  genUseActionCreators
-} from "../../lib/redux-actions-ts";
 import { StoreState } from "./types";
 import { User } from "../users";
+import { prepareReducer, genUseActionCreators } from "../../lib/redux-actions-ts";
 
-const TOKEN_ID_CHANGE = "TOKEN_ID_CHANGE";
-const SET_CURRENT_USER = "login/SET_CURRENT_USER";
+const CHANGE_LOGGED_IN_USER = "login/CHANGE_LOGGED_IN_USER";
 const EMAIL_CHANGE = "login/EMAIL_CHANGE";
+const SET_CLIENT_ID = "login/SET_CLIENT_ID";
+const SET_CURRENT_USER = "login/SET_CURRENT_USER";
+const SET_REDIRECT_URL = "login/SET_REDIRECT_URL";
+const SET_SESSION_ID = "login/SET_SESSION_ID";
+const SHOW_LOADER = "login/SHOW_LOADER";
 const TOKEN_CHANGE = "login/TOKEN_CHANGE";
 const TOKEN_DELETE = "login/TOKEN_DELETE";
-const SHOW_LOADER = "login/SHOW_LOADER";
-const CHANGE_LOGGED_IN_USER = "login/CHANGE_LOGGED_IN_USER";
-const SET_REDIRECT_URL = "login/SET_REDIRECT_URL";
-const SET_CLIENT_ID = "login/SET_CLIENT_ID";
-const SET_SESSION_ID = "login/SET_SESSION_ID";
+const TOKEN_ID_CHANGE = "TOKEN_ID_CHANGE";
 
 interface TokenIdChangeAction extends Action<"TOKEN_ID_CHANGE"> {
   idToken: string;
@@ -27,30 +24,22 @@ interface SetCurrentUserAction extends Action<"login/SET_CURRENT_USER"> {
 interface EmailChangeAction extends Action<"login/EMAIL_CHANGE"> {
   email: String;
 }
-
 interface TokenChangeAction extends Action<"login/TOKEN_CHANGE"> {
   token: String;
 }
-
-interface TokenDeleteAction extends Action<"login/TOKEN_DELETE"> {}
-
+interface TokenDeleteAction extends Action<"login/TOKEN_DELETE"> { }
 interface ShowLoaderAction extends Action<"login/SHOW_LOADER"> {
   showLoader: boolean;
 }
-
-interface ChangeLoggedInUserAction
-  extends Action<"login/CHANGE_LOGGED_IN_USER"> {
+interface ChangeLoggedInUserAction extends Action<"login/CHANGE_LOGGED_IN_USER"> {
   loggedInUserEmail: String;
 }
-
 interface SetRedirectUrlAction extends Action<"login/SET_REDIRECT_URL"> {
   redirectUrl: String;
 }
-
 interface SetClientIdAction extends Action<"login/SET_CLIENT_ID"> {
   clientId: String;
 }
-
 interface SetSessionIdAction extends Action<"login/SET_SESSION_ID"> {
   sessionId: String;
 }
@@ -137,7 +126,7 @@ export const reducer = prepareReducer(defaultState)
   )
   .handleAction<TokenDeleteAction>(
     TOKEN_DELETE,
-    (state = defaultState, {}) => ({
+    (state = defaultState, { }) => ({
       ...state,
       token: ""
     })

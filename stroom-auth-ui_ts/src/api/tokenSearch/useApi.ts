@@ -1,13 +1,13 @@
-import { useContext, useCallback } from "react";
 import { StoreContext } from "redux-react-hook";
+import { useContext, useCallback } from "react";
 
-import { useActionCreators } from "./redux";
 import useHttpClient from "../useHttpClient";
-import { useActionCreators as useTokenSearchActionCreators } from "../tokenSearch";
-import { GlobalStoreState } from '../../modules';
 import { Filter } from 'react-table';
-import { TokenSearchRequest, TokenSearchResponse } from './types'
+import { GlobalStoreState } from '../../modules';
 import { Token } from '../tokens';
+import { TokenSearchRequest, TokenSearchResponse } from './types'
+import { useActionCreators as useTokenSearchActionCreators } from "../tokenSearch";
+import { useActionCreators } from "./redux";
 
 interface Api {
   performTokenSearch: (tokenSearchRequest: TokenSearchRequest) => Promise<TokenSearchResponse>;
@@ -16,7 +16,6 @@ interface Api {
 
 const useApi = (): Api => {
   const store = useContext(StoreContext);
-  const { } = useActionCreators();
   const {
     showSearchLoader,
     updateResults,
@@ -28,6 +27,7 @@ const useApi = (): Api => {
   const { httpGetEmptyResponse, httpPostJsonResponse } = useHttpClient();
 
   return {
+
     toggleState: useCallback(
       (tokenId: string) => {
         const state: GlobalStoreState = store.getState();
@@ -40,6 +40,7 @@ const useApi = (): Api => {
         else { throw Error(`Can't toggle token ${tokenId} because it's not in our store!`) }
       }, []
     ),
+
     performTokenSearch: useCallback(
       (tokenSearchRequest: TokenSearchRequest) => {
         const state: GlobalStoreState = store.getState();
@@ -122,8 +123,6 @@ const useApi = (): Api => {
   };
 };
 
-export default useApi;
-
 export const getRowsPerPage = () => {
   const viewport = document.getElementById("User-content");
   let rowsInViewport = 20;
@@ -134,3 +133,5 @@ export const getRowsPerPage = () => {
   }
   return rowsInViewport;
 };
+
+export default useApi;

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Action } from "redux";
 import { StoreState, User } from "./types";
 import {
@@ -20,15 +21,13 @@ import {
   prepareReducer
 } from "../../lib/redux-actions-ts";
 
-const SHOW_CREATE_LOADER = "user/SHOW_CREATE_LOADER";
-const SAVE_USER_BEING_EDITED = "user/SAVE_USER_BEING_EDITED";
 const CHANGE_VISIBLE_CONTAINER = "user/CHANGE_VISIBLE_CONTAINER";
-const TOGGLE_ALERT_VISIBILITY = "user/TOGGLE_ALERT_VISIBILITY";
-const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE =
-  "user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE";
-const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE =
-  "user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE";
 const CLEAR_USER_BEING_EDITED = "user/CLEAR_USER_BEING_EDITED";
+const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE = "user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE";
+const SAVE_USER_BEING_EDITED = "user/SAVE_USER_BEING_EDITED";
+const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE = "user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE";
+const SHOW_CREATE_LOADER = "user/SHOW_CREATE_LOADER";
+const TOGGLE_ALERT_VISIBILITY = "user/TOGGLE_ALERT_VISIBILITY";
 const TOGGLE_IS_SAVING = "user/TOGGLE_IS_SAVING";
 
 interface ShowCreateLoaderAction extends Action<"user/SHOW_CREATE_LOADER"> {

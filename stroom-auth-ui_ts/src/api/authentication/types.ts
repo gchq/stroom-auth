@@ -34,7 +34,6 @@ export interface PasswordValidationRequest {
   verifyPassword: string
 }
 
-
 export interface PasswordValidationResponse {
   failedOn: string[];
 }

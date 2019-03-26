@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
-import { GlobalStoreState } from "../../modules/GlobalStoreState";
 import useHttpClient from '../useHttpClient';
+import { GlobalStoreState } from "../../modules/GlobalStoreState";
 
 interface Api {
     createUser: (userEmail: string) => Promise<void>;
 }
+
 export const useApi = (): Api => {
     const store = useContext(StoreContext);
-    const {httpPostEmptyResponse} = useHttpClient();
+    const { httpPostEmptyResponse } = useHttpClient();
 
     const createUser = useCallback(
-        (userEmail:string) => {
+        (userEmail: string) => {
             const reduxState: GlobalStoreState = store.getState();
             const url = `${reduxState.config.values.authorisationServiceUrl}/createUser?id=${userEmail}`;
             return httpPostEmptyResponse(url, {})
         }, []
     );
 
-    return {
-        createUser,
-    } as Api;
+    return { createUser };
 };
 
 export default useApi;

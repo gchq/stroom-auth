@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { useCallback, useContext } from "react";
 import { StoreContext } from "redux-react-hook";
 
@@ -31,9 +32,7 @@ export const useApi = (): Api => {
   return {
     getUsers: useCallback(() => {
       const state: GlobalStoreState = store.getState();
-      const url = `${
-        state.config.values.userServiceUrl
-      }/?fromEmail=&usersPerPage=100&orderBy=id`;
+      const url = `${state.config.values.userServiceUrl}/?fromEmail=&usersPerPage=100&orderBy=id`;
       return httpGetJson(url);
     }, [httpGetJson])
   };

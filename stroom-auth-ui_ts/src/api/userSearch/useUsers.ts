@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
 import useApi from "./useApi";
-import { useActionCreators } from "./redux";
-import { User } from "../users/types";
 import useReduxState from "../../lib/useReduxState";
+import { User } from "../users/types";
+import { useActionCreators } from "./redux";
 
 /**
  * This hook connects the REST API calls to the Redux Store.
@@ -11,7 +11,7 @@ import useReduxState from "../../lib/useReduxState";
 interface UseUsers {
   users: Array<User>;
 }
-const useUsers = () => {
+const useUsers = (): UseUsers => {
   const users = useReduxState(({ userSearch: { users } }) => users);
   const { getUsers } = useApi();
 
@@ -21,9 +21,7 @@ const useUsers = () => {
     getUsers().then(updateResults);
   }, [updateResults]);
 
-  return {
-    users
-  };
-};
+  return { users };
+}
 
 export default useUsers;

@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useContext, useCallback } from "react";
-import { StoreContext } from "redux-react-hook";
+
 import useHttpClient from "../useHttpClient";
-import { useActionCreators as useTokenActionCreators } from "./redux";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
+import { StoreContext } from "redux-react-hook";
 import { Token } from './types';
+import { useActionCreators as useTokenActionCreators } from "./redux";
+import { useContext, useCallback } from "react";
 
 interface Api {
   deleteSelectedToken: () => Promise<void>;

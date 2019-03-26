@@ -1,6 +1,12 @@
 import useApi from "./useApi";
-import { useActionCreators, reducer } from "./redux";
-import { StoreState } from "./types";
 import useAuthentication from "./useAuthentication";
+import { StoreState } from "./types";
+import { useActionCreators, reducer } from "./redux";
 
-export { useApi, reducer, StoreState, useActionCreators, useAuthentication };
+export { 
+    StoreState, 
+    reducer, 
+    useActionCreators, 
+    useApi, 
+    useAuthentication 
+};

@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { Token } from "../tokens/types"; //TODO don't reach into other modules! Go via index
+import { Token } from "../tokens"; //TODO don't reach into other modules! Go via index
 import { StoreState, TokenSearchResponse } from "./types";
 import {
   genUseActionCreators,
@@ -7,14 +7,14 @@ import {
 } from "../../lib/redux-actions-ts";
 import { Filter, SortingRule } from 'react-table';
 
-const SHOW_SEARCH_LOADER = "tokenSearch/SHOW_SEARCH_LOADER";
-const UPDATE_RESULTS = "tokenSearch/UPDATE_RESULTS";
-const SELECT_ROW = "tokenSearch/SELECT_ROW";
-const TOGGLE_ENABLED = "tokenSearch/TOGGLE_ENABLED";
-const CHANGE_LAST_USED_PAGE_SIZE = "tokenSearch/CHANGE_LAST_USED_PAGE_SIZE";
-const CHANGE_LAST_USED_PAGE = "tokenSearch/CHANGE_LAST_USED_PAGE";
-const CHANGE_LAST_USED_SORTED = "tokenSearch/CHANGE_LAST_USED_SORTED";
 const CHANGE_LAST_USED_FILTERED = "tokenSearch/CHANGE_LAST_USED_FILTERED";
+const CHANGE_LAST_USED_PAGE = "tokenSearch/CHANGE_LAST_USED_PAGE";
+const CHANGE_LAST_USED_PAGE_SIZE = "tokenSearch/CHANGE_LAST_USED_PAGE_SIZE";
+const CHANGE_LAST_USED_SORTED = "tokenSearch/CHANGE_LAST_USED_SORTED";
+const SELECT_ROW = "tokenSearch/SELECT_ROW";
+const SHOW_SEARCH_LOADER = "tokenSearch/SHOW_SEARCH_LOADER";
+const TOGGLE_ENABLED = "tokenSearch/TOGGLE_ENABLED";
+const UPDATE_RESULTS = "tokenSearch/UPDATE_RESULTS";
 
 interface ShowSearchLoaderAction
   extends Action<"tokenSearch/SHOW_SEARCH_LOADER"> {

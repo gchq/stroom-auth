@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 import useApi from "./useApi";
 import { useActionCreators } from "./redux";

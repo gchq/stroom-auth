@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useHttpClient from "../useHttpClient";
-import { User } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
-import { useActionCreators } from "./redux";
+import { User } from "./types";
 
 interface Api {
   add: (user: User) => Promise<void>;
-  remove: (userId: string) => Promise<void>;
+  change: (user: User) => Promise<void>;
   fetch: (userId: String) => Promise<User[]>;
   fetchCurrentUser: () => Promise<User[]>;
-  change: (user: User) => Promise<void>;
+  remove: (userId: string) => Promise<void>;
 }
 
 export const useApi = (): Api => {
@@ -108,7 +108,7 @@ export const useApi = (): Api => {
     fetchCurrentUser,
     remove,
     change
-  } as Api;
+  };
 };
 
 export default useApi;

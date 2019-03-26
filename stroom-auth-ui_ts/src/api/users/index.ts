@@ -1,6 +1,13 @@
 import useApi from "./useApi";
-import { useActionCreators, reducer } from "./redux";
-import { StoreState, User } from "./types";
 import useUsers from "./useUsers";
+import { StoreState, User } from "./types";
+import { useActionCreators, reducer } from "./redux";
 
-export { useApi, useUsers, reducer, StoreState, useActionCreators, User };
+export {
+    StoreState,
+    User,
+    reducer,
+    useActionCreators,
+    useApi,
+    useUsers,
+};

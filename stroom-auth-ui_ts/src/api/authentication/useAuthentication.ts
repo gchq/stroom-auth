@@ -1,25 +1,22 @@
 import * as Cookies from "cookies-js";
-import { Credentials } from "./types";
+import { FormikActions } from "formik";
 import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
+
 import useApi from "./useApi";
+import { Credentials } from "./types";
 import { useActionCreators } from "./redux";
-import { FormikActions } from "formik";
-import { GlobalStoreState } from '../../modules';
 
 interface UseAuthentication {
   login: (
     credentials: Credentials,
     formikActions: FormikActions<Credentials>
   ) => void;
-  // changePasswordForCurrentUser: () => void;
 }
 
-const useAuthentication = () => {
-  const store = useContext(StoreContext);
-
+const useAuthentication = (): UseAuthentication => {
   const { apiLogin } = useApi();
-  const { showLoader, changeEmail } = useActionCreators();
+  const { showLoader } = useActionCreators();
   const login = useCallback(
     (credentials: Credentials, formikActions: FormikActions<Credentials>) => {
       const { setStatus, setSubmitting } = formikActions;
@@ -39,24 +36,7 @@ const useAuthentication = () => {
     [apiLogin]
   );
 
-  // const {
-  //   // changePasswordForCurrentUser: apiChangePasswordForCurrentUser,
-  //   changePassword: apiChangePassword
-  // } = useApi();
-  // const changePasswordForCurrentUser = useCallback(() => {
-  //     const state:GlobalStoreState = store.getState();
-  //     apiChangePassword({email});
-  //   // apiChangePasswordForCurrentUser()
-  //   //   .then(users => users[0])
-  //   //   .then(user => {
-  //   //     apiChangePassword(user.email);
-  //   //   });
-  // }, [apiChangePassword]);
-
-  return {
-    login,
-    // changePasswordForCurrentUser
-  };
+  return { login };
 };
 
 export default useAuthentication;

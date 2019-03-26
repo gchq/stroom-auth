@@ -1,29 +1,29 @@
 export interface StoreState {
-  user: string;
-  password: string;
-  showCreateLoader: boolean;
   alertText: string;
-  showAlert: boolean;
-  changePasswordErrorMessage: any; // TODO: should be an array type of String
-  isSaving: boolean;
-  userBeingEdited?: User;
+  changePasswordErrorMessage: any;
   errorStatus?: string;
   errorText?: string;
+  isSaving: boolean;
+  password: string;
+  showAlert: boolean;
+  showCreateLoader: boolean;
+  user: string;
+  userBeingEdited?: User;
 }
 
 export interface User {
-  id?: string;
+  comments: string;
+  created_by_user?: any;
+  created_on?: any;
   email: string;
   first_name: string;
-  last_name: string;
-  state: string;
-  comments: string;
-  never_expires?: boolean;
   force_password_change: boolean;
-  login_count?: number;
+  id?: string;
   last_login?: any;
-  created_on?: any;
-  created_by_user?: any;
-  updated_on?: any;
+  last_name: string;
+  login_count?: number;
+  never_expires?: boolean;
+  state: string;
   updated_by_user?: any;
+  updated_on?: any;
 }

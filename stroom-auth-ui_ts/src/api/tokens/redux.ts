@@ -4,16 +4,14 @@ import {
   genUseActionCreators,
   prepareReducer
 } from "../..//lib/redux-actions-ts";
-import { any } from "prop-types";
 
-const CHANGE_VISIBLE_CONTAINER = "token/CHANGE_VISIBLE_CONTAINER";
-const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS =
-  "token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS";
 const CHANGE_READ_CREATED_TOKEN = "token/CHANGE_READ_CREATED_TOKEN";
-const SHOW_ERROR_MESSAGE = "token/SHOW_ERROR_MESSAGE";
+const CHANGE_VISIBLE_CONTAINER = "token/CHANGE_VISIBLE_CONTAINER";
 const HIDE_ERROR_MESSAGE = "token/HIDE_ERROR_MESSAGE";
-const TOGGLE_STATE = "token/TOGGLE_STATE";
+const SHOW_ERROR_MESSAGE = "token/SHOW_ERROR_MESSAGE";
 const TOGGLE_IS_CREATING = "token/TOGGLE_IS_CREATING";
+const TOGGLE_STATE = "token/TOGGLE_STATE";
+const UPDATE_MATCHING_AUTO_COMPLETE_RESULTS = "token/UPDATE_MATCHING_AUTO_COMPLETE_RESULTS";
 
 interface ChangeVisibleContainerAction
   extends Action<"token/CHANGE_VISIBLE_CONTAINER"> {

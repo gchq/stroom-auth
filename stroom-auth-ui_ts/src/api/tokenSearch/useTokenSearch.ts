@@ -1,14 +1,11 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 import { useApi, useActionCreators } from '../tokenSearch';
-import { useRouter } from "../../lib/useRouter";
 
 /**
  * This hook connects the REST API calls to the Redux Store.
  */
 const useTokenSearch = () => {
-    const {
-    } = useActionCreators();
 
     /**
      * Deletes the user and then refreshes our browser cache of users.

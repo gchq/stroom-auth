@@ -1,12 +1,12 @@
 export interface StoreState {
   lastReadToken: any;
   isCreating: any;
-  errorMessage: String;
-  matchingAutoCompleteResults: String[];
+  errorMessage: string;
+  matchingAutoCompleteResults: string[];
   show: string;
 }
 
 export interface Token {
-  id: String;
+  id: string;
   enabled: any;
 }
