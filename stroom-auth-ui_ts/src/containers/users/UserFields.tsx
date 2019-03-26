@@ -104,7 +104,6 @@ const UserFields = ({
                 name="state"
                 component="select"
                 onChange={(event: any) => {
-                  //FIXME
                   setFieldValue("state", event.target.value);
                   setFieldTouched("state");
                 }}

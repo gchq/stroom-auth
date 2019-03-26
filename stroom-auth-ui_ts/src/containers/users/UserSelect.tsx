@@ -60,7 +60,7 @@ const customStyles = {
   }),
 };
 
-const AsyncUserSelect = (props: { onChange: Function; }) => {//FIXME: get the right type
+const AsyncUserSelect = (props: { onChange: Function; }) => {
   const { idToken, userServiceUrl } = useReduxState(
     ({ authentication: { idToken }, config: { values: { userServiceUrl } } }) => ({
       idToken, userServiceUrl

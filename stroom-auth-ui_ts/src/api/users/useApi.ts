@@ -21,15 +21,14 @@ import { User } from "./types";
 import { GlobalStoreState } from "../../modules/GlobalStoreState";
 import { useActionCreators } from "./redux";
 
-//FIXME: make a type for editedUser
 interface Api {
   add: (user: User) => Promise<void>;
   remove: (userId: string) => Promise<void>;
   fetch: (userId: String) => Promise<User[]>;
-  fetchCurrentUser: () => Promise<User[]>; // FIXME: get rid of array. Ditto for fetch.
+  fetchCurrentUser: () => Promise<User[]>;
   change: (user: User) => Promise<void>;
 }
-// TODO: all the useCallback functions in one function is disgusting. The functions need splitting out.
+
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
   const {
@@ -42,36 +41,41 @@ export const useApi = (): Api => {
   const change = useCallback(user => {
     const reduxState: GlobalStoreState = store.getState();
     const url = `${reduxState.config.values.userServiceUrl}/${user.id}`;
-    return httpPutEmptyResponse(url, {
-      body: JSON.stringify({
-        email: user.email,
-        password: user.password,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        comments: user.comments,
-        state: user.state,
-        never_expires: user.never_expires,
-        force_password_change: user.force_password_change
-      })
-    });
+    return httpPutEmptyResponse(
+      url,
+      {
+        body: JSON.stringify({
+          email: user.email,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          comments: user.comments,
+          state: user.state,
+          never_expires: user.never_expires,
+          force_password_change: user.force_password_change
+        })
+      }
+    );
   }, []);
 
   const add = useCallback(user => {
     const reduxState: GlobalStoreState = store.getState();
-
     const url = reduxState.config.values.userServiceUrl;
-    return httpPostJsonResponse(url, {
-      body: JSON.stringify({
-        email: user.email,
-        password: user.password,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        comments: user.comments,
-        state: user.state,
-        never_expires: user.never_expires,
-        force_password_change: user.force_password_change
-      })
-    });
+    return httpPostJsonResponse(
+      url,
+      {
+        body: JSON.stringify({
+          email: user.email,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          comments: user.comments,
+          state: user.state,
+          never_expires: user.never_expires,
+          force_password_change: user.force_password_change
+        })
+      }
+    );
   }, []);
 
   /**

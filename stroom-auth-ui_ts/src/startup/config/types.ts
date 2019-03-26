@@ -1,15 +1,11 @@
-//FIXME: this needs to match congfig.template.json
 export interface Config {
-  tokenServiceUrl: any;
-  authenticationServiceUrl?: string;
-  authorisationServiceUrl?: string;
-  stroomBaseServiceUrl?: string;
   advertisedUrl?: string;
-  authUsersUiUrl?: string;
-  authTokensUiUrl?: string;
   allowPasswordResets?: string;
   appClientId?: string;
+  authenticationServiceUrl?: string;
+  authorisationServiceUrl?: string;
   stroomUiUrl: string;
+  tokenServiceUrl: any;
   userServiceUrl: string;
 }
 

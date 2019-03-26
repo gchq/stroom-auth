@@ -34,16 +34,14 @@ import "../../styles/index.css";
 import "../../styles/toolbar-small.css";
 import "../../styles/table-small.css";
 import "../../styles/toggle-small.css";
-import { useTokens, useApi as useTokenApi } from "../../api/tokens";
-import {
-  useApi as useTokenSearchApi,
-  useActionCreators as useTokenSearchActionCreators
+import { useTokens} from "../../api/tokens";
+import { useActionCreators as useTokenSearchActionCreators
 } from "../../api/tokenSearch";
 import { useReduxState } from "../../lib/useReduxState";
 import { useRouter } from "../../lib/useRouter";
 import useTokenSearch from '../../api/tokenSearch/useTokenSearch';
 
-// FIXME: Not sure why the actual filter props isn't working
+/** There is a corresponding react-table type but doing it like this is neater. */
 type FilterProps = {
   filter: any;
   onChange: ReactTableFunction;

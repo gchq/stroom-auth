@@ -32,7 +32,7 @@ import { useActionCreators as useUserSearchActionCreators } from "../../api/user
 import { useUsers } from "../../api/users";
 import { useState } from "react";
 
-// FIXME: Not sure why the actual filter props isn't working
+/** There is a corresponding react-table type but doing it like this is neater. */
 type FilterProps = {
   filter: any;
   onChange: ReactTableFunction;
