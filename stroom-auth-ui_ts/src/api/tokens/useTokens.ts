@@ -2,9 +2,10 @@ import { useCallback, useEffect } from "react";
 
 import useApi from "./useApi";
 import { useActionCreators as useTokenActionCreators, Token } from '../tokens';
-import { useApi as useTokenSearchApi } from '../tokenSearch';
+import { useApi as useTokenSearchApi, useActionCreators as useTokenSearchActionCreators } from '../tokenSearch';
 import { useActionCreators } from "./redux";
 import { useRouter } from "../../lib/useRouter";
+import { TokenSearchRequest } from '../tokenSearch/types';
 
 /**
  * This hook connects the REST API calls to the Redux Store.
@@ -28,14 +29,27 @@ const useUsers = () => {
     [toggleEnabledStateUsingApi]
   );
 
+  const {
+    showSearchLoader,
+    updateResults,
+  } = useTokenSearchActionCreators();
+  const { performTokenSearch: performTokenSearchUsingApi } = useTokenSearchApi();
+  const performTokenSearch = useCallback(
+    (tokenSearchRequest: TokenSearchRequest) => {
+      performTokenSearchUsingApi(tokenSearchRequest)
+          .then(data => {
+            showSearchLoader(false);
+            updateResults(data);
+          })
+    }, [performTokenSearchUsingApi, showSearchLoader, updateResults]
+  );
 
   const { deleteSelectedToken: deletedSelectedTokenUsingApi, } = useApi();
-  const { performTokenSearch } = useTokenSearchApi();
   const deleteSelectedToken = useCallback(
     () => {
-      deletedSelectedTokenUsingApi();
-      performTokenSearch();
-    }, []
+      deletedSelectedTokenUsingApi()
+        .then(() => performTokenSearch({}));
+    }, [deletedSelectedTokenUsingApi, performTokenSearchUsingApi]
   );
 
   const { toggleIsCreating } = useTokenActionCreators();
@@ -64,6 +78,7 @@ const useUsers = () => {
     deleteSelectedToken,
     createToken,
     fetchApiKey,
+    performTokenSearch
   };
 };
 export default useUsers;

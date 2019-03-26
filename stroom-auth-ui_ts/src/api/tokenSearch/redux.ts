@@ -1,10 +1,11 @@
 import { Action } from "redux";
 import { Token } from "../tokens/types"; //TODO don't reach into other modules! Go via index
-import { StoreState } from "./types";
+import { StoreState, TokenSearchResponse } from "./types";
 import {
   genUseActionCreators,
   prepareReducer
 } from "../../lib/redux-actions-ts";
+import { Filter } from 'react-table';
 
 const SHOW_SEARCH_LOADER = "tokenSearch/SHOW_SEARCH_LOADER";
 const UPDATE_RESULTS = "tokenSearch/UPDATE_RESULTS";
@@ -43,7 +44,7 @@ interface ChangeLastUsedSortedAction
 }
 interface ChangeLastUsedFilteredAction
   extends Action<"tokenSearch/CHANGE_LAST_USED_FILTERED"> {
-  lastUsedFiltered: string;
+  lastUsedFiltered: Filter[];
 }
 
 const defaultState: StoreState = {
@@ -62,13 +63,10 @@ export const useActionCreators = genUseActionCreators({
     type: SHOW_SEARCH_LOADER,
     showSearchLoader
   }),
-  updateResults: (
-    results: Token[],
-    totalPages: number
-  ): UpdateResultsAction => ({
+  updateResults: (tokenSearchResponse: TokenSearchResponse): UpdateResultsAction => ({
     type: UPDATE_RESULTS,
-    results,
-    totalPages
+    results: tokenSearchResponse.tokens,
+    totalPages: tokenSearchResponse.totalPages
   }),
   selectRow: (selectedTokenRowId: string): SelectRowAction => ({
     type: SELECT_ROW,
@@ -95,7 +93,7 @@ export const useActionCreators = genUseActionCreators({
     lastUsedSorted
   }),
   changeLastUsedFiltered: (
-    lastUsedFiltered: string
+    lastUsedFiltered: Filter[]
   ): ChangeLastUsedFilteredAction => ({
     type: CHANGE_LAST_USED_FILTERED,
     lastUsedFiltered

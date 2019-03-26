@@ -2,27 +2,19 @@ import { useContext, useCallback } from "react";
 import { StoreContext } from "redux-react-hook";
 
 import { useActionCreators } from "./redux";
-import { HttpError } from "../../ErrorTypes";
-// import { getJsonBody } from "../../modules/fetchFunctions";
 import useHttpClient from "../useHttpClient";
-import { useApi as useTokenApi } from "../tokens";
 import { useActionCreators as useTokenSearchActionCreators } from "../tokenSearch";
 import { GlobalStoreState } from '../../modules';
+import { Filter } from 'react-table';
+import {TokenSearchRequest, TokenSearchResponse} from './types'
 
 interface Api {
-  performTokenSearch: (
-    pageSize?: Number,
-    page?: Number,
-    sorted?: String,
-    filtered?: String
-  ) => void;
-  // setEnabledStateOnToken: (tokenId: String, isEnabled: boolean) => void;
+  performTokenSearch: (tokenSearchRequest: TokenSearchRequest) => Promise<TokenSearchResponse>;
 }
 
 const useApi = (): Api => {
   const store = useContext(StoreContext);
-  const {} = useActionCreators();
-  //   const { selectRow } = useUserSearchActionCreators();
+  const { } = useActionCreators();
   const {
     showSearchLoader,
     updateResults,
@@ -31,14 +23,12 @@ const useApi = (): Api => {
     changeLastUsedSorted,
     changeLastUsedFiltered
   } = useTokenSearchActionCreators();
-  //   const { history } = useRouter();
-  const { httpPostJsonResponse, httpGetJson } = useHttpClient();
-  // const { toggleEnabledState } = useTokenApi();
+  const { httpPostJsonResponse } = useHttpClient();
 
   return {
     performTokenSearch: useCallback(
-      (pageSize, page, sorted, filtered) => {
-        const state:GlobalStoreState = store.getState();
+      (tokenSearchRequest: TokenSearchRequest) => {
+        const state: GlobalStoreState = store.getState();
         showSearchLoader(true);
 
         // if (pageSize === undefined) {
@@ -49,6 +39,7 @@ const useApi = (): Api => {
         //     lastUsedPageSize: pageSize
         //   })
         // }
+        let { page, pageSize, sorted, filtered } = tokenSearchRequest;
 
         pageSize = getRowsPerPage();
         changeLastUsedPageSize(pageSize);
@@ -75,23 +66,27 @@ const useApi = (): Api => {
         let orderBy = "issued_on";
         let orderDirection = "desc";
 
-        if (sorted.length > 0) {
-          orderBy = sorted[0].id;
-          orderDirection = sorted[0].desc ? "desc" : "asc";
-        }
+        // if (!!sorted) {
+        //   if (sorted.length > 0) {
+        //     orderBy = sorted[0].id;
+        //     orderDirection = sorted[0].desc ? "desc" : "asc";
+        //   }
+        // }
 
         let filters = {} as { token_type: String };
-        if (filtered.length > 0) {
-          filtered.forEach((filter: { id: string | number; value: any }) => {
-            filters[filter.id] = filter.value;
-          });
+        if (!!filtered) {
+          if (filtered.length > 0) {
+            filtered.forEach((filter:Filter) => {
+              filters[filter.id] = filter.value;
+            });
+          }
         }
 
         // We only want to see API keys, not user keys.
         filters.token_type = "API";
 
         const url = `${state.config.values.tokenServiceUrl}/search`;
-        httpPostJsonResponse(url, {
+        return httpPostJsonResponse(url, {
           body: JSON.stringify({
             page,
             limit: pageSize,
@@ -102,12 +97,12 @@ const useApi = (): Api => {
         })
           // .then(handleStatus)
           // .then(getJsonBody)
-          .then(data => {
-            showSearchLoader(false);
-            const { tokens, totalPages } = data;
-            updateResults(tokens, totalPages);
-          })
-          // .catch(error => handleErrors(error));
+          // .then(data => {
+          //   showSearchLoader(false);
+          //   const { tokens, totalPages } = data;
+          //   updateResults(tokens, totalPages);
+          // })
+        // .catch(error => handleErrors(error));
       },
       [
         updateResults,

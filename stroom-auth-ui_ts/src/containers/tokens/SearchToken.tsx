@@ -155,9 +155,8 @@ const TokenSearch = () => {
       pageSize: lastUsedPageSize
     })
   );
-  const {toggleEnabledState, deleteSelectedToken} = useTokens();
+  const {toggleEnabledState, deleteSelectedToken, performTokenSearch} = useTokens();
   const { history } = useRouter();
-  const { performTokenSearch } = useTokenSearchApi();
   const { selectRow } = useTokenSearchActionCreators();
 
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
@@ -252,18 +251,18 @@ const TokenSearch = () => {
               className += selected ? " table-row-selected" : "";
               className += enabled ? "" : " table-row-dimmed";
               return {
-                onClick: (target: any, event: any) => {
+                onClick: () => {
                   selectRow(rowInfo.row.id);
                 },
                 className
               };
             }}
             onFetchData={(state, instance) => {
-              performTokenSearch(
-                state.pageSize,
-                state.page,
-                state.sorted,
-                state.filtered
+              performTokenSearch({
+                pageSize: state.pageSize,
+                page: state.page,
+                sorted: state.sorted,
+                filtered: state.filtered}
               );
             }}
           />
