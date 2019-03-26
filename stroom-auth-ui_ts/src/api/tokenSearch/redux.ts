@@ -97,7 +97,7 @@ export const useActionCreators = genUseActionCreators({
   ): ChangeLastUsedFilteredAction => ({
     type: CHANGE_LAST_USED_FILTERED,
     lastUsedFiltered
-  })
+  }),
 });
 
 export const reducer = prepareReducer(defaultState)

@@ -6,10 +6,12 @@ import useHttpClient from "../useHttpClient";
 import { useActionCreators as useTokenSearchActionCreators } from "../tokenSearch";
 import { GlobalStoreState } from '../../modules';
 import { Filter } from 'react-table';
-import {TokenSearchRequest, TokenSearchResponse} from './types'
+import { TokenSearchRequest, TokenSearchResponse } from './types'
+import { Token } from '../tokens';
 
 interface Api {
   performTokenSearch: (tokenSearchRequest: TokenSearchRequest) => Promise<TokenSearchResponse>;
+  toggleState: (tokenId: string) => Promise<void>;
 }
 
 const useApi = (): Api => {
@@ -23,9 +25,21 @@ const useApi = (): Api => {
     changeLastUsedSorted,
     changeLastUsedFiltered
   } = useTokenSearchActionCreators();
-  const { httpPostJsonResponse } = useHttpClient();
+  const { httpGetEmptyResponse, httpPostJsonResponse } = useHttpClient();
 
   return {
+    toggleState: useCallback(
+      (tokenId: string) => {
+        const state: GlobalStoreState = store.getState();
+        const token: Token | undefined = state.tokenSearch.results.find((token) => token.id === tokenId);
+        if (!!token) {
+          const nextState = !token.enabled;
+          const url = `${state.config.values.tokenServiceUrl}/${tokenId}/state/?enabled=${nextState}`
+          return httpGetEmptyResponse(url);
+        }
+        else { throw Error(`Can't toggle token ${tokenId} because it's not in our store!`) }
+      }, []
+    ),
     performTokenSearch: useCallback(
       (tokenSearchRequest: TokenSearchRequest) => {
         const state: GlobalStoreState = store.getState();
@@ -76,7 +90,7 @@ const useApi = (): Api => {
         let filters = {} as { token_type: String };
         if (!!filtered) {
           if (filtered.length > 0) {
-            filtered.forEach((filter:Filter) => {
+            filtered.forEach((filter: Filter) => {
               filters[filter.id] = filter.value;
             });
           }
@@ -95,14 +109,6 @@ const useApi = (): Api => {
             filters
           })
         })
-          // .then(handleStatus)
-          // .then(getJsonBody)
-          // .then(data => {
-          //   showSearchLoader(false);
-          //   const { tokens, totalPages } = data;
-          //   updateResults(tokens, totalPages);
-          // })
-        // .catch(error => handleErrors(error));
       },
       [
         updateResults,
@@ -113,35 +119,10 @@ const useApi = (): Api => {
         changeLastUsedSorted
       ]
     ),
-
-    // setEnabledStateOnToken: useCallback(
-    //   (tokenId, isEnabled) => {
-    //     const state:GlobalStoreState = store.getState();
-    //     toggleEnabledState();
-    //     const securityToken = state.authentication.idToken;
-    //     const url = `${
-    //         state.config.values.tokenServiceUrl
-    //       }/${tokenId}/state/?enabled=${isEnabled}`;
-    //     return httpGetJson(url);
-    //   },
-    //   [toggleEnabledState]
-    // )
   };
 };
 
 export default useApi;
-
-// function handleStatus(response: any) {
-//   if (response.status === 200) {
-//     return Promise.resolve(response);
-//   } else if (response.status === 409) {
-//     return Promise.reject(
-//       new HttpError(response.status, "This token already exists.")
-//     );
-//   } else {
-//     return Promise.reject(new HttpError(response.status, response.statusText));
-//   }
-// }
 
 export const getRowsPerPage = () => {
   const viewport = document.getElementById("User-content");

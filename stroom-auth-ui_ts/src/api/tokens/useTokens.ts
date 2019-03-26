@@ -10,7 +10,7 @@ import { TokenSearchRequest } from '../tokenSearch/types';
 /**
  * This hook connects the REST API calls to the Redux Store.
  */
-const useUsers = () => {
+const useTokens = () => {
   const {
   } = useActionCreators();
   const { history } = useRouter();
@@ -22,8 +22,8 @@ const useUsers = () => {
   const { toggleEnabledState: toggleEnabledStateUsingApi } = useApi();
   const { toggleState } = useActionCreators();
   const toggleEnabledState = useCallback(
-    (tokenId: string, state: boolean) => {
-      toggleEnabledStateUsingApi(tokenId)
+    () => {
+      toggleEnabledStateUsingApi()
         .then(() => toggleState())
     },
     [toggleEnabledStateUsingApi]
@@ -85,4 +85,4 @@ const useUsers = () => {
     performTokenSearch
   };
 };
-export default useUsers;
+export default useTokens;

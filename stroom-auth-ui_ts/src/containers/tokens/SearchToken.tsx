@@ -27,7 +27,6 @@ import ReactTable, {
 } from "react-table";
 import "react-table/react-table.css";
 import * as dateFormat from "dateformat";
-// import { Checkbox } from 'pretty-checkbox-react';
 
 import Button from "../Button";
 import "./TokenSearch.css";
@@ -42,6 +41,8 @@ import {
 } from "../../api/tokenSearch";
 import { useReduxState } from "../../lib/useReduxState";
 import { useRouter } from "../../lib/useRouter";
+import useTokenSearch from '../../api/tokenSearch/useTokenSearch';
+
 // FIXME: Not sure why the actual filter props isn't working
 type FilterProps = {
   filter: any;
@@ -155,7 +156,8 @@ const TokenSearch = () => {
       pageSize: lastUsedPageSize
     })
   );
-  const {toggleEnabledState, deleteSelectedToken, performTokenSearch} = useTokens();
+  const { deleteSelectedToken, performTokenSearch} = useTokens();
+  const {toggleState } = useTokenSearch();
   const { history } = useRouter();
   const { selectRow } = useTokenSearchActionCreators();
 
@@ -220,7 +222,7 @@ const TokenSearch = () => {
             className="-striped -highlight UserSearch-table"
             columns={getColumnFormat(
               selectedTokenRowId,
-              toggleEnabledState
+              toggleState
             )}
             filterable={isFilteringEnabled}
             showPagination

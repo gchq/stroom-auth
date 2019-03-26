@@ -25,10 +25,9 @@ import Button from "../Button";
 import Loader from "../Loader";
 import "./TokenEdit.css";
 import "../../styles/form.css";
-import { useApi } from "../../api/tokens";
 import { OnCopy, ByCopy } from "../auditCopy";
 
-import { useTokens, useApi as useTokenApi } from "../../api/tokens";
+import { useTokens } from "../../api/tokens";
 import useIdFromPath from "../../lib/useIdFromPath";
 import { useRouter } from "../../lib/useRouter";
 import { useReduxState } from "../../lib/useReduxState";
@@ -48,7 +47,6 @@ const EditToken = () => {
     }
   }, [tokenId]);
 
-  //TODO form needs onsubmit
   return (
     <form>
       <div className="header">
@@ -78,7 +76,7 @@ const EditToken = () => {
                   <Toggle
                     icons={false}
                     checked={token.enabled}
-                    onChange={event => !!tokenId ? toggleEnabledState(tokenId, event.target.checked): undefined}
+                    onChange={event => !!tokenId ? toggleEnabledState(): undefined}
                   />
                 </div>
               </div>

@@ -24,7 +24,8 @@ interface Api {
   deleteSelectedToken: () => Promise<void>;
   createToken: (email: string) => Promise<Token>;
   fetchApiKey: (tokenId: string) => Promise<Token>;
-  toggleEnabledState: (tokenId: string) => Promise<Token>;
+  /** Will toggle the last token read if there's no tokenId passed. Uses last read token otherwise */
+  toggleEnabledState: () => Promise<Token>;
 }
 
 export const useApi = (): Api => {
@@ -75,9 +76,10 @@ export const useApi = (): Api => {
     ),
 
     toggleEnabledState: useCallback(
-      (tokenId) => {
+      () => {
         const state: GlobalStoreState = store.getState();
         const nextState = state.token.lastReadToken.enabled ? "false" : "true";
+        const tokenId = state.token.lastReadToken.id;
         const url = `${state.config.values.tokenServiceUrl}/${tokenId}/state/?enabled=${nextState}`
         return httpGetEmptyResponse(url);
       }, []
