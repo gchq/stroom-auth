@@ -104,7 +104,7 @@ const EditToken = () => {
             <div className="section__fields--copy-only constrained">
               <textarea value={token.token} disabled />
               <CopyToClipboard text={token.token}>
-                <Button className="primary" icon="copy" text="Copy key"/>
+                <Button type="button" className="primary" icon="copy" text="Copy key"/>
               </CopyToClipboard>
             </div>
           </div>

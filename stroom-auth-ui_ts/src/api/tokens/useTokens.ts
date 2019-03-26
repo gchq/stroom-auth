@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 
 import useApi from "./useApi";
+import {useApi as useTokenSearchApi} from '../tokenSearch';
 import { useActionCreators } from "./redux";
 import { useRouter } from "../../lib/useRouter";
 
@@ -25,8 +26,19 @@ const useUsers = () => {
     [toggleEnabledStateUsingApi]
   );
 
+
+  const {deleteSelectedToken: deletedSelectedTokenUsingApi} = useApi();
+  const {performTokenSearch} = useTokenSearchApi();
+  const deleteSelectedToken = useCallback(
+    () => {
+      deletedSelectedTokenUsingApi();
+      performTokenSearch();
+    }, []
+  );
+
   return {
-      toggleEnabledState
+      toggleEnabledState,
+      deleteSelectedToken
   };
 };
 export default useUsers;

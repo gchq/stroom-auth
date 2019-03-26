@@ -155,11 +155,10 @@ const TokenSearch = () => {
       pageSize: lastUsedPageSize
     })
   );
-  const {toggleEnabledState} = useTokens();
+  const {toggleEnabledState, deleteSelectedToken} = useTokens();
   const { history } = useRouter();
   const { performTokenSearch } = useTokenSearchApi();
   const { selectRow } = useTokenSearchActionCreators();
-  const { deleteSelectedToken} = useTokenApi();
 
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
   const noTokenSelected = !selectedTokenRowId;

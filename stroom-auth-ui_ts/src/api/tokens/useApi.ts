@@ -43,9 +43,9 @@ interface Api {
 
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
-  const { selectRow } = useUserSearchActionCreators();
+  // const { selectRow } = useUserSearchActionCreators();
   const { history } = useRouter();
-  const { httpDeleteJsonResponse, httpGetJson, httpGetEmptyResponse } = useHttpClient();
+  const { httpDeleteJsonResponse,httpDeleteEmptyResponse, httpGetJson, httpGetEmptyResponse } = useHttpClient();
   const {
     toggleState,
     toggleIsCreating,
@@ -60,13 +60,14 @@ export const useApi = (): Api => {
       const state:GlobalStoreState = store.getState();
       const tokenIdToDelete = state.tokenSearch.selectedTokenRowId;
       const url = `${state.config.values.tokenServiceUrl}/${tokenIdToDelete}`;
-      httpDeleteJsonResponse(url)
-        .then(handleStatus)
+      httpDeleteEmptyResponse(url)
+        // .then(handleStatus)
         .then(() => {
-          selectRow("");
+
+          // selectRow("");
         })
         // .catch(error => handleErrors(error)); 
-    }, [selectRow]),
+    }, []),
 
     createToken: useCallback(
       ( email, setSubmitting ) => {
