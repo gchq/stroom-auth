@@ -32,6 +32,7 @@ const useUsers = () => {
   const {
     showSearchLoader,
     updateResults,
+    selectRow,
   } = useTokenSearchActionCreators();
   const { performTokenSearch: performTokenSearchUsingApi } = useTokenSearchApi();
   const performTokenSearch = useCallback(
@@ -48,7 +49,10 @@ const useUsers = () => {
   const deleteSelectedToken = useCallback(
     () => {
       deletedSelectedTokenUsingApi()
-        .then(() => performTokenSearch({}));
+        .then(() => {
+          performTokenSearch({});
+          selectRow('');
+        });
     }, [deletedSelectedTokenUsingApi, performTokenSearchUsingApi]
   );
 
