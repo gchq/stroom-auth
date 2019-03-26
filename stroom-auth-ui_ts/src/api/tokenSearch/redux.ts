@@ -5,7 +5,7 @@ import {
   genUseActionCreators,
   prepareReducer
 } from "../../lib/redux-actions-ts";
-import { Filter } from 'react-table';
+import { Filter, SortingRule } from 'react-table';
 
 const SHOW_SEARCH_LOADER = "tokenSearch/SHOW_SEARCH_LOADER";
 const UPDATE_RESULTS = "tokenSearch/UPDATE_RESULTS";
@@ -40,7 +40,7 @@ interface ChangeLastUsedPageAction
 }
 interface ChangeLastUsedSortedAction
   extends Action<"tokenSearch/CHANGE_LAST_USED_SORTED"> {
-  lastUsedSorted: string;
+  lastUsedSorted: SortingRule[];
 }
 interface ChangeLastUsedFilteredAction
   extends Action<"tokenSearch/CHANGE_LAST_USED_FILTERED"> {
@@ -87,7 +87,7 @@ export const useActionCreators = genUseActionCreators({
     lastUsedPage
   }),
   changeLastUsedSorted: (
-    lastUsedSorted: string
+    lastUsedSorted: SortingRule[]
   ): ChangeLastUsedSortedAction => ({
     type: CHANGE_LAST_USED_SORTED,
     lastUsedSorted

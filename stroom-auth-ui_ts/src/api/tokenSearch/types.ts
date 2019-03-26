@@ -1,5 +1,5 @@
 import { Token } from "../tokens";
-import { Filter } from 'react-table';
+import { Filter, SortingRule } from 'react-table';
 
 export interface StoreState {
   tokens: Token[];
@@ -18,7 +18,7 @@ export interface StoreState {
 export interface TokenSearchRequest {
   pageSize?: number,
   page?: number,
-  sorted?: string,
+  sorted?: SortingRule[],
   filtered?: Filter[]
 }
 

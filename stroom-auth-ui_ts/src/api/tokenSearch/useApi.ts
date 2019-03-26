@@ -66,12 +66,12 @@ const useApi = (): Api => {
         let orderBy = "issued_on";
         let orderDirection = "desc";
 
-        // if (!!sorted) {
-        //   if (sorted.length > 0) {
-        //     orderBy = sorted[0].id;
-        //     orderDirection = sorted[0].desc ? "desc" : "asc";
-        //   }
-        // }
+        if (!!sorted) {
+          if (sorted.length > 0) {
+            orderBy = sorted[0].id;
+            orderDirection = sorted[0].desc ? "desc" : "asc";
+          }
+        }
 
         let filters = {} as { token_type: String };
         if (!!filtered) {
