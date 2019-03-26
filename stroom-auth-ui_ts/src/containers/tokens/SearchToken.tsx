@@ -82,14 +82,14 @@ const getColumnFormat = (
       Header: "Expires on",
       accessor: "expires_on",
       Cell: (row: RowInfo) => formatDate(row.row.value),
-      Filter: ({ filter, onChange }: FilterProps) => undefined, // Disable filtering by this column - how do we filter on dates?
+      filterable: false,
       maxWidth: 165
     },
     {
       Header: "Issued on",
       accessor: "issued_on",
       Cell: (row: RowInfo) => formatDate(row.row.value),
-      Filter: ({ filter, onChange }: FilterProps) => undefined, // Disable filtering by this column - how do we filter on dates?
+      filterable: false,
       maxWidth: 165
     }
   ] as Column[];
@@ -161,7 +161,7 @@ const TokenSearch = () => {
   const { selectRow } = useTokenSearchActionCreators();
   const { deleteSelectedToken} = useTokenApi();
 
-  const [isFilteringEnabled, toggleFiltering] = useState(false);
+  const [isFilteringEnabled, setFilteringEnabled] = useState(false);
   const noTokenSelected = !selectedTokenRowId;
   return (
      <div className="Layout-main">
@@ -209,7 +209,7 @@ const TokenSearch = () => {
           <Toggle
             icons={false}
             checked={isFilteringEnabled}
-            onChange={event => toggleFiltering(event.target.checked)}
+            onChange={event => setFilteringEnabled(event.target.checked)}
           /> 
         </div>
       </div>
