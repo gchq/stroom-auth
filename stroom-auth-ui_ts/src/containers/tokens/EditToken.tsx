@@ -40,7 +40,7 @@ const EditToken = () => {
   const { history } = useRouter();
   const { toggleEnabledState } = useTokens();
 
-  const { fetchApiKey } = useTokenApi();
+  const { fetchApiKey } = useTokens();
   const tokenId = useIdFromPath("token/");
   React.useEffect(() => {
     if (!!tokenId) {

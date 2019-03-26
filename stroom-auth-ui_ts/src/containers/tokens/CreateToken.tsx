@@ -22,7 +22,7 @@ import '../../styles/form.css';
 import './CreateTokenForm.css';
 import '../Layout.css';
 import Button from '../Button';
-import { useApi } from '../../api/tokens';
+import { useTokens } from '../../api/tokens';
 import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
 
@@ -30,17 +30,18 @@ type DropDownValues = {
   label: string;
   value: number;
 }
+
 const TokenCreateForm = () => {
   const { history } = useRouter();
-  const { /*isCreating ,*/ errorMessage} = useReduxState(({ token: {errorMessage, isCreating } }) => ({ isCreating , errorMessage}));
-  const { createToken } = useApi();
+  const { errorMessage } = useReduxState(({ token: { errorMessage, isCreating } }) => ({ isCreating, errorMessage }));
+  const { createToken } = useTokens();
 
   return (
     <div className="CreateTokenForm-card">
       <Formik
-      initialValues={{user: {label:'', value:-1}} as {user: DropDownValues}}
+        initialValues={{ user: { label: '', value: -1 } } as { user: DropDownValues }}
         onSubmit={(values, actions) => {
-          createToken(values.user.label, actions.setSubmitting);
+          createToken(values.user.label);
           actions.setSubmitting(false);
         }}
         render={({ handleSubmit, setFieldValue, values }) => {
@@ -51,8 +52,8 @@ const TokenCreateForm = () => {
                 <Button
                   icon="arrow-left"
                   className="primary toolbar-button-small"
-                  onClick={() => history.push('/tokens')} 
-                  text="Back"/>
+                  onClick={() => history.push('/tokens')}
+                  text="Back" />
               </div>
               <div className="container">
                 <div className="section">
@@ -81,9 +82,8 @@ const TokenCreateForm = () => {
                   disabled={submitIsDisabled}
                   icon="plus"
                   type="submit"
-                  // isLoading={isCreating}>
                   text="Create"
-                  />
+                />
               </div>
             </form>
           )
