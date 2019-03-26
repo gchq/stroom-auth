@@ -28,7 +28,7 @@ import "../../styles/form.css";
 import { useApi } from "../../api/tokens";
 import { OnCopy, ByCopy } from "../auditCopy";
 
-import { useApi as useTokenApi } from "../../api/tokens";
+import { useTokens, useApi as useTokenApi } from "../../api/tokens";
 import useIdFromPath from "../../lib/useIdFromPath";
 import { useRouter } from "../../lib/useRouter";
 import { useReduxState } from "../../lib/useReduxState";
@@ -38,7 +38,7 @@ const EditToken = () => {
     token: lastReadToken
   }));
   const { history } = useRouter();
-  const { toggleEnabledState } = useApi();
+  const { toggleEnabledState } = useTokens();
 
   const { fetchApiKey } = useTokenApi();
   const tokenId = useIdFromPath("token/");
@@ -78,7 +78,7 @@ const EditToken = () => {
                   <Toggle
                     icons={false}
                     checked={token.enabled}
-                    // onChange={toggleEnabledState}//FIXME
+                    onChange={event => !!tokenId ? toggleEnabledState(tokenId, event.target.checked): undefined}
                   />
                 </div>
               </div>
