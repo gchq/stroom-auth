@@ -40,3 +40,7 @@ p.warning {
   display: flex;
   justify-content: center;
 }
+
+.TokenSearch__table__checkbox input {
+  margin-top: 0px;
+}
