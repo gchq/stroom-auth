@@ -14,33 +14,40 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import {Formik, Form, Field, ErrorMessage} from 'formik';
-import * as Yup from 'yup';
+import * as React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-import Button from '../Button';
-import '../Layout.css';
-import {hasAnyProps} from '../../lang';
-import '../../styles/index.css';
-import {useApi} from '../../api/authentication';
-import useReduxState from '../../lib/useReduxState';
+import Button from "../Button";
+import "../../styles/Layout.css";
+import { hasAnyProps } from "../../lang";
+import "../../styles/index.css";
+import { useApi } from "../../api/authentication";
+import useReduxState from "../../lib/useReduxState";
 
 const ValidationSchema = Yup.object().shape({
-  email: Yup.string().required('Required'),
+  email: Yup.string().required("Required")
 });
 
 const ResetPasswordRequest = () => {
-  const {stroomUiUrl} = useReduxState(({config: {values:{stroomUiUrl}}}) => ({stroomUiUrl}));
-  const { submitPasswordChangeRequest} = useApi();
+  const { stroomUiUrl } = useReduxState(
+    ({
+      config: {
+        values: { stroomUiUrl }
+      }
+    }) => ({ stroomUiUrl })
+  );
+  const { submitPasswordChangeRequest } = useApi();
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
-        email: '',
+        email: ""
       }}
       onSubmit={submitPasswordChangeRequest}
-      validationSchema={ValidationSchema}>
-      {({errors, touched, submitForm, isSubmitting}) => {
+      validationSchema={ValidationSchema}
+    >
+      {({ errors, touched, submitForm, isSubmitting }) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (
@@ -72,11 +79,12 @@ const ResetPasswordRequest = () => {
                   disabled={isPristine || hasErrors}
                   //isLoading={isSubmitting}
                   text="Send"
-                  />
+                />
                 <Button
                   className="toolbar-button-medium secondary"
                   onClick={() => (window.location.href = stroomUiUrl)}
-                  text="Back to Stroom"/>
+                  text="Back to Stroom"
+                />
               </div>
             </div>
           </Form>

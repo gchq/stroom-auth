@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
+import * as React from "react";
 
-import './PathNotFound.css';
-import '../Layout.css';
+import "./PathNotFound.css";
+import "../../styles/Layout.css";
 
 const PathNotFound = () => {
   return (

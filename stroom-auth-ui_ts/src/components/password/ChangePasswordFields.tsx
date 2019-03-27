@@ -17,7 +17,7 @@
 import * as React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-import "../Layout.css";
+import "../../styles/Layout.css";
 import Button from "../Button";
 import useReduxState from "../../lib/useReduxState";
 import { PasswordValidationRequest } from "../../api/authentication/types";

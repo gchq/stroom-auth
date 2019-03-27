@@ -17,7 +17,7 @@
 import * as React from "react";
 
 import Button from "../Button";
-import "../Layout.css";
+import "../../styles/Layout.css";
 import useReduxState from "../../lib/useReduxState";
 
 const ConfirmPasswordResetEmail = () => {

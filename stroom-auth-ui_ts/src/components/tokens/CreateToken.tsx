@@ -14,46 +14,51 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { Formik } from 'formik';
+import * as React from "react";
+import { Formik } from "formik";
 
-import { AsyncUserSelect } from '../users';
-import '../../styles/form.css';
-import './CreateTokenForm.css';
-import '../Layout.css';
-import Button from '../Button';
-import { useTokens } from '../../api/tokens';
+import { AsyncUserSelect } from "../users";
+import "../../styles/form.css";
+import "./CreateTokenForm.css";
+import "../../styles/Layout.css";
+import Button from "../Button";
+import { useTokens } from "../../api/tokens";
 import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
 
 type DropDownValues = {
   label: string;
   value: number;
-}
+};
 
 const TokenCreateForm = () => {
   const { history } = useRouter();
-  const { errorMessage } = useReduxState(({ token: { errorMessage, isCreating } }) => ({ isCreating, errorMessage }));
+  const { errorMessage } = useReduxState(
+    ({ token: { errorMessage, isCreating } }) => ({ isCreating, errorMessage })
+  );
   const { createToken } = useTokens();
 
   return (
     <div className="CreateTokenForm-card">
       <Formik
-        initialValues={{ user: { label: '', value: -1 } } as { user: DropDownValues }}
+        initialValues={
+          { user: { label: "", value: -1 } } as { user: DropDownValues }
+        }
         onSubmit={(values, actions) => {
           createToken(values.user.label);
           actions.setSubmitting(false);
         }}
         render={({ handleSubmit, setFieldValue, values }) => {
-          const submitIsDisabled = values.user === undefined
+          const submitIsDisabled = values.user === undefined;
           return (
             <form onSubmit={handleSubmit}>
               <div className="header">
                 <Button
                   icon="arrow-left"
                   className="primary toolbar-button-small"
-                  onClick={() => history.push('/tokens')}
-                  text="Back" />
+                  onClick={() => history.push("/tokens")}
+                  text="Back"
+                />
               </div>
               <div className="container">
                 <div className="section">
@@ -70,7 +75,7 @@ const TokenCreateForm = () => {
                       </div>
                     </div>
                     <div className="CreateTokenForm-errorMessage">
-                      {' '}
+                      {" "}
                       {errorMessage}
                     </div>
                   </div>
@@ -86,7 +91,7 @@ const TokenCreateForm = () => {
                 />
               </div>
             </form>
-          )
+          );
         }}
       />
     </div>

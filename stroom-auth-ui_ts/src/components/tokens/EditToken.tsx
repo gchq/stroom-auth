@@ -18,11 +18,11 @@ import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as CopyToClipboard from "react-copy-to-clipboard";
 import Toggle from "react-toggle";
-import "react-toggle/style.css"
+import "react-toggle/style.css";
 import "rc-checkbox/assets/index.css";
 
 import Button from "../Button";
-import Loader from "../Loader";
+import Loader from "../Loader2";
 import "./TokenEdit.css";
 import "../../styles/form.css";
 import { OnCopy, ByCopy } from "../auditCopy";
@@ -76,7 +76,9 @@ const EditToken = () => {
                   <Toggle
                     icons={false}
                     checked={token.enabled}
-                    onChange={event => !!tokenId ? toggleEnabledState(): undefined}
+                    onChange={event =>
+                      !!tokenId ? toggleEnabledState() : undefined
+                    }
                   />
                 </div>
               </div>
@@ -102,7 +104,12 @@ const EditToken = () => {
             <div className="section__fields--copy-only constrained">
               <textarea value={token.token} disabled />
               <CopyToClipboard text={token.token}>
-                <Button type="button" className="primary" icon="copy" text="Copy key"/>
+                <Button
+                  type="button"
+                  className="primary"
+                  icon="copy"
+                  text="Copy key"
+                />
               </CopyToClipboard>
             </div>
           </div>

@@ -20,7 +20,7 @@ import * as Cookies from "cookies-js";
 import * as queryString from "query-string";
 
 import "./ChangePassword.css";
-import "../Layout.css";
+import "../../styles/Layout.css";
 import ChangePasswordFields from "./ChangePasswordFields";
 
 import useRouter from "../../lib/useRouter";

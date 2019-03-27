@@ -5,7 +5,7 @@ import { StoreContext } from "redux-react-hook";
 import "./styles/index.css";
 import "./index.css";
 import "./startup/icons";
-import App from "./containers/app";
+import App from "./components/app";
 import createStore from "./startup/store";
 import registerServiceWorker from "./registerServiceWorker";
 import useFontAwesome from "./lib/useFontAwesome";

@@ -18,27 +18,27 @@ import * as React from "react";
 import { Route, Switch } from "react-router-dom";
 
 import "./App.css";
-import Login from "../../containers/login";
-import LoggedOut from "../../containers/loggedOut";
+import Login from "../../components/login";
+import LoggedOut from "../../components/loggedOut";
 import {
   UserCreate,
   UserEdit,
   UserSearch,
   NewUser
-} from "../../containers/users";
-import { TokenCreate, TokenSearch, TokenEdit } from "../../containers/tokens";
-import { PathNotFound } from "../../containers/pathNotFound";
+} from "../../components/users";
+import { TokenCreate, TokenSearch, TokenEdit } from "../../components/tokens";
+import { PathNotFound } from "../../components/pathNotFound";
 import {
   ResetPassword,
   ChangePassword,
   ConfirmPasswordResetEmail,
   ResetPasswordRequest
-} from "../../containers/password";
+} from "../../components/password";
 import AuthenticationRequest from "../../startup/authentication/AuthenticationRequest";
 import ErrorPage from "../../components/ErrorPage";
 import HandleAuthenticationResponse from "../../startup/authentication/HandleAuthenticationResponse";
 import Loader from "../../components/Loader";
-import Unauthorised from "../../containers/unauthorised";
+import Unauthorised from "../../components/unauthorised";
 import useConfig from "../../startup/config/useConfig";
 import useReduxState from "../../lib/useReduxState";
 import { useUsers } from "../../api/users";

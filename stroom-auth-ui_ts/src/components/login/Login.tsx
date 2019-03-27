@@ -24,7 +24,7 @@ import * as queryString from "qs";
 import Button from "../Button";
 import { hasAnyProps } from "../../lang";
 import "./Login.css";
-import "../Layout.css";
+import "../../styles/Layout.css";
 import icon from "../../icon.png";
 import { useActionCreators, useAuthentication } from "../../api/authentication";
 import useReduxState from "../../lib/useReduxState";
