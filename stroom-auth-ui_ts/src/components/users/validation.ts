@@ -16,8 +16,6 @@
 
 import * as Yup from "yup";
 
-import { hasAnyProps } from "../../lang";
-import { useApi } from "../../api/authentication";
 import { PasswordValidationRequest } from "../../api/authentication/types";
 
 export const NewUserValidationSchema = Yup.object().shape({

@@ -25,7 +25,7 @@ import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
 import { NewUserValidationSchema, validateAsync } from "./validation";
 import { PasswordValidationRequest } from "../../api/authentication/types";
-import { hasAnyProps } from "../../lang";
+import { hasAnyProps } from "../../lib/lang";
 import { useUsers, User } from "../../api/users";
 
 // If we don't pass initialValues to Formik then they won't be controlled

@@ -20,7 +20,7 @@ import * as Yup from "yup";
 
 import Button from "../Button";
 import "../../styles/Layout.css";
-import { hasAnyProps } from "../../lang";
+import { hasAnyProps } from "../../lib/lang";
 import "../../styles/index.css";
 import { useApi } from "../../api/authentication";
 import useReduxState from "../../lib/useReduxState";

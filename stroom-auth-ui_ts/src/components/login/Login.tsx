@@ -22,7 +22,7 @@ import * as Yup from "yup";
 import * as queryString from "qs";
 
 import Button from "../Button";
-import { hasAnyProps } from "../../lang";
+import { hasAnyProps } from "../../lib/lang";
 import "./Login.css";
 import "../../styles/Layout.css";
 import icon from "../../icon.png";

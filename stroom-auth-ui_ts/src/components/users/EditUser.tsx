@@ -26,7 +26,7 @@ import UserFields from "./UserFields";
 import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
 import { UserValidationSchema, validateAsync } from "./validation";
-import { hasAnyProps } from "../../lang";
+import { hasAnyProps } from "../../lib/lang";
 import { useActionCreators, useUsers } from "../../api/users";
 import useIdFromPath from "../../lib/useIdFromPath";
 import { PasswordValidationRequest } from "../../api/authentication/types";

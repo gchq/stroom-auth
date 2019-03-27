@@ -21,7 +21,7 @@ import "../../styles/Layout.css";
 import Button from "../Button";
 import useReduxState from "../../lib/useReduxState";
 import { PasswordValidationRequest } from "../../api/authentication/types";
-import { hasAnyProps } from "../../lang";
+import { hasAnyProps } from "../../lib/lang";
 import { validateAsync } from "../users/validation";
 
 const ChangePasswordFields = ({
