@@ -17,7 +17,7 @@
 import { createStore } from "redux";
 
 import middleware from "./middleware";
-import reducers from "../modules";
+import reducers from "./reducers";
 
 const initialState = {};
 
