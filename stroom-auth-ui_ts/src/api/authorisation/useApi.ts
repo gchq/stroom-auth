@@ -17,26 +17,26 @@
 import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
-import useHttpClient from '../useHttpClient';
-import { GlobalStoreState } from "../../modules/GlobalStoreState";
+import useHttpClient from "../useHttpClient";
+import { GlobalStoreState } from "../../startup/GlobalStoreState";
 
 interface Api {
-    createUser: (userEmail: string) => Promise<void>;
+  createUser: (userEmail: string) => Promise<void>;
 }
 
 export const useApi = (): Api => {
-    const store = useContext(StoreContext);
-    const { httpPostEmptyResponse } = useHttpClient();
+  const store = useContext(StoreContext);
+  const { httpPostEmptyResponse } = useHttpClient();
 
-    const createUser = useCallback(
-        (userEmail: string) => {
-            const reduxState: GlobalStoreState = store.getState();
-            const url = `${reduxState.config.values.authorisationServiceUrl}/createUser?id=${userEmail}`;
-            return httpPostEmptyResponse(url, {})
-        }, []
-    );
+  const createUser = useCallback((userEmail: string) => {
+    const reduxState: GlobalStoreState = store.getState();
+    const url = `${
+      reduxState.config.values.authorisationServiceUrl
+    }/createUser?id=${userEmail}`;
+    return httpPostEmptyResponse(url, {});
+  }, []);
 
-    return { createUser };
+  return { createUser };
 };
 
 export default useApi;

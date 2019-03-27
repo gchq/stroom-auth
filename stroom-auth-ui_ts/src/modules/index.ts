@@ -25,9 +25,7 @@ import { reducer as token } from "../api/tokens";
 import { reducer as tokenSearch } from "../api/tokenSearch";
 import { reducer as user } from "../api/users";
 import { reducer as userSearch } from "../api/userSearch";
-import { GlobalStoreState } from "./GlobalStoreState";
 
-export { GlobalStoreState };
 export default combineReducers({
   login,
   errorPage,

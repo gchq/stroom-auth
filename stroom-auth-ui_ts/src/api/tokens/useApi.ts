@@ -15,9 +15,9 @@
  */
 
 import useHttpClient from "../useHttpClient";
-import { GlobalStoreState } from "../../modules/GlobalStoreState";
+import { GlobalStoreState } from "../../startup/GlobalStoreState";
 import { StoreContext } from "redux-react-hook";
-import { Token } from './types';
+import { Token } from "./types";
 import { useActionCreators as useTokenActionCreators } from "./redux";
 import { useContext, useCallback } from "react";
 
@@ -31,61 +31,57 @@ interface Api {
 
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
-  const { httpGetJson, httpPostJsonResponse, httpDeleteEmptyResponse, httpGetEmptyResponse } = useHttpClient();
+  const {
+    httpGetJson,
+    httpPostJsonResponse,
+    httpDeleteEmptyResponse,
+    httpGetEmptyResponse
+  } = useHttpClient();
   const {
     toggleIsCreating,
     hideErrorMessage,
-    showErrorMessage,
+    showErrorMessage
   } = useTokenActionCreators();
 
   return {
-
-    deleteSelectedToken: useCallback(
-      () => {
-        const state: GlobalStoreState = store.getState();
-        const tokenIdToDelete = state.tokenSearch.selectedTokenRowId;
-        const url = `${state.config.values.tokenServiceUrl}/${tokenIdToDelete}`;
-        return httpDeleteEmptyResponse(url);
-      }, []
-    ),
+    deleteSelectedToken: useCallback(() => {
+      const state: GlobalStoreState = store.getState();
+      const tokenIdToDelete = state.tokenSearch.selectedTokenRowId;
+      const url = `${state.config.values.tokenServiceUrl}/${tokenIdToDelete}`;
+      return httpDeleteEmptyResponse(url);
+    }, []),
 
     createToken: useCallback(
       (email: string) => {
         const state: GlobalStoreState = store.getState();
         toggleIsCreating();
         hideErrorMessage();
-        return httpPostJsonResponse(
-          state.config.values.tokenServiceUrl,
-          {
-            body: JSON.stringify({
-              userEmail: email,
-              tokenType: "api",
-              enabled: true
-            })
-          }
-        );
+        return httpPostJsonResponse(state.config.values.tokenServiceUrl, {
+          body: JSON.stringify({
+            userEmail: email,
+            tokenType: "api",
+            enabled: true
+          })
+        });
       },
       [toggleIsCreating, hideErrorMessage, showErrorMessage]
     ),
 
-    fetchApiKey: useCallback(
-      (apiKeyId: string) => {
-        const state: GlobalStoreState = store.getState();
-        const url = `${state.config.values.tokenServiceUrl}/${apiKeyId}`;
-        return httpGetJson(url);
-      }, []
-    ),
+    fetchApiKey: useCallback((apiKeyId: string) => {
+      const state: GlobalStoreState = store.getState();
+      const url = `${state.config.values.tokenServiceUrl}/${apiKeyId}`;
+      return httpGetJson(url);
+    }, []),
 
-    toggleEnabledState: useCallback(
-      () => {
-        const state: GlobalStoreState = store.getState();
-        const nextState = state.token.lastReadToken.enabled ? "false" : "true";
-        const tokenId = state.token.lastReadToken.id;
-        const url = `${state.config.values.tokenServiceUrl}/${tokenId}/state/?enabled=${nextState}`
-        return httpGetEmptyResponse(url);
-      }, []
-    )
-
+    toggleEnabledState: useCallback(() => {
+      const state: GlobalStoreState = store.getState();
+      const nextState = state.token.lastReadToken.enabled ? "false" : "true";
+      const tokenId = state.token.lastReadToken.id;
+      const url = `${
+        state.config.values.tokenServiceUrl
+      }/${tokenId}/state/?enabled=${nextState}`;
+      return httpGetEmptyResponse(url);
+    }, [])
   };
 };
 

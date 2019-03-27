@@ -2,15 +2,17 @@ import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useHttpClient from "../useHttpClient";
-import { Filter } from 'react-table';
-import { GlobalStoreState } from '../../modules';
-import { Token } from '../tokens';
-import { TokenSearchRequest, TokenSearchResponse } from './types'
+import { Filter } from "react-table";
+import { GlobalStoreState } from "../../startup/GlobalStoreState";
+import { Token } from "../tokens";
+import { TokenSearchRequest, TokenSearchResponse } from "./types";
 import { useActionCreators as useTokenSearchActionCreators } from "../tokenSearch";
 import { useActionCreators } from "./redux";
 
 interface Api {
-  performTokenSearch: (tokenSearchRequest: TokenSearchRequest) => Promise<TokenSearchResponse>;
+  performTokenSearch: (
+    tokenSearchRequest: TokenSearchRequest
+  ) => Promise<TokenSearchResponse>;
   toggleState: (tokenId: string) => Promise<void>;
 }
 
@@ -27,19 +29,23 @@ const useApi = (): Api => {
   const { httpGetEmptyResponse, httpPostJsonResponse } = useHttpClient();
 
   return {
-
-    toggleState: useCallback(
-      (tokenId: string) => {
-        const state: GlobalStoreState = store.getState();
-        const token: Token | undefined = state.tokenSearch.results.find((token) => token.id === tokenId);
-        if (!!token) {
-          const nextState = !token.enabled;
-          const url = `${state.config.values.tokenServiceUrl}/${tokenId}/state/?enabled=${nextState}`
-          return httpGetEmptyResponse(url);
-        }
-        else { throw Error(`Can't toggle token ${tokenId} because it's not in our store!`) }
-      }, []
-    ),
+    toggleState: useCallback((tokenId: string) => {
+      const state: GlobalStoreState = store.getState();
+      const token: Token | undefined = state.tokenSearch.results.find(
+        token => token.id === tokenId
+      );
+      if (!!token) {
+        const nextState = !token.enabled;
+        const url = `${
+          state.config.values.tokenServiceUrl
+        }/${tokenId}/state/?enabled=${nextState}`;
+        return httpGetEmptyResponse(url);
+      } else {
+        throw Error(
+          `Can't toggle token ${tokenId} because it's not in our store!`
+        );
+      }
+    }, []),
 
     performTokenSearch: useCallback(
       (tokenSearchRequest: TokenSearchRequest) => {
@@ -109,7 +115,7 @@ const useApi = (): Api => {
             orderDirection,
             filters
           })
-        })
+        });
       },
       [
         updateResults,
@@ -119,7 +125,7 @@ const useApi = (): Api => {
         changeLastUsedPageSize,
         changeLastUsedSorted
       ]
-    ),
+    )
   };
 };
 

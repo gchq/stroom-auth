@@ -14,41 +14,41 @@
  * limitations under the License.
  */
 
-import * as jwtDecode from 'jwt-decode'
+import * as jwtDecode from "jwt-decode";
 import { StoreContext } from "redux-react-hook";
 import { useContext } from "react";
-import useRouter from '../lib/useRouter';
-import { GlobalStoreState } from '.';
-import {useActionCreators } from '../components/ErrorPage';
+import useRouter from "../lib/useRouter";
+import { GlobalStoreState } from "../startup/GlobalStoreState";
+import { useActionCreators } from "../components/ErrorPage";
 
 export const handleErrors = (error: any) => {
   const store = useContext(StoreContext);
   const { history } = useRouter();
   const state: GlobalStoreState = store.getState();
   const token = state.authentication.idToken;
-  const {setErrorMessage, setHttpErrorCode} = useActionCreators();
+  const { setErrorMessage, setHttpErrorCode } = useActionCreators();
 
   if (error.status === 401) {
     if (!!token) {
-      const decodedToken:any = jwtDecode(token)
-      const now = new Date().getTime() / 1000
-      const expiredToken = decodedToken.exp <= now
+      const decodedToken: any = jwtDecode(token);
+      const now = new Date().getTime() / 1000;
+      const expiredToken = decodedToken.exp <= now;
       if (expiredToken) {
-        history.push('/unauthorised?reason=expired_token');
+        history.push("/unauthorised?reason=expired_token");
       } else {
         // If it's not expired then that means this user is genuinely unauthorised
-        history.push('/unauthorised');
+        history.push("/unauthorised");
       }
     } else {
-        history.push('/unauthorised?reason=missing_token');
+      history.push("/unauthorised?reason=missing_token");
     }
   } else {
-    setErrorMessage('API request was rejected!');
+    setErrorMessage("API request was rejected!");
     setHttpErrorCode(error.status);
-    history.push('/error');
+    history.push("/error");
   }
-}
+};
 
-export function getJsonBody(response:any) {
-  return response.json()
+export function getJsonBody(response: any) {
+  return response.json();
 }

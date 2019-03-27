@@ -13,7 +13,7 @@ import {
 } from "./types";
 import { FormikBag } from "formik";
 import { useActionCreators } from "./redux";
-import { GlobalStoreState } from "../..//modules";
+import { GlobalStoreState } from "../../startup/GlobalStoreState";
 import { useActionCreators as useUserActionCreators, User } from "../users";
 import useRouter from "../../lib/useRouter";
 
@@ -25,7 +25,9 @@ interface Api {
     formData: any,
     formikBag: FormikBag<any, any>
   ) => void;
-  isPasswordValid: (passwordValidationRequest: PasswordValidationRequest) => Promise<PasswordValidationResponse>;
+  isPasswordValid: (
+    passwordValidationRequest: PasswordValidationRequest
+  ) => Promise<PasswordValidationResponse>;
 }
 
 export const useApi = (): Api => {
@@ -48,7 +50,8 @@ export const useApi = (): Api => {
     (credentials: Credentials) => {
       const { email, password } = credentials;
       const state: GlobalStoreState = store.getState();
-      const authenticationServiceUrl = state.config.values.authenticationServiceUrl;
+      const authenticationServiceUrl =
+        state.config.values.authenticationServiceUrl;
       const loginServiceUrl = `${authenticationServiceUrl}/authenticate`;
       const clientId = state.config.values.appClientId;
 
@@ -60,17 +63,14 @@ export const useApi = (): Api => {
         sessionId = fullSessionId.slice(0, fullSessionId.indexOf("."));
       }
 
-      return httpPostJsonResponse(
-        loginServiceUrl,
-        {
-          body: JSON.stringify({
-            email,
-            password,
-            sessionId,
-            requestingClientId: clientId
-          })
-        }
-      );
+      return httpPostJsonResponse(loginServiceUrl, {
+        body: JSON.stringify({
+          email,
+          password,
+          sessionId,
+          requestingClientId: clientId
+        })
+      });
     },
     [httpPostJsonResponse, showLoader]
   );
@@ -79,7 +79,9 @@ export const useApi = (): Api => {
     (changePasswordRequest: ChangePasswordRequest) => {
       const state: GlobalStoreState = store.getState();
       hideChangePasswordErrorMessage();
-      const url = `${state.config.values.authenticationServiceUrl}/changePassword/`;
+      const url = `${
+        state.config.values.authenticationServiceUrl
+      }/changePassword/`;
       const {
         password,
         oldPassword,
@@ -87,12 +89,9 @@ export const useApi = (): Api => {
         redirectUrl
       } = changePasswordRequest;
 
-      httpPostJsonResponse(
-        url,
-        {
-          body: JSON.stringify({ newPassword: password, oldPassword, email })
-        }
-      ).then(response => {
+      httpPostJsonResponse(url, {
+        body: JSON.stringify({ newPassword: password, oldPassword, email })
+      }).then(response => {
         if (response.changeSucceeded) {
           // If we successfully changed the password then we want to redirect if there's a redirection URL
           if (redirectUrl !== undefined) {
@@ -132,12 +131,11 @@ export const useApi = (): Api => {
       const state: GlobalStoreState = store.getState();
       const newPassword = resetPasswordRequest.password;
       const stroomUiUrl = state.config.values.stroomUiUrl;
-      const url = `${state.config.values.authenticationServiceUrl}/resetPassword/`;
+      const url = `${
+        state.config.values.authenticationServiceUrl
+      }/resetPassword/`;
 
-      httpPostJsonResponse(
-        url,
-        { body: JSON.stringify({ newPassword }) }
-      ).then(
+      httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) }).then(
         response => {
           if (response.changeSucceeded) {
             if (stroomUiUrl !== undefined) {
@@ -167,20 +165,30 @@ export const useApi = (): Api => {
     (formData: any, formikBag: FormikBag<any, any>) => {
       const state: GlobalStoreState = store.getState();
       const { setSubmitting } = formikBag;
-      const url = `${state.config.values.authenticationServiceUrl}/reset/${ formData.email }`;
-      
+      const url = `${state.config.values.authenticationServiceUrl}/reset/${
+        formData.email
+      }`;
+
       httpGetJson(url, {}).then(() => {
         setSubmitting(false);
         history.push("/confirmPasswordResetEmail");
       });
-    }, []
+    },
+    []
   );
 
-  const isPasswordValid = useCallback((passwordValidationRequest: PasswordValidationRequest) => {
-    const state: GlobalStoreState = store.getState();
-    const url = `${state.config.values.authenticationServiceUrl}/isPasswordValid`;
-    return httpPostJsonResponse(url, { body: JSON.stringify(passwordValidationRequest) });
-  }, []);
+  const isPasswordValid = useCallback(
+    (passwordValidationRequest: PasswordValidationRequest) => {
+      const state: GlobalStoreState = store.getState();
+      const url = `${
+        state.config.values.authenticationServiceUrl
+      }/isPasswordValid`;
+      return httpPostJsonResponse(url, {
+        body: JSON.stringify(passwordValidationRequest)
+      });
+    },
+    []
+  );
 
   return {
     apiLogin,
