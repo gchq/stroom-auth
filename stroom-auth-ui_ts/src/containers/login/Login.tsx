@@ -129,7 +129,6 @@ const LoginForm = () => {
                       className="toolbar-button-full primary"
                       disabled={isPristine || hasErrors}
                       type="submit"
-                      // isLoading={isSubmitting}
                       text="Sign in"
                     />
                   </div>

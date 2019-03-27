@@ -16,20 +16,15 @@
 
 import { combineReducers } from "redux";
 
-import {
-  authorisationReducer as authorisation
-  // authenticationReducer as authentication
-} from "../startup/authentication";
+import { authorisationReducer as authorisation } from "../startup/authentication";
 import { reducer as authentication } from "../api/authentication";
 import { reducer as config } from "../startup/config";
-
 import { reducer as errorPage } from "../components/ErrorPage";
-
-import { reducer as user } from "../api/users";
 import { reducer as login } from "../api/users";
-import { reducer as userSearch } from "../api/userSearch";
 import { reducer as token } from "../api/tokens";
 import { reducer as tokenSearch } from "../api/tokenSearch";
+import { reducer as user } from "../api/users";
+import { reducer as userSearch } from "../api/userSearch";
 import { GlobalStoreState } from "./GlobalStoreState";
 
 export { GlobalStoreState };
@@ -43,5 +38,4 @@ export default combineReducers({
   authentication,
   authorisation,
   config
-  // form: formReducer,
 });

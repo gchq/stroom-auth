@@ -22,12 +22,11 @@ import "./CreateUserForm.css";
 import Button from "../Button";
 import UserFields from "./UserFields";
 import useReduxState from "../../lib/useReduxState";
-import { NewUserValidationSchema, validateAsync } from "./validation";
-import { hasAnyProps } from "../../lang";
-import { useApi , useUsers, User} from "../../api/users";
 import useRouter from "../../lib/useRouter";
-import { PasswordValidationRequest } from '../../api/authentication/types';
-
+import { NewUserValidationSchema, validateAsync } from "./validation";
+import { PasswordValidationRequest } from "../../api/authentication/types";
+import { hasAnyProps } from "../../lang";
+import { useUsers, User } from "../../api/users";
 
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.
@@ -42,44 +41,36 @@ const initialValues = {
   force_password_change: true
 };
 
-const UserCreateForm = (
-  {
-    // onSubmit,
-    // idToken,
-    // authenticationServiceUrl,
-    // isSaving,
-    // push,
-  }
-) => {
-  // const {createUser} = useActionCreators();
-  const {createUser} = useUsers();
-  // const { createUser } = useApi();
+const UserCreateForm = ({}) => {
+  const { createUser } = useUsers();
   const { history } = useRouter();
-  const { idToken, authenticationServiceUrl/*, isSaving */} = useReduxState(
+  const { authenticationServiceUrl, idToken } = useReduxState(
     ({
-      authentication: { idToken },
-      user: { isSaving },
       config: {
         values: { authenticationServiceUrl }
-      }
-    }) => ({ idToken, isSaving, authenticationServiceUrl })
+      },
+      authentication: { idToken }
+    }) => ({ authenticationServiceUrl, idToken })
   );
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, actions) => {
-        const user:User = values;
+      onSubmit={values => {
+        const user: User = values;
         createUser(user);
       }}
-      validate={values =>{
-        const passwordValidationRequest:PasswordValidationRequest = {
+      validate={values => {
+        const passwordValidationRequest: PasswordValidationRequest = {
           newPassword: values.password,
           verifyPassword: values.verifyPassword,
           email: values.email
-        }
-        validateAsync(passwordValidationRequest);
-      }
-      }
+        };
+        return validateAsync(
+          passwordValidationRequest,
+          idToken,
+          authenticationServiceUrl
+        );
+      }}
       validationSchema={NewUserValidationSchema}
     >
       {({ errors, touched, setFieldTouched, setFieldValue }) => {
@@ -108,7 +99,6 @@ const UserCreateForm = (
                 disabled={isPristine || hasErrors}
                 type="submit"
                 icon="save"
-                // isLoading={isSaving}
                 text="Save"
               />
               <Button

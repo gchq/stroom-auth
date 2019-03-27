@@ -1,6 +1,5 @@
-import IconHeader from './IconHeader';
-// import DocRefIconHeader from './DocRefIconHeader';
+import IconHeader from "./IconHeader";
 
 export default IconHeader;
 
-export { IconHeader,/* DocRefIconHeader */};
+export { IconHeader };

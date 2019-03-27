@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
+import * as React from "react";
 import { useEffect, useState } from "react";
 
 import Button from "../Button";
 import { useReduxState } from "../../lib/useReduxState";
 import "./Unauthorised.css";
 import "../Layout.css";
-import useHttpQueryParam from '../../lib/useHttpQueryParam';
+import useHttpQueryParam from "../../lib/useHttpQueryParam";
 
 const Unauthorised = () => {
   const [isExpiredToken, setIsExpiredToken] = useState(false);
   const [isAccountLocked, setIsAccountLocked] = useState(false);
-  const { stroomUiUrl } = useReduxState(({ config: { values: { stroomUiUrl } } }) => ({
-    stroomUiUrl
-  }));
+  const { stroomUiUrl } = useReduxState(
+    ({
+      config: {
+        values: { stroomUiUrl }
+      }
+    }) => ({
+      stroomUiUrl
+    })
+  );
   const reason = useHttpQueryParam("reason");
   useEffect(() => {
     if (reason === "expired_token") {
@@ -38,7 +44,7 @@ const Unauthorised = () => {
     }
   }, [setIsExpiredToken, setIsAccountLocked]);
 
-  const backToStroomButton = (url:string) => (
+  const backToStroomButton = (url: string) => (
     <div className="Unauthorised__actions">
       <Button
         className="toolbar-button-medium primary"

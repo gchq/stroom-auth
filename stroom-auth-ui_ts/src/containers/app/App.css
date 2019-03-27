@@ -20,11 +20,6 @@
    margin-left: 10px;
 }
 
-/* This just adds some padding to the content, so the paper stands out */
-.main {
-  /* padding:10px;  */
-}
-
 .App-appBar-buttons {
   /* Align the buttons with the main Stroom logo */
   padding-top:6px;

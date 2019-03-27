@@ -25,12 +25,10 @@ import ChangePasswordFields from "./ChangePasswordFields";
 
 import useRouter from "../../lib/useRouter";
 import useReduxState from "../../lib/useReduxState";
-import {useApi as useAuthenticationApi} from '../../api/authentication';
+import { useApi as useAuthenticationApi } from "../../api/authentication";
 
 const ChangePassword = () => {
-  const {
-    showAlert
-  } = useReduxState(
+  const { showAlert } = useReduxState(
     ({
       user: { showAlert, changePasswordErrorMessage },
       config: {
@@ -46,8 +44,8 @@ const ChangePassword = () => {
   );
   const { changePassword } = useAuthenticationApi();
   const { router } = useRouter();
-  const [redirectUrl, setRedirectUrl] = useState('');
-  const [email, setEmail] = useState('');
+  const [redirectUrl, setRedirectUrl] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (!!router.location) {
@@ -71,9 +69,7 @@ const ChangePassword = () => {
           "Unable to display the change password page because we could not get the user's email address from either the query string or a cookie!"
         );
       }
-
     }
-
 
     // Try and get the user's email from the query string, and fall back on a cookie.
   }, [setRedirectUrl, setEmail]);
@@ -97,13 +93,13 @@ const ChangePassword = () => {
             onSubmit={changePassword}
           />
         ) : (
-            undefined
-          )}
+          undefined
+        )}
         {showAlert && !redirectUrl ? (
           <p>Your password has been changed.</p>
         ) : (
-            undefined
-          )}
+          undefined
+        )}
         }
       </div>
     </div>

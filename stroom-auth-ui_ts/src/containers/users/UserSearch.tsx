@@ -16,21 +16,21 @@
 
 import "rc-checkbox/assets/index.css";
 import "react-table/react-table.css";
+import "react-toggle/style.css";
 import * as React from "react";
 import * as dateFormat from "dateformat";
 import ReactTable, { RowInfo, ReactTableFunction } from "react-table";
 import Toggle from "react-toggle";
-import "react-toggle/style.css"
 
 import "../../styles/table-small.css";
 import "./UserSearch.css";
 import Button from "../Button";
 import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
-import useUserSearch from '../../api/userSearch/useUsers';
+import useUserSearch from "../../api/userSearch/useUsers";
 import { useActionCreators as useUserSearchActionCreators } from "../../api/userSearch";
-import { useUsers } from "../../api/users";
 import { useState } from "react";
+import { useUsers } from "../../api/users";
 
 /** There is a corresponding react-table type but doing it like this is neater. */
 type FilterProps = {
@@ -62,7 +62,8 @@ const getColumnFormat = (selectedUserRowId: string | undefined) => {
       accessor: "state",
       maxWidth: 100,
       Cell: (row: RowInfo) => renderStateCell(row.row.state),
-      Filter: ({ filter, onChange }: FilterProps) => getStateCellFilter(filter, onChange)
+      Filter: ({ filter, onChange }: FilterProps) =>
+        getStateCellFilter(filter, onChange)
     },
     {
       Header: "Last login",
@@ -151,12 +152,8 @@ const UserSearch = () => {
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
   const { deleteUser } = useUsers();
   const { selectRow } = useUserSearchActionCreators();
-  const { history  } = useRouter();
-  const {
-    showSearchLoader,
-    results,
-    selectedUserRowId,
-  } = useReduxState(
+  const { history } = useRouter();
+  const { showSearchLoader, results, selectedUserRowId } = useReduxState(
     ({
       userSearch: { showSearchLoader, results, selectedUserRowId },
       user: { errorStatus, errorText }
@@ -191,13 +188,13 @@ const UserSearch = () => {
             />
           </div>
         ) : (
-            <Button
-              className="toolbar-button-small primary"
-              onClick={() => history.push(`/user/${selectedUserRowId}`)}
-              icon="edit"
-              text="View/edit"
-            />
-          )}
+          <Button
+            className="toolbar-button-small primary"
+            onClick={() => history.push(`/user/${selectedUserRowId}`)}
+            icon="edit"
+            text="View/edit"
+          />
+        )}
 
         <div>
           <Button

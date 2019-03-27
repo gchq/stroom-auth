@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
+import * as React from "react";
 
-import Button from '../Button';
-import '../Layout.css';
-import useReduxState from '../../lib/useReduxState';
-// const enhance = compose(
-//   connect(
-//     ({config: {stroomUiUrl}}) => ({stroomUiUrl}),
-//     {},
-//   ),
-// );
+import Button from "../Button";
+import "../Layout.css";
+import useReduxState from "../../lib/useReduxState";
 
 const ConfirmPasswordResetEmail = () => {
-  const {stroomUiUrl} = useReduxState(({config:{values:{stroomUiUrl}}}) => ({stroomUiUrl}));
+  const { stroomUiUrl } = useReduxState(
+    ({
+      config: {
+        values: { stroomUiUrl }
+      }
+    }) => ({ stroomUiUrl })
+  );
   return (
     <div className="container">
       <h3>Password reset</h3>
@@ -40,7 +40,8 @@ const ConfirmPasswordResetEmail = () => {
         <Button
           className="toolbar-button-medium primary"
           onClick={() => (window.location.href = stroomUiUrl)}
-          text="Back to Stroom"/>
+          text="Back to Stroom"
+        />
       </div>
     </div>
   );

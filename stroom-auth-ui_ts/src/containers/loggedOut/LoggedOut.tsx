@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import {useEffect} from 'react';
+import * as React from "react";
+import { useEffect } from "react";
 
-import {useActionCreators} from '../../api/authentication'
-import Button from '../Button';
-import './LoggedOut.css';
-import '../Layout.css';
+import { useActionCreators } from "../../api/authentication";
+import Button from "../Button";
+import "./LoggedOut.css";
+import "../Layout.css";
 import useReduxState from "../../lib/useReduxState";
 
 const LoggedOut = () => {
-  const {stroomUiUrl} = useReduxState(
-    ({config: {values:{stroomUiUrl}}
-    }) => ({stroomUiUrl}));
-  const {changeLoggedInUser, deleteToken} = useActionCreators();
+  const { stroomUiUrl } = useReduxState(
+    ({
+      config: {
+        values: { stroomUiUrl }
+      }
+    }) => ({ stroomUiUrl })
+  );
+  const { changeLoggedInUser, deleteToken } = useActionCreators();
 
   useEffect(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userEmail');
-    changeLoggedInUser(''),
-    deleteToken()
-  }, [])
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    changeLoggedInUser(""), deleteToken();
+  }, []);
 
   return (
     <div className="content-floating-without-appbar">
@@ -43,8 +46,9 @@ const LoggedOut = () => {
         <div className="LoggedOut__actions">
           <Button
             className="toolbar-button-medium primary"
-            onClick={() => window.location.href = stroomUiUrl }
-            text="Return to Stroom"/>
+            onClick={() => (window.location.href = stroomUiUrl)}
+            text="Return to Stroom"
+          />
         </div>
       </div>
     </div>

@@ -14,83 +14,73 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import {Formik, Form, Field, ErrorMessage} from 'formik';
+import * as React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
-import Button from '../Button';
-import {validateAsync} from '../users/validation';
-import '../Layout.css';
-import {hasAnyProps} from '../../lang';
-import useReduxState from '../../lib/useReduxState';
-import { PasswordValidationRequest } from '../../api/authentication/types';
+import "../Layout.css";
+import Button from "../Button";
+import useReduxState from "../../lib/useReduxState";
+import { PasswordValidationRequest } from "../../api/authentication/types";
+import { hasAnyProps } from "../../lang";
+import { validateAsync } from "../users/validation";
 
-// const enhance = compose(
-//   withRouter,
-//   connect(
-//     ({
-//       user: {changePasswordErrorMessage},
-//       config: {authenticationServiceUrl},
-//       authentication: {idToken},
-//     }) => ({
-//       changePasswordErrorMessage,
-//       authenticationServiceUrl,
-//       idToken,
-//     }),
-//     {},
-//   ),
-// );
 const ChangePasswordFields = ({
-  // Props
   email,
   redirectUrl,
   showOldPasswordField,
-  onSubmit,
-  // Redux
-  // changePasswordErrorMessage,
-  // idToken,
-  // authenticationServiceUrl,
-}:{
-  email?: string,
-  redirectUrl?: string,
-  showOldPasswordField: boolean,
-  onSubmit: Function
+  onSubmit
+}: {
+  email?: string;
+  redirectUrl?: string;
+  showOldPasswordField: boolean;
+  onSubmit: Function;
 }) => {
-  const {changePasswordErrorMessage,
-      authenticationServiceUrl,
-      idToken} = useReduxState(({user: {changePasswordErrorMessage},
-      config: {values:{ authenticationServiceUrl}},
-      authentication: {idToken}}) => ({changePasswordErrorMessage,
-      authenticationServiceUrl,
-      idToken}))
+  const {
+    changePasswordErrorMessage,
+    authenticationServiceUrl,
+    idToken
+  } = useReduxState(
+    ({
+      user: { changePasswordErrorMessage },
+      config: {
+        values: { authenticationServiceUrl }
+      },
+      authentication: { idToken }
+    }) => ({ changePasswordErrorMessage, authenticationServiceUrl, idToken })
+  );
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
-        oldPassword: '',
-        password: '',
-        verifyPassword: '',
-        email: email || '',
-        redirectUrl: redirectUrl || '',
+        oldPassword: "",
+        password: "",
+        verifyPassword: "",
+        email: email || "",
+        redirectUrl: redirectUrl || ""
       }}
-      onSubmit={(values, actions) => {
+      onSubmit={values => {
         onSubmit(values);
       }}
-      validate={values =>{
-        const passwordValidationRequest:PasswordValidationRequest = {
+      validate={values => {
+        const passwordValidationRequest: PasswordValidationRequest = {
           oldPassword: values.oldPassword,
           newPassword: values.password,
           verifyPassword: values.verifyPassword,
-          email: values.email,
+          email: values.email
         };
-        validateAsync(passwordValidationRequest);
-      } 
-      }>
-      {({errors, touched, submitForm, isSubmitting}) => {
+        validateAsync(
+          passwordValidationRequest,
+          idToken,
+          authenticationServiceUrl
+        );
+      }}
+    >
+      {({ errors, touched }) => {
         const isPristine = !hasAnyProps(touched);
         const hasErrors = hasAnyProps(errors);
         return (
           <Form className="ChangePassword-form">
-            <div style={{display: 'none'}}>
+            <div style={{ display: "none" }}>
               <Field
                 className="redirectUrl-field"
                 name="redirectUrl"
@@ -147,23 +137,24 @@ const ChangePasswordFields = ({
 
               <div className="ChangePassword-controls">
                 <div>
-                  {changePasswordErrorMessage.map((error:string, index:string) => (
-                    <p key={index} className="ChangePassword-errorMessage">
-                      {error}
-                    </p>
-                  ))}
+                  {changePasswordErrorMessage.map(
+                    (error: string, index: string) => (
+                      <p key={index} className="ChangePassword-errorMessage">
+                        {error}
+                      </p>
+                    )
+                  )}
                 </div>
                 <br />
 
                 <div className="ChangePassword-actions">
                   <Button
                     className="ChangePassword-button primary"
-                    // isLoading={isSubmitting}
                     disabled={isPristine || hasErrors}
                     type="submit"
-                    // label=""
                     icon="save"
-                    text="Change password"/>
+                    text="Change password"
+                  />
                 </div>
               </div>
             </div>

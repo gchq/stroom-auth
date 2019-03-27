@@ -27,26 +27,25 @@ import {
   NewUser
 } from "../../containers/users";
 import { TokenCreate, TokenSearch, TokenEdit } from "../../containers/tokens";
-import {PathNotFound }from "../../containers/pathNotFound";
+import { PathNotFound } from "../../containers/pathNotFound";
 import {
   ResetPassword,
   ChangePassword,
   ConfirmPasswordResetEmail,
   ResetPasswordRequest
 } from "../../containers/password";
-import Unauthorised from "../../containers/unauthorised";
 import AuthenticationRequest from "../../startup/authentication/AuthenticationRequest";
-import HandleAuthenticationResponse from "../../startup/authentication/HandleAuthenticationResponse";
-import useReduxState from "../../lib/useReduxState";
-import Loader from "../../components/Loader";
-import useConfig from "../../startup/config/useConfig";
 import ErrorPage from "../../components/ErrorPage";
-import { useApi as useUserApi, useUsers } from "../../api/users";
+import HandleAuthenticationResponse from "../../startup/authentication/HandleAuthenticationResponse";
+import Loader from "../../components/Loader";
+import Unauthorised from "../../containers/unauthorised";
+import useConfig from "../../startup/config/useConfig";
+import useReduxState from "../../lib/useReduxState";
+import { useUsers } from "../../api/users";
 
 const App = () => {
   const config = useConfig();
   const idToken = useReduxState(({ authentication: { idToken } }) => idToken);
-
   const isLoggedIn = !!idToken;
   const { fetchCurrentUser } = useUsers();
 
@@ -82,9 +81,7 @@ const App = () => {
     <div className="App">
       <main className="main">
         <div>
-          {/* <BrowserRouter basename={'/'} /> */}
           <Switch>
-            {/* Authentication routes */}
             <Route
               exact={true}
               path={"/handleAuthentication"}

@@ -14,78 +14,111 @@
  * limitations under the License.
  */
 
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
-import { hasAnyProps } from '../../lang';
-import { useApi } from '../../api/authentication';
-import { PasswordValidationRequest } from '../../api/authentication/types';
+import { hasAnyProps } from "../../lang";
+import { useApi } from "../../api/authentication";
+import { PasswordValidationRequest } from "../../api/authentication/types";
 
 export const NewUserValidationSchema = Yup.object().shape({
-  email: Yup.string().required('Required'),
-  password: Yup.string().required('Required'),
-  verifyPassword: Yup.string().required('Required'),
+  email: Yup.string().required("Required"),
+  password: Yup.string().required("Required"),
+  verifyPassword: Yup.string().required("Required")
 });
 
 export const UserValidationSchema = Yup.object().shape({
-  email: Yup.string().required('Required'),
+  email: Yup.string().required("Required")
 });
 
 type PasswordValidationErrors = {
   password: string;
   oldPassword: string;
   verifyPassword: string;
-}
+};
 
-export const validateAsync = (passwordValidationRequest: PasswordValidationRequest) => {
-  const { isPasswordValid } = useApi();
+export const validateAsync = (
+  passwordValidationRequest: PasswordValidationRequest,
+  idToken: string,
+  url: string
+) => {
   if (passwordValidationRequest.newPassword) {
-    isPasswordValid(passwordValidationRequest)
-      .then(body => {
-        let errors = <PasswordValidationErrors>{};
+    return fetch(`${url}/isPasswordValid`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + idToken
+      },
+      method: "post",
+      mode: "cors",
+      body: JSON.stringify({
+        email: passwordValidationRequest.email,
+        newPassword: passwordValidationRequest.newPassword,
+        oldPassword: passwordValidationRequest.oldPassword
+      })
+    })
+      .then(response => response.json())
+      .then((body: { failedOn: string[] }) => {
+        let errors: PasswordValidationErrors = {
+          password: "",
+          oldPassword: "",
+          verifyPassword: ""
+        };
+
         // First sort out async password checks
-        let passwordErrors = <string[]>[];
-        let oldPasswordErrors = <string[]>[];
+        let passwordErrors: string[] = [];
+        let oldPasswordErrors: string[] = [];
         if (body.failedOn.length > 0) {
-          body.failedOn.forEach((failureType: string) => {
-            if (failureType === 'LENGTH') {
-              passwordErrors.push('Your new password is not long enough.');
-            } else if (failureType === 'COMPLEXITY') {
+          body.failedOn.forEach(failureType => {
+            if (failureType === "LENGTH") {
+              passwordErrors.push("Your new password is not long enough.");
+            } else if (failureType === "COMPLEXITY") {
               passwordErrors.push(
-                'Your new password not meet the password complexity requirements.',
+                "Your new password not meet the password complexity requirements."
               );
-            } else if (failureType === 'BAD_OLD_PASSWORD') {
-              oldPasswordErrors.push('Your old password is not correct.');
-            } else if (failureType === 'REUSE') {
-              passwordErrors.push('You may not reuse your old password.');
+            } else if (failureType === "BAD_OLD_PASSWORD") {
+              oldPasswordErrors.push("Your old password is not correct.");
+            } else if (failureType === "REUSE") {
+              passwordErrors.push("You may not reuse your old password.");
             } else {
               passwordErrors.push(
-                'There is a problem with changing your password, please contact an administrator',
+                "There is a problem with changing your password, please contact an administrator"
               );
             }
           });
         }
         if (passwordErrors.length > 0) {
-          errors.password = passwordErrors.join('\n');
+          errors.password = passwordErrors.join("\n");
         }
 
         if (oldPasswordErrors.length > 0) {
-          errors.oldPassword = oldPasswordErrors.join('\n');
+          errors.oldPassword = oldPasswordErrors.join("\n");
         }
 
         // Do password checks
-        if (passwordValidationRequest.newPassword !== undefined && passwordValidationRequest.newPassword !== '') {
+        if (
+          passwordValidationRequest.newPassword !== undefined &&
+          passwordValidationRequest.newPassword !== ""
+        ) {
           if (
             passwordValidationRequest.verifyPassword !== undefined &&
-            passwordValidationRequest.verifyPassword !== '' &&
-            passwordValidationRequest.newPassword !== passwordValidationRequest.verifyPassword
+            passwordValidationRequest.verifyPassword !== "" &&
+            passwordValidationRequest.newPassword !==
+              passwordValidationRequest.verifyPassword
           ) {
-            errors.verifyPassword = 'Passwords do not match';
+            errors.verifyPassword = "Passwords do not match";
           }
         }
-        if (hasAnyProps(errors)) {
+
+        if (
+          errors.oldPassword !== "" ||
+          errors.password !== "" ||
+          errors.verifyPassword !== ""
+        ) {
           throw errors;
         }
       });
+  } else {
+    // If we're not checking the password then we return an empty async function
+    return () => {};
   }
 };
-

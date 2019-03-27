@@ -28,8 +28,8 @@ import useRouter from "../../lib/useRouter";
 import { UserValidationSchema, validateAsync } from "./validation";
 import { hasAnyProps } from "../../lang";
 import { useActionCreators, useUsers } from "../../api/users";
-import useIdFromPath from '../../lib/useIdFromPath';
-import { PasswordValidationRequest } from '../../api/authentication/types';
+import useIdFromPath from "../../lib/useIdFromPath";
+import { PasswordValidationRequest } from "../../api/authentication/types";
 
 const UserEditForm = () => {
   const { updateUser, fetchUser } = useUsers();
@@ -37,14 +37,9 @@ const UserEditForm = () => {
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
   const userId = useIdFromPath("user/");
-  const {
-    userBeingEdited,
-    // isSaving,
-    idToken,
-    authenticationServiceUrl
-  } = useReduxState(
+  const { userBeingEdited, idToken, authenticationServiceUrl } = useReduxState(
     ({
-      user: { userBeingEdited, isSaving, showAlert, alertText },
+      user: { userBeingEdited, showAlert, alertText },
       authentication: { idToken },
       config: {
         values: { authenticationServiceUrl }
@@ -53,12 +48,10 @@ const UserEditForm = () => {
       userBeingEdited,
       showAlert,
       alertText,
-      isSaving,
       idToken,
       authenticationServiceUrl
     })
   );
-
 
   useEffect(() => {
     clearUserBeingEdited();
@@ -80,7 +73,6 @@ const UserEditForm = () => {
       force_password_change: userBeingEdited.force_password_change || false
     };
 
-
     const handleBack = (isPristine: boolean) => {
       if (isPristine) {
         history.push("/userSearch");
@@ -101,9 +93,14 @@ const UserEditForm = () => {
             newPassword: values.password,
             verifyPassword: values.verifyPassword,
             email: values.email
-          }
-          validateAsync(passwordValidationRequest);
-        }} validationSchema={UserValidationSchema}
+          };
+          validateAsync(
+            passwordValidationRequest,
+            idToken,
+            authenticationServiceUrl
+          );
+        }}
+        validationSchema={UserValidationSchema}
       >
         {({ errors, touched, submitForm, setFieldTouched, setFieldValue }) => {
           const isPristine = !hasAnyProps(touched);
@@ -134,7 +131,7 @@ const UserEditForm = () => {
                     disabled={isPristine || hasErrors}
                     icon="save"
                     text="Save"
-                  // isLoading={isSaving}
+                    // isLoading={isSaving}
                   />
                   <Button
                     className="toolbar-button-small secondary"
@@ -159,8 +156,7 @@ const UserEditForm = () => {
         }}
       </Formik>
     );
-  }
-  else {
+  } else {
     return <Loader message="" />;
   }
 };

@@ -19,10 +19,15 @@ import * as moment from "moment";
 
 const DISPLAY_DATE_TIME_FORMAT = "MMMM Do YYYY, h:mm:ss a";
 
-export const LoginStatsCopy = ({ lastLogin, loginCount }:{lastLogin:string, loginCount:number}) => {
+export const LoginStatsCopy = ({
+  lastLogin,
+  loginCount
+}: {
+  lastLogin: string;
+  loginCount: number;
+}) => {
   if (lastLogin !== undefined) {
     const lastLoginMoment = moment(lastLogin);
-    //lastLogin = moment(lastLogin, SERVER_DATE_TIME_FORMAT);
     const loginStatsCopy = (
       <div>
         <div className="copy">
@@ -38,8 +43,17 @@ export const LoginStatsCopy = ({ lastLogin, loginCount }:{lastLogin:string, logi
   }
 };
 
-export const AuditCopy = ({ createdBy, createdOn, updatedBy, updatedOn }:
-  {createdBy:string, createdOn:string, updatedBy:string, updatedOn:string}) => {
+export const AuditCopy = ({
+  createdBy,
+  createdOn,
+  updatedBy,
+  updatedOn
+}: {
+  createdBy: string;
+  createdOn: string;
+  updatedBy: string;
+  updatedOn: string;
+}) => {
   return (
     <div>
       <OnCopy on={createdOn} verb="Created" />
@@ -59,9 +73,9 @@ export const OnCopy = ({
   verb,
   fallbackCopy
 }: {
-  on: string,
-  verb: string,
-  fallbackCopy?: string
+  on: string;
+  verb: string;
+  fallbackCopy?: string;
 }) => {
   if (on !== undefined && on !== null) {
     const onMoment = moment(on);
@@ -81,9 +95,9 @@ export const ByCopy = ({
   verb,
   fallbackCopy
 }: {
-  by: string,
-  verb: string,
-  fallbackCopy?: string
+  by: string;
+  verb: string;
+  fallbackCopy?: string;
 }) => {
   if (by !== undefined && by !== null) {
     return (

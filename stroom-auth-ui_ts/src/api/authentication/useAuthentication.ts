@@ -4,7 +4,7 @@ import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useApi from "./useApi";
-import { Credentials } from "./types";
+import { Credentials, PasswordValidationRequest } from "./types";
 import { useActionCreators } from "./redux";
 
 interface UseAuthentication {
