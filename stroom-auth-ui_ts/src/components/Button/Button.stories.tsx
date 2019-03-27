@@ -20,7 +20,6 @@ import { storiesOf } from "@storybook/react";
 import Button from "./Button";
 
 const stories = storiesOf("General Purpose/Button", module);
-stories;
 
 stories.add("button group - icon only", () => (
   <div>
