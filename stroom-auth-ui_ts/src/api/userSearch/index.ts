@@ -1,12 +1,5 @@
-import useApi from "./useApi";
-import useUsers from './useUsers';
+import useUsers from "./useUserSearch";
 import { StoreState } from "./types";
 import { useActionCreators, reducer } from "./redux";
 
-export {
-    StoreState,
-    reducer,
-    useActionCreators,
-    useApi,
-    useUsers,
-};
+export { StoreState, reducer, useActionCreators, useUsers };

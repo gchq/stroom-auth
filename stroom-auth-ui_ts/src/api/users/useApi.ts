@@ -27,6 +27,7 @@ interface Api {
   fetch: (userId: String) => Promise<User[]>;
   fetchCurrentUser: () => Promise<User[]>;
   remove: (userId: string) => Promise<void>;
+  search: () => Promise<User[]>;
 }
 
 export const useApi = (): Api => {
@@ -96,12 +97,21 @@ export const useApi = (): Api => {
     return httpGetJson(url);
   }, []);
 
+  const search = useCallback(() => {
+    const state: GlobalStoreState = store.getState();
+    const url = `${
+      state.config.values.userServiceUrl
+    }/?fromEmail=&usersPerPage=100&orderBy=id`;
+    return httpGetJson(url);
+  }, []);
+
   return {
     add,
     fetch,
     fetchCurrentUser,
     remove,
-    change
+    change,
+    search
   };
 };
 

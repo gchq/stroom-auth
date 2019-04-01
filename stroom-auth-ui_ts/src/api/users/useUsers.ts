@@ -2,10 +2,7 @@ import { useCallback, useReducer } from "react";
 
 import useApi from "./useApi";
 import { useActionCreators } from "./redux";
-import {
-  useApi as useUserSearchApi,
-  useActionCreators as useUserSearchActionCreators
-} from "../userSearch";
+import { useActionCreators as useUserSearchActionCreators } from "../userSearch";
 import { useActionCreators as useAuthenticationActionCreators } from "../authentication";
 import { useApi as useAuthorisationApi } from "../authorisation";
 import { User } from "../users/types";
@@ -35,7 +32,6 @@ const reducer = (
 ) => {
   switch (action.type) {
     case "set_user":
-      console.log(`Using being saved`, "color: yellow; font-weight: bold");
       return { ...state, userBeingEdited: action.user };
 
     default:
@@ -58,11 +54,7 @@ const useUsersState = (): UserStateApi => {
  * This hook connects the REST API calls to the Redux Store.
  */
 const useUsers = () => {
-  const {
-    toggleIsSaving,
-    // saveUserBeingEdited,
-    toggleAlertVisibility
-  } = useActionCreators();
+  const { toggleIsSaving, toggleAlertVisibility } = useActionCreators();
   const { history } = useRouter();
 
   const { user, setUser, clearUser } = useUsersState();
@@ -71,15 +63,14 @@ const useUsers = () => {
    * Deletes the user and then refreshes our browser cache of users.
    */
   const { updateResults } = useUserSearchActionCreators();
-  const { getUsers } = useUserSearchApi();
-  const { remove: removeUserUsingApi } = useApi();
+  const { remove: removeUserUsingApi, search } = useApi();
   const deleteUser = useCallback(
     (userId: string) => {
       removeUserUsingApi(userId).then(() =>
-        getUsers().then(results => updateResults(results))
+        search().then(results => updateResults(results))
       );
     },
-    [removeUserUsingApi, getUsers, updateResults]
+    [removeUserUsingApi, search, updateResults]
   );
 
   /**
