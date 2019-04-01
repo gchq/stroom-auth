@@ -83,8 +83,7 @@ public final class UserMapper {
 
     public static UsersRecord map(User user){
         UsersRecord usersRecord = new UsersRecord();
-        //TODO: Need this in the POJO
-//        usersRecord.setForcePasswordChange(user.getForcePasswordChange());
+        usersRecord.setForcePasswordChange(user.isForce_password_change());
         usersRecord.setComments(user.getComments());
         usersRecord.setCreatedByUser(user.getCreated_by_user());
         usersRecord.setCreatedOn(convertISO8601ToTimestamp(user.getCreated_on()));
