@@ -8,7 +8,6 @@ export interface StoreState {
   showAlert: boolean;
   showCreateLoader: boolean;
   user: string;
-  userBeingEdited?: User;
 }
 
 export interface User {

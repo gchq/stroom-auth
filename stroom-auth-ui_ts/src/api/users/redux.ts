@@ -24,7 +24,6 @@ import {
 const CHANGE_VISIBLE_CONTAINER = "user/CHANGE_VISIBLE_CONTAINER";
 const CLEAR_USER_BEING_EDITED = "user/CLEAR_USER_BEING_EDITED";
 const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE = "user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE";
-const SAVE_USER_BEING_EDITED = "user/SAVE_USER_BEING_EDITED";
 const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE = "user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE";
 const SHOW_CREATE_LOADER = "user/SHOW_CREATE_LOADER";
 const TOGGLE_ALERT_VISIBILITY = "user/TOGGLE_ALERT_VISIBILITY";
@@ -32,10 +31,6 @@ const TOGGLE_IS_SAVING = "user/TOGGLE_IS_SAVING";
 
 interface ShowCreateLoaderAction extends Action<"user/SHOW_CREATE_LOADER"> {
   showCreateLoader: boolean;
-}
-interface SaveUserBeingEditedAction
-  extends Action<"user/SAVE_USER_BEING_EDITED"> {
-  userBeingEdited: User | undefined;
 }
 interface ChangeVisibleContainerAction
   extends Action<"user/CHANGE_VISIBLE_CONTAINER"> {
@@ -66,7 +61,6 @@ const defaultState: StoreState = {
   showAlert: false,
   changePasswordErrorMessage: [],
   isSaving: false,
-  userBeingEdited: undefined,
   errorStatus: undefined,
   errorText: undefined
 };
@@ -75,12 +69,6 @@ export const useActionCreators = genUseActionCreators({
   showCreateLoader: (showCreateLoader: boolean): ShowCreateLoaderAction => ({
     type: SHOW_CREATE_LOADER,
     showCreateLoader
-  }),
-  saveUserBeingEdited: (
-    userBeingEdited: User | undefined
-  ): SaveUserBeingEditedAction => ({
-    type: SAVE_USER_BEING_EDITED,
-    userBeingEdited
   }),
   changeVisibleContainer: (show: boolean): ChangeVisibleContainerAction => ({
     type: CHANGE_VISIBLE_CONTAINER,
@@ -118,13 +106,6 @@ export const reducer = prepareReducer(defaultState)
     (state = defaultState, { showCreateLoader }) => ({
       ...state,
       showCreateLoader
-    })
-  )
-  .handleAction<SaveUserBeingEditedAction>(
-    SAVE_USER_BEING_EDITED,
-    (state = defaultState, { userBeingEdited }) => ({
-      ...state,
-      userBeingEdited
     })
   )
   .handleAction<ChangeVisibleContainerAction>(

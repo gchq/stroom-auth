@@ -107,7 +107,41 @@ const App = () => {
             <Route exact path={"/login"} component={Login} />
             <Route exact path={"/logout"} component={LoggedOut} />
             <Route exact path={"/loggedOut"} component={LoggedOut} />
+
             <Route exact path={"/newUser"} component={NewUser} />
+            <Route
+              exact
+              path={"/user"}
+              render={() =>
+                isLoggedIn ? (
+                  <UserCreate />
+                ) : (
+                  <AuthenticationRequest
+                    referrer="/user"
+                    uiUrl={advertisedUrl}
+                    appClientId={appClientId}
+                    authenticationServiceUrl={authenticationServiceUrl}
+                  />
+                )
+              }
+            />
+            <Route
+              exact
+              path={"/user/:userId"}
+              render={route =>
+                isLoggedIn ? (
+                  <UserEdit />
+                ) : (
+                  <AuthenticationRequest
+                    referrer={route.location.pathname}
+                    uiUrl={advertisedUrl}
+                    appClientId={appClientId}
+                    authenticationServiceUrl={authenticationServiceUrl}
+                  />
+                )
+              }
+            />
+
             <Route exact path={"/resetPassword"} component={ResetPassword} />
             <Route exact path={"/resetpassword"} component={ResetPassword} />
             <Route exact path={"/changepassword"} component={ChangePassword} />
@@ -133,40 +167,6 @@ const App = () => {
                 ) : (
                   <AuthenticationRequest
                     referrer="/userSearch"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={authenticationServiceUrl}
-                  />
-                )
-              }
-            />
-
-            <Route
-              exact
-              path={"/user"}
-              render={() =>
-                isLoggedIn ? (
-                  <UserCreate />
-                ) : (
-                  <AuthenticationRequest
-                    referrer="/user"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={authenticationServiceUrl}
-                  />
-                )
-              }
-            />
-
-            <Route
-              exact
-              path={"/user/:userId"}
-              render={route =>
-                isLoggedIn ? (
-                  <UserEdit />
-                ) : (
-                  <AuthenticationRequest
-                    referrer={route.location.pathname}
                     uiUrl={advertisedUrl}
                     appClientId={appClientId}
                     authenticationServiceUrl={authenticationServiceUrl}

@@ -27,50 +27,43 @@ import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
 import { UserValidationSchema, validateAsync } from "./validation";
 import { hasAnyProps } from "../../lib/lang";
-import { useActionCreators, useUsers } from "../../api/users";
+import { useUsers } from "../../api/users";
 import useIdFromPath from "../../lib/useIdFromPath";
 import { PasswordValidationRequest } from "../../api/authentication/types";
 
 const UserEditForm = () => {
-  const { updateUser, fetchUser } = useUsers();
-  const { clearUserBeingEdited } = useActionCreators();
+  const { updateUser, fetchUser, user } = useUsers();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
   const userId = useIdFromPath("user/");
-  const { userBeingEdited, idToken, authenticationServiceUrl } = useReduxState(
+  const { idToken, authenticationServiceUrl } = useReduxState(
     ({
-      user: { userBeingEdited, showAlert, alertText },
       authentication: { idToken },
       config: {
         values: { authenticationServiceUrl }
       }
     }) => ({
-      userBeingEdited,
-      showAlert,
-      alertText,
       idToken,
       authenticationServiceUrl
     })
   );
 
   useEffect(() => {
-    clearUserBeingEdited();
-    if (!!userId) fetchUser(userId);
+    if (!!userId && !user) fetchUser(userId);
   }, [fetchUser]);
 
-  if (!!userBeingEdited) {
-    //TODO: the error page uses redux. Make it use hooks instead.
+  if (!!user) {
     let initialValues = {
-      ...userBeingEdited,
-      email: userBeingEdited.email || "",
-      first_name: userBeingEdited.first_name || "",
-      last_name: userBeingEdited.last_name || "",
-      state: userBeingEdited.state || "enabled",
+      id: user.id || "",
+      email: user.email || "",
+      first_name: user.first_name || "",
+      last_name: user.last_name || "",
+      state: user.state || "enabled",
       password: "",
       verifyPassword: "",
-      comments: userBeingEdited.comments || "",
-      never_expires: userBeingEdited.never_expires || false,
-      force_password_change: userBeingEdited.force_password_change || false
+      comments: user.comments || "",
+      never_expires: user.never_expires || false,
+      force_password_change: user.force_password_change || false
     };
 
     const handleBack = (isPristine: boolean) => {
@@ -84,6 +77,7 @@ const UserEditForm = () => {
     return (
       <Formik
         onSubmit={(values, actions) => {
+          //TODO: Add a form-to-user mapping function here
           updateUser(values);
         }}
         initialValues={initialValues}
@@ -118,7 +112,7 @@ const UserEditForm = () => {
               <div>
                 <UserFields
                   showCalculatedFields
-                  userBeingEdited={userBeingEdited}
+                  userBeingEdited={user}
                   errors={errors}
                   touched={touched}
                   setFieldTouched={setFieldTouched}
