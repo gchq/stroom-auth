@@ -35,7 +35,8 @@ const CheckboxField = ({ field, ...props }: { field: any }) => {
       icons={false}
       checked={field.value}
       onChange={field.onChange}
-      // {...field}
+      onBlur={field.onBlur}
+      name={field.name}
       {...props}
     />
   );
@@ -55,7 +56,7 @@ const UserFields = ({
   setFieldValue: Function;
 }) => (
   <div className="container">
-    <Field name="id" type="hidden"/>
+    <Field name="id" type="hidden" />
     <div className="section">
       <div className="section__title">
         <h3>Account</h3>
@@ -122,11 +123,7 @@ const UserFields = ({
               <Field
                 name="never_expires"
                 label="never_expires"
-                // component={CheckboxField}
-                component="input"
-                type="checkbox"
-                checked={!!userBeingEdited ? userBeingEdited.never_expires : false}
-                onClick={()=> console.log('JKLHKLJHLKJLKJ')}
+                component={CheckboxField}
               />
               <ErrorMessage
                 name="never_expire"

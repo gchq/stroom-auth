@@ -1,4 +1,4 @@
-import { useCallback, useContext, useReducer } from "react";
+import { useCallback, useReducer } from "react";
 
 import useApi from "./useApi";
 import { useActionCreators } from "./redux";
@@ -10,21 +10,16 @@ import { useActionCreators as useAuthenticationActionCreators } from "../authent
 import { useApi as useAuthorisationApi } from "../authorisation";
 import { User } from "../users/types";
 import { useRouter } from "../../lib/useRouter";
-import UsersContext from './UsersContext';
-// import UsersContext from './UsersContext';
-// import UsersReducer from './reducer';
-
-
 
 interface UserStateApi {
-  user?:User;
-  setUser: (user:User) => void;
+  user?: User;
+  setUser: (user: User) => void;
   clearUser: () => void;
 }
 
-type UsersState ={
-  userBeingEdited?: User
-}
+type UsersState = {
+  userBeingEdited?: User;
+};
 
 type SetUserAction = {
   type: "set_user";
@@ -38,10 +33,9 @@ const reducer = (
   state: UsersState,
   action: SetUserAction | ClearUserAction
 ) => {
-
   switch (action.type) {
     case "set_user":
-      console.log( `Using being saved`, "color: yellow; font-weight: bold");
+      console.log(`Using being saved`, "color: yellow; font-weight: bold");
       return { ...state, userBeingEdited: action.user };
 
     default:
@@ -49,18 +43,16 @@ const reducer = (
   }
 };
 
-const useUsersState = ():UserStateApi => {
-  const [userState, dispatch] = useReducer(reducer, {userBeingEdited: undefined});
+const useUsersState = (): UserStateApi => {
+  const [userState, dispatch] = useReducer(reducer, {
+    userBeingEdited: undefined
+  });
   return {
     user: userState.userBeingEdited,
-    setUser: (user:User|undefined) => dispatch({type:"set_user", user}),
-    clearUser: () => dispatch({type:"clear_user"})
-  }
-}
-
-
-
-
+    setUser: (user: User | undefined) => dispatch({ type: "set_user", user }),
+    clearUser: () => dispatch({ type: "clear_user" })
+  };
+};
 
 /**
  * This hook connects the REST API calls to the Redux Store.
@@ -73,8 +65,7 @@ const useUsers = () => {
   } = useActionCreators();
   const { history } = useRouter();
 
-  const {user, setUser, clearUser} = useUsersState();
-  const initialState = useContext(UsersContext);
+  const { user, setUser, clearUser } = useUsersState();
 
   /**
    * Deletes the user and then refreshes our browser cache of users.
@@ -111,12 +102,7 @@ const useUsers = () => {
           toggleIsSaving(false);
         });
     },
-    [
-      updateUserUsingApi,
-      clearUser,
-      toggleAlertVisibility,
-      toggleIsSaving
-    ]
+    [updateUserUsingApi, clearUser, toggleAlertVisibility, toggleIsSaving]
   );
 
   /**
@@ -159,7 +145,7 @@ const useUsers = () => {
       fetchUserUsingApi(userId).then(users => {
         showCreateLoader(false);
         setUser(users[0]);
-          // dispatch({type:"save_user_being_edited", user:users[0]})
+        // dispatch({type:"save_user_being_edited", user:users[0]})
         // saveUserBeingEdited(users[0]);
       });
     },
