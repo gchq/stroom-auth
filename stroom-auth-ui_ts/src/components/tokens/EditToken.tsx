@@ -27,7 +27,7 @@ import "./TokenEdit.css";
 import "src/styles/form.css";
 import { OnCopy, ByCopy } from "../auditCopy";
 
-import { useTokens } from "../../api/tokens";
+import { useTokens } from "src/api/tokens";
 import useIdFromPath from "src/lib/useIdFromPath";
 import { useRouter } from "src/lib/useRouter";
 import { useReduxState } from "src/lib/useReduxState";

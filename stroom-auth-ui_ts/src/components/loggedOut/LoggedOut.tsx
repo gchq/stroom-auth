@@ -17,7 +17,7 @@
 import * as React from "react";
 import { useEffect } from "react";
 
-import { useActionCreators } from "../../api/authentication";
+import { useActionCreators } from "src/api/authentication";
 import Button from "../Button";
 import "./LoggedOut.css";
 import "src/styles/Layout.css";

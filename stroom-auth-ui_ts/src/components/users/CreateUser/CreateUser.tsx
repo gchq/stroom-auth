@@ -24,7 +24,7 @@ import UserFields from "./UserFields";
 import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
 import { NewUserValidationSchema, validateAsync } from "../validation";
-import { PasswordValidationRequest } from "../../../api/authentication/types";
+import { PasswordValidationRequest } from "src/api/authentication/types";
 import { hasAnyProps } from "src/lib/lang";
 import { useUsers } from "../api";
 import { User } from "../types";

@@ -16,7 +16,7 @@
 
 import * as Yup from "yup";
 
-import { PasswordValidationRequest } from "../../api/authentication/types";
+import { PasswordValidationRequest } from "src/api/authentication/types";
 
 export const NewUserValidationSchema = Yup.object().shape({
   email: Yup.string().required("Required"),
@@ -101,7 +101,7 @@ export const validateAsync = (
             passwordValidationRequest.verifyPassword !== undefined &&
             passwordValidationRequest.verifyPassword !== "" &&
             passwordValidationRequest.newPassword !==
-              passwordValidationRequest.verifyPassword
+            passwordValidationRequest.verifyPassword
           ) {
             errors.verifyPassword = "Passwords do not match";
           }
@@ -117,6 +117,6 @@ export const validateAsync = (
       });
   } else {
     // If we're not checking the password then we return an empty async function
-    return () => {};
+    return () => { };
   }
 };

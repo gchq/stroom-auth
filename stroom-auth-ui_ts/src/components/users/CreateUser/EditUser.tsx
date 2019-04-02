@@ -29,7 +29,7 @@ import { UserValidationSchema, validateAsync } from "../validation";
 import { hasAnyProps } from "src/lib/lang";
 import { useUsers } from "../api";
 import useIdFromPath from "src/lib/useIdFromPath";
-import { PasswordValidationRequest } from "../../../api/authentication/types";
+import { PasswordValidationRequest } from "src/api/authentication/types";
 
 const UserEditForm = () => {
   const { updateUser, fetchUser, user } = useUsers();

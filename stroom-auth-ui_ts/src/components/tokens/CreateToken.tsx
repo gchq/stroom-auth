@@ -22,7 +22,7 @@ import "src/styles/form.css";
 import "./CreateTokenForm.css";
 import "src/styles/Layout.css";
 import Button from "../Button";
-import { useTokens } from "../../api/tokens";
+import { useTokens } from "src/api/tokens";
 import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
 
