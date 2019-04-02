@@ -17,8 +17,8 @@
 import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
-import useHttpClient from "../useHttpClient";
-import { GlobalStoreState } from "../../startup/GlobalStoreState";
+import useHttpClient from "../../../api/useHttpClient";
+import { GlobalStoreState } from "../../../startup/GlobalStoreState";
 import { User } from "./types";
 
 interface Api {

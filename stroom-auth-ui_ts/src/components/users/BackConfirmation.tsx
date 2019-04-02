@@ -22,7 +22,7 @@ import { isEmpty } from "ramda";
 import "./BackConfirmation.css";
 import Button from "../Button";
 import { FormikErrors } from "formik";
-import { User } from "../../api/users";
+import { User } from "../../components/users/api";
 
 const BackConfirmation = ({
   isOpen,

@@ -27,7 +27,7 @@ import useReduxState from "../../lib/useReduxState";
 import useRouter from "../../lib/useRouter";
 import { UserValidationSchema, validateAsync } from "./validation";
 import { hasAnyProps } from "../../lib/lang";
-import { useUsers } from "../../api/users";
+import { useUsers } from "./api";
 import useIdFromPath from "../../lib/useIdFromPath";
 import { PasswordValidationRequest } from "../../api/authentication/types";
 

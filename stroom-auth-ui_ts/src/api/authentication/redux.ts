@@ -1,8 +1,11 @@
 import { Action } from "redux";
 
 import { StoreState } from "./types";
-import { User } from "../users";
-import { prepareReducer, genUseActionCreators } from "../../lib/redux-actions-ts";
+import { User } from "../../components/users/api";
+import {
+  prepareReducer,
+  genUseActionCreators
+} from "../../lib/redux-actions-ts";
 
 const CHANGE_LOGGED_IN_USER = "login/CHANGE_LOGGED_IN_USER";
 const EMAIL_CHANGE = "login/EMAIL_CHANGE";
@@ -27,11 +30,12 @@ interface EmailChangeAction extends Action<"login/EMAIL_CHANGE"> {
 interface TokenChangeAction extends Action<"login/TOKEN_CHANGE"> {
   token: String;
 }
-interface TokenDeleteAction extends Action<"login/TOKEN_DELETE"> { }
+interface TokenDeleteAction extends Action<"login/TOKEN_DELETE"> {}
 interface ShowLoaderAction extends Action<"login/SHOW_LOADER"> {
   showLoader: boolean;
 }
-interface ChangeLoggedInUserAction extends Action<"login/CHANGE_LOGGED_IN_USER"> {
+interface ChangeLoggedInUserAction
+  extends Action<"login/CHANGE_LOGGED_IN_USER"> {
   loggedInUserEmail: String;
 }
 interface SetRedirectUrlAction extends Action<"login/SET_REDIRECT_URL"> {
@@ -126,7 +130,7 @@ export const reducer = prepareReducer(defaultState)
   )
   .handleAction<TokenDeleteAction>(
     TOKEN_DELETE,
-    (state = defaultState, { }) => ({
+    (state = defaultState, {}) => ({
       ...state,
       token: ""
     })

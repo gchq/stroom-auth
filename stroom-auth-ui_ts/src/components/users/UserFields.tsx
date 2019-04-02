@@ -21,7 +21,7 @@ import "react-toggle/style.css";
 
 import "../../styles/form.css";
 import { AuditCopy, LoginStatsCopy } from "../auditCopy";
-import { User } from "../../api/users";
+import { User } from "../../components/users/api";
 
 const LoginFailureCopy = ({ attemptCount }: { attemptCount: number }) => (
   <div className="copy">

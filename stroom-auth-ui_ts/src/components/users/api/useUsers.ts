@@ -2,11 +2,10 @@ import { useCallback, useReducer } from "react";
 
 import useApi from "./useApi";
 import { useActionCreators } from "./redux";
-import { useActionCreators as useUserSearchActionCreators } from "../userSearch";
-import { useActionCreators as useAuthenticationActionCreators } from "../authentication";
-import { useApi as useAuthorisationApi } from "../authorisation";
-import { User } from "../users/types";
-import { useRouter } from "../../lib/useRouter";
+import { useActionCreators as useAuthenticationActionCreators } from "../../../api/authentication";
+import { useApi as useAuthorisationApi } from "../../../api/authorisation";
+import { User } from "./types";
+import { useRouter } from "../../../lib/useRouter";
 
 interface UserStateApi {
   user?: User;
@@ -62,15 +61,16 @@ const useUsers = () => {
   /**
    * Deletes the user and then refreshes our browser cache of users.
    */
-  const { updateResults } = useUserSearchActionCreators();
+  // const { updateResults } = useUserSearchActionCreators();
   const { remove: removeUserUsingApi, search } = useApi();
   const deleteUser = useCallback(
     (userId: string) => {
-      removeUserUsingApi(userId).then(() =>
-        search().then(results => updateResults(results))
-      );
+      removeUserUsingApi(userId);
+      // .then(() =>
+      // search().then(results => updateResults(results))
+      // )
     },
-    [removeUserUsingApi, search, updateResults]
+    [removeUserUsingApi, search]
   );
 
   /**
@@ -155,7 +155,7 @@ const useUsers = () => {
   }, [setCurrentUser, apiFetchCurrentUser]);
 
   return {
-    deleteUser,
+    // deleteUser,
     updateUser,
     createUser,
     fetchUser,

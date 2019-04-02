@@ -41,7 +41,7 @@ import Loader from "../../components/Loader";
 import Unauthorised from "../../components/unauthorised";
 import useConfig from "../../startup/config/useConfig";
 import useReduxState from "../../lib/useReduxState";
-import { useUsers } from "../../api/users";
+import { useUsers } from "../../components/users/api";
 
 const App = () => {
   const config = useConfig();

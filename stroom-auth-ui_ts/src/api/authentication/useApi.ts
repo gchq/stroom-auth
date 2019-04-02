@@ -14,7 +14,10 @@ import {
 import { FormikBag } from "formik";
 import { useActionCreators } from "./redux";
 import { GlobalStoreState } from "../../startup/GlobalStoreState";
-import { useActionCreators as useUserActionCreators, User } from "../users";
+import {
+  useActionCreators as useUserActionCreators,
+  User
+} from "../../components/users/api";
 import useRouter from "../../lib/useRouter";
 
 interface Api {

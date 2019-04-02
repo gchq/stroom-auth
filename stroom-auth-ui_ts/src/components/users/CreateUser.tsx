@@ -26,7 +26,7 @@ import useRouter from "../../lib/useRouter";
 import { NewUserValidationSchema, validateAsync } from "./validation";
 import { PasswordValidationRequest } from "../../api/authentication/types";
 import { hasAnyProps } from "../../lib/lang";
-import { useUsers, User } from "../../api/users";
+import { useUsers, User } from "./api";
 
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.

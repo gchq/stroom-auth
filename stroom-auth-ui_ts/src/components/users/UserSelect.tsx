@@ -14,64 +14,75 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { useState } from 'react';
-import AsyncSelect from 'react-select/lib/Async';
-import useReduxState from '../../lib/useReduxState';
-import './asyncUserSelect.css';
-import { User } from '../../api/users';
+import * as React from "react";
+import { useState } from "react";
+import AsyncSelect from "react-select/lib/Async";
+import useReduxState from "../../lib/useReduxState";
+import "./asyncUserSelect.css";
+import { User } from "../../components/users/api";
 
-const loadOptions = (inputValue: string, callback: Function, idToken: string, url: string) => {
-  const email = inputValue || '';
+const loadOptions = (
+  inputValue: string,
+  callback: Function,
+  idToken: string,
+  url: string
+) => {
+  const email = inputValue || "";
   fetch(`${url}/search?email=${email}`, {
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + idToken,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + idToken
     },
-    method: 'get',
-    mode: 'cors',
+    method: "get",
+    mode: "cors"
   })
     .then(response => response.json())
     .then(body => {
-      const options = body.map((result:User) => {
+      const options = body.map((result: User) => {
         return { value: result.id, label: result.email };
       });
       callback(options);
     });
 };
 
-
 const customStyles = {
-  option: (provided:any) => ({
+  option: (provided: any) => ({
     ...provided,
-    fontSize: 14,
+    fontSize: 14
   }),
   placeholder: () => ({
-    fontSize: 14,
+    fontSize: 14
   }),
-  input: (provided:any) => ({
+  input: (provided: any) => ({
     ...provided,
-    fontSize: 14,
+    fontSize: 14
   }),
-  singleValue: (provided:any) => ({
+  singleValue: (provided: any) => ({
     ...provided,
-    fontSize: 14,
-  }),
+    fontSize: 14
+  })
 };
 
-const AsyncUserSelect = (props: { onChange: Function; }) => {
+const AsyncUserSelect = (props: { onChange: Function }) => {
   const { idToken, userServiceUrl } = useReduxState(
-    ({ authentication: { idToken }, config: { values: { userServiceUrl } } }) => ({
-      idToken, userServiceUrl
-    }));
+    ({
+      authentication: { idToken },
+      config: {
+        values: { userServiceUrl }
+      }
+    }) => ({
+      idToken,
+      userServiceUrl
+    })
+  );
   const { onChange } = props;
   // eslint-disable-next-line
-  const [_, setInputValue] = useState('');
+  const [_, setInputValue] = useState("");
 
   return (
     <AsyncSelect
-      placeholder=''
+      placeholder=""
       styles={customStyles}
       className="AsyncUserSelect"
       cacheOptions
@@ -83,9 +94,9 @@ const AsyncUserSelect = (props: { onChange: Function; }) => {
         setInputValue(value);
         return value;
       }}
-      onChange={value => onChange('user', value)}
+      onChange={value => onChange("user", value)}
     />
   );
-}
+};
 
 export default AsyncUserSelect;

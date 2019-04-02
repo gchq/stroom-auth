@@ -20,10 +20,10 @@ import { authorisationReducer as authorisation } from "../startup/authentication
 import { reducer as authentication } from "../api/authentication";
 import { reducer as config } from "../startup/config";
 import { reducer as errorPage } from "../components/ErrorPage";
-import { reducer as login } from "../api/users";
+import { reducer as login } from "../components/users/api";
 import { reducer as token } from "../api/tokens";
 import { reducer as tokenSearch } from "../api/tokenSearch";
-import { reducer as user } from "../api/users";
+import { reducer as user } from "../components/users/api";
 
 export default combineReducers({
   login,

@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useCallback } from "react";
 
-import { User } from "../../../api/users/types";
-import { useApi } from "../../../api/users";
+import { User } from "../api";
+import { useApi } from "../api";
 
 interface UsersStateApi {
   users: User[];
