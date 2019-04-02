@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-import UserCreate from "./edit/CreateUser";
-import UserEdit from "./edit/EditUser";
-import UserSearch from "./search";
-import NewUser from "./NewUser";
+import UserCreate from "./CreateUser/CreateUser";
+import UserEdit from "./CreateUser/EditUser";
+import UserSearch from "./UserSearch";
 import AsyncUserSelect from "./UserSelect";
 import { User, StoreState } from "./types";
 
-export {
-  User,
-  StoreState,
-  UserCreate,
-  UserEdit,
-  UserSearch,
-  NewUser,
-  AsyncUserSelect
-};
+export { User, StoreState, UserCreate, UserEdit, UserSearch, AsyncUserSelect };

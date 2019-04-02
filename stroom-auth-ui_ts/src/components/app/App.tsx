@@ -20,12 +20,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import Login from "../../components/login";
 import LoggedOut from "../../components/loggedOut";
-import {
-  UserCreate,
-  UserEdit,
-  UserSearch,
-  NewUser
-} from "../../components/users";
+import { UserCreate, UserEdit, UserSearch } from "../../components/users";
 import { TokenCreate, TokenSearch, TokenEdit } from "../../components/tokens";
 import { PathNotFound } from "../../components/pathNotFound";
 import {
