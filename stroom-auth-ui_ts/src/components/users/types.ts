@@ -6,8 +6,6 @@ export interface StoreState {
   isSaving: boolean;
   password: string;
   showAlert: boolean;
-  showCreateLoader: boolean;
-  user: string;
 }
 
 export interface User {

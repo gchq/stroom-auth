@@ -26,13 +26,9 @@ const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE =
   "user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE";
 const SHOW_CHANGE_PASSWORD_ERROR_MESSAGE =
   "user/SHOW_CHANGE_PASSWORD_ERROR_MESSAGE";
-const SHOW_CREATE_LOADER = "user/SHOW_CREATE_LOADER";
 const TOGGLE_ALERT_VISIBILITY = "user/TOGGLE_ALERT_VISIBILITY";
 const TOGGLE_IS_SAVING = "user/TOGGLE_IS_SAVING";
 
-interface ShowCreateLoaderAction extends Action<"user/SHOW_CREATE_LOADER"> {
-  showCreateLoader: boolean;
-}
 interface ToggleAlertVisibilityAction
   extends Action<"user/TOGGLE_ALERT_VISIBILITY"> {
   showAlert: boolean;
@@ -51,9 +47,7 @@ interface ToggleIsSavingAction extends Action<"user/TOGGLE_IS_SAVING"> {
 }
 
 const defaultState: StoreState = {
-  user: "",
   password: "",
-  showCreateLoader: false,
   alertText: "",
   showAlert: false,
   changePasswordErrorMessage: [],
@@ -63,10 +57,6 @@ const defaultState: StoreState = {
 };
 
 export const useActionCreators = genUseActionCreators({
-  showCreateLoader: (showCreateLoader: boolean): ShowCreateLoaderAction => ({
-    type: SHOW_CREATE_LOADER,
-    showCreateLoader
-  }),
   toggleAlertVisibility: (
     showAlert: boolean,
     alertText: string
@@ -94,13 +84,6 @@ export const useActionCreators = genUseActionCreators({
 });
 
 export const reducer = prepareReducer(defaultState)
-  .handleAction<ShowCreateLoaderAction>(
-    SHOW_CREATE_LOADER,
-    (state = defaultState, { showCreateLoader }) => ({
-      ...state,
-      showCreateLoader
-    })
-  )
   .handleAction<ToggleAlertVisibilityAction>(
     TOGGLE_ALERT_VISIBILITY,
     (state = defaultState, { showAlert, alertText }) => ({

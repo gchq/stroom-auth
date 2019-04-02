@@ -15,7 +15,13 @@ const useUsers = () => {
   const { toggleIsSaving, toggleAlertVisibility } = useActionCreators();
   const { history } = useRouter();
 
-  const { user, setUser, clearUser } = useUserState();
+  const {
+    user,
+    isCreating,
+    setUser,
+    clearUser,
+    setIsCreating
+  } = useUserState();
 
   /**
    * Deletes the user and then refreshes our browser cache of users.
@@ -58,7 +64,6 @@ const useUsers = () => {
   /**
    * Creates a user
    */
-  const { showCreateLoader } = useActionCreators();
   const { createUser: createAuthorisationUser } = useAuthorisationApi();
   const { add: createUserUsingApi } = useApi();
   const createUser = useCallback(
@@ -67,7 +72,7 @@ const useUsers = () => {
         .then(newUserId => {
           toggleIsSaving(true);
           createAuthorisationUser(user.email).then(newUserId => {
-            showCreateLoader(false);
+            setIsCreating(false);
             toggleAlertVisibility(true, "User has been created");
             toggleIsSaving(false);
             history.push("/userSearch");
@@ -80,7 +85,7 @@ const useUsers = () => {
     [
       createUserUsingApi,
       createAuthorisationUser,
-      showCreateLoader,
+      setIsCreating,
       toggleAlertVisibility,
       toggleIsSaving
     ]
@@ -93,13 +98,13 @@ const useUsers = () => {
   const fetchUser = useCallback(
     (userId: string) => {
       fetchUserUsingApi(userId).then(users => {
-        showCreateLoader(false);
+        setIsCreating(false);
         setUser(users[0]);
         // dispatch({type:"save_user_being_edited", user:users[0]})
         // saveUserBeingEdited(users[0]);
       });
     },
-    [showCreateLoader, setUser]
+    [setIsCreating, setUser]
   );
 
   /**
