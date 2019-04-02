@@ -4,7 +4,7 @@ import { AuthorisationStoreState } from "./types";
 import {
   prepareReducer,
   genUseActionCreators
-} from "../../lib/redux-actions-ts";
+} from "src/lib/redux-actions-ts";
 
 export const SET_APP_PERMISSION = "authorisation/SET_APP_PERMISSION";
 

@@ -5,7 +5,7 @@ import { useActionCreators as useErrorActionCreators } from "../../components/Er
 import handleStatus from "./handleStatus";
 import { useContext } from "react";
 import { StoreContext } from "redux-react-hook";
-import useRouter from "../../lib/useRouter";
+import useRouter from "src/lib/useRouter";
 import { GlobalStoreState } from "../../startup/GlobalStoreState";
 
 /**

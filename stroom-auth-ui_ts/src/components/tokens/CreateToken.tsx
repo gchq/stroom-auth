@@ -23,8 +23,8 @@ import "./CreateTokenForm.css";
 import "../../styles/Layout.css";
 import Button from "../Button";
 import { useTokens } from "../../api/tokens";
-import useReduxState from "../../lib/useReduxState";
-import useRouter from "../../lib/useRouter";
+import useReduxState from "src/lib/useReduxState";
+import useRouter from "src/lib/useRouter";
 
 type DropDownValues = {
   label: string;

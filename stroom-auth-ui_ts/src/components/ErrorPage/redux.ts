@@ -17,7 +17,7 @@ import { Action } from "redux";
 import {
   genUseActionCreators,
   prepareReducer
-} from "../../lib/redux-actions-ts";
+} from "src/lib/redux-actions-ts";
 import { StoreState } from "./types";
 
 const initialState = {

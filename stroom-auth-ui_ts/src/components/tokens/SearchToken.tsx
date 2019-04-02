@@ -36,8 +36,8 @@ import "./TokenSearch.css";
 import Button from "../Button";
 import useTokenSearch from "../../api/tokenSearch/useTokenSearch";
 import { useActionCreators as useTokenSearchActionCreators } from "../../api/tokenSearch";
-import { useReduxState } from "../../lib/useReduxState";
-import { useRouter } from "../../lib/useRouter";
+import { useReduxState } from "src/lib/useReduxState";
+import { useRouter } from "src/lib/useRouter";
 import { useTokens } from "../../api/tokens";
 
 /** There is a corresponding react-table type but doing it like this is neater. */
@@ -182,14 +182,14 @@ const TokenSearch = () => {
                 />
               </div>
             ) : (
-              <Button
-                className="toolbar-button-small primary"
-                disabled={noTokenSelected}
-                onClick={() => history.push(`/token/${selectedTokenRowId}`)}
-                icon="edit"
-                text="View/edit"
-              />
-            )}
+                <Button
+                  className="toolbar-button-small primary"
+                  disabled={noTokenSelected}
+                  onClick={() => history.push(`/token/${selectedTokenRowId}`)}
+                  icon="edit"
+                  text="View/edit"
+                />
+              )}
 
             <div>
               <Button

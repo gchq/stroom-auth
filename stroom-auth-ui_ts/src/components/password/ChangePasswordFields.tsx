@@ -17,12 +17,12 @@
 import * as React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-import "../../styles/Layout.css";
-import Button from "../Button";
-import useReduxState from "../../lib/useReduxState";
-import { PasswordValidationRequest } from "../../api/authentication/types";
-import { hasAnyProps } from "../../lib/lang";
-import { validateAsync } from "../users/validation";
+import "src/styles/Layout.css";
+import Button from "src/components/Button";
+import useReduxState from "src/lib/useReduxState";
+import { PasswordValidationRequest } from "src/api/authentication/types";
+import { hasAnyProps } from "src/lib/lang";
+import { validateAsync } from "src/components/users/validation";
 
 const ChangePasswordFields = ({
   email,
@@ -138,16 +138,16 @@ const ChangePasswordFields = ({
               </div>
 
               <div className="ChangePassword-controls">
-                {/* <div>
-                  {errorMessages.map(
+                <div>
+                  {/* {errorMessages.map(
                     (error: string, index: number) => (
                       <p key={index} className="ChangePassword-errorMessage">
                         {error}
                       </p>
                     )
-                  )}
+                  )} */}
                 </div>
-                <br /> */}
+                <br />
 
                 <div className="ChangePassword-actions">
                   <Button

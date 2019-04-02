@@ -4,7 +4,7 @@ import { StoreState, TokenSearchResponse } from "./types";
 import {
   genUseActionCreators,
   prepareReducer
-} from "../../lib/redux-actions-ts";
+} from "src/lib/redux-actions-ts";
 import { Filter, SortingRule } from 'react-table';
 
 const CHANGE_LAST_USED_FILTERED = "tokenSearch/CHANGE_LAST_USED_FILTERED";

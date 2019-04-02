@@ -1,11 +1,11 @@
 import { Action } from "redux";
 
 import { StoreState } from "./types";
-import { User } from "../../components/users";
+import { User } from "src/components/users";
 import {
   prepareReducer,
   genUseActionCreators
-} from "../../lib/redux-actions-ts";
+} from "src/lib/redux-actions-ts";
 
 const CHANGE_LOGGED_IN_USER = "login/CHANGE_LOGGED_IN_USER";
 const EMAIL_CHANGE = "login/EMAIL_CHANGE";
@@ -30,7 +30,7 @@ interface EmailChangeAction extends Action<"login/EMAIL_CHANGE"> {
 interface TokenChangeAction extends Action<"login/TOKEN_CHANGE"> {
   token: String;
 }
-interface TokenDeleteAction extends Action<"login/TOKEN_DELETE"> {}
+interface TokenDeleteAction extends Action<"login/TOKEN_DELETE"> { }
 interface ShowLoaderAction extends Action<"login/SHOW_LOADER"> {
   showLoader: boolean;
 }
@@ -130,7 +130,7 @@ export const reducer = prepareReducer(defaultState)
   )
   .handleAction<TokenDeleteAction>(
     TOKEN_DELETE,
-    (state = defaultState, {}) => ({
+    (state = defaultState, { }) => ({
       ...state,
       token: ""
     })

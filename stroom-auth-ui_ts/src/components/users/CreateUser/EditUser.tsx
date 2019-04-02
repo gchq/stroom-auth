@@ -23,12 +23,12 @@ import BackConfirmation from "../BackConfirmation";
 import Button from "../../Button";
 import Loader from "../../Loader";
 import UserFields from "./UserFields";
-import useReduxState from "../../../lib/useReduxState";
-import useRouter from "../../../lib/useRouter";
+import useReduxState from "src/lib/useReduxState";
+import useRouter from "src/lib/useRouter";
 import { UserValidationSchema, validateAsync } from "../validation";
-import { hasAnyProps } from "../../../lib/lang";
+import { hasAnyProps } from "src/lib/lang";
 import { useUsers } from "../api";
-import useIdFromPath from "../../../lib/useIdFromPath";
+import useIdFromPath from "src/lib/useIdFromPath";
 import { PasswordValidationRequest } from "../../../api/authentication/types";
 
 const UserEditForm = () => {
@@ -125,7 +125,7 @@ const UserEditForm = () => {
                     disabled={isPristine || hasErrors}
                     icon="save"
                     text="Save"
-                    // isLoading={isSaving}
+                  // isLoading={isSaving}
                   />
                   <Button
                     className="toolbar-button-small secondary"

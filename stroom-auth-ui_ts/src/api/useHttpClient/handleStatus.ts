@@ -1,4 +1,4 @@
-import { HttpError } from "../../lib/ErrorTypes";
+import { HttpError } from "src/lib/ErrorTypes";
 
 export default (response: Response) => {
   if (response.status === 200) {

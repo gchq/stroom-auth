@@ -4,7 +4,7 @@ import useApi from "../api/useApi";
 import { useActionCreators as useAuthenticationActionCreators } from "../../../api/authentication";
 import { useApi as useAuthorisationApi } from "../../../api/authorisation";
 import { User } from "../types";
-import { useRouter } from "../../../lib/useRouter";
+import { useRouter } from "src/lib/useRouter";
 import useUserState from "./useUserState";
 
 /**

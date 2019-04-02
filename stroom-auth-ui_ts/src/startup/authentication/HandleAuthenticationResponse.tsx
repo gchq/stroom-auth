@@ -18,7 +18,7 @@ import { useEffect, useMemo } from "react";
 
 import { handleAuthenticationResponse } from "./authentication";
 import { useActionCreators } from "../../api/authentication";
-import useRouter from "../../lib/useRouter";
+import useRouter from "src/lib/useRouter";
 
 interface Props {
   authenticationServiceUrl: string;
@@ -52,12 +52,12 @@ export const HandleAuthenticationResponse: React.FunctionComponent<Props> = ({
       authorisationServiceUrl
     );
   }, [
-    accessCode,
-    tokenIdChange,
-    history,
-    authenticationServiceUrl,
-    authorisationServiceUrl
-  ]);
+      accessCode,
+      tokenIdChange,
+      history,
+      authenticationServiceUrl,
+      authorisationServiceUrl
+    ]);
 
   return null;
 };

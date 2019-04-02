@@ -24,7 +24,7 @@ import Toggle from "react-toggle";
 import "../../../styles/table-small.css";
 import "./UserSearch.css";
 import Button from "../../Button";
-import useRouter from "../../../lib/useRouter";
+import useRouter from "src/lib/useRouter";
 import useUserSearch from "./useUserSearch";
 import { useState } from "react";
 import { getColumnFormat } from "./tableCustomisations";
@@ -54,13 +54,13 @@ const UserSearch = () => {
             />
           </div>
         ) : (
-          <Button
-            className="toolbar-button-small primary"
-            onClick={() => history.push(`/user/${selectedUser}`)}
-            icon="edit"
-            text="View/edit"
-          />
-        )}
+            <Button
+              className="toolbar-button-small primary"
+              onClick={() => history.push(`/user/${selectedUser}`)}
+              icon="edit"
+              text="View/edit"
+            />
+          )}
 
         <div>
           <Button

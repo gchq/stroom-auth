@@ -21,11 +21,11 @@ import "../../../styles/Layout.css";
 import "./CreateUserForm.css";
 import Button from "../../Button";
 import UserFields from "./UserFields";
-import useReduxState from "../../../lib/useReduxState";
-import useRouter from "../../../lib/useRouter";
+import useReduxState from "src/lib/useReduxState";
+import useRouter from "src/lib/useRouter";
 import { NewUserValidationSchema, validateAsync } from "../validation";
 import { PasswordValidationRequest } from "../../../api/authentication/types";
-import { hasAnyProps } from "../../../lib/lang";
+import { hasAnyProps } from "src/lib/lang";
 import { useUsers } from "../api";
 import { User } from "../types";
 
@@ -42,7 +42,7 @@ const initialValues = {
   force_password_change: true
 };
 
-const UserCreateForm = ({}) => {
+const UserCreateForm = ({ }) => {
   const { createUser } = useUsers();
   const { history } = useRouter();
   const { authenticationServiceUrl, idToken } = useReduxState(

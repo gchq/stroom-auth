@@ -18,7 +18,7 @@ import * as React from "react";
 
 import ErrorSection from "./ErrorSection";
 import IconHeader from "../IconHeader";
-import useReduxState from "../../lib/useReduxState";
+import useReduxState from "src/lib/useReduxState";
 
 const ErrorPage = () => {
   const { errorMessage, stackTrace, httpErrorCode } = useReduxState(

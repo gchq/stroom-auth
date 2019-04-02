@@ -21,7 +21,7 @@ import { useActionCreators } from "../../api/authentication";
 import Button from "../Button";
 import "./LoggedOut.css";
 import "../../styles/Layout.css";
-import useReduxState from "../../lib/useReduxState";
+import useReduxState from "src/lib/useReduxState";
 
 const LoggedOut = () => {
   const { stroomUiUrl } = useReduxState(

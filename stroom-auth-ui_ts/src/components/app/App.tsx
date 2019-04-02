@@ -35,7 +35,7 @@ import HandleAuthenticationResponse from "../../startup/authentication/HandleAut
 import Loader from "../../components/Loader";
 import Unauthorised from "../../components/unauthorised";
 import useConfig from "../../startup/config/useConfig";
-import useReduxState from "../../lib/useReduxState";
+import useReduxState from "src/lib/useReduxState";
 import { useUsers } from "../../components/users/api";
 
 const App = () => {
@@ -116,13 +116,13 @@ const App = () => {
                 isLoggedIn ? (
                   <UserCreate />
                 ) : (
-                  <AuthenticationRequest
-                    referrer="/user"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={authenticationServiceUrl}
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer="/user"
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={authenticationServiceUrl}
+                    />
+                  )
               }
             />
             <Route
@@ -132,13 +132,13 @@ const App = () => {
                 isLoggedIn ? (
                   <UserEdit />
                 ) : (
-                  <AuthenticationRequest
-                    referrer={route.location.pathname}
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={authenticationServiceUrl}
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer={route.location.pathname}
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={authenticationServiceUrl}
+                    />
+                  )
               }
             />
 
@@ -165,13 +165,13 @@ const App = () => {
                 isLoggedIn ? (
                   <UserSearch />
                 ) : (
-                  <AuthenticationRequest
-                    referrer="/userSearch"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={authenticationServiceUrl}
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer="/userSearch"
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={authenticationServiceUrl}
+                    />
+                  )
               }
             />
 
@@ -182,13 +182,13 @@ const App = () => {
                 isLoggedIn ? (
                   <TokenSearch />
                 ) : (
-                  <AuthenticationRequest
-                    referrer="/tokens"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={authenticationServiceUrl}
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer="/tokens"
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={authenticationServiceUrl}
+                    />
+                  )
               }
             />
 
@@ -199,13 +199,13 @@ const App = () => {
                 isLoggedIn ? (
                   <TokenCreate />
                 ) : (
-                  <AuthenticationRequest
-                    referrer="/token/newApiToken"
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={authenticationServiceUrl}
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer="/token/newApiToken"
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={authenticationServiceUrl}
+                    />
+                  )
               }
             />
 
@@ -216,13 +216,13 @@ const App = () => {
                 isLoggedIn ? (
                   <TokenEdit />
                 ) : (
-                  <AuthenticationRequest
-                    referrer={route.location.pathname}
-                    uiUrl={advertisedUrl}
-                    appClientId={appClientId}
-                    authenticationServiceUrl={authenticationServiceUrl}
-                  />
-                )
+                    <AuthenticationRequest
+                      referrer={route.location.pathname}
+                      uiUrl={advertisedUrl}
+                      appClientId={appClientId}
+                      authenticationServiceUrl={authenticationServiceUrl}
+                    />
+                  )
               }
             />
 

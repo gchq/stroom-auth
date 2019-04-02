@@ -17,7 +17,7 @@
 // import * as React from "react";
 // import { storiesOf } from "@storybook/react";
 
-// import { addThemedStories } from "../../lib/themedStoryGenerator";
+// import { addThemedStories } from "src/lib/themedStoryGenerator";
 // import IconHeader from "./IconHeader";
 
 // import "../../styles/main.css";

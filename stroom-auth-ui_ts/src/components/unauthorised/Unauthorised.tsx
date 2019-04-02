@@ -18,10 +18,10 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 
 import Button from "../Button";
-import { useReduxState } from "../../lib/useReduxState";
+import { useReduxState } from "src/lib/useReduxState";
 import "./Unauthorised.css";
 import "../../styles/Layout.css";
-import useHttpQueryParam from "../../lib/useHttpQueryParam";
+import useHttpQueryParam from "src/lib/useHttpQueryParam";
 
 const Unauthorised = () => {
   const [isExpiredToken, setIsExpiredToken] = useState(false);

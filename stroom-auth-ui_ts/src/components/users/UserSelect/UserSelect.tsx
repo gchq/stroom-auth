@@ -17,7 +17,7 @@
 import * as React from "react";
 import { useState } from "react";
 import AsyncSelect from "react-select/lib/Async";
-import useReduxState from "../../../lib/useReduxState";
+import useReduxState from "src/lib/useReduxState";
 import "./asyncUserSelect.css";
 import { User } from "../types";
 

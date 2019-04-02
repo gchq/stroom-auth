@@ -5,7 +5,7 @@ import { TokenSearchRequest } from '../tokenSearch/types';
 import { useActionCreators as useTokenActionCreators, Token } from '../tokens';
 import { useActionCreators } from "./redux";
 import { useApi as useTokenSearchApi, useActionCreators as useTokenSearchActionCreators } from '../tokenSearch';
-import { useRouter } from "../../lib/useRouter";
+import { useRouter } from "src/lib/useRouter";
 
 /**
  * This hook connects the REST API calls to the Redux Store.
