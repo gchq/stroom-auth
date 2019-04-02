@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 
-import useApi from "./useApi";
-import { useActionCreators } from "./redux";
+import useApi from "../api/useApi";
+import { useActionCreators } from "../api/redux";
 import { useActionCreators as useAuthenticationActionCreators } from "../../../api/authentication";
 import { useApi as useAuthorisationApi } from "../../../api/authorisation";
 import { User } from "../types";

@@ -21,7 +21,6 @@ import {
   prepareReducer
 } from "../../../lib/redux-actions-ts";
 
-const CHANGE_VISIBLE_CONTAINER = "user/CHANGE_VISIBLE_CONTAINER";
 const CLEAR_USER_BEING_EDITED = "user/CLEAR_USER_BEING_EDITED";
 const HIDE_CHANGE_PASSWORD_ERROR_MESSAGE =
   "user/HIDE_CHANGE_PASSWORD_ERROR_MESSAGE";
@@ -33,10 +32,6 @@ const TOGGLE_IS_SAVING = "user/TOGGLE_IS_SAVING";
 
 interface ShowCreateLoaderAction extends Action<"user/SHOW_CREATE_LOADER"> {
   showCreateLoader: boolean;
-}
-interface ChangeVisibleContainerAction
-  extends Action<"user/CHANGE_VISIBLE_CONTAINER"> {
-  show: boolean;
 }
 interface ToggleAlertVisibilityAction
   extends Action<"user/TOGGLE_ALERT_VISIBILITY"> {
@@ -72,10 +67,6 @@ export const useActionCreators = genUseActionCreators({
     type: SHOW_CREATE_LOADER,
     showCreateLoader
   }),
-  changeVisibleContainer: (show: boolean): ChangeVisibleContainerAction => ({
-    type: CHANGE_VISIBLE_CONTAINER,
-    show
-  }),
   toggleAlertVisibility: (
     showAlert: boolean,
     alertText: string
@@ -108,13 +99,6 @@ export const reducer = prepareReducer(defaultState)
     (state = defaultState, { showCreateLoader }) => ({
       ...state,
       showCreateLoader
-    })
-  )
-  .handleAction<ChangeVisibleContainerAction>(
-    CHANGE_VISIBLE_CONTAINER,
-    (state = defaultState, { show }) => ({
-      ...state,
-      show
     })
   )
   .handleAction<ToggleAlertVisibilityAction>(

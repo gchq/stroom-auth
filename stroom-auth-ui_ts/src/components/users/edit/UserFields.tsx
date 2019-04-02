@@ -19,9 +19,9 @@ import { Field, ErrorMessage, FormikErrors, FormikTouched } from "formik";
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
 
-import "../../styles/form.css";
-import { AuditCopy, LoginStatsCopy } from "../auditCopy";
-import { User } from "./types";
+import "../../../styles/form.css";
+import { AuditCopy, LoginStatsCopy } from "../../auditCopy";
+import { User } from "../types";
 
 const LoginFailureCopy = ({ attemptCount }: { attemptCount: number }) => (
   <div className="copy">
