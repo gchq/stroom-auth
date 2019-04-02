@@ -19,7 +19,7 @@ import { Formik, Form } from "formik";
 
 import "src/styles/Layout.css";
 import "./CreateUserForm.css";
-import Button from "../../Button";
+import Button from "src/components/Button";
 import UserFields from "./UserFields";
 import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";

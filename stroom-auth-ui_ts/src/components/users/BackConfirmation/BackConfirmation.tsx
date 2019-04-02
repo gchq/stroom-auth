@@ -20,7 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isEmpty } from "ramda";
 
 import "./BackConfirmation.css";
-import Button from "../../Button";
+import Button from "src/components/Button";
 import { FormikErrors } from "formik";
 import { User } from "../types";
 
@@ -53,8 +53,8 @@ const BackConfirmation = ({
           There are validation issues with this data and we can't save it.
         </p>
       ) : (
-        undefined
-      )}
+          undefined
+        )}
       <div className="BackConfirmation__actions">
         <Button
           className="toolbar-button-large primary"

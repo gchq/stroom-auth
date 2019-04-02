@@ -20,7 +20,7 @@ import Toggle from "react-toggle";
 import "react-toggle/style.css";
 
 import "src/styles/form.css";
-import { AuditCopy, LoginStatsCopy } from "../../auditCopy";
+import { AuditCopy, LoginStatsCopy } from "src/components/auditCopy";
 import { User } from "../types";
 
 const LoginFailureCopy = ({ attemptCount }: { attemptCount: number }) => (

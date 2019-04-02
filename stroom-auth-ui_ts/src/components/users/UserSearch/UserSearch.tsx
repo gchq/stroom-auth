@@ -23,7 +23,7 @@ import Toggle from "react-toggle";
 
 import "src/styles/table-small.css";
 import "./UserSearch.css";
-import Button from "../../Button";
+import Button from "src/components/Button";
 import useRouter from "src/lib/useRouter";
 import useUserSearch from "./useUserSearch";
 import { useState } from "react";

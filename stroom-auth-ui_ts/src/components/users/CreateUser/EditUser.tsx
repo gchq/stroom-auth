@@ -20,8 +20,8 @@ import { Formik, Form } from "formik";
 
 import "./EditUser.css";
 import BackConfirmation from "../BackConfirmation";
-import Button from "../../Button";
-import Loader from "../../Loader";
+import Button from "src/components/Button";
+import Loader from "src/components/Loader";
 import UserFields from "./UserFields";
 import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
