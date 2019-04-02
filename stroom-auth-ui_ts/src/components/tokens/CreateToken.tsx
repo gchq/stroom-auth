@@ -18,9 +18,9 @@ import * as React from "react";
 import { Formik } from "formik";
 
 import { AsyncUserSelect } from "../users";
-import "../../styles/form.css";
+import "src/styles/form.css";
 import "./CreateTokenForm.css";
-import "../../styles/Layout.css";
+import "src/styles/Layout.css";
 import Button from "../Button";
 import { useTokens } from "../../api/tokens";
 import useReduxState from "src/lib/useReduxState";

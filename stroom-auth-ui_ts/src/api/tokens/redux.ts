@@ -3,7 +3,7 @@ import { StoreState, Token } from "./types";
 import {
   genUseActionCreators,
   prepareReducer
-} from "../..//lib/redux-actions-ts";
+} from "src/lib/redux-actions-ts";
 
 const CHANGE_READ_CREATED_TOKEN = "token/CHANGE_READ_CREATED_TOKEN";
 const CHANGE_VISIBLE_CONTAINER = "token/CHANGE_VISIBLE_CONTAINER";
@@ -28,9 +28,9 @@ interface ChangeReadCreatedTokenAction
 interface ShowErrorMessageAction extends Action<"token/SHOW_ERROR_MESSAGE"> {
   errorMessage: string;
 }
-interface HideErrorMessageAction extends Action<"token/HIDE_ERROR_MESSAGE"> {}
-interface ToggleStateAction extends Action<"token/TOGGLE_STATE"> {}
-interface ToggleIsCreatingAction extends Action<"token/TOGGLE_IS_CREATING"> {}
+interface HideErrorMessageAction extends Action<"token/HIDE_ERROR_MESSAGE"> { }
+interface ToggleStateAction extends Action<"token/TOGGLE_STATE"> { }
+interface ToggleIsCreatingAction extends Action<"token/TOGGLE_IS_CREATING"> { }
 
 const defaultState: StoreState = {
   lastReadToken: undefined,
@@ -103,14 +103,14 @@ export const reducer = prepareReducer(defaultState)
   )
   .handleAction<HideErrorMessageAction>(
     HIDE_ERROR_MESSAGE,
-    (state = defaultState, {}) => ({
+    (state = defaultState, { }) => ({
       ...state,
       errorMessage: ""
     })
   )
   .handleAction<ToggleStateAction>(
     TOGGLE_STATE,
-    (state = defaultState, {}) => ({
+    (state = defaultState, { }) => ({
       ...state,
       lastReadToken: {
         ...state.lastReadToken,
@@ -120,7 +120,7 @@ export const reducer = prepareReducer(defaultState)
   )
   .handleAction<ToggleIsCreatingAction>(
     TOGGLE_IS_CREATING,
-    (state = defaultState, {}) => ({
+    (state = defaultState, { }) => ({
       ...state,
       isCreating: !state.isCreating
     })

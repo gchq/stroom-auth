@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import Button from "../Button";
 import { useReduxState } from "src/lib/useReduxState";
 import "./Unauthorised.css";
-import "../../styles/Layout.css";
+import "src/styles/Layout.css";
 import useHttpQueryParam from "src/lib/useHttpQueryParam";
 
 const Unauthorised = () => {

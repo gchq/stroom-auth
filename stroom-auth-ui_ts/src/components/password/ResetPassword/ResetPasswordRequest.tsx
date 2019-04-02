@@ -19,9 +19,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import Button from "src/components/Button";
-import "../../../styles/Layout.css";
+import "src/styles/Layout.css";
 import { hasAnyProps } from "src/lib/lang";
-import "../../../styles/index.css";
+import "src/styles/index.css";
 import { useApi } from "src/api/authentication";
 import useReduxState from "src/lib/useReduxState";
 

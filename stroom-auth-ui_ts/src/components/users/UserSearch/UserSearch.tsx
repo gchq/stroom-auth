@@ -21,7 +21,7 @@ import * as React from "react";
 import ReactTable, { RowInfo } from "react-table";
 import Toggle from "react-toggle";
 
-import "../../../styles/table-small.css";
+import "src/styles/table-small.css";
 import "./UserSearch.css";
 import Button from "../../Button";
 import useRouter from "src/lib/useRouter";

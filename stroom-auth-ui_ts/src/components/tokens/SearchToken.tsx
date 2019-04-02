@@ -28,10 +28,10 @@ import ReactTable, {
 import "react-table/react-table.css";
 import * as dateFormat from "dateformat";
 
-import "../../styles/index.css";
-import "../../styles/table-small.css";
-import "../../styles/toggle-small.css";
-import "../../styles/toolbar-small.css";
+import "src/styles/index.css";
+import "src/styles/table-small.css";
+import "src/styles/toggle-small.css";
+import "src/styles/toolbar-small.css";
 import "./TokenSearch.css";
 import Button from "../Button";
 import useTokenSearch from "../../api/tokenSearch/useTokenSearch";

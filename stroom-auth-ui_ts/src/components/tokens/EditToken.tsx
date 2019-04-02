@@ -24,7 +24,7 @@ import "rc-checkbox/assets/index.css";
 import Button from "../Button";
 import Loader from "../Loader2";
 import "./TokenEdit.css";
-import "../../styles/form.css";
+import "src/styles/form.css";
 import { OnCopy, ByCopy } from "../auditCopy";
 
 import { useTokens } from "../../api/tokens";

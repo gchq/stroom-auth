@@ -20,7 +20,7 @@
 // import { addThemedStories } from "src/lib/themedStoryGenerator";
 // import IconHeader from "./IconHeader";
 
-// import "../../styles/main.css";
+// import "src/styles/main.css";
 
 // const iconHeaderStories = storiesOf("General Purpose/Icon Header", module);
 // addThemedStories(
