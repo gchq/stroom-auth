@@ -17,11 +17,12 @@
 import * as React from "react";
 import { useEffect } from "react";
 
-import { useActionCreators } from "src/api/authentication";
-import Button from "../Button";
-import "./LoggedOut.css";
 import "src/styles/Layout.css";
+import Button from "src/components/Button";
 import useReduxState from "src/lib/useReduxState";
+import { useActionCreators } from "src/api/authentication";
+
+import "./LoggedOut.css";
 
 const LoggedOut = () => {
   const { stroomUiUrl } = useReduxState(

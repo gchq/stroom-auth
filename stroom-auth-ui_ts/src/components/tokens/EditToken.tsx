@@ -21,16 +21,16 @@ import Toggle from "react-toggle";
 import "react-toggle/style.css";
 import "rc-checkbox/assets/index.css";
 
-import Button from "../Button";
-import Loader from "../Loader2";
-import "./TokenEdit.css";
 import "src/styles/form.css";
-import { OnCopy, ByCopy } from "../auditCopy";
-
-import { useTokens } from "src/api/tokens";
+import Button from "src/components/Button";
+import Loader from "src/components/Loader2";
 import useIdFromPath from "src/lib/useIdFromPath";
-import { useRouter } from "src/lib/useRouter";
+import { OnCopy, ByCopy } from "src/components/auditCopy";
 import { useReduxState } from "src/lib/useReduxState";
+import { useRouter } from "src/lib/useRouter";
+import { useTokens } from "src/api/tokens";
+
+import "./TokenEdit.css";
 
 const EditToken = () => {
   const { token } = useReduxState(({ token: { lastReadToken } }) => ({

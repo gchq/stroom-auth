@@ -1,11 +1,12 @@
 import { useCallback, useReducer } from "react";
 
-import useApi from "../api/useApi";
 import { useActionCreators as useAuthenticationActionCreators } from "src/api/authentication";
 import { useApi as useAuthorisationApi } from "src/api/authorisation";
-import { User } from "../types";
 import { useRouter } from "src/lib/useRouter";
+
 import useUserState from "./useUserState";
+import { User } from "../types";
+import useApi from "../api/useApi";
 
 /**
  * This hook connects the REST API calls to the Redux Store.

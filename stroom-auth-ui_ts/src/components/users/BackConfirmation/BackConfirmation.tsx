@@ -17,12 +17,13 @@
 import * as React from "react";
 import * as ReactModal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FormikErrors } from "formik";
 import { isEmpty } from "ramda";
 
-import "./BackConfirmation.css";
 import Button from "src/components/Button";
-import { FormikErrors } from "formik";
+
 import { User } from "../types";
+import "./BackConfirmation.css";
 
 const BackConfirmation = ({
   isOpen,

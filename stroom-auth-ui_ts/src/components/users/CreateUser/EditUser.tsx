@@ -18,18 +18,19 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 
-import "./EditUser.css";
-import BackConfirmation from "../BackConfirmation";
 import Button from "src/components/Button";
 import Loader from "src/components/Loader";
-import UserFields from "./UserFields";
+import useIdFromPath from "src/lib/useIdFromPath";
 import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
-import { UserValidationSchema, validateAsync } from "../validation";
-import { hasAnyProps } from "src/lib/lang";
-import { useUsers } from "../api";
-import useIdFromPath from "src/lib/useIdFromPath";
 import { PasswordValidationRequest } from "src/api/authentication/types";
+import { hasAnyProps } from "src/lib/lang";
+
+import "./EditUser.css";
+import BackConfirmation from "../BackConfirmation";
+import UserFields from "./UserFields";
+import { UserValidationSchema, validateAsync } from "../validation";
+import { useUsers } from "../api";
 
 const UserEditForm = () => {
   const { updateUser, fetchUser, user } = useUsers();

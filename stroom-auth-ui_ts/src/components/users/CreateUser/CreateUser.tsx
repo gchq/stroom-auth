@@ -18,16 +18,17 @@ import * as React from "react";
 import { Formik, Form } from "formik";
 
 import "src/styles/Layout.css";
-import "./CreateUserForm.css";
 import Button from "src/components/Button";
-import UserFields from "./UserFields";
 import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
-import { NewUserValidationSchema, validateAsync } from "../validation";
 import { PasswordValidationRequest } from "src/api/authentication/types";
 import { hasAnyProps } from "src/lib/lang";
-import { useUsers } from "../api";
+
+import "./CreateUserForm.css";
+import UserFields from "./UserFields";
+import { NewUserValidationSchema, validateAsync } from "../validation";
 import { User } from "../types";
+import { useUsers } from "../api";
 
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.

@@ -17,14 +17,15 @@
 import * as React from "react";
 import { Formik } from "formik";
 
-import { AsyncUserSelect } from "../users";
-import "src/styles/form.css";
-import "./CreateTokenForm.css";
 import "src/styles/Layout.css";
-import Button from "../Button";
-import { useTokens } from "src/api/tokens";
+import "src/styles/form.css";
+import Button from "src/components/Button";
 import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
+import { AsyncUserSelect } from "src/components/users";
+import { useTokens } from "src/api/tokens";
+
+import "./CreateTokenForm.css";
 
 type DropDownValues = {
   label: string;

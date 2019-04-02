@@ -32,13 +32,14 @@ import "src/styles/index.css";
 import "src/styles/table-small.css";
 import "src/styles/toggle-small.css";
 import "src/styles/toolbar-small.css";
-import "./TokenSearch.css";
-import Button from "../Button";
+import Button from "src/components/Button";
 import useTokenSearch from "src/api/tokenSearch/useTokenSearch";
 import { useActionCreators as useTokenSearchActionCreators } from "src/api/tokenSearch";
 import { useReduxState } from "src/lib/useReduxState";
 import { useRouter } from "src/lib/useRouter";
 import { useTokens } from "src/api/tokens";
+
+import "./TokenSearch.css";
 
 /** There is a corresponding react-table type but doing it like this is neater. */
 type FilterProps = {

@@ -1,6 +1,7 @@
-import useHttpQueryParam from "src/lib/useHttpQueryParam";
 import { useEffect, useState } from 'react';
 import * as jwtDecode from 'jwt-decode';
+
+import useHttpQueryParam from "src/lib/useHttpQueryParam";
 
 export const useTokenValidityCheck = () => {
 

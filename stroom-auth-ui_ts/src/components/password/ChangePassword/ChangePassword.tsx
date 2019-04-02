@@ -21,9 +21,9 @@ import * as queryString from "query-string";
 
 import "./ChangePassword.css";
 import "src/styles/Layout.css";
-import ChangePasswordFields from "../ChangePasswordFields";
-
 import useRouter from "src/lib/useRouter";
+
+import ChangePasswordFields from "../ChangePasswordFields";
 import usePassword from './useChangePassword';
 
 const ChangePassword = () => {

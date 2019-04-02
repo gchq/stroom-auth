@@ -19,6 +19,7 @@ import { useContext, useCallback } from "react";
 
 import useHttpClient from "src/api/useHttpClient";
 import { GlobalStoreState } from "src/startup/GlobalStoreState";
+
 import { User } from "../types";
 
 interface Api {

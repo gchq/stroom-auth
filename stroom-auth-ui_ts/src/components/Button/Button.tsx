@@ -18,6 +18,7 @@ import * as React from "react";
 import { useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
+
 import { ButtonProps } from "./types";
 import './Button.css';
 
@@ -64,8 +65,8 @@ export const Button = ({
       {icon ? (
         <FontAwesomeIcon size={fontAwesomeSize} icon={icon} />
       ) : (
-        undefined
-      )}
+          undefined
+        )}
       {text ? <span className="button__text">{text}</span> : undefined}
     </button>
   );

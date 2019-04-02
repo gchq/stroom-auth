@@ -16,8 +16,9 @@
 
 import * as React from "react";
 
-import "./PathNotFound.css";
 import "src/styles/Layout.css";
+
+import "./PathNotFound.css";
 
 const PathNotFound = () => {
   return (

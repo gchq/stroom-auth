@@ -20,13 +20,14 @@ import "react-toggle/style.css";
 import * as React from "react";
 import ReactTable, { RowInfo } from "react-table";
 import Toggle from "react-toggle";
+import { useState } from "react";
 
 import "src/styles/table-small.css";
-import "./UserSearch.css";
 import Button from "src/components/Button";
 import useRouter from "src/lib/useRouter";
+
+import "./UserSearch.css";
 import useUserSearch from "./useUserSearch";
-import { useState } from "react";
 import { getColumnFormat } from "./tableCustomisations";
 
 const UserSearch = () => {

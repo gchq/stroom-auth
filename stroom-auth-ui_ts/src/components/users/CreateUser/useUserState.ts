@@ -1,5 +1,6 @@
-import { User } from "../types";
 import { useReducer } from "react";
+
+import { User } from "../types";
 
 interface UserStateApi {
   user?: User;

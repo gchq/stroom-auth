@@ -1,8 +1,5 @@
 import * as React from "react";
 import { ReactTableFunction, RowInfo } from "react-table";
-
-import { filter, all } from "ramda";
-
 import * as dateFormat from "dateformat";
 
 /** There is a corresponding react-table type but doing it like this is neater. */
