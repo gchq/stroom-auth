@@ -1,11 +1,8 @@
 export interface StoreState {
-  alertText: string;
   changePasswordErrorMessage: any;
   errorStatus?: string;
   errorText?: string;
-  isSaving: boolean;
   password: string;
-  showAlert: boolean;
 }
 
 export interface User {

@@ -68,7 +68,7 @@ const ChangePasswordFields = ({
           verifyPassword: values.verifyPassword,
           email: values.email
         };
-        validateAsync(
+        return validateAsync(
           passwordValidationRequest,
           idToken,
           authenticationServiceUrl
@@ -103,8 +103,8 @@ const ChangePasswordFields = ({
                     />
                   </div>
                 ) : (
-                  <div className="field-container vertical" />
-                )}
+                    <div className="field-container vertical" />
+                  )}
 
                 <div className="field-container__spacer" />
 

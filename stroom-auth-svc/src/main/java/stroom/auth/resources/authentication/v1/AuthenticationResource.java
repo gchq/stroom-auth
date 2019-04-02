@@ -19,6 +19,7 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.collect.Lists;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
@@ -41,6 +42,7 @@ import stroom.auth.config.PasswordIntegrityChecksConfig;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
 import stroom.auth.exceptions.NoSuchUserException;
+import stroom.auth.resources.authentication.v1.ChangePasswordResponse.ChangePasswordResponseBuilder;
 import stroom.auth.resources.token.v1.Token;
 import stroom.auth.resources.user.v1.User;
 import stroom.auth.service.eventlogging.StroomEventLoggingService;
@@ -79,6 +81,7 @@ import java.util.regex.Pattern;
 import static javax.ws.rs.core.Response.ResponseBuilder;
 import static javax.ws.rs.core.Response.seeOther;
 import static javax.ws.rs.core.Response.status;
+import static stroom.auth.daos.UserDao.LoginResult.*;
 import static stroom.auth.resources.authentication.v1.PasswordValidator.validateAuthenticity;
 import static stroom.auth.resources.authentication.v1.PasswordValidator.validateComplexity;
 import static stroom.auth.resources.authentication.v1.PasswordValidator.validateLength;
@@ -450,20 +453,20 @@ public final class AuthenticationResource {
             @PathParam("id") int userId) {
 
         List<PasswordValidationFailureType> failedOn = new ArrayList<>();
-
         final UserDao.LoginResult loginResult = userDao.areCredentialsValid(changePasswordRequest.getEmail(), changePasswordRequest.getOldPassword());
-
         validateAuthenticity(loginResult).ifPresent(failedOn::add);
         validateReuse(changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword()).ifPresent(failedOn::add);
         validateLength(changePasswordRequest.getNewPassword(), config.getPasswordIntegrityChecksConfig().getMinimumPasswordLength()).ifPresent(failedOn::add);
         validateComplexity(changePasswordRequest.getNewPassword(), config.getPasswordIntegrityChecksConfig().getPasswordComplexityRegex()).ifPresent(failedOn::add);
 
-        final ChangePasswordResponse.ChangePasswordResponseBuilder responseBuilder = ChangePasswordResponse.ChangePasswordResponseBuilder.aChangePasswordResponse();
-
-        if (responseBuilder.failedOn.size() == 0) {
+        final ChangePasswordResponseBuilder responseBuilder = ChangePasswordResponseBuilder.aChangePasswordResponse();
+        if (failedOn.size() == 0){
             responseBuilder.withSuccess();
             stroomEventLoggingService.changePassword(httpServletRequest, changePasswordRequest.getEmail());
             userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
+        }
+        else {
+            responseBuilder.withFailedOn(failedOn);
         }
 
         return Response.status(Status.OK).entity(responseBuilder.build()).build();
@@ -485,7 +488,7 @@ public final class AuthenticationResource {
         validateLength(req.getNewPassword(), conf.getMinimumPasswordLength()).ifPresent(failedOn::add);
         validateComplexity(req.getNewPassword(), conf.getPasswordComplexityRegex()).ifPresent(failedOn::add);
 
-        final ChangePasswordResponse.ChangePasswordResponseBuilder responseBuilder = ChangePasswordResponse.ChangePasswordResponseBuilder.aChangePasswordResponse();
+        final ChangePasswordResponseBuilder responseBuilder = ChangePasswordResponseBuilder.aChangePasswordResponse();
 
         if (responseBuilder.failedOn.size() == 0) {
             responseBuilder.withSuccess();

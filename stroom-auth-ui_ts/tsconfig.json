@@ -1,16 +1,21 @@
 {
   "compilerOptions": {
-    "paths": { "*": ["src/@types/*"] },
-    "baseUrl": ".",
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es5",
+      "es6",
+      "es7",
+      "dom",
+      "es2017"
+    ],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
     "rootDir": "src",
+    "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -19,7 +24,7 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": false,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules",
@@ -29,5 +34,9 @@
     "webpack",
     "jest",
     "src/setupTests.ts"
+  ],
+  "include": [
+    "node_modules/@pollyjs/adapter-fetch/dist/umd",
+    "src"
   ]
 }

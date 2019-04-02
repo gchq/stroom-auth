@@ -20,29 +20,14 @@ import * as Cookies from "cookies-js";
 import * as queryString from "query-string";
 
 import "./ChangePassword.css";
-import "../../styles/Layout.css";
+import "src/styles/Layout.css";
 import ChangePasswordFields from "./ChangePasswordFields";
 
-import useRouter from "../../lib/useRouter";
-import useReduxState from "../../lib/useReduxState";
-import { useApi as useAuthenticationApi } from "../../api/authentication";
+import useRouter from "src/lib/useRouter";
+import usePassword from './usePassword';
 
 const ChangePassword = () => {
-  const { showAlert } = useReduxState(
-    ({
-      user: { showAlert, changePasswordErrorMessage },
-      config: {
-        values: { authenticationServiceUrl }
-      },
-      authentication: { idToken }
-    }) => ({
-      showAlert,
-      changePasswordErrorMessage,
-      authenticationServiceUrl,
-      idToken
-    })
-  );
-  const { changePassword } = useAuthenticationApi();
+  const { changePassword, errorMessages, showChangeConfirmation } = usePassword();
   const { router } = useRouter();
   const [redirectUrl, setRedirectUrl] = useState("");
   const [email, setEmail] = useState("");
@@ -75,8 +60,27 @@ const ChangePassword = () => {
   }, [setRedirectUrl, setEmail]);
 
   let title = "Change your password";
-  if (showAlert && redirectUrl) {
+  if (showChangeConfirmation && redirectUrl) {
     title = "Your password has been changed";
+  }
+
+  let content;
+  if (errorMessages.length === 0) {
+    if (!showChangeConfirmation) {
+      content =
+        <ChangePasswordFields
+          email={email}
+          redirectUrl={redirectUrl}
+          showOldPasswordField={true}
+          onSubmit={changePassword}
+        />
+    }
+    else if (showChangeConfirmation && !redirectUrl) {
+      content = <p>Your password has been changed.</p>
+    }
+  }
+  else {
+    content = <p>There were the following errors: {errorMessages} </p>
   }
 
   return (
@@ -85,22 +89,7 @@ const ChangePassword = () => {
         <div className="section__title">
           <h3>{title} </h3>
         </div>
-        {!showAlert ? (
-          <ChangePasswordFields
-            email={email}
-            redirectUrl={redirectUrl}
-            showOldPasswordField={true}
-            onSubmit={changePassword}
-          />
-        ) : (
-          undefined
-        )}
-        {showAlert && !redirectUrl ? (
-          <p>Your password has been changed.</p>
-        ) : (
-          undefined
-        )}
-        }
+        {content}
       </div>
     </div>
   );

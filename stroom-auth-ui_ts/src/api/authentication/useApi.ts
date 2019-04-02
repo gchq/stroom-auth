@@ -16,11 +16,12 @@ import { useActionCreators } from "./redux";
 import { GlobalStoreState } from "../../startup/GlobalStoreState";
 import { useActionCreators as useUserActionCreators } from "../../components/users/api";
 import useRouter from "../../lib/useRouter";
+import { ChangePasswordResponse } from '.';
 
 interface Api {
   apiLogin: (credentials: Credentials) => Promise<LoginResponse>;
   resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
-  changePassword: (changePasswordRequest: ChangePasswordRequest) => void;
+  changePassword: (changePasswordRequest: ChangePasswordRequest) => Promise<ChangePasswordResponse>;
   submitPasswordChangeRequest: (
     formData: any,
     formikBag: FormikBag<any, any>
@@ -38,8 +39,7 @@ export const useApi = (): Api => {
 
   const {
     showChangePasswordErrorMessage,
-    hideChangePasswordErrorMessage,
-    toggleAlertVisibility
+    hideChangePasswordErrorMessage
   } = useUserActionCreators();
 
   if (!store) {
@@ -81,7 +81,7 @@ export const useApi = (): Api => {
       hideChangePasswordErrorMessage();
       const url = `${
         state.config.values.authenticationServiceUrl
-      }/changePassword/`;
+        }/changePassword/`;
       const {
         password,
         oldPassword,
@@ -89,41 +89,11 @@ export const useApi = (): Api => {
         redirectUrl
       } = changePasswordRequest;
 
-      httpPostJsonResponse(url, {
+      return httpPostJsonResponse(url, {
         body: JSON.stringify({ newPassword: password, oldPassword, email })
-      }).then(response => {
-        if (response.changeSucceeded) {
-          // If we successfully changed the password then we want to redirect if there's a redirection URL
-          if (redirectUrl !== undefined) {
-            window.location.href = redirectUrl;
-          } else {
-            toggleAlertVisibility(true, "Your password has been changed");
-          }
-        } else {
-          let errorMessage = [];
-          if (response.failedOn.includes("BAD_OLD_PASSWORD")) {
-            errorMessage.push("Your new old password is not correct");
-          }
-          if (response.failedOn.includes("COMPLEXITY")) {
-            errorMessage.push(
-              "Your new password does not meet the complexity requirements"
-            );
-          }
-          if (response.failedOn.includes("REUSE")) {
-            errorMessage.push("You may not reuse your previous password");
-          }
-          if (response.failedOn.includes("LENGTH")) {
-            errorMessage.push("Your new password is too short");
-          }
-          showChangePasswordErrorMessage(errorMessage);
-        }
-      });
+      })
     },
-    [
-      hideChangePasswordErrorMessage,
-      toggleAlertVisibility,
-      showChangePasswordErrorMessage
-    ]
+    [hideChangePasswordErrorMessage, showChangePasswordErrorMessage]
   );
 
   const resetPassword = useCallback(
@@ -133,7 +103,7 @@ export const useApi = (): Api => {
       const stroomUiUrl = state.config.values.stroomUiUrl;
       const url = `${
         state.config.values.authenticationServiceUrl
-      }/resetPassword/`;
+        }/resetPassword/`;
 
       httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) }).then(
         response => {
@@ -167,7 +137,7 @@ export const useApi = (): Api => {
       const { setSubmitting } = formikBag;
       const url = `${state.config.values.authenticationServiceUrl}/reset/${
         formData.email
-      }`;
+        }`;
 
       httpGetJson(url, {}).then(() => {
         setSubmitting(false);
@@ -182,7 +152,7 @@ export const useApi = (): Api => {
       const state: GlobalStoreState = store.getState();
       const url = `${
         state.config.values.authenticationServiceUrl
-      }/isPasswordValid`;
+        }/isPasswordValid`;
       return httpPostJsonResponse(url, {
         body: JSON.stringify(passwordValidationRequest)
       });

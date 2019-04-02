@@ -21,14 +21,15 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as queryString from "qs";
 
-import Button from "../Button";
-import { hasAnyProps } from "../../lib/lang";
+import Button from "src/components/Button";
+import { hasAnyProps } from "src/lib/lang";
+import "src/styles/Layout.css";
+import icon from "src/icon.png";
+import { useActionCreators, useAuthentication } from "src/api/authentication";
+import useReduxState from "src/lib/useReduxState";
+import useRouter from "src/lib/useRouter";
+
 import "./Login.css";
-import "../../styles/Layout.css";
-import icon from "../../icon.png";
-import { useActionCreators, useAuthentication } from "../../api/authentication";
-import useReduxState from "../../lib/useReduxState";
-import useRouter from "../../lib/useRouter";
 
 const LoginValidationSchema = Yup.object().shape({
   email: Yup.string().required("Required"),
@@ -111,8 +112,8 @@ const LoginForm = () => {
                     {status ? (
                       <div className="validation-error">{status}</div>
                     ) : (
-                      <div />
-                    )}
+                        <div />
+                      )}
                     {allowPasswordResets ? (
                       <NavLink
                         className="Login__reset-password"
@@ -121,8 +122,8 @@ const LoginForm = () => {
                         Reset password?
                       </NavLink>
                     ) : (
-                      undefined
-                    )}
+                        undefined
+                      )}
                   </div>
                   <div className="Login__actions">
                     <Button

@@ -42,8 +42,8 @@ public class ChangePasswordResponse {
             return this;
         }
 
-        public ChangePasswordResponseBuilder withFailedOn(PasswordValidationFailureType ...failedOn) {
-            this.failedOn.addAll(Arrays.asList(failedOn));
+        public ChangePasswordResponseBuilder withFailedOn(List<PasswordValidationFailureType> failedOn) {
+            this.failedOn.addAll(failedOn);
             this.changeSucceeded = false;
             return this;
         }

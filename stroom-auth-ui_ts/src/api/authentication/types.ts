@@ -17,6 +17,10 @@ export interface ChangePasswordRequest {
   redirectUrl: string;
 }
 
+export interface ChangePasswordResponse {
+  failedOn: string[];
+  changeSucceeded: boolean;
+}
 export interface ResetPasswordRequest {
   password: string;
 }
