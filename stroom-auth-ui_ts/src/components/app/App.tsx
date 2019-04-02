@@ -21,7 +21,7 @@ import "./App.css";
 import Login from "src/components/login";
 import LoggedOut from "src/components/loggedOut";
 import { UserCreate, UserEdit, UserSearch } from "src/components/users";
-import { TokenCreate, TokenSearch, TokenEdit } from "src/components/tokens";
+import { CreateToken, SearchToken, TokenEdit } from "src/components/tokens";
 import { PathNotFound } from "src/components/pathNotFound";
 import {
   ResetPassword,
@@ -180,7 +180,7 @@ const App = () => {
               path={"/tokens"}
               render={() =>
                 isLoggedIn ? (
-                  <TokenSearch />
+                  <SearchToken />
                 ) : (
                     <AuthenticationRequest
                       referrer="/tokens"
@@ -197,7 +197,7 @@ const App = () => {
               path={"/token/newApiToken"}
               render={() =>
                 isLoggedIn ? (
-                  <TokenCreate />
+                  <CreateToken />
                 ) : (
                     <AuthenticationRequest
                       referrer="/token/newApiToken"

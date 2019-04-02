@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import TokenCreate from './CreateToken';
-import EditToken from './EditToken';
-import TokenSearch from './SearchToken';
+import { CreateToken, EditToken } from './Create';
+import { SearchToken } from './Search';
 
-export { TokenCreate, EditToken as TokenEdit, TokenSearch }
+export { CreateToken, EditToken as TokenEdit, SearchToken }
