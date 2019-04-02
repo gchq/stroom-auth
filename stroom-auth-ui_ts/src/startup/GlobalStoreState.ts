@@ -1,7 +1,7 @@
 import { StoreState as AuthenticationStoreState } from "../api/authentication";
 import { StoreState as ConfigStoreState } from "../startup/config";
 import { StoreState as ErrorPageState } from "../components/ErrorPage";
-import { StoreState as UserStoreState } from "../components/users/api";
+import { StoreState as UserStoreState } from "../components/users";
 import { StoreState as TokenStoreState } from "../api/tokens";
 import { StoreState as TokenSearchStoreState } from "../api/tokenSearch";
 

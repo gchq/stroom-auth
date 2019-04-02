@@ -15,7 +15,7 @@
  */
 
 import { Action } from "redux";
-import { StoreState, User } from "./types";
+import { StoreState } from "../types";
 import {
   genUseActionCreators,
   prepareReducer

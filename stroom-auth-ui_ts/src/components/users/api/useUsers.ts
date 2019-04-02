@@ -4,7 +4,7 @@ import useApi from "./useApi";
 import { useActionCreators } from "./redux";
 import { useActionCreators as useAuthenticationActionCreators } from "../../../api/authentication";
 import { useApi as useAuthorisationApi } from "../../../api/authorisation";
-import { User } from "./types";
+import { User } from "../types";
 import { useRouter } from "../../../lib/useRouter";
 
 interface UserStateApi {

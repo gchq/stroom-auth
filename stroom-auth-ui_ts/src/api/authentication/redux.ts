@@ -1,7 +1,7 @@
 import { Action } from "redux";
 
 import { StoreState } from "./types";
-import { User } from "../../components/users/api";
+import { User } from "../../components/users";
 import {
   prepareReducer,
   genUseActionCreators

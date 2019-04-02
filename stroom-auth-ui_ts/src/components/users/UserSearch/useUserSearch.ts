@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useCallback } from "react";
 
-import { User } from "../api";
+import { User } from "../types";
 import { useApi } from "../api";
 
 interface UsersStateApi {
