@@ -15,74 +15,34 @@
  */
 
 import * as React from "react";
-import { useState, useEffect } from "react";
-import * as jwtDecode from "jwt-decode";
 
-import { useReduxState } from "../../lib/useReduxState";
 import ChangePasswordFields from "./ChangePasswordFields";
-import { useApi, useActionCreators } from "../../api/authentication";
-import useHttpQueryParam from "../../lib/useHttpQueryParam";
+import useResetPassword from './useResetPassword';
+import { useTokenValidityCheck } from './useTokenValidityCheck';
 
 const ResetPassword = () => {
-  const { resetPassword } = useApi();
 
-  const { showAlert } = useReduxState(({ user: { showAlert } }) => ({
-    showAlert
-  }));
-  const [missingToken, setMissingToken] = useState(false);
-  const [invalidToken, setInvalidToken] = useState(false);
-  const [expiredToken, setExpiredToken] = useState(false);
-  const { changeToken } = useActionCreators();
-
-  const token = useHttpQueryParam("token");
-
-  useEffect(() => {
-    let missingToken = false;
-    let invalidToken = false;
-    let expiredToken = false;
-
-    // Validate token
-    if (!token) {
-      missingToken = true;
-    } else {
-      try {
-        const decodedToken: { exp: number } = jwtDecode(token);
-        const now = new Date().getTime() / 1000;
-        expiredToken = decodedToken.exp <= now;
-      } catch (err) {
-        invalidToken = true;
-      }
-    }
-
-    setMissingToken(missingToken);
-    setInvalidToken(invalidToken);
-    setExpiredToken(expiredToken);
-
-    if (!missingToken && !invalidToken && !expiredToken && token) {
-      // If we have a valid token we're going to save it, so we can easily
-      // use it with getState when requesting the change.
-      changeToken(token);
-    }
-  }, [changeToken, setMissingToken, setInvalidToken, setExpiredToken]);
+  const { resetPassword } = useResetPassword();
+  const { isTokenMissing, isTokenInvalid, isTokenExpired } = useTokenValidityCheck();
 
   const failure = (
     <div>
       <h4>Unable to reset password!</h4>
-      {missingToken || invalidToken ? (
+      {isTokenMissing || isTokenInvalid ? (
         <p>I'm afraid this password reset link is broken.</p>
       ) : (
-        undefined
-      )}
-      {expiredToken ? (
+          undefined
+        )}
+      {isTokenExpired ? (
         <p>I'm afraid this password reset link has expired.</p>
       ) : (
-        undefined
-      )}
+          undefined
+        )}
     </div>
   );
 
-  const showFailure = missingToken || invalidToken || expiredToken;
-  const showChangePasswordFields = !showAlert && !showFailure;
+  const showFailure = isTokenMissing || isTokenInvalid || isTokenExpired;
+  const showChangePasswordFields = !showFailure;
   return (
     <div className="container">
       <div className="section">
@@ -96,8 +56,8 @@ const ResetPassword = () => {
             onSubmit={resetPassword}
           />
         ) : (
-          undefined
-        )}
+            undefined
+          )}
       </div>
     </div>
   );

@@ -14,33 +14,20 @@ import {
 import { FormikBag } from "formik";
 import { useActionCreators } from "./redux";
 import { GlobalStoreState } from "../../startup/GlobalStoreState";
-import { useActionCreators as useUserActionCreators } from "../../components/users/api";
-import useRouter from "../../lib/useRouter";
 import { ChangePasswordResponse } from '.';
 
 interface Api {
   apiLogin: (credentials: Credentials) => Promise<LoginResponse>;
-  resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
+  resetPassword: (resetPasswordRequest: ResetPasswordRequest) => Promise<ChangePasswordResponse>;
   changePassword: (changePasswordRequest: ChangePasswordRequest) => Promise<ChangePasswordResponse>;
-  submitPasswordChangeRequest: (
-    formData: any,
-    formikBag: FormikBag<any, any>
-  ) => void;
-  isPasswordValid: (
-    passwordValidationRequest: PasswordValidationRequest
-  ) => Promise<PasswordValidationResponse>;
+  submitPasswordChangeRequest: (formData: any, formikBag: FormikBag<any, any>) => Promise<void>;
+  isPasswordValid: (passwordValidationRequest: PasswordValidationRequest) => Promise<PasswordValidationResponse>;
 }
 
 export const useApi = (): Api => {
   const store = useContext(StoreContext);
   const { httpGetJson, httpPostJsonResponse } = useHttpClient();
   const { showLoader } = useActionCreators();
-  const { history } = useRouter();
-
-  const {
-    showChangePasswordErrorMessage,
-    hideChangePasswordErrorMessage
-  } = useUserActionCreators();
 
   if (!store) {
     throw new Error("Could not get Redux Store for processing Thunks");
@@ -78,73 +65,34 @@ export const useApi = (): Api => {
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
       const state: GlobalStoreState = store.getState();
-      hideChangePasswordErrorMessage();
-      const url = `${
-        state.config.values.authenticationServiceUrl
-        }/changePassword/`;
+      const url = `${state.config.values.authenticationServiceUrl}/changePassword/`;
       const {
         password,
         oldPassword,
         email,
-        redirectUrl
       } = changePasswordRequest;
 
       return httpPostJsonResponse(url, {
         body: JSON.stringify({ newPassword: password, oldPassword, email })
       })
-    },
-    [hideChangePasswordErrorMessage, showChangePasswordErrorMessage]
+    }, []
   );
 
   const resetPassword = useCallback(
     (resetPasswordRequest: ResetPasswordRequest) => {
       const state: GlobalStoreState = store.getState();
       const newPassword = resetPasswordRequest.password;
-      const stroomUiUrl = state.config.values.stroomUiUrl;
-      const url = `${
-        state.config.values.authenticationServiceUrl
-        }/resetPassword/`;
-
-      httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) }).then(
-        response => {
-          if (response.changeSucceeded) {
-            if (stroomUiUrl !== undefined) {
-              window.location.href = stroomUiUrl;
-            } else {
-              console.error("No stroom UI url available for redirect!");
-            }
-          } else {
-            let errorMessage = [];
-            if (response.failedOn.includes("COMPLEXITY")) {
-              errorMessage.push(
-                "Your new password does not meet the complexity requirements"
-              );
-            }
-            if (response.failedOn.includes("LENGTH")) {
-              errorMessage.push("Your new password is too short");
-            }
-            showChangePasswordErrorMessage(errorMessage);
-          }
-        }
-      );
-    },
-    [showChangePasswordErrorMessage]
+      const url = `${state.config.values.authenticationServiceUrl}/resetPassword/`;
+      return httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) });
+    }, []
   );
 
   const submitPasswordChangeRequest = useCallback(
-    (formData: any, formikBag: FormikBag<any, any>) => {
+    (formData: any) => {
       const state: GlobalStoreState = store.getState();
-      const { setSubmitting } = formikBag;
-      const url = `${state.config.values.authenticationServiceUrl}/reset/${
-        formData.email
-        }`;
-
-      httpGetJson(url, {}).then(() => {
-        setSubmitting(false);
-        history.push("/confirmPasswordResetEmail");
-      });
-    },
-    []
+      const url = `${state.config.values.authenticationServiceUrl}/reset/${formData.email}`;
+      return httpGetJson(url, {});
+    }, []
   );
 
   const isPasswordValid = useCallback(
@@ -156,8 +104,7 @@ export const useApi = (): Api => {
       return httpPostJsonResponse(url, {
         body: JSON.stringify(passwordValidationRequest)
       });
-    },
-    []
+    }, []
   );
 
   return {

@@ -1,7 +1,6 @@
 import { useCallback, useReducer } from "react";
 
 import useApi from "../api/useApi";
-import { useActionCreators } from "../api/redux";
 import { useActionCreators as useAuthenticationActionCreators } from "../../../api/authentication";
 import { useApi as useAuthorisationApi } from "../../../api/authorisation";
 import { User } from "../types";
@@ -12,7 +11,7 @@ import useUserState from "./useUserState";
  * This hook connects the REST API calls to the Redux Store.
  */
 const useUsers = () => {
-  const { toggleIsSaving, toggleAlertVisibility } = useActionCreators();
+  // const { toggleIsSaving, toggleAlertVisibility } = useActionCreators();
   const { history } = useRouter();
 
   const {
@@ -44,21 +43,11 @@ const useUsers = () => {
   const { change: updateUserUsingApi } = useApi();
   const updateUser = useCallback(
     (user: User) => {
-      updateUserUsingApi(user)
-        .then(response => {
-          // clearUser();// TODO: we're leaving this page so the state will be lost, so we probably don't need to clear the user.
-
-          // dispatch({type:"save_user_being_edited", user:undefined})
-          // saveUserBeingEdited(undefined);
-          toggleAlertVisibility(true, "User has been updated");
-          toggleIsSaving(false);
-          history.push("/userSearch");
-        })
-        .catch(error => {
-          toggleIsSaving(false);
-        });
+      updateUserUsingApi(user).then(() => {
+        history.push("/userSearch");
+      });
     },
-    [updateUserUsingApi, clearUser, toggleAlertVisibility, toggleIsSaving]
+    [updateUserUsingApi, clearUser]
   );
 
   /**
@@ -68,27 +57,14 @@ const useUsers = () => {
   const { add: createUserUsingApi } = useApi();
   const createUser = useCallback(
     (user: User) => {
-      createUserUsingApi(user)
-        .then(newUserId => {
-          toggleIsSaving(true);
-          createAuthorisationUser(user.email).then(newUserId => {
-            setIsCreating(false);
-            toggleAlertVisibility(true, "User has been created");
-            toggleIsSaving(false);
-            history.push("/userSearch");
-          });
-        })
-        .catch(error => {
-          toggleIsSaving(false);
+      createUserUsingApi(user).then(newUserId => {
+        createAuthorisationUser(user.email).then(newUserId => {
+          setIsCreating(false);
+          history.push("/userSearch");
         });
+      });
     },
-    [
-      createUserUsingApi,
-      createAuthorisationUser,
-      setIsCreating,
-      toggleAlertVisibility,
-      toggleIsSaving
-    ]
+    [createUserUsingApi, createAuthorisationUser, setIsCreating]
   );
 
   /**
