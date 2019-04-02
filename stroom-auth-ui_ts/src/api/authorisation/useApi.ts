@@ -18,7 +18,7 @@ import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useHttpClient from "../useHttpClient";
-import { GlobalStoreState } from "../../startup/GlobalStoreState";
+import { GlobalStoreState } from "src/startup/GlobalStoreState";
 
 interface Api {
   createUser: (userEmail: string) => Promise<void>;
@@ -32,7 +32,7 @@ export const useApi = (): Api => {
     const reduxState: GlobalStoreState = store.getState();
     const url = `${
       reduxState.config.values.authorisationServiceUrl
-    }/createUser?id=${userEmail}`;
+      }/createUser?id=${userEmail}`;
     return httpPostEmptyResponse(url, {});
   }, []);
 

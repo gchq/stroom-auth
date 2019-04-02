@@ -3,7 +3,7 @@ import { useContext, useCallback } from "react";
 
 import useHttpClient from "../useHttpClient";
 import { Filter } from "react-table";
-import { GlobalStoreState } from "../../startup/GlobalStoreState";
+import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { Token } from "../tokens";
 import { TokenSearchRequest, TokenSearchResponse } from "./types";
 import { useActionCreators as useTokenSearchActionCreators } from "../tokenSearch";
@@ -38,7 +38,7 @@ const useApi = (): Api => {
         const nextState = !token.enabled;
         const url = `${
           state.config.values.tokenServiceUrl
-        }/${tokenId}/state/?enabled=${nextState}`;
+          }/${tokenId}/state/?enabled=${nextState}`;
         return httpGetEmptyResponse(url);
       } else {
         throw Error(

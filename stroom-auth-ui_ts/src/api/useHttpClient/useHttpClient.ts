@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 
-import { useActionCreators as useErrorActionCreators } from "../../components/ErrorPage";
+import { useActionCreators as useErrorActionCreators } from "src/components/ErrorPage";
 
 import handleStatus from "./handleStatus";
 import { useContext } from "react";
 import { StoreContext } from "redux-react-hook";
 import useRouter from "src/lib/useRouter";
-import { GlobalStoreState } from "../../startup/GlobalStoreState";
+import { GlobalStoreState } from "src/startup/GlobalStoreState";
 
 /**
  * A wrapper around fetch that can be used to de-duplicate GET calls to the same resources.

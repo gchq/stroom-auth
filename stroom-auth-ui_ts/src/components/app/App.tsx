@@ -18,25 +18,25 @@ import * as React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
 import "./App.css";
-import Login from "../../components/login";
-import LoggedOut from "../../components/loggedOut";
-import { UserCreate, UserEdit, UserSearch } from "../../components/users";
-import { TokenCreate, TokenSearch, TokenEdit } from "../../components/tokens";
-import { PathNotFound } from "../../components/pathNotFound";
+import Login from "src/components/login";
+import LoggedOut from "src/components/loggedOut";
+import { UserCreate, UserEdit, UserSearch } from "src/components/users";
+import { TokenCreate, TokenSearch, TokenEdit } from "src/components/tokens";
+import { PathNotFound } from "src/components/pathNotFound";
 import {
   ResetPassword,
   ChangePassword,
   ConfirmPasswordResetEmail,
   ResetPasswordRequest
-} from "../../components/password";
-import AuthenticationRequest from "../../startup/authentication/AuthenticationRequest";
-import ErrorPage from "../../components/ErrorPage";
-import HandleAuthenticationResponse from "../../startup/authentication/HandleAuthenticationResponse";
-import Loader from "../../components/Loader";
-import Unauthorised from "../../components/unauthorised";
-import useConfig from "../../startup/config/useConfig";
+} from "src/components/password";
+import AuthenticationRequest from "src/startup/authentication/AuthenticationRequest";
+import ErrorPage from "src/components/ErrorPage";
+import HandleAuthenticationResponse from "src/startup/authentication/HandleAuthenticationResponse";
+import Loader from "src/components/Loader";
+import Unauthorised from "src/components/unauthorised";
+import useConfig from "src/startup/config/useConfig";
 import useReduxState from "src/lib/useReduxState";
-import { useUsers } from "../../components/users/api";
+import { useUsers } from "src/components/users/api";
 
 const App = () => {
   const config = useConfig();

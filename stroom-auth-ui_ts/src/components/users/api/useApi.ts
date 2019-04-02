@@ -18,7 +18,7 @@ import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useHttpClient from "../../../api/useHttpClient";
-import { GlobalStoreState } from "../../../startup/GlobalStoreState";
+import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { User } from "../types";
 
 interface Api {
@@ -101,7 +101,7 @@ export const useApi = (): Api => {
     const state: GlobalStoreState = store.getState();
     const url = `${
       state.config.values.userServiceUrl
-    }/?fromEmail=&usersPerPage=100&orderBy=id`;
+      }/?fromEmail=&usersPerPage=100&orderBy=id`;
     return httpGetJson(url);
   }, []);
 

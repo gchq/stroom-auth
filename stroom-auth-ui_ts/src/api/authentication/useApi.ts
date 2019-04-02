@@ -13,7 +13,7 @@ import {
 } from "./types";
 import { FormikBag } from "formik";
 import { useActionCreators } from "./redux";
-import { GlobalStoreState } from "../../startup/GlobalStoreState";
+import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { ChangePasswordResponse } from '.';
 
 interface Api {

@@ -15,7 +15,7 @@
  */
 
 import useHttpClient from "../useHttpClient";
-import { GlobalStoreState } from "../../startup/GlobalStoreState";
+import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { StoreContext } from "redux-react-hook";
 import { Token } from "./types";
 import { useActionCreators as useTokenActionCreators } from "./redux";
@@ -79,7 +79,7 @@ export const useApi = (): Api => {
       const tokenId = state.token.lastReadToken.id;
       const url = `${
         state.config.values.tokenServiceUrl
-      }/${tokenId}/state/?enabled=${nextState}`;
+        }/${tokenId}/state/?enabled=${nextState}`;
       return httpGetEmptyResponse(url);
     }, [])
   };
