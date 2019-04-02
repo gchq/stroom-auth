@@ -4,7 +4,7 @@ import useApi from "./useApi";
 import { TokenSearchRequest } from '../tokenSearch/types';
 import { useActionCreators as useTokenActionCreators, Token } from '../tokens';
 import { useActionCreators } from "./redux";
-import { useApi as useTokenSearchApi, useActionCreators as useTokenSearchActionCreators } from '../tokenSearch';
+import { useActionCreators as useTokenSearchActionCreators } from '../tokenSearch';
 import { useRouter } from "src/lib/useRouter";
 
 /**
@@ -31,7 +31,7 @@ const useTokens = () => {
     updateResults,
     selectRow,
   } = useTokenSearchActionCreators();
-  const { performTokenSearch: performTokenSearchUsingApi } = useTokenSearchApi();
+  const { performTokenSearch: performTokenSearchUsingApi } = useApi();
   const performTokenSearch = useCallback(
     (tokenSearchRequest: TokenSearchRequest) => {
       performTokenSearchUsingApi(tokenSearchRequest)

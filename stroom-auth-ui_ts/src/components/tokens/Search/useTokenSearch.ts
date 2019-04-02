@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
-import { useApi, useActionCreators } from '../tokenSearch';
+import { useActionCreators } from 'src/api/tokenSearch';
+import { useApi } from 'src/api/tokens';
 
 /**
  * This hook connects the REST API calls to the Redux Store.
