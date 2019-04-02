@@ -24,13 +24,11 @@ import { reducer as login } from "../api/users";
 import { reducer as token } from "../api/tokens";
 import { reducer as tokenSearch } from "../api/tokenSearch";
 import { reducer as user } from "../api/users";
-import { reducer as userSearch } from "../api/userSearch";
 
 export default combineReducers({
   login,
   errorPage,
   user,
-  userSearch,
   token,
   tokenSearch,
   authentication,

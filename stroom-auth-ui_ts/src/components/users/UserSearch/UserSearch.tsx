@@ -24,33 +24,16 @@ import Toggle from "react-toggle";
 import "../../../styles/table-small.css";
 import "./UserSearch.css";
 import Button from "../../Button";
-import useReduxState from "../../../lib/useReduxState";
 import useRouter from "../../../lib/useRouter";
 import useUserSearch from "../../../api/userSearch/useUserSearch";
-import { useActionCreators as useUserSearchActionCreators } from "../../../api/userSearch";
 import { useState } from "react";
-import { useUsers } from "../../../api/users";
 import { getColumnFormat } from "./tableCustomisations";
 
 const UserSearch = () => {
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
-  const { deleteUser } = useUsers();
-  const { users, remove } = useUserSearch();
-  const { selectRow } = useUserSearchActionCreators();
+  const { users, selectedUser, remove, changeSelectedUser } = useUserSearch();
   const { history } = useRouter();
-  const { showSearchLoader, selectedUserRowId } = useReduxState(
-    ({
-      userSearch: { showSearchLoader, selectedUserRowId },
-      user: { errorStatus, errorText }
-    }) => ({
-      showSearchLoader,
-      selectedUserRowId,
-      errorStatus,
-      errorText
-    })
-  );
-
-  const deleteButtonDisabled = !selectedUserRowId;
+  const deleteButtonDisabled = !selectedUser;
 
   return (
     <div className="UserSearch-main">
@@ -73,7 +56,7 @@ const UserSearch = () => {
         ) : (
           <Button
             className="toolbar-button-small primary"
-            onClick={() => history.push(`/user/${selectedUserRowId}`)}
+            onClick={() => history.push(`/user/${selectedUser}`)}
             icon="edit"
             text="View/edit"
           />
@@ -83,8 +66,8 @@ const UserSearch = () => {
           <Button
             disabled={deleteButtonDisabled}
             onClick={() => {
-              if (!!selectedUserRowId) {
-                remove(selectedUserRowId);
+              if (!!selectedUser) {
+                remove(selectedUser);
               }
             }}
             className="toolbar-button-small primary"
@@ -106,7 +89,7 @@ const UserSearch = () => {
           <ReactTable
             data={users}
             className="-striped -highlight UserSearch-table"
-            columns={getColumnFormat(selectedUserRowId)}
+            columns={getColumnFormat(selectedUser)}
             defaultSorted={[
               {
                 id: "email",
@@ -115,7 +98,7 @@ const UserSearch = () => {
             ]}
             filterable={isFilteringEnabled}
             showPagination
-            loading={showSearchLoader}
+            // loading={showSearchLoader} //TODO
             defaultPageSize={50}
             style={{
               // We use 'calc' because we want full height but need
@@ -136,11 +119,11 @@ const UserSearch = () => {
             getTrProps={(state: any, rowInfo: RowInfo) => {
               let selected = false;
               if (rowInfo) {
-                selected = rowInfo.row.id === selectedUserRowId;
+                selected = rowInfo.row.id === selectedUser;
               }
               return {
                 onClick: (target: any, event: any) => {
-                  selectRow(rowInfo.row.id);
+                  changeSelectedUser(rowInfo.row.id);
                 },
                 className: selected
                   ? "table-row-small table-row-selected"
