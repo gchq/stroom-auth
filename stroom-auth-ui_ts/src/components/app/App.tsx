@@ -15,7 +15,7 @@
  */
 
 import * as React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import "./App.css";
 import Login from "../../components/login";
@@ -108,7 +108,12 @@ const App = () => {
             <Route exact path={"/logout"} component={LoggedOut} />
             <Route exact path={"/loggedOut"} component={LoggedOut} />
 
-            <Route exact path={"/newUser"} component={NewUser} />
+            <Route
+              exact
+              path={"/newUser"}
+              render={() => <Redirect to="/user" />}
+            />
+
             <Route
               exact
               path={"/user"}
