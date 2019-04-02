@@ -6,48 +6,7 @@ import { useActionCreators as useAuthenticationActionCreators } from "../../../a
 import { useApi as useAuthorisationApi } from "../../../api/authorisation";
 import { User } from "../types";
 import { useRouter } from "../../../lib/useRouter";
-
-interface UserStateApi {
-  user?: User;
-  setUser: (user: User) => void;
-  clearUser: () => void;
-}
-
-type UsersState = {
-  userBeingEdited?: User;
-};
-
-type SetUserAction = {
-  type: "set_user";
-  user?: User;
-};
-type ClearUserAction = {
-  type: "clear_user";
-};
-
-const reducer = (
-  state: UsersState,
-  action: SetUserAction | ClearUserAction
-) => {
-  switch (action.type) {
-    case "set_user":
-      return { ...state, userBeingEdited: action.user };
-
-    default:
-      return state;
-  }
-};
-
-const useUsersState = (): UserStateApi => {
-  const [userState, dispatch] = useReducer(reducer, {
-    userBeingEdited: undefined
-  });
-  return {
-    user: userState.userBeingEdited,
-    setUser: (user: User | undefined) => dispatch({ type: "set_user", user }),
-    clearUser: () => dispatch({ type: "clear_user" })
-  };
-};
+import useUserState from "./useUserState";
 
 /**
  * This hook connects the REST API calls to the Redux Store.
@@ -56,7 +15,7 @@ const useUsers = () => {
   const { toggleIsSaving, toggleAlertVisibility } = useActionCreators();
   const { history } = useRouter();
 
-  const { user, setUser, clearUser } = useUsersState();
+  const { user, setUser, clearUser } = useUserState();
 
   /**
    * Deletes the user and then refreshes our browser cache of users.
