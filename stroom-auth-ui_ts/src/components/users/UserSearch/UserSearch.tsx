@@ -25,7 +25,7 @@ import "../../../styles/table-small.css";
 import "./UserSearch.css";
 import Button from "../../Button";
 import useRouter from "../../../lib/useRouter";
-import useUserSearch from "../../../api/userSearch/useUserSearch";
+import useUserSearch from "./useUserSearch";
 import { useState } from "react";
 import { getColumnFormat } from "./tableCustomisations";
 
