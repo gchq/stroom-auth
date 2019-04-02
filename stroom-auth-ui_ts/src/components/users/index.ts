@@ -16,7 +16,7 @@
 
 import UserCreate from "./edit/CreateUser";
 import UserEdit from "./edit/EditUser";
-import UserSearch from "./UserSearch";
+import UserSearch from "./search";
 import NewUser from "./NewUser";
 import AsyncUserSelect from "./UserSelect";
 import { User, StoreState } from "./types";

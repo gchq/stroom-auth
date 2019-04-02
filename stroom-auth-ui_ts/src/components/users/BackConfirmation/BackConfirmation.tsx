@@ -20,9 +20,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { isEmpty } from "ramda";
 
 import "./BackConfirmation.css";
-import Button from "../Button";
+import Button from "../../Button";
 import { FormikErrors } from "formik";
-import { User } from "../../components/users";
+import { User } from "../types";
 
 const BackConfirmation = ({
   isOpen,
