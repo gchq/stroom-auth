@@ -29,7 +29,7 @@ const reducer = (
   }
 };
 
-const usePasswordState = (): {
+const useChangePasswordState = (): {
   showChangeConfirmation: boolean;
   errorMessages: string[];
   setShowChangeConfirmation: (showChangeConfirmation: boolean) => void;
@@ -48,4 +48,4 @@ const usePasswordState = (): {
   };
 };
 
-export default usePasswordState;
+export default useChangePasswordState;

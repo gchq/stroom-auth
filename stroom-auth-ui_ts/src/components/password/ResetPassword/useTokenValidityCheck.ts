@@ -31,12 +31,6 @@ export const useTokenValidityCheck = () => {
     setMissingToken(missingToken);
     setInvalidToken(invalidToken);
     setExpiredToken(expiredToken);
-
-    // if (!missingToken && !invalidToken && !expiredToken && token) {
-    // If we have a valid token we're going to save it, so we can easily
-    // use it with getState when requesting the change.
-    // changeToken(token);
-    // }
   });
   return { isTokenMissing, isTokenInvalid, isTokenExpired };
 }

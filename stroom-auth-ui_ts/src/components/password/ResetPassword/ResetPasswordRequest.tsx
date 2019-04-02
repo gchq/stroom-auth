@@ -18,12 +18,12 @@ import * as React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import Button from "../Button";
-import "../../styles/Layout.css";
-import { hasAnyProps } from "../../lib/lang";
-import "../../styles/index.css";
-import { useApi } from "../../api/authentication";
-import useReduxState from "../../lib/useReduxState";
+import Button from "src/components/Button";
+import "../../../styles/Layout.css";
+import { hasAnyProps } from "src/lib/lang";
+import "../../../styles/index.css";
+import { useApi } from "src/api/authentication";
+import useReduxState from "src/lib/useReduxState";
 
 const ValidationSchema = Yup.object().shape({
   email: Yup.string().required("Required")

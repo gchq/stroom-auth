@@ -21,10 +21,10 @@ import * as queryString from "query-string";
 
 import "./ChangePassword.css";
 import "src/styles/Layout.css";
-import ChangePasswordFields from "./ChangePasswordFields";
+import ChangePasswordFields from "../ChangePasswordFields";
 
 import useRouter from "src/lib/useRouter";
-import usePassword from './usePassword';
+import usePassword from './useChangePassword';
 
 const ChangePassword = () => {
   const { changePassword, errorMessages, showChangeConfirmation } = usePassword();
@@ -73,6 +73,7 @@ const ChangePassword = () => {
           redirectUrl={redirectUrl}
           showOldPasswordField={true}
           onSubmit={changePassword}
+        // errorMessages={errorMessages}
         />
     }
     else if (showChangeConfirmation && !redirectUrl) {

@@ -28,25 +28,27 @@ const ChangePasswordFields = ({
   email,
   redirectUrl,
   showOldPasswordField,
-  onSubmit
+  onSubmit,
+  // errorMessages: errorMessages
 }: {
   email?: string;
   redirectUrl?: string;
   showOldPasswordField: boolean;
   onSubmit: Function;
+  // errorMessages?: string[];
 }) => {
   const {
-    changePasswordErrorMessage,
+    // changePasswordErrorMessage,
     authenticationServiceUrl,
     idToken
   } = useReduxState(
     ({
-      user: { changePasswordErrorMessage },
+      // user: { changePasswordErrorMessage },
       config: {
         values: { authenticationServiceUrl }
       },
       authentication: { idToken }
-    }) => ({ changePasswordErrorMessage, authenticationServiceUrl, idToken })
+    }) => ({ /*changePasswordErrorMessage,*/ authenticationServiceUrl, idToken })
   );
   return (
     <Formik
@@ -136,16 +138,16 @@ const ChangePasswordFields = ({
               </div>
 
               <div className="ChangePassword-controls">
-                <div>
-                  {changePasswordErrorMessage.map(
-                    (error: string, index: string) => (
+                {/* <div>
+                  {errorMessages.map(
+                    (error: string, index: number) => (
                       <p key={index} className="ChangePassword-errorMessage">
                         {error}
                       </p>
                     )
                   )}
                 </div>
-                <br />
+                <br /> */}
 
                 <div className="ChangePassword-actions">
                   <Button

@@ -16,9 +16,9 @@
 
 import * as React from "react";
 
-import Button from "../Button";
-import "../../styles/Layout.css";
-import useReduxState from "../../lib/useReduxState";
+import Button from "src/components/Button";
+import "../../../styles/Layout.css";
+import useReduxState from "src/lib/useReduxState";
 
 const ConfirmPasswordResetEmail = () => {
   const { stroomUiUrl } = useReduxState(

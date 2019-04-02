@@ -2,8 +2,7 @@
 import { useCallback, useContext } from "react";
 
 import { StoreContext } from "redux-react-hook";
-import { useApi, ChangePasswordRequest } from "src/api/authentication";
-// import useResetPasswordState from './useResetPasswordState';
+import { useApi } from "src/api/authentication";
 import { FormikBag } from 'formik';
 import { useRouter } from 'src/lib/useRouter';
 import { ResetPasswordRequest, ChangePasswordResponse } from 'src/api/authentication/types';
@@ -14,7 +13,6 @@ const useResetPassword = (): {
   resetPassword: (resetPasswordRequest: ResetPasswordRequest) => void;
 } => {
 
-  // const { } = useResetPasswordState();
   const { history } = useRouter();
   const { submitPasswordChangeRequest: submitPasswordChangeRequestUsingApi, resetPassword: resetPasswordUsingApi } = useApi();
   const submitPasswordChangeRequest = useCallback(
@@ -35,7 +33,6 @@ const useResetPassword = (): {
           if (stroomUiUrl !== undefined) {
             window.location.href = stroomUiUrl;
           } else {
-            // setShowChangeConfirmation(true);
             console.error("No stroom UI url available for redirect!");
           }
         } else {
@@ -48,7 +45,6 @@ const useResetPassword = (): {
           if (response.failedOn.includes("LENGTH")) {
             errorMessage.push("Your new password is too short");
           }
-          // showChangePasswordErrorMessage(errorMessage);
         }
       }
       );

@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 
 import { useApi, ChangePasswordRequest } from "src/api/authentication";
-import usePasswordState from './usePasswordState';
+import usePasswordState from './useChangePasswordState';
 
-const usePassword = (): {
+const useChangePassword = (): {
   errorMessages: string[];
   showChangeConfirmation: boolean;
   changePassword: (changePasswordRequest: ChangePasswordRequest) => void;
@@ -47,4 +47,4 @@ const usePassword = (): {
   return { changePassword, errorMessages, showChangeConfirmation };
 };
 
-export default usePassword;
+export default useChangePassword;

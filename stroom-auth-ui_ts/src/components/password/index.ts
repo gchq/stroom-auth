@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-import ResetPassword from './ResetPassword';
+import { ResetPassword, ConfirmPasswordResetEmail, ResetPasswordRequest } from './ResetPassword';
 import ChangePassword from './ChangePassword';
-import ConfirmPasswordResetEmail from './ConfirmPasswordResetEmail';
-import ResetPasswordRequest from './ResetPasswordRequest';
 
 export {
   ChangePassword,

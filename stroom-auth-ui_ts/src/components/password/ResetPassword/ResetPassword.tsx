@@ -16,7 +16,7 @@
 
 import * as React from "react";
 
-import ChangePasswordFields from "./ChangePasswordFields";
+import ChangePasswordFields from "../ChangePasswordFields";
 import useResetPassword from './useResetPassword';
 import { useTokenValidityCheck } from './useTokenValidityCheck';
 
@@ -54,6 +54,7 @@ const ResetPassword = () => {
           <ChangePasswordFields
             showOldPasswordField={false}
             onSubmit={resetPassword}
+          // errorMessages={errorMessages}
           />
         ) : (
             undefined
