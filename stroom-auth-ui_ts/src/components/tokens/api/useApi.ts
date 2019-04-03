@@ -18,7 +18,7 @@ import useHttpClient from "src/api/useHttpClient";
 import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { StoreContext } from "redux-react-hook";
 import { Token, SearchConfig, TokenSearchRequest, TokenSearchResponse } from "./types";
-import { useActionCreators as useTokenActionCreators } from "./redux";
+// import { useActionCreators as useTokenActionCreators } from "./redux";
 import { useContext, useCallback } from "react";
 import { Filter } from 'react-table';
 
@@ -40,11 +40,11 @@ export const useApi = (): Api => {
     httpDeleteEmptyResponse,
     httpGetEmptyResponse
   } = useHttpClient();
-  const {
-    toggleIsCreating,
-    hideErrorMessage,
-    showErrorMessage
-  } = useTokenActionCreators();
+  // const {
+  //   toggleIsCreating,
+  //   hideErrorMessage,
+  //   showErrorMessage
+  // } = useTokenActionCreators();
 
   return {
     deleteToken: useCallback((tokenId) => {
@@ -56,8 +56,8 @@ export const useApi = (): Api => {
     createToken: useCallback(
       (email: string) => {
         const state: GlobalStoreState = store.getState();
-        toggleIsCreating();
-        hideErrorMessage();
+        // toggleIsCreating();
+        // hideErrorMessage();
         return httpPostJsonResponse(state.config.values.tokenServiceUrl, {
           body: JSON.stringify({
             userEmail: email,
@@ -66,7 +66,8 @@ export const useApi = (): Api => {
           })
         });
       },
-      [toggleIsCreating, hideErrorMessage, showErrorMessage]
+      // [toggleIsCreating, hideErrorMessage, showErrorMessage]
+      []
     ),
 
     fetchApiKey: useCallback((apiKeyId: string) => {
