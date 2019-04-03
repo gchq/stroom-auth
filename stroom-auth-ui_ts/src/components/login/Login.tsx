@@ -26,10 +26,10 @@ import { hasAnyProps } from "src/lib/lang";
 import "src/styles/Layout.css";
 import icon from "src/icon.png";
 import { useActionCreators, useAuthentication } from "src/api/authentication";
-import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
 
 import "./Login.css";
+import { useConfig } from 'src/startup/config';
 
 const LoginValidationSchema = Yup.object().shape({
   email: Yup.string().required("Required"),
@@ -37,15 +37,7 @@ const LoginValidationSchema = Yup.object().shape({
 });
 
 const LoginForm = () => {
-  const { allowPasswordResets } = useReduxState(
-    ({
-      config: {
-        values: { allowPasswordResets }
-      }
-    }) => ({
-      allowPasswordResets
-    })
-  );
+  const { allowPasswordResets } = useConfig();
   const { login } = useAuthentication();
   const { setRedirectUrl, setClientId, setSessionId } = useActionCreators();
   const {

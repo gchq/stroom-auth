@@ -19,19 +19,16 @@ import { useEffect } from "react";
 
 import "src/styles/Layout.css";
 import Button from "src/components/Button";
-import useReduxState from "src/lib/useReduxState";
 import { useActionCreators } from "src/api/authentication";
 
 import "./LoggedOut.css";
+import { useConfig } from 'src/startup/config';
 
 const LoggedOut = () => {
-  const { stroomUiUrl } = useReduxState(
-    ({
-      config: {
-        values: { stroomUiUrl }
-      }
-    }) => ({ stroomUiUrl })
-  );
+  const { stroomUiUrl } = useConfig();
+  if (!stroomUiUrl) {
+    throw Error("Cannot find stroomUiUrl configuration!");
+  }
   const { changeLoggedInUser, deleteToken } = useActionCreators();
 
   useEffect(() => {

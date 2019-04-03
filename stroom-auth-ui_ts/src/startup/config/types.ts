@@ -1,16 +1,13 @@
 export interface Config {
-  advertisedUrl?: string;
-  allowPasswordResets?: string;
-  appClientId?: string;
-  authenticationServiceUrl: string;
+  authenticationServiceUrl?: string;
   authorisationServiceUrl?: string;
-  stroomUiUrl: string;
-  tokenServiceUrl: any;
-  userServiceUrl: string;
-}
-
-export interface StoreState {
-  tokenServiceUrl: any;
-  isReady: boolean;
-  values: Config;
+  userServiceUrl?: string;
+  tokenServiceUrl?: string;
+  stroomBaseServiceUrl?: string;
+  allowPasswordResets?: string;
+  advertisedUrl?: string;
+  authUsersUiUrl?: string;
+  authTokensUiUrl?: string;
+  stroomUiUrl?: string;
+  appClientId?: string;
 }

@@ -18,16 +18,11 @@ import * as React from "react";
 
 import Button from "src/components/Button";
 import "src/styles/Layout.css";
-import useReduxState from "src/lib/useReduxState";
+import { useConfig } from 'src/startup/config';
 
 const ConfirmPasswordResetEmail = () => {
-  const { stroomUiUrl } = useReduxState(
-    ({
-      config: {
-        values: { stroomUiUrl }
-      }
-    }) => ({ stroomUiUrl })
-  );
+  const { stroomUiUrl } = useConfig();
+  if (!stroomUiUrl) throw Error("Config not ready or misconfigured!");
   return (
     <div className="container">
       <h3>Password reset</h3>

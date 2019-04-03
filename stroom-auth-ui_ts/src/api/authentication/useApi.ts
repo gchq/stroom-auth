@@ -15,6 +15,7 @@ import { FormikBag } from "formik";
 import { useActionCreators } from "./redux";
 import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { ChangePasswordResponse } from '.';
+import { useConfig } from 'src/startup/config';
 
 interface Api {
   apiLogin: (credentials: Credentials) => Promise<LoginResponse>;
@@ -28,6 +29,7 @@ export const useApi = (): Api => {
   const store = useContext(StoreContext);
   const { httpGetJson, httpPostJsonResponse } = useHttpClient();
   const { showLoader } = useActionCreators();
+  const { authenticationServiceUrl, appClientId } = useConfig();
 
   if (!store) {
     throw new Error("Could not get Redux Store for processing Thunks");
@@ -36,11 +38,7 @@ export const useApi = (): Api => {
   const apiLogin = useCallback(
     (credentials: Credentials) => {
       const { email, password } = credentials;
-      const state: GlobalStoreState = store.getState();
-      const authenticationServiceUrl =
-        state.config.values.authenticationServiceUrl;
       const loginServiceUrl = `${authenticationServiceUrl}/authenticate`;
-      const clientId = state.config.values.appClientId;
 
       // We need to post the sessionId in the credentials, otherwise the
       // authenticationService will have no way of marking the session as valid.
@@ -55,7 +53,7 @@ export const useApi = (): Api => {
           email,
           password,
           sessionId,
-          requestingClientId: clientId
+          requestingClientId: appClientId
         })
       });
     },
@@ -65,7 +63,7 @@ export const useApi = (): Api => {
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
       const state: GlobalStoreState = store.getState();
-      const url = `${state.config.values.authenticationServiceUrl}/changePassword/`;
+      const url = `${authenticationServiceUrl}/changePassword/`;
       const {
         password,
         oldPassword,
@@ -82,7 +80,7 @@ export const useApi = (): Api => {
     (resetPasswordRequest: ResetPasswordRequest) => {
       const state: GlobalStoreState = store.getState();
       const newPassword = resetPasswordRequest.password;
-      const url = `${state.config.values.authenticationServiceUrl}/resetPassword/`;
+      const url = `${authenticationServiceUrl}/resetPassword/`;
       return httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) });
     }, []
   );
@@ -90,7 +88,7 @@ export const useApi = (): Api => {
   const submitPasswordChangeRequest = useCallback(
     (formData: any) => {
       const state: GlobalStoreState = store.getState();
-      const url = `${state.config.values.authenticationServiceUrl}/reset/${formData.email}`;
+      const url = `${authenticationServiceUrl}/reset/${formData.email}`;
       return httpGetJson(url, {});
     }, []
   );
@@ -98,9 +96,7 @@ export const useApi = (): Api => {
   const isPasswordValid = useCallback(
     (passwordValidationRequest: PasswordValidationRequest) => {
       const state: GlobalStoreState = store.getState();
-      const url = `${
-        state.config.values.authenticationServiceUrl
-        }/isPasswordValid`;
+      const url = `${authenticationServiceUrl}/isPasswordValid`;
       return httpPostJsonResponse(url, {
         body: JSON.stringify(passwordValidationRequest)
       });

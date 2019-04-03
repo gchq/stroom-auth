@@ -23,6 +23,7 @@ import useReduxState from "src/lib/useReduxState";
 import { PasswordValidationRequest } from "src/api/authentication/types";
 import { hasAnyProps } from "src/lib/lang";
 import { validateAsync } from "src/components/users/validation";
+import { useConfig } from 'src/startup/config';
 
 const ChangePasswordFields = ({
   email,
@@ -37,18 +38,10 @@ const ChangePasswordFields = ({
   onSubmit: Function;
   // errorMessages?: string[];
 }) => {
-  const {
-    // changePasswordErrorMessage,
-    authenticationServiceUrl,
-    idToken
-  } = useReduxState(
-    ({
-      // user: { changePasswordErrorMessage },
-      config: {
-        values: { authenticationServiceUrl }
-      },
-      authentication: { idToken }
-    }) => ({ /*changePasswordErrorMessage,*/ authenticationServiceUrl, idToken })
+  const { authenticationServiceUrl } = useConfig();
+  if (!authenticationServiceUrl) throw Error("Config not ready or misconfigured!");
+
+  const { idToken } = useReduxState(({ authentication: { idToken } }) => ({ idToken })
   );
   return (
     <Formik

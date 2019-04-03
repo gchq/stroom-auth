@@ -23,20 +23,15 @@ import "src/styles/Layout.css";
 import { hasAnyProps } from "src/lib/lang";
 import "src/styles/index.css";
 import { useApi } from "src/api/authentication";
-import useReduxState from "src/lib/useReduxState";
+import { useConfig } from 'src/startup/config';
 
 const ValidationSchema = Yup.object().shape({
   email: Yup.string().required("Required")
 });
 
 const ResetPasswordRequest = () => {
-  const { stroomUiUrl } = useReduxState(
-    ({
-      config: {
-        values: { stroomUiUrl }
-      }
-    }) => ({ stroomUiUrl })
-  );
+  const { stroomUiUrl } = useConfig();
+  if (!stroomUiUrl) throw Error("Config not ready or misconfigured!");
   const { submitPasswordChangeRequest } = useApi();
   return (
     <Formik

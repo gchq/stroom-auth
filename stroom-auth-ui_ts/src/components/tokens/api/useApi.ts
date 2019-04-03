@@ -21,6 +21,7 @@ import { Token, SearchConfig, TokenSearchRequest, TokenSearchResponse } from "./
 // import { useActionCreators as useTokenActionCreators } from "./redux";
 import { useContext, useCallback } from "react";
 import { Filter } from 'react-table';
+import { useConfig } from 'src/startup/config';
 
 interface Api {
   deleteToken: (tokenId: string) => Promise<void>;
@@ -40,6 +41,8 @@ export const useApi = (): Api => {
     httpDeleteEmptyResponse,
     httpGetEmptyResponse
   } = useHttpClient();
+  const { tokenServiceUrl } = useConfig();
+  if (!tokenServiceUrl) throw Error("Configuration not ready or misconfigured!");
   // const {
   //   toggleIsCreating,
   //   hideErrorMessage,
@@ -49,7 +52,7 @@ export const useApi = (): Api => {
   return {
     deleteToken: useCallback((tokenId) => {
       const state: GlobalStoreState = store.getState();
-      const url = `${state.config.values.tokenServiceUrl}/${tokenId}`;
+      const url = `${tokenServiceUrl}/${tokenId}`;
       return httpDeleteEmptyResponse(url);
     }, []),
 
@@ -58,7 +61,7 @@ export const useApi = (): Api => {
         const state: GlobalStoreState = store.getState();
         // toggleIsCreating();
         // hideErrorMessage();
-        return httpPostJsonResponse(state.config.values.tokenServiceUrl, {
+        return httpPostJsonResponse(tokenServiceUrl, {
           body: JSON.stringify({
             userEmail: email,
             tokenType: "api",
@@ -72,14 +75,14 @@ export const useApi = (): Api => {
 
     fetchApiKey: useCallback((apiKeyId: string) => {
       const state: GlobalStoreState = store.getState();
-      const url = `${state.config.values.tokenServiceUrl}/${apiKeyId}`;
+      const url = `${tokenServiceUrl}/${apiKeyId}`;
       return httpGetJson(url);
     }, []),
 
     toggleState: useCallback((tokenId: string, nextState: boolean) => {
       const state: GlobalStoreState = store.getState();
       const url = `${
-        state.config.values.tokenServiceUrl
+        tokenServiceUrl
         }/${tokenId}/state/?enabled=${nextState}`;
       return httpGetEmptyResponse(url);
     }, []),
@@ -110,7 +113,7 @@ export const useApi = (): Api => {
         // We only want to see API keys, not user keys.
         filters.token_type = "API";
 
-        const url = `${state.config.values.tokenServiceUrl}/search`;
+        const url = `${tokenServiceUrl}/search`;
         return httpPostJsonResponse(url, {
           body: JSON.stringify({
             page: searchConfig.page,

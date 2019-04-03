@@ -18,8 +18,6 @@ import * as React from "react";
 import { useState } from "react";
 import AsyncSelect from "react-select/lib/Async";
 
-import useReduxState from "src/lib/useReduxState";
-
 import "./asyncUserSelect.css";
 import { User } from "../types";
 
@@ -66,19 +64,11 @@ const customStyles = {
   })
 };
 
-const AsyncUserSelect = (props: { onChange: Function }) => {
-  const { idToken, userServiceUrl } = useReduxState(
-    ({
-      authentication: { idToken },
-      config: {
-        values: { userServiceUrl }
-      }
-    }) => ({
-      idToken,
-      userServiceUrl
-    })
-  );
-  const { onChange } = props;
+//TODO: Obviously this isn't a hook, and therefore it can't use useConfig.
+// I had a go at converting it when I was just getting started with hooks 
+// and ran into some problems. Still needs doing.
+const AsyncUserSelect = (props: { onChange: Function, idToken: string, userServiceUrl: string }) => {
+  const { onChange, idToken, userServiceUrl } = props;
   // eslint-disable-next-line
   const [_, setInputValue] = useState("");
 

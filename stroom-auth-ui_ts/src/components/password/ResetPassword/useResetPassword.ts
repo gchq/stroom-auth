@@ -1,12 +1,11 @@
 
-import { useCallback, useContext } from "react";
-import { StoreContext } from "redux-react-hook";
+import { useCallback } from "react";
 import { FormikBag } from 'formik';
 
 import { useApi } from "src/api/authentication";
 import { useRouter } from 'src/lib/useRouter';
 import { ResetPasswordRequest, ChangePasswordResponse } from 'src/api/authentication/types';
-import { GlobalStoreState } from 'src/startup/GlobalStoreState';
+import { useConfig } from 'src/startup/config';
 
 const useResetPassword = (): {
   submitPasswordChangeRequest: (formData: any, formikBag: FormikBag<any, any>) => void;
@@ -23,12 +22,10 @@ const useResetPassword = (): {
     []
   );
 
-  const store = useContext(StoreContext);
+  const { stroomUiUrl } = useConfig();
   const resetPassword = useCallback((resetPasswordRequest: ResetPasswordRequest) => {
     resetPasswordUsingApi(resetPasswordRequest)
       .then((response: ChangePasswordResponse) => {
-        const state: GlobalStoreState = store.getState();
-        const stroomUiUrl = state.config.values.stroomUiUrl;
         if (response.changeSucceeded) {
           if (stroomUiUrl !== undefined) {
             window.location.href = stroomUiUrl;

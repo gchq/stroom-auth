@@ -10,17 +10,20 @@ import createStore from "./startup/store";
 import registerServiceWorker from "./registerServiceWorker";
 import useFontAwesome from "./lib/useFontAwesome";
 import { CustomRouter } from "./lib/useRouter";
+import { ConfigProvider } from './startup/config';
 
 const store = createStore();
 
 const AppWrapper: React.FunctionComponent = () => {
   useFontAwesome();
   return (
-    <StoreContext.Provider value={store}>
-      <CustomRouter>
-        <App />
-      </CustomRouter>
-    </StoreContext.Provider>
+    <ConfigProvider>
+      <StoreContext.Provider value={store}>
+        <CustomRouter>
+          <App />
+        </CustomRouter>
+      </StoreContext.Provider>
+    </ConfigProvider>
   );
 };
 

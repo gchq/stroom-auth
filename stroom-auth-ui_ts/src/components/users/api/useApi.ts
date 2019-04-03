@@ -21,6 +21,7 @@ import useHttpClient from "src/api/useHttpClient";
 import { GlobalStoreState } from "src/startup/GlobalStoreState";
 
 import { User } from "../types";
+import { useConfig } from 'src/startup/config';
 
 interface Api {
   add: (user: User) => Promise<void>;
@@ -39,10 +40,12 @@ export const useApi = (): Api => {
     httpPostJsonResponse,
     httpDeleteEmptyResponse
   } = useHttpClient();
+  const { userServiceUrl } = useConfig();
+  if (!userServiceUrl) throw Error("Configuration not ready or misconfigured!");
 
   const change = useCallback(user => {
     const reduxState: GlobalStoreState = store.getState();
-    const url = `${reduxState.config.values.userServiceUrl}/${user.id}`;
+    const url = `${userServiceUrl}/${user.id}`;
     return httpPutEmptyResponse(url, {
       body: JSON.stringify({
         email: user.email,
@@ -59,7 +62,7 @@ export const useApi = (): Api => {
 
   const add = useCallback(user => {
     const reduxState: GlobalStoreState = store.getState();
-    const url = reduxState.config.values.userServiceUrl;
+    const url = userServiceUrl;
     return httpPostJsonResponse(url, {
       body: JSON.stringify({
         email: user.email,
@@ -79,7 +82,7 @@ export const useApi = (): Api => {
    */
   const remove = useCallback((userId: string) => {
     const state: GlobalStoreState = store.getState();
-    const url = `${state.config.values.userServiceUrl}/${userId}`;
+    const url = `${userServiceUrl}/${userId}`;
     return httpDeleteEmptyResponse(url, {});
   }, []);
 
@@ -88,20 +91,20 @@ export const useApi = (): Api => {
    */
   const fetch = useCallback((userId: String) => {
     const state: GlobalStoreState = store.getState();
-    const url = `${state.config.values.userServiceUrl}/${userId}`;
+    const url = `${userServiceUrl}/${userId}`;
     return httpGetJson(url);
   }, []);
 
   const fetchCurrentUser = useCallback(() => {
     const state: GlobalStoreState = store.getState();
-    const url = `${state.config.values.userServiceUrl}/me`;
+    const url = `${userServiceUrl}/me`;
     return httpGetJson(url);
   }, []);
 
   const search = useCallback(() => {
     const state: GlobalStoreState = store.getState();
     const url = `${
-      state.config.values.userServiceUrl
+      userServiceUrl
       }/?fromEmail=&usersPerPage=100&orderBy=id`;
     return httpGetJson(url);
   }, []);

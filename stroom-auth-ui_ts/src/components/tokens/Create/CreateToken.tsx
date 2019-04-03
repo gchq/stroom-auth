@@ -25,6 +25,7 @@ import { AsyncUserSelect } from "src/components/users";
 import useTokens from "./useTokens";
 
 import "./CreateTokenForm.css";
+import { useConfig } from 'src/startup/config';
 
 type DropDownValues = {
   label: string;
@@ -34,6 +35,10 @@ type DropDownValues = {
 const TokenCreateForm = () => {
   const { history } = useRouter();
   const { createToken } = useTokens();
+  const { userServiceUrl } = useConfig();
+  if (!userServiceUrl) throw Error("Configuration not ready or misconfigured!");
+
+  const idToken = "TODO";//TODO: waiting on authentication hooks to be brought in
 
   return (
     <div className="CreateTokenForm-card">
@@ -68,7 +73,7 @@ const TokenCreateForm = () => {
                         <div className="label-container">
                           <label />
                         </div>
-                        <AsyncUserSelect onChange={setFieldValue} />
+                        <AsyncUserSelect onChange={setFieldValue} userServiceUrl={userServiceUrl} idToken={idToken} />
                       </div>
                     </div>
                     <div className="CreateTokenForm-errorMessage">

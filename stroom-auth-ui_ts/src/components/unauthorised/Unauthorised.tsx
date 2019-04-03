@@ -23,19 +23,15 @@ import "src/styles/Layout.css";
 import useHttpQueryParam from "src/lib/useHttpQueryParam";
 
 import "./Unauthorised.css";
+import { useConfig } from 'src/startup/config';
 
 const Unauthorised = () => {
   const [isExpiredToken, setIsExpiredToken] = useState(false);
   const [isAccountLocked, setIsAccountLocked] = useState(false);
-  const { stroomUiUrl } = useReduxState(
-    ({
-      config: {
-        values: { stroomUiUrl }
-      }
-    }) => ({
-      stroomUiUrl
-    })
-  );
+
+  const { stroomUiUrl } = useConfig();
+  if (!stroomUiUrl) throw Error("Configuration not ready of misconfigured!");
+
   const reason = useHttpQueryParam("reason");
   useEffect(() => {
     if (reason === "expired_token") {

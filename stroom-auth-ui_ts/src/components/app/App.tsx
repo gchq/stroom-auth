@@ -34,12 +34,11 @@ import ErrorPage from "src/components/ErrorPage";
 import HandleAuthenticationResponse from "src/startup/authentication/HandleAuthenticationResponse";
 import Loader from "src/components/Loader";
 import Unauthorised from "src/components/unauthorised";
-import useConfig from "src/startup/config/useConfig";
 import useReduxState from "src/lib/useReduxState";
 import { useUsers } from "src/components/users/api";
+import { useConfig } from 'src/startup/config';
 
 const App = () => {
-  const config = useConfig();
   const idToken = useReduxState(({ authentication: { idToken } }) => idToken);
   const isLoggedIn = !!idToken;
   const { fetchCurrentUser } = useUsers();
@@ -51,18 +50,18 @@ const App = () => {
   }, [isLoggedIn, fetchCurrentUser]);
 
   const {
-    isReady,
-    values: {
-      authenticationServiceUrl,
-      authorisationServiceUrl,
-      advertisedUrl,
-      appClientId
-    }
-  } = config;
+    // isReady,
+    // values: {
+    authenticationServiceUrl,
+    authorisationServiceUrl,
+    advertisedUrl,
+    appClientId
+    // }
+  } = useConfig();
 
   if (
     !(
-      isReady &&
+      // isReady &&
       !!advertisedUrl &&
       !!appClientId &&
       !!authenticationServiceUrl &&

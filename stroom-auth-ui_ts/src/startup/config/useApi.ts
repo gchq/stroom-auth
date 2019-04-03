@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Crown Copyright
+ * Copyright 2018 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as React from "react";
+import { Config } from "./types";
+import useHttpClient from 'src/api/useHttpClient';
 
-import { combineReducers } from "redux";
+interface Api {
+  fetchConfig: () => Promise<Config>;
+}
 
-import { authorisationReducer as authorisation } from "../startup/authentication";
-import { reducer as authentication } from "../api/authentication";
-import { reducer as errorPage } from "../components/ErrorPage";
+const useApi = (): Api => {
+  const { httpGetJson } = useHttpClient();
 
-export default combineReducers({
-  errorPage,
-  authentication,
-  authorisation,
-});
+  const fetchConfig = React.useCallback(() => {
+    return httpGetJson("/config.json", {}, false);
+  }, [httpGetJson]);
+
+  return { fetchConfig };
+};
+
+export { Api, useApi };
+
+export default useApi;

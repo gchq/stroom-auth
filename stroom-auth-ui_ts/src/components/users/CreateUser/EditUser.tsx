@@ -31,24 +31,16 @@ import BackConfirmation from "../BackConfirmation";
 import UserFields from "./UserFields";
 import { UserValidationSchema, validateAsync } from "../validation";
 import { useUsers } from "../api";
+import { useConfig } from 'src/startup/config';
 
 const UserEditForm = () => {
   const { updateUser, fetchUser, user } = useUsers();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
   const userId = useIdFromPath("user/");
-  const { idToken, authenticationServiceUrl } = useReduxState(
-    ({
-      authentication: { idToken },
-      config: {
-        values: { authenticationServiceUrl }
-      }
-    }) => ({
-      idToken,
-      authenticationServiceUrl
-    })
-  );
-
+  const { idToken } = useReduxState(({ authentication: { idToken }, }) => ({ idToken, }));
+  const { authenticationServiceUrl } = useConfig();
+  if (!authenticationServiceUrl) throw Error("Configuration not ready or misconfigured!");
   useEffect(() => {
     if (!!userId && !user) fetchUser(userId);
   }, [fetchUser]);

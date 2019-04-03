@@ -1,21 +1,7 @@
-import { useEffect } from "react";
+import * as React from "react";
 
-import useReduxState from "src/lib/useReduxState";
-import { GlobalStoreState } from "src/startup/GlobalStoreState";
+import ConfigContext from "./ConfigContext";
 
-import { useApi } from "./config";
-
-export const useConfig = () => {
-  const api = useApi();
-
-  useEffect(() => {
-    api.fetchConfig();
-  }, []);
-
-  // Get data from and subscribe to the store
-  const config = useReduxState(({ config }: GlobalStoreState) => config);
-
-  return config;
-};
+export const useConfig = () => React.useContext(ConfigContext);
 
 export default useConfig;

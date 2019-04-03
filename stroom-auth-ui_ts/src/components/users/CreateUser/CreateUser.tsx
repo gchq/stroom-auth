@@ -29,6 +29,7 @@ import UserFields from "./UserFields";
 import { NewUserValidationSchema, validateAsync } from "../validation";
 import { User } from "../types";
 import { useUsers } from "../api";
+import { useConfig } from 'src/startup/config';
 
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.
@@ -46,14 +47,9 @@ const initialValues = {
 const UserCreateForm = ({ }) => {
   const { createUser } = useUsers();
   const { history } = useRouter();
-  const { authenticationServiceUrl, idToken } = useReduxState(
-    ({
-      config: {
-        values: { authenticationServiceUrl }
-      },
-      authentication: { idToken }
-    }) => ({ authenticationServiceUrl, idToken })
-  );
+  const { authenticationServiceUrl } = useConfig();
+  if (!authenticationServiceUrl) throw Error("Configuration not ready or misconfigured!");
+  const { idToken } = useReduxState(({ authentication: { idToken } }) => ({ idToken }));
   return (
     <Formik
       initialValues={initialValues}

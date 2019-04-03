@@ -1,5 +1,5 @@
-import { reducer } from "./config";
 import { useConfig } from "./useConfig";
-import { Config, StoreState } from "./types";
+import { Config } from "./types";
+import ConfigProvider from "./ConfigProvider";
 
-export { Config, StoreState, useConfig, reducer };
+export { Config, useConfig, ConfigProvider };
