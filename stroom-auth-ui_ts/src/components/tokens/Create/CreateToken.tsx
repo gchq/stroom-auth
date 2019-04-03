@@ -20,10 +20,9 @@ import { Formik } from "formik";
 import "src/styles/Layout.css";
 import "src/styles/form.css";
 import Button from "src/components/Button";
-import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
 import { AsyncUserSelect } from "src/components/users";
-import { useTokens } from "src/api/tokens";
+import useTokens from "./useTokens";
 
 import "./CreateTokenForm.css";
 
@@ -34,9 +33,6 @@ type DropDownValues = {
 
 const TokenCreateForm = () => {
   const { history } = useRouter();
-  const { errorMessage } = useReduxState(
-    ({ token: { errorMessage, isCreating } }) => ({ isCreating, errorMessage })
-  );
   const { createToken } = useTokens();
 
   return (
@@ -77,7 +73,7 @@ const TokenCreateForm = () => {
                     </div>
                     <div className="CreateTokenForm-errorMessage">
                       {" "}
-                      {errorMessage}
+                      {/* {errorMessage} */}
                     </div>
                   </div>
                 </div>

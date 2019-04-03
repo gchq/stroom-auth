@@ -1,6 +1,6 @@
-import { useApi } from 'src/api/tokens/useApi';
+import { useApi } from '../../api/useApi';
 import { useCallback } from 'react';
-import { SearchConfig } from 'src/api/tokens/types';
+import { SearchConfig } from '../../api/types';
 
 const useDeleteToken = (
   lastSearchConfig: SearchConfig,

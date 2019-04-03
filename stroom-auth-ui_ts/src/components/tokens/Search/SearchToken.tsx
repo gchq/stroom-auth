@@ -140,7 +140,7 @@ const TokenSearch = () => {
                     className
                   };
                 }}
-                onFetchData={(state, instance) => {
+                onFetchData={(state) => {
                   performTokenSearch({
                     pageSize: state.pageSize,
                     page: state.page,

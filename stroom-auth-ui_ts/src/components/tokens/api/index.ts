@@ -1,5 +1,4 @@
 import useApi from "./useApi";
-import useTokens from "./useTokens";
 import { StoreState, Token } from "./types";
 import { useActionCreators, reducer } from "./redux";
 
@@ -9,5 +8,4 @@ export {
     reducer,
     useActionCreators,
     useApi,
-    useTokens
 };

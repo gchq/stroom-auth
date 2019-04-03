@@ -1,4 +1,4 @@
-import useToggleState from './useToggleState';
+import useToggleState from './actions/useToggleState';
 import { useTokenSearchState } from './useTokenSearchState';
 import usePerformTokenSearch from './actions/usePerformTokenSearch';
 import useDeleteToken from './actions/useDeleteToken';

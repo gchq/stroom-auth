@@ -10,7 +10,14 @@ export interface StoreState {
 
 export interface Token {
   id: string;
-  enabled: any;
+  enabled: boolean;
+  user_email: string;
+  expires_on: string;
+  issued_on: string;
+  issued_by_user: string;
+  updated_on: string;
+  updated_by_user: string;
+  token: string;
 }
 export type SearchConfig = {
   filters: Filter[],

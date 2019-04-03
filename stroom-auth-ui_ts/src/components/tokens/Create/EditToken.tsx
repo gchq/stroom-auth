@@ -26,20 +26,15 @@ import Button from "src/components/Button";
 import Loader from "src/components/Loader2";
 import useIdFromPath from "src/lib/useIdFromPath";
 import { OnCopy, ByCopy } from "src/components/auditCopy";
-import { useReduxState } from "src/lib/useReduxState";
 import { useRouter } from "src/lib/useRouter";
-import { useTokens } from "src/api/tokens";
+import useTokens from "./useTokens";
 
 import "./TokenEdit.css";
 
 const EditToken = () => {
-  const { token } = useReduxState(({ token: { lastReadToken } }) => ({
-    token: lastReadToken
-  }));
   const { history } = useRouter();
-  const { toggleEnabledState } = useTokens();
+  const { toggleEnabledState, fetchApiKey, token } = useTokens();
 
-  const { fetchApiKey } = useTokens();
   const tokenId = useIdFromPath("token/");
   React.useEffect(() => {
     if (!!tokenId) {
@@ -77,7 +72,7 @@ const EditToken = () => {
                       icons={false}
                       checked={token.enabled}
                       onChange={event =>
-                        !!tokenId ? toggleEnabledState() : undefined
+                        !!tokenId ? toggleEnabledState(tokenId, !token.enabled) : undefined
                       }
                     />
                   </div>

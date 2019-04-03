@@ -20,11 +20,9 @@ import { authorisationReducer as authorisation } from "../startup/authentication
 import { reducer as authentication } from "../api/authentication";
 import { reducer as config } from "../startup/config";
 import { reducer as errorPage } from "../components/ErrorPage";
-import { reducer as token } from "../api/tokens";
 
 export default combineReducers({
   errorPage,
-  token,
   authentication,
   authorisation,
   config

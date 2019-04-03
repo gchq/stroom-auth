@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import useApi from 'src/api/tokens/useApi';
-import { SearchConfig } from 'src/api/tokens/types';
+import useApi from '../../api/useApi';
+import { SearchConfig } from '../../api/types';
 
 const usePerformTokenSearch = (
   setResults: Function,

@@ -1,15 +1,12 @@
-import { useApi } from 'src/api/tokens';
+import { useApi } from '../../api/';
 import { useCallback } from 'react';
 
-/**
- * Toggles the state of a token
- */
 const useToggleState = (toggleEnabled: Function) => {
   const { toggleState } = useApi();
   return useCallback(
     (tokenId: string, nextState: boolean) => {
       toggleState(tokenId, nextState)
-        .then(() => toggleEnabled(tokenId));
+        .then(() => toggleEnabled(nextState));
     },
     [toggleState]
   );

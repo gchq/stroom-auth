@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import useHttpClient from "../useHttpClient";
+import useHttpClient from "src/api/useHttpClient";
 import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { StoreContext } from "redux-react-hook";
 import { Token, SearchConfig, TokenSearchRequest, TokenSearchResponse } from "./types";
@@ -26,8 +26,6 @@ interface Api {
   deleteToken: (tokenId: string) => Promise<void>;
   createToken: (email: string) => Promise<Token>;
   fetchApiKey: (tokenId: string) => Promise<Token>;
-  /** Will toggle the last token read if there's no tokenId passed. Uses last read token otherwise */
-  toggleEnabledState: () => Promise<Token>;
   performTokenSearch: (
     tokenSearchRequest: TokenSearchRequest
   ) => Promise<TokenSearchResponse>;
@@ -75,16 +73,6 @@ export const useApi = (): Api => {
       const state: GlobalStoreState = store.getState();
       const url = `${state.config.values.tokenServiceUrl}/${apiKeyId}`;
       return httpGetJson(url);
-    }, []),
-
-    toggleEnabledState: useCallback(() => {
-      const state: GlobalStoreState = store.getState();
-      const nextState = state.token.lastReadToken.enabled ? "false" : "true";
-      const tokenId = state.token.lastReadToken.id;
-      const url = `${
-        state.config.values.tokenServiceUrl
-        }/${tokenId}/state/?enabled=${nextState}`;
-      return httpGetEmptyResponse(url);
     }, []),
 
     toggleState: useCallback((tokenId: string, nextState: boolean) => {
