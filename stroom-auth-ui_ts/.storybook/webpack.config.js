@@ -77,6 +77,11 @@ module.exports = ({ config, mode }) => {
   //config.plugins.push(new TSDocgenPlugin()); // optional
   config.resolve.extensions.push(".ts", ".tsx");
 
+  config.resolve.modules = [
+    ...(config.resolve.modules || []),
+    path.resolve("./")
+  ];
+
   // Return the altered config
   return config;
 };
