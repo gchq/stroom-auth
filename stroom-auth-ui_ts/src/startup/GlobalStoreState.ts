@@ -3,7 +3,6 @@ import { StoreState as ConfigStoreState } from "../startup/config";
 import { StoreState as ErrorPageState } from "../components/ErrorPage";
 import { StoreState as UserStoreState } from "../components/users";
 import { StoreState as TokenStoreState } from "../api/tokens";
-import { StoreState as TokenSearchStoreState } from "../api/tokenSearch";
 
 export interface GlobalStoreState {
   config: ConfigStoreState;
@@ -11,5 +10,4 @@ export interface GlobalStoreState {
   errorPage: ErrorPageState;
   user: UserStoreState;
   token: TokenStoreState;
-  tokenSearch: TokenSearchStoreState;
 }

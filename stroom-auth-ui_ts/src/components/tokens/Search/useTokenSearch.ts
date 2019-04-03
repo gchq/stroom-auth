@@ -1,27 +1,31 @@
-import { useCallback } from "react";
+import useToggleState from './useToggleState';
+import { useTokenSearchState } from './useTokenSearchState';
+import usePerformTokenSearch from './actions/usePerformTokenSearch';
+import useDeleteToken from './actions/useDeleteToken';
 
-import { useActionCreators } from 'src/api/tokenSearch';
-import { useApi } from 'src/api/tokens';
-
-/**
- * This hook connects the REST API calls to the Redux Store.
- */
 const useTokenSearch = () => {
 
-    /**
-     * Deletes the user and then refreshes our browser cache of users.
-     */
-    const { toggleState: toggleStateUsingApi } = useApi();
-    const { toggleEnabled: toggleStateUsingRedux } = useActionCreators();
-    const toggleState = useCallback(
-        (tokenId: string) => {
-            toggleStateUsingApi(tokenId)
-                .then(() => toggleStateUsingRedux(tokenId));
-        },
-        [toggleStateUsingRedux]
-    );
-
-    return { toggleState };
+    const {
+        selectedTokenRowId,
+        setSelectedTokenRowId,
+        results,
+        setResults,
+        totalPages,
+        setTotalPages,
+        setLastUsedSearchConfig,
+        lastUsedSearchConfig,
+        toggleEnabled
+    } = useTokenSearchState();
+    return {
+        selectedTokenRowId,
+        setSelectedTokenRowId,
+        results,
+        searchConfig: lastUsedSearchConfig,
+        totalPages,
+        toggleState: useToggleState(toggleEnabled),
+        performTokenSearch: usePerformTokenSearch(setResults, setLastUsedSearchConfig, setTotalPages, lastUsedSearchConfig),
+        deleteSelectedToken: useDeleteToken(lastUsedSearchConfig, setSelectedTokenRowId, selectedTokenRowId),
+    }
 };
 
 export default useTokenSearch;

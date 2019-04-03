@@ -19,145 +19,31 @@ import { useState } from "react";
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
 import "rc-checkbox/assets/index.css";
-import ReactTable, {
-  RowRenderProps,
-  ReactTableFunction,
-  RowInfo,
-  Column
-} from "react-table";
+import ReactTable, { RowInfo } from "react-table";
 import "react-table/react-table.css";
-import * as dateFormat from "dateformat";
 
 import "src/styles/index.css";
 import "src/styles/table-small.css";
 import "src/styles/toggle-small.css";
 import "src/styles/toolbar-small.css";
 import Button from "src/components/Button";
-import { useActionCreators as useTokenSearchActionCreators } from "src/api/tokenSearch";
-import { useReduxState } from "src/lib/useReduxState";
 import { useRouter } from "src/lib/useRouter";
-import { useTokens } from "src/api/tokens";
 
 import "./TokenSearch.css";
-import useTokenSearch from "./useTokenSearch";
-
-/** There is a corresponding react-table type but doing it like this is neater. */
-type FilterProps = {
-  filter: any;
-  onChange: ReactTableFunction;
-};
-
-const getColumnFormat = (
-  selectedTokenRowId: string | undefined,
-  setEnabledStateOnToken: Function
-) => {
-  return [
-    {
-      Header: "",
-      accessor: "id",
-      Cell: (row: RowInfo): React.ReactNode => (
-        <div>
-          {selectedTokenRowId === row.row.value ? "selected" : "unselected"}
-        </div>
-      ),
-      filterable: false,
-      show: false
-    },
-    {
-      Header: "User",
-      accessor: "user_email",
-      maxWidth: 190
-    },
-    {
-      Header: "Enabled",
-      accessor: "enabled",
-      maxWidth: 80,
-      Cell: (row: RowInfo) =>
-        getEnabledCellRenderer(row, setEnabledStateOnToken),
-      Filter: ({ filter, onChange }: FilterProps) =>
-        getEnabledCellFilter(filter, onChange)
-    },
-    {
-      Header: "Expires on",
-      accessor: "expires_on",
-      Cell: (row: RowInfo) => formatDate(row.row.value),
-      filterable: false,
-      maxWidth: 165
-    },
-    {
-      Header: "Issued on",
-      accessor: "issued_on",
-      Cell: (row: RowInfo) => formatDate(row.row.value),
-      filterable: false,
-      maxWidth: 165
-    }
-  ] as Column[];
-};
-
-const getEnabledCellRenderer = (
-  row: RowRenderProps,
-  setEnabledStateOnToken: Function
-) => {
-  const state = row.original.enabled;
-  const tokenId = row.original.id;
-  return (
-    <div className="TokenSearch__table__checkbox">
-      <input
-        type="checkbox"
-        checked={state}
-        onChange={() => setEnabledStateOnToken(tokenId, !state)}
-      />
-    </div>
-  );
-};
-
-const getEnabledCellFilter = (filter: any, onChange: Function) => {
-  return (
-    <select
-      onChange={event => onChange(event.target.value)}
-      style={{ width: "100%" }}
-      value={filter ? filter.value : "all"}
-    >
-      <option value="">Show all</option>
-      <option value="true">Enabled only</option>
-      <option value="false">Disabled only</option>
-    </select>
-  );
-};
-
-const formatDate = (dateString: string) => {
-  const dateFormatString = "ddd mmm d yyyy, hh:MM:ss";
-  return dateString ? dateFormat(dateString, dateFormatString) : "";
-};
+import useTokenSearch from './useTokenSearch';
+import { getColumnFormat } from './tableCustomisations';
 
 const TokenSearch = () => {
   const {
-    showSearchLoader,
+    deleteSelectedToken,
+    performTokenSearch,
+    setSelectedTokenRowId,
+    selectedTokenRowId,
     results,
     totalPages,
-    selectedTokenRowId,
-    pageSize
-  } = useReduxState(
-    ({
-      tokenSearch: {
-        showSearchLoader,
-        results,
-        totalPages,
-        selectedTokenRowId,
-        lastUsedPageSize
-      }
-    }) => ({
-      showSearchLoader,
-      results,
-      totalPages,
-      selectedTokenRowId,
-      pageSize: lastUsedPageSize
-    })
-  );
-  const { deleteSelectedToken, performTokenSearch } = useTokens();
-  const { toggleState } = useTokenSearch();
+    searchConfig,
+    toggleState } = useTokenSearch();
   const { history } = useRouter();
-  const { selectRow } = useTokenSearchActionCreators();
 
   const [isFilteringEnabled, setFilteringEnabled] = useState(false);
   const noTokenSelected = !selectedTokenRowId;
@@ -222,9 +108,9 @@ const TokenSearch = () => {
                 filterable={isFilteringEnabled}
                 showPagination
                 showPageSizeOptions={false}
-                loading={showSearchLoader}
-                defaultPageSize={pageSize}
-                pageSize={pageSize}
+                // loading={showSearchLoader}
+                defaultPageSize={searchConfig.pageSize}
+                pageSize={searchConfig.pageSize}
                 style={{
                   // We use 'calc' because we want full height but need
                   // to account for the header. Obviously if the header height
@@ -249,7 +135,7 @@ const TokenSearch = () => {
                   className += enabled ? "" : " table-row-dimmed";
                   return {
                     onClick: () => {
-                      selectRow(rowInfo.row.id);
+                      setSelectedTokenRowId(rowInfo.row.id);
                     },
                     className
                   };
@@ -258,8 +144,8 @@ const TokenSearch = () => {
                   performTokenSearch({
                     pageSize: state.pageSize,
                     page: state.page,
-                    sorted: state.sorted,
-                    filtered: state.filtered
+                    sorting: state.sorted,
+                    filters: state.filtered
                   });
                 }}
               />

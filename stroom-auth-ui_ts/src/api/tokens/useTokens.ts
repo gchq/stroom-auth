@@ -1,21 +1,13 @@
 import { useCallback } from "react";
 
 import useApi from "./useApi";
-import { TokenSearchRequest } from '../tokenSearch/types';
 import { useActionCreators as useTokenActionCreators, Token } from '../tokens';
 import { useActionCreators } from "./redux";
-import { useActionCreators as useTokenSearchActionCreators } from '../tokenSearch';
 import { useRouter } from "src/lib/useRouter";
 
-/**
- * This hook connects the REST API calls to the Redux Store.
- */
 const useTokens = () => {
   const { history } = useRouter();
 
-  /**
-   * Deletes the user and then refreshes our browser cache of users.
-   */
   const { toggleEnabledState: toggleEnabledStateUsingApi } = useApi();
   const { toggleState } = useActionCreators();
   const toggleEnabledState = useCallback(
@@ -24,35 +16,6 @@ const useTokens = () => {
         .then(() => toggleState())
     },
     [toggleEnabledStateUsingApi]
-  );
-
-  const {
-    showSearchLoader,
-    updateResults,
-    selectRow,
-  } = useTokenSearchActionCreators();
-  const { performTokenSearch: performTokenSearchUsingApi } = useApi();
-  const performTokenSearch = useCallback(
-    (tokenSearchRequest: TokenSearchRequest) => {
-      performTokenSearchUsingApi(tokenSearchRequest)
-        .then(data => {
-          showSearchLoader(false);
-          updateResults(data);
-        })
-    },
-    [performTokenSearchUsingApi, showSearchLoader, updateResults]
-  );
-
-  const { deleteSelectedToken: deletedSelectedTokenUsingApi, } = useApi();
-  const deleteSelectedToken = useCallback(
-    () => {
-      deletedSelectedTokenUsingApi()
-        .then(() => {
-          performTokenSearch({});
-          selectRow('');
-        });
-    },
-    [deletedSelectedTokenUsingApi, performTokenSearchUsingApi]
   );
 
   const { toggleIsCreating } = useTokenActionCreators();
@@ -81,10 +44,8 @@ const useTokens = () => {
 
   return {
     toggleEnabledState,
-    deleteSelectedToken,
     createToken,
     fetchApiKey,
-    performTokenSearch
   }
 }
 

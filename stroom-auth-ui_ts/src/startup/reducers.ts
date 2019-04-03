@@ -21,12 +21,10 @@ import { reducer as authentication } from "../api/authentication";
 import { reducer as config } from "../startup/config";
 import { reducer as errorPage } from "../components/ErrorPage";
 import { reducer as token } from "../api/tokens";
-import { reducer as tokenSearch } from "../api/tokenSearch";
 
 export default combineReducers({
   errorPage,
   token,
-  tokenSearch,
   authentication,
   authorisation,
   config
