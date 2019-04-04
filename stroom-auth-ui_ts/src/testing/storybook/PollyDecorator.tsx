@@ -24,6 +24,7 @@ import { TestData } from "../testTypes";
 
 import resources from "./resources";
 import * as React from "react";
+import useHttpClient from 'src/api/useHttpClient';
 
 // Register the fetch adapter so its accessible by all future polly instances
 Polly.register(FetchAdapter);
