@@ -15,9 +15,8 @@
  */
 
 import useHttpClient from "src/api/useHttpClient";
-import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { Token, SearchConfig, TokenSearchRequest, TokenSearchResponse } from "./types";
-import { useContext, useCallback } from "react";
+import { useCallback } from "react";
 import { Filter } from 'react-table';
 import { useConfig } from 'src/startup/config';
 

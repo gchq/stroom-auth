@@ -33,12 +33,12 @@ import ErrorPage from "src/components/ErrorPage";
 import Loader from "src/components/Loader";
 import Unauthorised from "src/components/unauthorised";
 import { useConfig } from 'src/startup/config';
-import { HandleAuthenticationResponse, AuthenticationRequest, useAuthenticationContext } from 'src/startup/Authentication';
+import { useAuthenticationContext, HandleAuthenticationResponse, AuthenticationRequest } from 'src/startup/authentication';
 
 const App = () => {
   const { idToken } = useAuthenticationContext();
-  // const idToken = useReduxState(({ authentication: { idToken } }) => idToken);
   const isLoggedIn = !!idToken;
+  //FIXME
   // const { fetchCurrentUser } = useUsers();
 
   // React.useEffect(() => {
