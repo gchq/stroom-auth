@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FunctionComponent, useEffect } from "react";
+import * as React from "react";
 
 import { sendAuthenticationRequest } from "./authentication";
 
@@ -26,20 +26,20 @@ interface Props {
   appPermission?: string;
 }
 
-const AuthenticationRequest: FunctionComponent<Props> = ({
+const AuthenticationRequest: React.FunctionComponent<Props> = ({
   referrer,
   uiUrl,
   appClientId,
   authenticationServiceUrl,
-  appPermission
+  appPermission,
 }) => {
-  useEffect(() => {
+  React.useEffect(() => {
     sendAuthenticationRequest(
       referrer,
       uiUrl,
       appClientId,
       authenticationServiceUrl,
-      appPermission
+      appPermission,
     );
   }, []);
 

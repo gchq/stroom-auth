@@ -1,17 +1,18 @@
 import { useCallback, useReducer } from "react";
 
-import { useActionCreators as useAuthenticationActionCreators } from "src/api/authentication";
 import { useApi as useAuthorisationApi } from "src/api/authorisation";
 import { useRouter } from "src/lib/useRouter";
 
 import useUserState from "./useUserState";
 import { User } from "../types";
 import useApi from "../api/useApi";
+import { useAuthenticationContext } from 'src/startup/Authentication';
 
 /**
  * This hook connects the REST API calls to the Redux Store.
  */
 const useUsers = () => {
+  const { idToken } = useAuthenticationContext();
   // const { toggleIsSaving, toggleAlertVisibility } = useActionCreators();
   const { history } = useRouter();
 
@@ -87,20 +88,20 @@ const useUsers = () => {
   /**
    * Fetches a user by id/email, and puts it into the redux state.
    */
-  const { fetchCurrentUser: apiFetchCurrentUser } = useApi();
-  const { setCurrentUser } = useAuthenticationActionCreators();
-  const fetchCurrentUser = useCallback(() => {
-    apiFetchCurrentUser().then(users => {
-      setCurrentUser(users[0]);
-    });
-  }, [setCurrentUser, apiFetchCurrentUser]);
+  // const { fetchCurrentUser: apiFetchCurrentUser } = useApi();
+  // const { setCurrentUser } = useAuthenticationActionCreators();
+  // const fetchCurrentUser = useCallback(() => {
+  //   apiFetchCurrentUser().then(users => {
+  //     setCurrentUser(users[0]);
+  //   });
+  // }, [setCurrentUser, apiFetchCurrentUser]);
 
   return {
     // deleteUser,
     updateUser,
     createUser,
     fetchUser,
-    fetchCurrentUser,
+    // fetchCurrentUser,
     user
   };
 };

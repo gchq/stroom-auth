@@ -1,28 +1,25 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { StoreContext } from "redux-react-hook";
 
 import "./styles/index.css";
 import "./index.css";
 import "./startup/icons";
 import App from "./components/app";
-import createStore from "./startup/store";
 import registerServiceWorker from "./registerServiceWorker";
 import useFontAwesome from "./lib/useFontAwesome";
 import { CustomRouter } from "./lib/useRouter";
-import { ConfigProvider } from './startup/config';
-
-const store = createStore();
+import { ConfigProvider } from "./startup/config";
+import { AuthenticationContextProvider } from "./startup/Authentication";
 
 const AppWrapper: React.FunctionComponent = () => {
   useFontAwesome();
   return (
     <ConfigProvider>
-      <StoreContext.Provider value={store}>
+      <AuthenticationContextProvider>
         <CustomRouter>
           <App />
         </CustomRouter>
-      </StoreContext.Provider>
+      </AuthenticationContextProvider>
     </ConfigProvider>
   );
 };

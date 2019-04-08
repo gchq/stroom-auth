@@ -1,5 +1,4 @@
 import * as Cookies from "cookies-js";
-import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useHttpClient from "../useHttpClient";
@@ -26,14 +25,9 @@ interface Api {
 }
 
 export const useApi = (): Api => {
-  const store = useContext(StoreContext);
   const { httpGetJson, httpPostJsonResponse } = useHttpClient();
   const { showLoader } = useActionCreators();
   const { authenticationServiceUrl, appClientId } = useConfig();
-
-  if (!store) {
-    throw new Error("Could not get Redux Store for processing Thunks");
-  }
 
   const apiLogin = useCallback(
     (credentials: Credentials) => {
@@ -54,15 +48,14 @@ export const useApi = (): Api => {
           password,
           sessionId,
           requestingClientId: appClientId
-        })
-      });
+        }),
+      }, false);
     },
     [httpPostJsonResponse, showLoader]
   );
 
   const changePassword = useCallback(
     (changePasswordRequest: ChangePasswordRequest) => {
-      const state: GlobalStoreState = store.getState();
       const url = `${authenticationServiceUrl}/changePassword/`;
       const {
         password,
@@ -72,34 +65,31 @@ export const useApi = (): Api => {
 
       return httpPostJsonResponse(url, {
         body: JSON.stringify({ newPassword: password, oldPassword, email })
-      })
+      }, false)
     }, []
   );
 
   const resetPassword = useCallback(
     (resetPasswordRequest: ResetPasswordRequest) => {
-      const state: GlobalStoreState = store.getState();
       const newPassword = resetPasswordRequest.password;
       const url = `${authenticationServiceUrl}/resetPassword/`;
-      return httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) });
+      return httpPostJsonResponse(url, { body: JSON.stringify({ newPassword }) }, false);
     }, []
   );
 
   const submitPasswordChangeRequest = useCallback(
     (formData: any) => {
-      const state: GlobalStoreState = store.getState();
       const url = `${authenticationServiceUrl}/reset/${formData.email}`;
-      return httpGetJson(url, {});
+      return httpGetJson(url, {}, false);
     }, []
   );
 
   const isPasswordValid = useCallback(
     (passwordValidationRequest: PasswordValidationRequest) => {
-      const state: GlobalStoreState = store.getState();
       const url = `${authenticationServiceUrl}/isPasswordValid`;
       return httpPostJsonResponse(url, {
         body: JSON.stringify(passwordValidationRequest)
-      });
+      }, false);
     }, []
   );
 

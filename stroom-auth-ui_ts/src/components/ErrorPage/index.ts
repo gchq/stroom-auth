@@ -16,7 +16,9 @@
 
 import ErrorPage from "./ErrorPage";
 
-export { reducer, useActionCreators } from "./redux";
-export { StoreState } from "./types";
+import ErrorReportingContextProvider from "./ErrorReportingContextProvider";
+import useErrorReporting from "./useErrorReporting";
+
+export { ErrorReportingContextProvider, useErrorReporting };
 
 export default ErrorPage;

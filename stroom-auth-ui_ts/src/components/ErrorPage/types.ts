@@ -1,5 +1,5 @@
-export interface StoreState {
-  errorMessage: string;
-  httpErrorCode: number;
-  stackTrace: string;
+export interface SingleError {
+  errorMessage?: string;
+  stackTrace?: string;
+  httpErrorCode?: number;
 }

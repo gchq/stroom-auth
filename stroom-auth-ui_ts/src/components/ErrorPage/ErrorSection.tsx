@@ -5,7 +5,7 @@ interface Props {
   errorData: string | number;
 }
 
-const ErrorSection = ({ title, errorData }: Props) => (
+const ErrorSection: React.FunctionComponent<Props> = ({ title, errorData }) => (
   <div className="ErrorPage__section">
     <strong>{title}: </strong>
     <code>{errorData}</code>

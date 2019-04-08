@@ -18,7 +18,6 @@ import { StoreContext } from "redux-react-hook";
 import { useContext, useCallback } from "react";
 
 import useHttpClient from "src/api/useHttpClient";
-import { GlobalStoreState } from "src/startup/GlobalStoreState";
 
 import { User } from "../types";
 import { useConfig } from 'src/startup/config';
@@ -44,7 +43,6 @@ export const useApi = (): Api => {
   if (!userServiceUrl) throw Error("Configuration not ready or misconfigured!");
 
   const change = useCallback(user => {
-    const reduxState: GlobalStoreState = store.getState();
     const url = `${userServiceUrl}/${user.id}`;
     return httpPutEmptyResponse(url, {
       body: JSON.stringify({
@@ -61,7 +59,6 @@ export const useApi = (): Api => {
   }, []);
 
   const add = useCallback(user => {
-    const reduxState: GlobalStoreState = store.getState();
     const url = userServiceUrl;
     return httpPostJsonResponse(url, {
       body: JSON.stringify({
@@ -81,7 +78,6 @@ export const useApi = (): Api => {
    * Delete user
    */
   const remove = useCallback((userId: string) => {
-    const state: GlobalStoreState = store.getState();
     const url = `${userServiceUrl}/${userId}`;
     return httpDeleteEmptyResponse(url, {});
   }, []);
@@ -90,19 +86,16 @@ export const useApi = (): Api => {
    * Fetch a user
    */
   const fetch = useCallback((userId: String) => {
-    const state: GlobalStoreState = store.getState();
     const url = `${userServiceUrl}/${userId}`;
     return httpGetJson(url);
   }, []);
 
   const fetchCurrentUser = useCallback(() => {
-    const state: GlobalStoreState = store.getState();
     const url = `${userServiceUrl}/me`;
     return httpGetJson(url);
   }, []);
 
   const search = useCallback(() => {
-    const state: GlobalStoreState = store.getState();
     const url = `${
       userServiceUrl
       }/?fromEmail=&usersPerPage=100&orderBy=id`;

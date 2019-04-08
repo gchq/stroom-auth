@@ -29,25 +29,23 @@ import {
   ConfirmPasswordResetEmail,
   ResetPasswordRequest
 } from "src/components/password";
-import AuthenticationRequest from "src/startup/authentication/AuthenticationRequest";
 import ErrorPage from "src/components/ErrorPage";
-import HandleAuthenticationResponse from "src/startup/authentication/HandleAuthenticationResponse";
 import Loader from "src/components/Loader";
 import Unauthorised from "src/components/unauthorised";
-import useReduxState from "src/lib/useReduxState";
-import { useUsers } from "src/components/users/api";
 import { useConfig } from 'src/startup/config';
+import { HandleAuthenticationResponse, AuthenticationRequest, useAuthenticationContext } from 'src/startup/Authentication';
 
 const App = () => {
-  const idToken = useReduxState(({ authentication: { idToken } }) => idToken);
+  const { idToken } = useAuthenticationContext();
+  // const idToken = useReduxState(({ authentication: { idToken } }) => idToken);
   const isLoggedIn = !!idToken;
-  const { fetchCurrentUser } = useUsers();
+  // const { fetchCurrentUser } = useUsers();
 
-  React.useEffect(() => {
-    if (isLoggedIn) {
-      fetchCurrentUser();
-    }
-  }, [isLoggedIn, fetchCurrentUser]);
+  // React.useEffect(() => {
+  //   if (isLoggedIn) {
+  //     fetchCurrentUser();
+  //   }
+  // }, [isLoggedIn, fetchCurrentUser]);
 
   const {
     // isReady,
@@ -80,20 +78,14 @@ const App = () => {
               exact={true}
               path={"/handleAuthentication"}
               render={() => (
-                <HandleAuthenticationResponse
-                  authenticationServiceUrl={authenticationServiceUrl}
-                  authorisationServiceUrl={authorisationServiceUrl}
-                />
+                <HandleAuthenticationResponse />
               )}
             />
             <Route
               exact
               path={"/handleAuthenticationResponse"}
               render={() => (
-                <HandleAuthenticationResponse
-                  authenticationServiceUrl={authenticationServiceUrl}
-                  authorisationServiceUrl={authorisationServiceUrl}
-                />
+                <HandleAuthenticationResponse />
               )}
             />
 

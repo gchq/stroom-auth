@@ -16,9 +16,7 @@
 
 import useHttpClient from "src/api/useHttpClient";
 import { GlobalStoreState } from "src/startup/GlobalStoreState";
-import { StoreContext } from "redux-react-hook";
 import { Token, SearchConfig, TokenSearchRequest, TokenSearchResponse } from "./types";
-// import { useActionCreators as useTokenActionCreators } from "./redux";
 import { useContext, useCallback } from "react";
 import { Filter } from 'react-table';
 import { useConfig } from 'src/startup/config';
@@ -34,7 +32,6 @@ interface Api {
 }
 
 export const useApi = (): Api => {
-  const store = useContext(StoreContext);
   const {
     httpGetJson,
     httpPostJsonResponse,
@@ -51,14 +48,12 @@ export const useApi = (): Api => {
 
   return {
     deleteToken: useCallback((tokenId) => {
-      const state: GlobalStoreState = store.getState();
       const url = `${tokenServiceUrl}/${tokenId}`;
       return httpDeleteEmptyResponse(url);
     }, []),
 
     createToken: useCallback(
       (email: string) => {
-        const state: GlobalStoreState = store.getState();
         // toggleIsCreating();
         // hideErrorMessage();
         return httpPostJsonResponse(tokenServiceUrl, {
@@ -74,13 +69,11 @@ export const useApi = (): Api => {
     ),
 
     fetchApiKey: useCallback((apiKeyId: string) => {
-      const state: GlobalStoreState = store.getState();
       const url = `${tokenServiceUrl}/${apiKeyId}`;
       return httpGetJson(url);
     }, []),
 
     toggleState: useCallback((tokenId: string, nextState: boolean) => {
-      const state: GlobalStoreState = store.getState();
       const url = `${
         tokenServiceUrl
         }/${tokenId}/state/?enabled=${nextState}`;
@@ -89,7 +82,6 @@ export const useApi = (): Api => {
 
     performTokenSearch: useCallback(
       (searchConfig: SearchConfig) => {
-        const state: GlobalStoreState = store.getState();
         // // Default ordering and direction
         let orderBy = "issued_on";
         let orderDirection = "desc";

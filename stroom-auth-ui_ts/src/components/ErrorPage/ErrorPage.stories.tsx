@@ -15,14 +15,14 @@
  */
 
 import * as React from "react";
-import { useEffect } from "react";
 import { storiesOf } from "@storybook/react";
 
 import ErrorPage from "./ErrorPage";
-import { useActionCreators } from "./redux";
+import { useErrorReporting } from ".";
+import { SingleError } from "./types";
 
-const errorMessage = "Everything is a disaster";
-const stackTrace = `Invariant Violation: Objects are not valid as a React child (found: object with keys {sdfs}). If you meant to render a collection of children, use an array instead.
+const testErrorMessage = "Everything is a disaster";
+const testStackTrace = `Invariant Violation: Objects are not valid as a React child (found: object with keys {sdfs}). If you meant to render a collection of children, use an array instead.
 in code (created by ErrorPage)
 in p (created by ErrorPage)
 in div (created by ErrorPage)
@@ -44,36 +44,21 @@ at beginWork (http://localhost:9001/static/preview.bundle.js:37139:16)
 at performUnitOfWork (http://localhost:9001/static/preview.bundle.js:39967:16)
 at workLoop (http://localhost:9001/static/preview.bundle.js:39996:26)
 at renderRoot (http://localhost:9001/static/preview.bundle.js:40027:9)`;
-const httpErrorStatus = 501;
-
-interface Props {
-  _errorMessage?: string;
-  _stackTrace?: string;
-  _httpErrorStatus?: number;
-}
+const testHttpErrorCode = 501;
 
 const TestErrorPage = ({
-  _errorMessage,
-  _stackTrace,
-  _httpErrorStatus
-}: Props) => {
-  const {
-    setErrorMessage,
-    setStackTrace,
-    setHttpErrorCode
-  } = useActionCreators();
-  useEffect(() => {
-    if (!!_errorMessage) setErrorMessage(_errorMessage);
-    if (!!_stackTrace) setStackTrace(_stackTrace);
-    if (!!_httpErrorStatus) setHttpErrorCode(_httpErrorStatus);
-  }, [
-    setErrorMessage,
-    setStackTrace,
-    setHttpErrorCode,
-    _errorMessage,
-    _stackTrace,
-    _httpErrorStatus
-  ]);
+  errorMessage,
+  stackTrace,
+  httpErrorCode,
+}: SingleError) => {
+  const { reportError } = useErrorReporting();
+  React.useEffect(() => {
+    reportError({
+      errorMessage,
+      stackTrace,
+      httpErrorCode,
+    });
+  }, [reportError, errorMessage, stackTrace, httpErrorCode]);
 
   return <ErrorPage />;
 };
@@ -81,15 +66,18 @@ const TestErrorPage = ({
 storiesOf("Sections/ErrorPage", module)
   .add("No details", () => <TestErrorPage />)
   .add("Just error message", () => (
-    <TestErrorPage _errorMessage={errorMessage} />
+    <TestErrorPage errorMessage={testErrorMessage} />
   ))
   .add("Error message and stack trace", () => (
-    <TestErrorPage _errorMessage={errorMessage} _stackTrace={stackTrace} />
+    <TestErrorPage
+      errorMessage={testErrorMessage}
+      stackTrace={testStackTrace}
+    />
   ))
   .add("Everything", () => (
     <TestErrorPage
-      _errorMessage={errorMessage}
-      _stackTrace={stackTrace}
-      _httpErrorStatus={httpErrorStatus}
+      errorMessage={testErrorMessage}
+      stackTrace={testStackTrace}
+      httpErrorCode={testHttpErrorCode}
     />
   ));

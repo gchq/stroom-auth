@@ -11,7 +11,6 @@ import {
   StreamAttributeMapResult,
   DocumentType,
 } from "../types";
-import { ResourcesByDocType } from "src/api/useDocumentApi/types";
 
 export interface UserGroupMembership {
   userUuid: string;
@@ -29,9 +28,6 @@ export interface TestData {
   documentTree: DocRefTree;
   elements: ElementDefinitions;
   elementProperties: ElementPropertiesByElementIdType;
-  documents: {
-    [docRefType in keyof ResourcesByDocType]: DocumentType<docRefType>[]
-  };
   trackers: StreamTaskType[];
   dataList: StreamAttributeMapResult;
   dataSource: DataSourceType;

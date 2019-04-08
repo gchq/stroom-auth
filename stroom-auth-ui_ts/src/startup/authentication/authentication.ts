@@ -23,7 +23,7 @@ export const sendAuthenticationRequest = (
   uiUrl: string,
   appClientId: string,
   authenticationServiceUrl: string,
-  appPermission?: string
+  appPermission?: string,
 ) => {
   const redirectUrl = `${uiUrl}/handleAuthenticationResponse`;
   const state = "";
@@ -51,7 +51,6 @@ export const handleAuthenticationResponse = (
   history: History,
   accessCode: string,
   authenticationServiceUrl: string,
-  authorisationServiceUrl: string
 ) => {
   const idTokenRequestUrl = `${authenticationServiceUrl}/idToken?accessCode=${accessCode}`;
 
@@ -60,11 +59,11 @@ export const handleAuthenticationResponse = (
   fetch(idTokenRequestUrl, {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     method: "get",
     credentials: "include",
-    mode: "cors"
+    mode: "cors",
   })
     .then(response => response.text())
     .then(idToken => {
@@ -74,7 +73,7 @@ export const handleAuthenticationResponse = (
       const nonceHash = sjcl.codec.hex.fromBits(nonceHashBytes);
       const returnedNonce = decodedToken.nonce;
       const referrer = localStorage.getItem(
-        "preAuthenticationRequestReferrer"
+        "preAuthenticationRequestReferrer",
       ) as string;
       // const appPermission = localStorage.getItem('appPermission');
 

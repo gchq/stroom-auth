@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 import * as queryString from "qs";
-import { useEffect, useMemo } from "react";
+import * as React from "react";
 
 import { handleAuthenticationResponse } from "./authentication";
-import { useActionCreators } from "src/api/authentication";
 import useRouter from "src/lib/useRouter";
+import useAuthenticationContext from "./useAuthenticationContext";
+import { useConfig } from "../config";
 
-interface Props {
-  authenticationServiceUrl: string;
-  authorisationServiceUrl: string;
-}
-
-export const HandleAuthenticationResponse: React.FunctionComponent<Props> = ({
-  authenticationServiceUrl,
-  authorisationServiceUrl
-}: Props) => {
+export const HandleAuthenticationResponse: React.FunctionComponent = () => {
+  const { authenticationServiceUrl, authorisationServiceUrl } = useConfig();
   const {
     router: { location },
-    history
+    history,
   } = useRouter();
-  const { tokenIdChange } = useActionCreators();
+  const { setIdToken } = useAuthenticationContext();
 
-  const accessCode = useMemo(() => {
+  const accessCode = React.useMemo(() => {
     let query = location!.search;
     if (query[0] == "?") {
       query = query.substring(1);
@@ -43,21 +37,20 @@ export const HandleAuthenticationResponse: React.FunctionComponent<Props> = ({
     return queryString.parse(query).accessCode;
   }, [location]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     handleAuthenticationResponse(
-      tokenIdChange,
+      setIdToken,
       history,
       accessCode,
-      authenticationServiceUrl,
-      authorisationServiceUrl
+      authenticationServiceUrl!,
     );
   }, [
-      accessCode,
-      tokenIdChange,
-      history,
-      authenticationServiceUrl,
-      authorisationServiceUrl
-    ]);
+    accessCode,
+    setIdToken,
+    history,
+    authenticationServiceUrl,
+    authorisationServiceUrl,
+  ]);
 
   return null;
 };

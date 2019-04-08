@@ -16,19 +16,23 @@
 
 import * as React from "react";
 
-import IconHeader from "src/components/IconHeader";
-import useReduxState from "src/lib/useReduxState";
-
+import IconHeader from "../IconHeader";
 import ErrorSection from "./ErrorSection";
+import { useErrorReporting } from ".";
 
 const ErrorPage = () => {
-  const { errorMessage, stackTrace, httpErrorCode } = useReduxState(
-    ({ errorPage: { errorMessage, stackTrace, httpErrorCode } }) => ({
-      errorMessage,
-      stackTrace,
-      httpErrorCode
-    })
-  );
+  const { error } = useErrorReporting();
+
+  if (!error) {
+    return (
+      <p>
+        No Error Seen, apart from the fact you have been directed to this
+        page...which is an error...lol!
+      </p>
+    );
+  }
+
+  const { errorMessage, httpErrorCode, stackTrace } = error;
 
   return (
     <div>

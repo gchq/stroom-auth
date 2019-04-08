@@ -1,10 +1,13 @@
 {
-  "authenticationServiceUrl": "http://10.164.11.244/authService/authentication/v1",
-  "userServiceUrl": "http://10.164.11.244:8099/user/v1",
-  "tokenServiceUrl": "http://10.164.11.244:8099/token/v1",
-  "authorisationServiceUrl": "http://10.164.11.244:8080/api/authorisation/v1",
-  "stroomUiUrl": "http://10.164.11.244:8080/stroom",
-  "advertisedUrl": "http://10.164.11.244:5000",
+  "advertisedUrl": "http://192.168.1.11:5000",
+  "allowPasswordResets": true,
   "appClientId": "stroom-accounts",
-  "allowPasswordResets": true
+  "authTokensUiUrl": "https://192.168.1.11:9443/userSearch",
+  "authUsersUiUrl": "https://192.168.1.11:9443/tokens",
+  "authenticationServiceUrl": "http://192.168.1.11/authService/authentication/v1",
+  "authorisationServiceUrl": "http://192.168.1.11:8080/api/authorisation/v1",
+  "stroomBaseServiceUrl": "http://192.168.1.11:8080/api",
+  "stroomUiUrl": "http://192.168.1.11:8080/stroom",
+  "tokenServiceUrl": "http://192.168.1.11:8099/token/v1",
+  "userServiceUrl": "http://192.168.1.11:8099/user/v1"
 }

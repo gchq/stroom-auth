@@ -16,12 +16,8 @@
 
 import { combineReducers } from "redux";
 
-import { authorisationReducer as authorisation } from "../startup/authentication";
 import { reducer as authentication } from "../api/authentication";
-import { reducer as errorPage } from "../components/ErrorPage";
 
 export default combineReducers({
-  errorPage,
   authentication,
-  authorisation,
 });

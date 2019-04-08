@@ -6,17 +6,27 @@ import Loader from "src/components/Loader";
 
 const ConfigProvider: React.FunctionComponent = ({ children }) => {
   const [isReady, setIsReady] = React.useState<boolean>(false);
-  const [config, setConfig] = React.useState<Config>({});
+  const [config, setConfig] = React.useState<any>({});
 
   React.useEffect(() => {
     // Not using our http client stuff, it depends on things which won't be ready until the config is loaded
-    fetch("/config.json")
-      .then(r => r.json())
+    fetch("/config.json",
+    {headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+    }, mode:"cors"})
+
+      .then(r =>  {
+        return r.json()
+      })
       .then(c => {
         setConfig(c);
         setIsReady(true);
+      })
+      .catch(error => {
+        console.error({error})
       });
-  }, [setIsReady, setConfig]);
+  }, [setIsReady, fetch, setConfig]);
 
   if (!isReady) {
     return <Loader message="Waiting for config" />;
