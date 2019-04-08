@@ -3,7 +3,7 @@ import * as React from "react";
 import { useErrorReporting } from "src/components/ErrorPage";
 
 import handleStatus from "./handleStatus";
-import { useAuthenticationContext } from "src/startup/Authentication";
+import { useAuthenticationContext } from 'src/startup/authentication';
 
 /**
  * A wrapper around HTTP fetch that allows us to plop in idTokens, CORS specifications,
@@ -80,7 +80,7 @@ export const useHttpClient = (): HttpClient => {
         ...(options ? options.headers : {}),
       };
 
-      if(authenticate) {
+      if (authenticate) {
         headers.Authorization = `Bearer ${idToken}`;
       }
 
@@ -91,7 +91,7 @@ export const useHttpClient = (): HttpClient => {
           method: "get",
           mode: "cors",
           ...options,
-          headers: headers 
+          headers: headers
         })
           .then(handleStatus)
           .then(r => r.json())
@@ -125,7 +125,7 @@ export const useHttpClient = (): HttpClient => {
           ...(options ? options.headers : {}),
         };
 
-        if(authenticate) {
+        if (authenticate) {
           headers.Authorization = `Bearer ${idToken}`;
         }
 
@@ -162,7 +162,7 @@ export const useHttpClient = (): HttpClient => {
           ...(options ? options.headers : {}),
         };
 
-        if(authenticate) {
+        if (authenticate) {
           headers.Authorization = `Bearer ${idToken}`;
         }
 

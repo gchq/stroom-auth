@@ -11,8 +11,6 @@ import {
   PasswordValidationResponse
 } from "./types";
 import { FormikBag } from "formik";
-import { useActionCreators } from "./redux";
-import { GlobalStoreState } from "src/startup/GlobalStoreState";
 import { ChangePasswordResponse } from '.';
 import { useConfig } from 'src/startup/config';
 
@@ -26,7 +24,6 @@ interface Api {
 
 export const useApi = (): Api => {
   const { httpGetJson, httpPostJsonResponse } = useHttpClient();
-  const { showLoader } = useActionCreators();
   const { authenticationServiceUrl, appClientId } = useConfig();
 
   const apiLogin = useCallback(
@@ -51,7 +48,7 @@ export const useApi = (): Api => {
         }),
       }, false);
     },
-    [httpPostJsonResponse, showLoader]
+    [httpPostJsonResponse]
   );
 
   const changePassword = useCallback(

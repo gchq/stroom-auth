@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-import { StoreContext } from "redux-react-hook";
-import { useContext, useCallback } from "react";
-
+import { useCallback } from "react";
 import useHttpClient from "src/api/useHttpClient";
-
-import { User } from "../types";
 import { useConfig } from 'src/startup/config';
+import { User } from "../types";
 
 interface Api {
   add: (user: User) => Promise<void>;
@@ -32,7 +29,6 @@ interface Api {
 }
 
 export const useApi = (): Api => {
-  const store = useContext(StoreContext);
   const {
     httpPutEmptyResponse,
     httpGetJson,

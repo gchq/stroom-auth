@@ -15,8 +15,7 @@
  */
 
 import * as React from "react";
-
-import { sendAuthenticationRequest } from "./authentication";
+import { sendAuthenticationRequest } from '../authentication/authentication';
 
 interface Props {
   referrer: string;

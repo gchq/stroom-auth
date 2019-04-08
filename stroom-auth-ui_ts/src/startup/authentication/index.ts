@@ -1,10 +1,9 @@
-import AuthenticationRequest from "./AuthenticationRequest";
 import HandleAuthenticationResponse from "./HandleAuthenticationResponse";
-import AuthenticationContext from "./AuthenticationContext";
-import AuthenticationContextProvider from "./AuthenticationContextProvider";
-import useAuthenticationContext from "./useAuthenticationContext";
-
-import PrivateRoute from "./PrivateRoute";
+import AuthenticationRequest from '../Authentication/AuthenticationRequest';
+import PrivateRoute from '../Authentication/PrivateRoute';
+import AuthenticationContext from '../Authentication/AuthenticationContext';
+import AuthenticationContextProvider from '../Authentication/AuthenticationContextProvider';
+import useAuthenticationContext from '../Authentication/useAuthenticationContext';
 
 export {
   AuthenticationRequest,

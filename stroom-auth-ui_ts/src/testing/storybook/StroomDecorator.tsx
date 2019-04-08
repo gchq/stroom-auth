@@ -11,7 +11,6 @@ import { withRouter, RouteComponentProps } from "react-router";
 import { CustomRouter } from "src/lib/useRouter";
 import { ConfigProvider } from "src/startup/config";
 import { AuthorisationContextProvider } from "src/startup/Authorisation";
-import { AuthenticationContext } from 'src/startup/Authentication';
 import { ErrorReportingContextProvider } from 'src/components/ErrorPage';
 
 const B: React.FunctionComponent = ({ children }) => {

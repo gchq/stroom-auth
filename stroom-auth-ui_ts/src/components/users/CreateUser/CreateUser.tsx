@@ -19,7 +19,6 @@ import { Formik, Form } from "formik";
 
 import "src/styles/Layout.css";
 import Button from "src/components/Button";
-import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
 import { PasswordValidationRequest } from "src/api/authentication/types";
 import { hasAnyProps } from "src/lib/lang";
@@ -30,6 +29,7 @@ import { NewUserValidationSchema, validateAsync } from "../validation";
 import { User } from "../types";
 import { useUsers } from "../api";
 import { useConfig } from 'src/startup/config';
+import { useAuthenticationContext } from 'src/startup/authentication';
 
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.
@@ -49,7 +49,9 @@ const UserCreateForm = ({ }) => {
   const { history } = useRouter();
   const { authenticationServiceUrl } = useConfig();
   if (!authenticationServiceUrl) throw Error("Configuration not ready or misconfigured!");
-  const { idToken } = useReduxState(({ authentication: { idToken } }) => ({ idToken }));
+  const { idToken } = useAuthenticationContext();
+  if (!idToken) throw Error("Not authenticated") //FIXME: handle this. Show unauthorised page probably.
+
   return (
     <Formik
       initialValues={initialValues}

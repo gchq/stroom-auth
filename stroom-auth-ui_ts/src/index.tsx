@@ -9,7 +9,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import useFontAwesome from "./lib/useFontAwesome";
 import { CustomRouter } from "./lib/useRouter";
 import { ConfigProvider } from "./startup/config";
-import { AuthenticationContextProvider } from "./startup/Authentication";
+import { AuthenticationContextProvider } from './startup/authentication';
 
 const AppWrapper: React.FunctionComponent = () => {
   useFontAwesome();

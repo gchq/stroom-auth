@@ -1,8 +1,8 @@
 import * as React from "react";
-import { useAuthenticationContext } from "../Authentication";
 import { useConfig } from "../config";
 import { AppPermissions } from "./types";
 import AuthorisationContext from "./AuthorisationContext";
+import { useAuthenticationContext } from '../authentication';
 
 const AuthorisationContextProvider: React.FunctionComponent = ({
   children,

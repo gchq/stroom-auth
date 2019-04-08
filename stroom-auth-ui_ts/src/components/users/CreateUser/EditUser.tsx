@@ -21,7 +21,6 @@ import { Formik, Form } from "formik";
 import Button from "src/components/Button";
 import Loader from "src/components/Loader";
 import useIdFromPath from "src/lib/useIdFromPath";
-import useReduxState from "src/lib/useReduxState";
 import useRouter from "src/lib/useRouter";
 import { PasswordValidationRequest } from "src/api/authentication/types";
 import { hasAnyProps } from "src/lib/lang";
@@ -32,15 +31,16 @@ import UserFields from "./UserFields";
 import { UserValidationSchema, validateAsync } from "../validation";
 import { useUsers } from "../api";
 import { useConfig } from 'src/startup/config';
+import { useAuthenticationContext } from 'src/startup/authentication';
 
 const UserEditForm = () => {
   const { updateUser, fetchUser, user } = useUsers();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
   const userId = useIdFromPath("user/");
-  const { idToken } = useReduxState(({ authentication: { idToken }, }) => ({ idToken, }));
+  const { idToken } = useAuthenticationContext();
   const { authenticationServiceUrl } = useConfig();
-  if (!authenticationServiceUrl) throw Error("Configuration not ready or misconfigured!");
+  if (!authenticationServiceUrl || !idToken) throw Error("Configuration not ready or misconfigured!");
   useEffect(() => {
     if (!!userId && !user) fetchUser(userId);
   }, [fetchUser]);

@@ -18,8 +18,8 @@ import * as React from "react";
 
 import { handleAuthenticationResponse } from "./authentication";
 import useRouter from "src/lib/useRouter";
-import useAuthenticationContext from "./useAuthenticationContext";
 import { useConfig } from "../config";
+import { useAuthenticationContext } from '.';
 
 export const HandleAuthenticationResponse: React.FunctionComponent = () => {
   const { authenticationServiceUrl, authorisationServiceUrl } = useConfig();
@@ -45,12 +45,12 @@ export const HandleAuthenticationResponse: React.FunctionComponent = () => {
       authenticationServiceUrl!,
     );
   }, [
-    accessCode,
-    setIdToken,
-    history,
-    authenticationServiceUrl,
-    authorisationServiceUrl,
-  ]);
+      accessCode,
+      setIdToken,
+      history,
+      authenticationServiceUrl,
+      authorisationServiceUrl,
+    ]);
 
   return null;
 };

@@ -6,7 +6,7 @@ import { useRouter } from "src/lib/useRouter";
 import useUserState from "./useUserState";
 import { User } from "../types";
 import useApi from "../api/useApi";
-import { useAuthenticationContext } from 'src/startup/Authentication';
+import { useAuthenticationContext } from 'src/startup/authentication';
 
 /**
  * This hook connects the REST API calls to the Redux Store.
