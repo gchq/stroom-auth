@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 
+//TODO: rename this to something like ExternalServicesConfig
 public class AuthorisationServiceConfig {
 
     @NotNull
@@ -40,11 +41,20 @@ public class AuthorisationServiceConfig {
     @JsonProperty
     private String setUserStatusPath;
 
+    @NotNull
+    @JsonProperty
+    private String groupsForUserPath;
+
+
+    @NotNull
+    @JsonProperty
+    private String appPermissionsUrl;
+
     public String getUrl() {
         return url;
     }
 
-    public String getCanManageUsersUrl() {
+    public String getCanManageUsersUrl(){
         return url + canManageUsersPath;
     }
 
@@ -55,4 +65,17 @@ public class AuthorisationServiceConfig {
     public String getSetUserStatusPath() {
         return setUserStatusPath;
     }
+
+    public String getGroupsForUserPath() {
+        return groupsForUserPath;
+    }
+
+    public String getGroupsForUserUrl() {
+        return url + groupsForUserPath;
+    }
+
+    public String getAppPermissionsUrl() {
+        return appPermissionsUrl;
+    }
+
 }

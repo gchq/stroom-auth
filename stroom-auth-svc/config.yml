@@ -95,10 +95,10 @@ token:
   algorithm: ${JWS_ALGORITHM:- RS256}
 
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- .*\((.*)\)} # This is the Java regex pattern used to capture the ID from the CN.
-certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The pattern above must identify the group with the sid.loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5000/login}
+certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The pattern above must identify the group with the sid.loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5001/login}
 loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5000/login}
-changePasswordUrl: ${CHANGE_PASSWORD_URL:-http://<IP_ADDRESS>:5000/changepassword}
-unauthorisedUrl: ${UNAUTHORISED_URL:-http://<IP_ADDRESS>:5000/unauthorised}
+changePasswordUrl: ${CHANGE_PASSWORD_URL:-http://<IP_ADDRESS>:5001/changepassword}
+unauthorisedUrl: ${UNAUTHORISED_URL:-http://<IP_ADDRESS>:5001/unauthorised}
 stroomUrl: ${STROOM_UI:- http://<IP_ADDRESS>:8099}
 advertisedHost: ${ADVERTISED_HTTP_HOST:- http://<IP_ADDRESS>}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
@@ -109,7 +109,9 @@ sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 mont
 ownPath: ${OWN_PATH:-authenticationService}
 
 authorisationService:
-  url: ${AUTHORISATION_SERVICE_URL:- http://<IP_ADDRESS>:8080/api/authorisation/v1}
+  url: ${AUTHORISATION_SERVICE_URL:- http://<IP_ADDRESS>:8080/api/users/v1}
+  groupsForUserPath: ${AUTHORISATION_SERVICE_GROUPS_FOR_USER_PATH:-/groupsForUserName}
+  appPermissionsUrl: ${AUTHORISATION_SERVICE_APP_PERMISSSIONS_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
   canManageUsersPath: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PATH:- /canManageUsers}
   setUserStatusPath: ${AUTHORISATION_SERVICE_SET_USER_STATUS_PATH:- /setUserStatus}
   canManageUsersPermission: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
@@ -120,7 +122,7 @@ email:
   allowPasswordResets: ${ALLOW_PASSWORD_RESETS:- true}
   passwordResetSubject: ${EMAIL_RESET_SUBJECT:- Password reset for Stroom}
   passwordResetText: ${EMAIL_RESET_TEXT:- 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'}
-  passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>:5000/resetPassword/?token=%s'}
+  passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>:5001/resetPassword/?token=%s'}
   passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 600}
   smtp:
     host: ${EMAIL_SMTP_HOST:- localhost}

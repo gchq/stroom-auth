@@ -19,7 +19,7 @@ package stroom.auth.service;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import org.jooq.Configuration;
-import stroom.auth.AuthorisationServiceClient;
+import stroom.auth.clients.AuthorisationServiceClient;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
 import stroom.auth.PasswordIntegrityCheckTask;

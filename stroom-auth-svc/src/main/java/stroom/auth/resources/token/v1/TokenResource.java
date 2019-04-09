@@ -19,7 +19,6 @@
 package stroom.auth.resources.token.v1;
 
 import com.codahale.metrics.annotation.Timed;
-import event.logging.Data;
 import event.logging.Event;
 import event.logging.MultiObject;
 import event.logging.ObjectOutcome;
@@ -31,7 +30,8 @@ import io.swagger.annotations.ApiParam;
 import org.jose4j.jwk.JsonWebKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.AuthorisationServiceClient;
+import stroom.auth.clients.AppPermissionsService;
+import stroom.auth.clients.AuthorisationServiceClient;
 import stroom.auth.TokenVerifier;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
@@ -68,19 +68,19 @@ public class TokenResource {
 
     private final TokenDao tokenDao;
     private final UserDao userDao;
+    private AppPermissionsService appPermissionsService;
     private TokenVerifier tokenVerifier;
     private StroomEventLoggingService stroomEventLoggingService;
-    private final AuthorisationServiceClient authorisationServiceClient;
 
     @Inject
-    public TokenResource(final AuthorisationServiceClient authorisationServiceClient,
-                         final TokenDao tokenDao,
+    public TokenResource(final TokenDao tokenDao,
                          final UserDao userDao,
+                         final AppPermissionsService appPermissionsService,
                          final TokenVerifier tokenVerifier,
                          final StroomEventLoggingService stroomEventLoggingService) {
-        this.authorisationServiceClient = authorisationServiceClient;
         this.tokenDao = tokenDao;
         this.userDao = userDao;
+        this.appPermissionsService = appPermissionsService;
         this.tokenVerifier = tokenVerifier;
         this.stroomEventLoggingService = stroomEventLoggingService;
     }
@@ -115,7 +115,7 @@ public class TokenResource {
                 "The user searched for an API token.");
 
         // Check the user is authorised to call this
-        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -149,7 +149,7 @@ public class TokenResource {
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @ApiParam("CreateTokenRequest") @NotNull CreateTokenRequest createTokenRequest) {
 
-        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -193,7 +193,7 @@ public class TokenResource {
     public final Response deleteAll(
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser) {
-        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -224,7 +224,7 @@ public class TokenResource {
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @PathParam("id") int tokenId) {
-        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -254,7 +254,7 @@ public class TokenResource {
     public final Response delete(
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
-        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -284,7 +284,7 @@ public class TokenResource {
     public final Response read(
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
-        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -314,7 +314,7 @@ public class TokenResource {
     public final Response read(
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
-        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -348,7 +348,7 @@ public class TokenResource {
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @NotNull @PathParam("id") int tokenId,
             @NotNull @QueryParam("enabled") boolean enabled) {
-        if (!authorisationServiceClient.isUserAuthorisedToManageUsers(authenticatedServiceUser.getJwt())) {
+        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 

@@ -1,7 +1,7 @@
 {
   "advertisedUrl": "http://192.168.1.7:5000",
   "allowPasswordResets": true,
-  "appClientId": "stroom-accounts",
+  "appClientId": "stroom-ui",
   "authTokensUiUrl": "https://192.168.1.7:9443/userSearch",
   "authUsersUiUrl": "https://192.168.1.7:9443/tokens",
   "authenticationServiceUrl": "http://192.168.1.7/authService/authentication/v1",
