@@ -45,7 +45,7 @@ public class AppPermissionsClient {
     }
 
     public Set<String> getPermissionNamesForUserName(String userName, String usersJws) {
-        String authorisationUrl = config.getAuthorisationServiceConfig().getAppPermissionsUrl() + "/byName/" + userName;
+        String authorisationUrl = config.getAppPermissionServiceConfig().getUrl() + "/byName/" + userName;
         Response response = authorisationService
                 .target(authorisationUrl)
                 .request()

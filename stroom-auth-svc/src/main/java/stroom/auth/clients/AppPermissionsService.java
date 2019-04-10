@@ -1,6 +1,6 @@
 package stroom.auth.clients;
 
-import stroom.auth.config.AuthorisationServiceConfig;
+import stroom.auth.config.AppPermissionServiceConfig;
 import stroom.auth.config.Config;
 
 import javax.inject.Inject;
@@ -11,14 +11,14 @@ import java.util.Set;
 
 @Singleton
 public class AppPermissionsService {
-    private final AuthorisationServiceConfig config;
+    private final AppPermissionServiceConfig config;
     private AppPermissionsClient appPermissionsClient;
 
     @Inject
     public AppPermissionsService( @NotNull AppPermissionsClient appPermissionsClient, @NotNull Config config ) {
         super();
         this.appPermissionsClient = appPermissionsClient;
-        this.config = config.getAuthorisationServiceConfig();
+        this.config = config.getAppPermissionServiceConfig();
     }
 
     public boolean isAuthorisedToManageUsers(String userName, String idToken){

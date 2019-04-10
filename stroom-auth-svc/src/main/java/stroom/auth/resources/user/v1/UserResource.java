@@ -41,7 +41,7 @@ import org.jooq.TableField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.clients.AppPermissionsService;
-import stroom.auth.clients.AuthorisationServiceClient;
+import stroom.auth.clients.UserServiceClient;
 import stroom.auth.daos.UserDao;
 import stroom.auth.daos.UserMapper;
 import stroom.auth.service.eventlogging.StroomEventLoggingService;
@@ -75,19 +75,19 @@ public final class UserResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
     private AppPermissionsService appPermissionsService;
-    private AuthorisationServiceClient authorisationServiceClient;
+    private UserServiceClient userServiceClient;
     private UserDao userDao;
     private StroomEventLoggingService stroomEventLoggingService;
 
     @Inject
     public UserResource(
             @NotNull AppPermissionsService appPermissionsService,
-            @NotNull AuthorisationServiceClient authorisationServiceClient,
+            @NotNull UserServiceClient userServiceClient,
             UserDao userDao,
             final StroomEventLoggingService stroomEventLoggingService) {
         super();
         this.appPermissionsService = appPermissionsService;
-        this.authorisationServiceClient = authorisationServiceClient;
+        this.userServiceClient = userServiceClient;
         this.userDao = userDao;
         this.stroomEventLoggingService = stroomEventLoggingService;
     }
@@ -108,7 +108,7 @@ public final class UserResource {
         Preconditions.checkNotNull(database);
 
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         TableField orderByEmailField = USERS.EMAIL;
@@ -152,7 +152,7 @@ public final class UserResource {
         Preconditions.checkNotNull(database);
 
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         Pair<Boolean, String> validationResults = User.isValidForCreate(user);
@@ -278,7 +278,7 @@ public final class UserResource {
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), (authenticatedServiceUser.getJwt()))) {
             return Response
                     .status(Response.Status.UNAUTHORIZED)
-                    .entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+                    .entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         // Get the users
@@ -375,7 +375,7 @@ public final class UserResource {
             boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
             if (!isUserAccessingThemselves) {
                 if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-                    return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
                 }
             }
 
@@ -441,13 +441,13 @@ public final class UserResource {
         boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
         if (!isUserAccessingThemselves) {
             if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+                return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
             }
         }
 
         if(!usersRecord.getState().equalsIgnoreCase(user.getState())) {
-            // We need to make sure that the authorisation user has the same status as the user we're updating.
-            authorisationServiceClient.setUserStatus(authenticatedServiceUser.getJwt(), user.getEmail(), user.getState());
+            boolean isEnabled = user.getState().equals("enabled");
+            userServiceClient.setUserStatus(authenticatedServiceUser.getJwt(), user.getEmail(), isEnabled);
         }
 
         user.setUpdated_by_user(authenticatedServiceUser.getName());
@@ -493,7 +493,7 @@ public final class UserResource {
         Preconditions.checkNotNull(database);
 
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         database

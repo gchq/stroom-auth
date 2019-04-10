@@ -108,13 +108,14 @@ sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 mont
 # e.g. https://123.123.123.123/authenticationService/v1/postAuthenticationRedirect
 ownPath: ${OWN_PATH:-authenticationService}
 
-authorisationService:
-  url: ${AUTHORISATION_SERVICE_URL:- http://<IP_ADDRESS>:8080/api/users/v1}
-  groupsForUserPath: ${AUTHORISATION_SERVICE_GROUPS_FOR_USER_PATH:-/groupsForUserName}
-  appPermissionsUrl: ${AUTHORISATION_SERVICE_APP_PERMISSSIONS_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
-  canManageUsersPath: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PATH:- /canManageUsers}
-  setUserStatusPath: ${AUTHORISATION_SERVICE_SET_USER_STATUS_PATH:- /setUserStatus}
-  canManageUsersPermission: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
+appPermissionService:
+  url: $STROOM_APP_PERMISSSIONS_SERVICE_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
+  canManageUsersPermission: ${STROOM_APP_PERMISSIONS_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
+#  groupsForUserPath: ${STROOM_APP_PERMISSIONS_SERVICE_GROUPS_FOR_USER_PATH:-/groupsForUserName}
+
+userService:
+  url: ${STROOM_USER_SERVICE_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
+#  setStatusPath: ${AUTHORISATION_SERVICE_SET_USER_STATUS_PATH:- /setUserStatus}
 
 email:
   fromAddress: ${EMAIL_FROM_ADDRESS:- noreply@stroom.com}

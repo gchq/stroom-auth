@@ -106,8 +106,8 @@ public final class Config extends Configuration {
     private int sessionIdCookieMaxAge;
 
     @NotNull
-    @JsonProperty("authorisationService")
-    private AuthorisationServiceConfig authorisationServiceConfig;
+    @JsonProperty("userService")
+    private UserServiceConfig userServiceConfig;
 
     @NotNull
     @JsonProperty("passwordIntegrityChecks")
@@ -116,6 +116,10 @@ public final class Config extends Configuration {
     @NotNull
     @JsonProperty("ownPath")
     private String ownPath;
+
+    @NotNull
+    @JsonProperty("appPermissionService")
+    private AppPermissionServiceConfig appPermissionServiceConfig;
 
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
@@ -165,8 +169,8 @@ public final class Config extends Configuration {
         return this.failedLoginLockThreshold;
     }
 
-    public AuthorisationServiceConfig getAuthorisationServiceConfig() {
-        return authorisationServiceConfig;
+    public UserServiceConfig getUserServiceConfig() {
+        return userServiceConfig;
     }
 
     public TokenConfig getTokenConfig() {
@@ -195,6 +199,10 @@ public final class Config extends Configuration {
         return ownPath;
     }
 
+    public AppPermissionServiceConfig getAppPermissionServiceConfig() {
+        return appPermissionServiceConfig;
+    }
+
     private Integer getPort() {
         DefaultServerFactory serverFactory = (DefaultServerFactory) this.getServerFactory();
         Integer port = serverFactory.getApplicationConnectors().stream()
@@ -205,4 +213,5 @@ public final class Config extends Configuration {
                 .get();
         return port;
     }
+
 }

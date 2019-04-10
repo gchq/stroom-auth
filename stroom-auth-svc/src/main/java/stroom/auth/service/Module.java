@@ -19,7 +19,7 @@ package stroom.auth.service;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import org.jooq.Configuration;
-import stroom.auth.clients.AuthorisationServiceClient;
+import stroom.auth.clients.UserServiceClient;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
 import stroom.auth.PasswordIntegrityCheckTask;
@@ -52,7 +52,7 @@ public final class Module extends AbstractModule {
         bind(UserResource.class);
         bind(AuthenticationResource.class);
         bind(TokenResource.class);
-        bind(AuthorisationServiceClient.class);
+        bind(UserServiceClient.class);
         bind(TokenDao.class);
         bind(UserDao.class);
         bind(JwkDao.class);

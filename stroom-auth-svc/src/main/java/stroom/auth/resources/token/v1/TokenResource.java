@@ -31,7 +31,7 @@ import org.jose4j.jwk.JsonWebKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.clients.AppPermissionsService;
-import stroom.auth.clients.AuthorisationServiceClient;
+import stroom.auth.clients.UserServiceClient;
 import stroom.auth.TokenVerifier;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
@@ -116,7 +116,7 @@ public class TokenResource {
 
         // Check the user is authorised to call this
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         // Validate filters
@@ -150,7 +150,7 @@ public class TokenResource {
             @ApiParam("CreateTokenRequest") @NotNull CreateTokenRequest createTokenRequest) {
 
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         // Parse and validate tokenType
@@ -194,7 +194,7 @@ public class TokenResource {
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser) {
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         tokenDao.deleteAllTokensExceptAdmins();
@@ -225,7 +225,7 @@ public class TokenResource {
             @Auth @NotNull ServiceUser authenticatedServiceUser,
             @PathParam("id") int tokenId) {
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         tokenDao.deleteTokenById(tokenId);
@@ -255,7 +255,7 @@ public class TokenResource {
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         tokenDao.deleteTokenByTokenString(token);
@@ -285,7 +285,7 @@ public class TokenResource {
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("token") String token) {
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         event.logging.Object object = new event.logging.Object();
@@ -315,7 +315,7 @@ public class TokenResource {
             @Context @NotNull HttpServletRequest httpServletRequest,
             @Auth @NotNull ServiceUser authenticatedServiceUser, @PathParam("id") int tokenId) {
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         event.logging.Object object = new event.logging.Object();
@@ -349,7 +349,7 @@ public class TokenResource {
             @NotNull @PathParam("id") int tokenId,
             @NotNull @QueryParam("enabled") boolean enabled) {
         if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(AuthorisationServiceClient.UNAUTHORISED_USER_MESSAGE).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
         final event.logging.Object afterObject = new event.logging.Object();
