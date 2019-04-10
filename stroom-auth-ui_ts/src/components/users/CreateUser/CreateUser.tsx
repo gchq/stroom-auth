@@ -29,7 +29,7 @@ import { NewUserValidationSchema, validateAsync } from "../validation";
 import { User } from "../types";
 import { useUsers } from "../api";
 import { useConfig } from 'src/startup/config';
-import { useAuthenticationContext } from 'src/startup/authentication';
+import { useAuthenticationContext } from 'src/startup/Authentication';
 
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.
@@ -50,8 +50,9 @@ const UserCreateForm = ({ }) => {
   const { authenticationServiceUrl } = useConfig();
   if (!authenticationServiceUrl) throw Error("Configuration not ready or misconfigured!");
   const { idToken } = useAuthenticationContext();
-  if (!idToken) throw Error("Not authenticated") //FIXME: handle this. Show unauthorised page probably.
-
+  if (!authenticationServiceUrl || !idToken) {
+    throw Error("Config not ready or misconfigured!");
+  }
   return (
     <Formik
       initialValues={initialValues}

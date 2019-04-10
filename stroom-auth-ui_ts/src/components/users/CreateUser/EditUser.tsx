@@ -31,16 +31,18 @@ import UserFields from "./UserFields";
 import { UserValidationSchema, validateAsync } from "../validation";
 import { useUsers } from "../api";
 import { useConfig } from 'src/startup/config';
-import { useAuthenticationContext } from 'src/startup/authentication';
+import { useAuthenticationContext } from 'src/startup/Authentication';
 
 const UserEditForm = () => {
   const { updateUser, fetchUser, user } = useUsers();
   const { history } = useRouter();
   const [showBackConfirmation, setShowBackConfirmation] = useState(false);
   const userId = useIdFromPath("user/");
-  const { idToken } = useAuthenticationContext();
   const { authenticationServiceUrl } = useConfig();
-  if (!authenticationServiceUrl || !idToken) throw Error("Configuration not ready or misconfigured!");
+  const { idToken } = useAuthenticationContext();
+  if (!authenticationServiceUrl || !idToken) {
+    throw Error("Config not ready or misconfigured!");
+  }
   useEffect(() => {
     if (!!userId && !user) fetchUser(userId);
   }, [fetchUser]);

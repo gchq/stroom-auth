@@ -23,7 +23,7 @@ import { PasswordValidationRequest } from "src/api/authentication/types";
 import { hasAnyProps } from "src/lib/lang";
 import { validateAsync } from "src/components/users/validation";
 import { useConfig } from 'src/startup/config';
-import { useAuthenticationContext } from 'src/startup/authentication';
+import { useAuthenticationContext } from 'src/startup/Authentication';
 
 const ChangePasswordFields = ({
   email,
@@ -39,8 +39,11 @@ const ChangePasswordFields = ({
   // errorMessages?: string[];
 }) => {
   const { authenticationServiceUrl } = useConfig();
+  if (!authenticationServiceUrl) throw Error("Config not ready or misconfigured!");
   const { idToken } = useAuthenticationContext();
-  if (!authenticationServiceUrl || !idToken) throw Error("Config not ready or misconfigured!");
+  if (!authenticationServiceUrl || !idToken) {
+    throw Error("Config not ready or misconfigured!");
+  }
   return (
     <Formik
       enableReinitialize={true}
