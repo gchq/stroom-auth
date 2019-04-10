@@ -19,11 +19,11 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import "src/styles/Layout.css";
 import Button from "src/components/Button";
-import useReduxState from "src/lib/useReduxState";
 import { PasswordValidationRequest } from "src/api/authentication/types";
 import { hasAnyProps } from "src/lib/lang";
 import { validateAsync } from "src/components/users/validation";
 import { useConfig } from 'src/startup/config';
+import { useAuthenticationContext } from 'src/startup/Authentication';
 
 const ChangePasswordFields = ({
   email,
@@ -40,9 +40,10 @@ const ChangePasswordFields = ({
 }) => {
   const { authenticationServiceUrl } = useConfig();
   if (!authenticationServiceUrl) throw Error("Config not ready or misconfigured!");
-
-  const { idToken } = useReduxState(({ authentication: { idToken } }) => ({ idToken })
-  );
+  const { idToken } = useAuthenticationContext();
+  if (!authenticationServiceUrl || !idToken){
+    throw Error("Config not ready or misconfigured!");
+  }
   return (
     <Formik
       enableReinitialize={true}

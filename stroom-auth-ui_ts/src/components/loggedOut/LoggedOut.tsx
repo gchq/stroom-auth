@@ -19,7 +19,6 @@ import { useEffect } from "react";
 
 import "src/styles/Layout.css";
 import Button from "src/components/Button";
-import { useActionCreators } from "src/api/authentication";
 
 import "./LoggedOut.css";
 import { useConfig } from 'src/startup/config';
@@ -29,12 +28,12 @@ const LoggedOut = () => {
   if (!stroomUiUrl) {
     throw Error("Cannot find stroomUiUrl configuration!");
   }
-  const { changeLoggedInUser, deleteToken } = useActionCreators();
 
   useEffect(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("userEmail");
-    changeLoggedInUser(""), deleteToken();
+    //TODO: restore this?
+    // changeLoggedInUser(""), deleteToken();
   }, []);
 
   return (

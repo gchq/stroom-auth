@@ -25,7 +25,7 @@ import Button from "src/components/Button";
 import { hasAnyProps } from "src/lib/lang";
 import "src/styles/Layout.css";
 import icon from "src/icon.png";
-import { useActionCreators, useAuthentication } from "src/api/authentication";
+import { useAuthentication } from "src/api/authentication";
 import useRouter from "src/lib/useRouter";
 
 import "./Login.css";
@@ -39,7 +39,7 @@ const LoginValidationSchema = Yup.object().shape({
 const LoginForm = () => {
   const { allowPasswordResets } = useConfig();
   const { login } = useAuthentication();
-  const { setRedirectUrl, setClientId, setSessionId } = useActionCreators();
+  // const { setRedirectUrl, setClientId, setSessionId } = useActionCreators();
   const {
     router: { location }
   } = useRouter();
@@ -51,9 +51,10 @@ const LoginForm = () => {
       const clientId = queryParams["clientId"];
       const sessionId = queryParams["sessionId"];
 
-      setRedirectUrl(redirectUrl);
-      setClientId(clientId);
-      setSessionId(sessionId);
+      //TODO: restore these?
+      // setRedirectUrl(redirectUrl);
+      // setClientId(clientId);
+      // setSessionId(sessionId);
     } else {
       console.log("TODO: location not being found!");
     }

@@ -18,7 +18,6 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 
 import Button from "src/components/Button";
-import { useReduxState } from "src/lib/useReduxState";
 import "src/styles/Layout.css";
 import useHttpQueryParam from "src/lib/useHttpQueryParam";
 
