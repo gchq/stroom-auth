@@ -68,7 +68,6 @@ const UserCreateForm = ({ }) => {
         };
         return validateAsync(
           passwordValidationRequest,
-          idToken,
           authenticationServiceUrl
         );
       }}

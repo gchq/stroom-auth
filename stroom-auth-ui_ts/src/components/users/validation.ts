@@ -36,7 +36,7 @@ type PasswordValidationErrors = {
 
 export const validateAsync = (
   passwordValidationRequest: PasswordValidationRequest,
-  idToken: string,
+  // idToken: string,
   url: string
 ) => {
   if (passwordValidationRequest.newPassword) {
@@ -44,7 +44,7 @@ export const validateAsync = (
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + idToken
+        // Authorization: "Bearer " + idToken
       },
       method: "post",
       mode: "cors",

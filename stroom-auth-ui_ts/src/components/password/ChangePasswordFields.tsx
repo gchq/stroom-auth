@@ -66,7 +66,7 @@ const ChangePasswordFields = ({
         };
         return validateAsync(
           passwordValidationRequest,
-          idToken,
+          // idToken,
           authenticationServiceUrl
         );
       }}

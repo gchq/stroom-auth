@@ -85,7 +85,6 @@ const UserEditForm = () => {
           };
           validateAsync(
             passwordValidationRequest,
-            idToken,
             authenticationServiceUrl
           );
         }}
