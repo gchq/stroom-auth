@@ -129,6 +129,7 @@ public final class UserMapper {
         }
         user.setLoginCount(usersRecord.getLoginCount());
         user.setLoginFailures(usersRecord.getLoginFailures());
+        user.setForcePasswordChange(usersRecord.getForcePasswordChange());
         return user;
     }
 

@@ -345,23 +345,8 @@ public final class UserResource {
         Preconditions.checkNotNull(database);
 
         // Get the user
-        Record foundUserRecord = database
-                .select(USERS.ID,
-                        USERS.EMAIL,
-                        USERS.FIRST_NAME,
-                        USERS.LAST_NAME,
-                        USERS.COMMENTS,
-                        USERS.STATE,
-                        USERS.LOGIN_FAILURES,
-                        USERS.LOGIN_COUNT,
-                        USERS.LAST_LOGIN,
-                        USERS.UPDATED_ON,
-                        USERS.UPDATED_BY_USER,
-                        USERS.CREATED_ON,
-                        USERS.CREATED_BY_USER,
-                        USERS.NEVER_EXPIRES,
-                        USERS.FORCE_PASSWORD_CHANGE)
-                .from(USERS)
+        UsersRecord foundUserRecord = database
+                .selectFrom(USERS)
                 .where(new Condition[]{USERS.ID.eq(userId)})
                 .fetchOne();
         Response response;
@@ -379,28 +364,6 @@ public final class UserResource {
                 }
             }
 
-            Result foundUserResult = database.newResult(
-                    USERS.ID,
-                    USERS.EMAIL,
-                    USERS.FIRST_NAME,
-                    USERS.LAST_NAME,
-                    USERS.COMMENTS,
-                    USERS.STATE,
-                    USERS.LOGIN_FAILURES,
-                    USERS.LOGIN_COUNT,
-                    USERS.LAST_LOGIN,
-                    USERS.UPDATED_ON,
-                    USERS.UPDATED_BY_USER,
-                    USERS.CREATED_ON,
-                    USERS.CREATED_BY_USER,
-                    USERS.NEVER_EXPIRES,
-                    USERS.FORCE_PASSWORD_CHANGE);
-            foundUserResult.add(foundUserRecord);
-            String foundUserJson = foundUserResult
-                    .formatJSON((new JSONFormat())
-                            .header(false)
-                            .recordFormat(JSONFormat.RecordFormat.OBJECT));
-
             event.logging.User user = new event.logging.User();
             user.setId(foundUserRecord.get(USERS.EMAIL));
             ObjectOutcome objectOutcome = new ObjectOutcome();
@@ -412,7 +375,8 @@ public final class UserResource {
                     objectOutcome,
                     "Read a specific user.");
 
-            response = Response.status(Response.Status.OK).entity(foundUserJson).build();
+            User foundUser = UserMapper.map(foundUserRecord);
+            response = Response.status(Response.Status.OK).entity(foundUser).build();
             return response;
         }
     }
