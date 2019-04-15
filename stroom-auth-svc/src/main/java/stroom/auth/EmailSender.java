@@ -70,7 +70,7 @@ public class EmailSender {
         Preconditions.checkNotNull(config.getEmailConfig(), "Missing 'email' section in config");
 
         final EmailConfig emailConfig = config.getEmailConfig();
-        final String resetName = user.getFirst_name() + "" + user.getLast_name();
+        final String resetName = user.getFirstName() + "" + user.getLastName();
         final String resetUrl = String.format(emailConfig.getPasswordResetUrl(), resetToken);
         final String passwordResetEmailText = String.format(emailConfig.getPasswordResetText(), resetUrl);
 

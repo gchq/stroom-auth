@@ -36,9 +36,9 @@ public final class User {
     @Nullable
     private Integer id;
     @Nullable
-    private String first_name;
+    private String firstName;
     @Nullable
-    private String last_name;
+    private String lastName;
     @Nullable
     private String comments;
     @Nullable
@@ -48,25 +48,25 @@ public final class User {
     @Nullable
     private String password;
     @Nullable
-    private String password_hash;
+    private String passwordHash;
     @Nullable
-    private Integer login_failures;
+    private Integer loginFailures;
     @Nullable
-    private Integer login_count;
+    private Integer loginCount;
     @Nullable
-    private String last_login;
+    private String lastLogin;
     @Nullable
-    private String updated_on;
+    private String updatedOn;
     @Nullable
-    private String updated_by_user;
+    private String updatedByUser;
     @Nullable
-    private String created_on;
+    private String createdOn;
     @Nullable
-    private String created_by_user;
+    private String createdByUser;
     @Nullable
-    private boolean never_expires;
+    private boolean neverExpires;
     @Nullable
-    private boolean force_password_change;
+    private boolean forcePasswordChange;
     @Nullable
     private String reactivatedDate;
 
@@ -88,21 +88,21 @@ public final class User {
     }
 
     @Nullable
-    public final String getFirst_name() {
-        return this.first_name;
+    public final String getFirstName() {
+        return this.firstName;
     }
 
-    public final void setFirst_name(@Nullable String firstName) {
-        this.first_name = firstName;
+    public final void setFirstName(@Nullable String firstName) {
+        this.firstName = firstName;
     }
 
     @Nullable
-    public final String getLast_name() {
-        return this.last_name;
+    public final String getLastName() {
+        return this.lastName;
     }
 
-    public final void setLast_name(@Nullable String lastName) {
-        this.last_name = lastName;
+    public final void setLastName(@Nullable String lastName) {
+        this.lastName = lastName;
     }
 
     @Nullable
@@ -142,92 +142,92 @@ public final class User {
     }
 
     @Nullable
-    public final String getPassword_hash() {
-        return this.password_hash;
+    public final String getPasswordHash() {
+        return this.passwordHash;
     }
 
-    public final void setPassword_hash(@Nullable String passwordHash) {
-        this.password_hash = passwordHash;
-    }
-
-    @Nullable
-    public final Integer getLogin_failures() {
-        return this.login_failures;
-    }
-
-    public final void setLogin_failures(@Nullable Integer loginFailures) {
-        this.login_failures = loginFailures;
+    public final void setPasswordHash(@Nullable String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     @Nullable
-    public final Integer getLogin_count() {
-        return this.login_count;
+    public final Integer getLoginFailures() {
+        return this.loginFailures;
     }
 
-    public final void setLogin_count(@Nullable Integer loginCount) {
-        this.login_count = loginCount;
-    }
-
-    @Nullable
-    public final String getLast_login() {
-        return this.last_login;
-    }
-
-    public final void setLast_login(@Nullable String lastLogin) {
-        this.last_login = lastLogin;
+    public final void setLoginFailures(@Nullable Integer loginFailures) {
+        this.loginFailures = loginFailures;
     }
 
     @Nullable
-    public final String getUpdated_on() {
-        return this.updated_on;
+    public final Integer getLoginCount() {
+        return this.loginCount;
     }
 
-    public final void setUpdated_on(@Nullable String updatedOn) {
-        this.updated_on = updatedOn;
-    }
-
-    @Nullable
-    public final String getUpdated_by_user() {
-        return this.updated_by_user;
-    }
-
-    public final void setUpdated_by_user(@Nullable String updatedByUser) {
-        this.updated_by_user = updatedByUser;
+    public final void setLoginCount(@Nullable Integer loginCount) {
+        this.loginCount = loginCount;
     }
 
     @Nullable
-    public final String getCreated_on() {
-        return this.created_on;
+    public final String getLastLogin() {
+        return this.lastLogin;
     }
 
-    public final void setCreated_on(@Nullable String createdOn) {
-        this.created_on = createdOn;
-    }
-
-    @Nullable
-    public final String getCreated_by_user() {
-        return this.created_by_user;
-    }
-
-    public final void setCreated_by_user(@Nullable String createdByUser) {
-        this.created_by_user = createdByUser;
+    public final void setLastLogin(@Nullable String lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     @Nullable
-    public boolean getNever_expires() {
-        return never_expires;
+    public final String getUpdatedOn() {
+        return this.updatedOn;
     }
 
-    public void setNever_expires(@Nullable boolean never_expires) {
-        this.never_expires = never_expires;
+    public final void setUpdatedOn(@Nullable String updatedOn) {
+        this.updatedOn = updatedOn;
     }
 
-    public boolean isForce_password_change() {
-        return force_password_change;
+    @Nullable
+    public final String getUpdatedByUser() {
+        return this.updatedByUser;
     }
 
-    public void setForce_password_change(boolean force_password_change) {
-        this.force_password_change = force_password_change;
+    public final void setUpdatedByUser(@Nullable String updatedByUser) {
+        this.updatedByUser = updatedByUser;
+    }
+
+    @Nullable
+    public final String getCreatedOn() {
+        return this.createdOn;
+    }
+
+    public final void setCreatedOn(@Nullable String createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    @Nullable
+    public final String getCreatedByUser() {
+        return this.createdByUser;
+    }
+
+    public final void setCreatedByUser(@Nullable String createdByUser) {
+        this.createdByUser = createdByUser;
+    }
+
+    @Nullable
+    public boolean getNeverExpires() {
+        return neverExpires;
+    }
+
+    public void setNeverExpires(@Nullable boolean neverExpires) {
+        this.neverExpires = neverExpires;
+    }
+
+    public boolean isForcePasswordChange() {
+        return forcePasswordChange;
+    }
+
+    public void setForcePasswordChange(boolean forcePasswordChange) {
+        this.forcePasswordChange = forcePasswordChange;
     }
 
     public void setReactivatedDate(String reactivatedDate) {
@@ -290,22 +290,22 @@ public final class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", comments='" + comments + '\'' +
                 ", email='" + email + '\'' +
                 ", state='" + state + '\'' +
                 ", password='" + password + '\'' +
-                ", password_hash='" + password_hash + '\'' +
-                ", login_failures=" + login_failures +
-                ", login_count=" + login_count +
-                ", last_login='" + last_login + '\'' +
-                ", updated_on='" + updated_on + '\'' +
-                ", updated_by_user='" + updated_by_user + '\'' +
-                ", created_on='" + created_on + '\'' +
-                ", created_by_user='" + created_by_user + '\'' +
-                ", never_expire='" + never_expires + '\'' +
-                ", force_password_change='" + force_password_change + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", loginFailures=" + loginFailures +
+                ", loginCount=" + loginCount +
+                ", lastLogin='" + lastLogin + '\'' +
+                ", updatedOn='" + updatedOn + '\'' +
+                ", updatedByUser='" + updatedByUser + '\'' +
+                ", createdOn='" + createdOn + '\'' +
+                ", createdByUser='" + createdByUser + '\'' +
+                ", neverExpires='" + neverExpires + '\'' +
+                ", forcePasswordChange='" + forcePasswordChange + '\'' +
                 ", reactivated_date='" + reactivatedDate + '\'' +
                 '}';
     }

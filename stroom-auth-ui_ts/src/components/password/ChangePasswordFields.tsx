@@ -23,7 +23,7 @@ import { PasswordValidationRequest } from "src/api/authentication/types";
 import { hasAnyProps } from "src/lib/lang";
 import { validateAsync } from "src/components/users/validation";
 import { useConfig } from 'src/startup/config';
-import { useAuthenticationContext } from 'src/startup/Authentication';
+import { useAuthenticationContext } from 'src/startup/authentication';
 
 const ChangePasswordFields = ({
   email,

@@ -84,9 +84,9 @@ public class UserDao {
     }
 
     public int create(User newUser, String creatingUsername){
-        newUser.setCreated_on(UserMapper.toIso(Timestamp.from(Instant.now(clock))));
-        newUser.setCreated_by_user(creatingUsername);
-        newUser.setLogin_count(0);
+        newUser.setCreatedOn(UserMapper.toIso(Timestamp.from(Instant.now(clock))));
+        newUser.setCreatedByUser(creatingUsername);
+        newUser.setLoginCount(0);
         UsersRecord usersRecord = UserMapper.map(newUser);
         UsersRecord createdUser = database.newRecord(USERS, usersRecord);
         createdUser.store();

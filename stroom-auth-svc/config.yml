@@ -109,7 +109,7 @@ sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 mont
 ownPath: ${OWN_PATH:-authenticationService}
 
 appPermissionService:
-  url: $STROOM_APP_PERMISSSIONS_SERVICE_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
+  url: ${STROOM_APP_PERMISSSIONS_SERVICE_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
   canManageUsersPermission: ${STROOM_APP_PERMISSIONS_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
 #  groupsForUserPath: ${STROOM_APP_PERMISSIONS_SERVICE_GROUPS_FOR_USER_PATH:-/groupsForUserName}
 

@@ -450,8 +450,8 @@ public final class UserResource {
             userServiceClient.setUserStatus(authenticatedServiceUser.getJwt(), user.getEmail(), isEnabled);
         }
 
-        user.setUpdated_by_user(authenticatedServiceUser.getName());
-        user.setUpdated_on(LocalDateTime.now().toString());
+        user.setUpdatedByUser(authenticatedServiceUser.getName());
+        user.setUpdatedOn(LocalDateTime.now().toString());
         UsersRecord updatedUsersRecord = UserMapper.updateUserRecordWithUser(user, usersRecord);
         database
                 .update((Table) USERS)

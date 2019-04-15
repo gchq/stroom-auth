@@ -122,8 +122,8 @@ const UserFields = ({
               <div className="field-container__spacer" />
               <div className="field-container--with-validation">
                 <Field
-                  name="never_expires"
-                  label="never_expires"
+                  name="neverExpires"
+                  label="neverExpires"
                   component={CheckboxField}
                 />
                 <ErrorMessage
@@ -170,8 +170,8 @@ const UserFields = ({
               <div className="field-container__spacer" />
               <div className="field-container--with-validation">
                 <Field
-                  name="force_password_change"
-                  label="force_password_change"
+                  name="forcePasswordChange"
+                  label="forcePasswordChange"
                   component={CheckboxField}
                 />
               </div>

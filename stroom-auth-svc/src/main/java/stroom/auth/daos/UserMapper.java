@@ -47,23 +47,23 @@ public final class UserMapper {
 
         if (user.getId() != null) userMap.put("id", user.getId());
         if (!Strings.isNullOrEmpty(user.getEmail())) userMap.put("email", user.getEmail());
-        if (!Strings.isNullOrEmpty(user.getPassword_hash())) userMap.put("password_hash", user.getPassword_hash());
+        if (!Strings.isNullOrEmpty(user.getPasswordHash())) userMap.put("password_hash", user.getPasswordHash());
         // This will override the setting for getPasswordHash, above. If there's a hash it'll map that,
         // but if there's a password it'll update the hash.
         if (!Strings.isNullOrEmpty(user.getPassword())) userMap.put("password_hash", user.generatePasswordHash());
-        if (user.getFirst_name() != null) userMap.put("first_name", user.getFirst_name());
-        if (user.getLast_name() != null)userMap.put("last_name", user.getLast_name());
+        if (user.getFirstName() != null) userMap.put("first_name", user.getFirstName());
+        if (user.getLastName() != null)userMap.put("last_name", user.getLastName());
         if (user.getComments() != null) userMap.put("comments", user.getComments());
-        if (user.getLogin_count() != null) userMap.put("login_count", user.getLogin_count());
-        if (user.getLogin_failures() != null) userMap.put("login_failures", user.getLogin_failures());
-        if (user.getLast_login() != null) userMap.put("last_login", convertISO8601ToTimestamp(user.getLast_login()));
-        if (user.getCreated_on() != null) userMap.put("created_on", convertISO8601ToTimestamp(user.getCreated_on()));
-        if (user.getCreated_by_user() != null) userMap.put("created_by_user", user.getCreated_by_user());
-        if (user.getUpdated_on() != null) userMap.put("updated_on", convertISO8601ToTimestamp(user.getUpdated_on()));
-        if (user.getUpdated_by_user() != null) userMap.put("updated_by_user", user.getUpdated_by_user());
+        if (user.getLoginCount() != null) userMap.put("login_count", user.getLoginCount());
+        if (user.getLoginFailures() != null) userMap.put("login_failures", user.getLoginFailures());
+        if (user.getLastLogin() != null) userMap.put("last_login", convertISO8601ToTimestamp(user.getLastLogin()));
+        if (user.getCreatedOn() != null) userMap.put("created_on", convertISO8601ToTimestamp(user.getCreatedOn()));
+        if (user.getCreatedByUser() != null) userMap.put("created_by_user", user.getCreatedByUser());
+        if (user.getUpdatedOn() != null) userMap.put("updated_on", convertISO8601ToTimestamp(user.getUpdatedOn()));
+        if (user.getUpdatedByUser() != null) userMap.put("updated_by_user", user.getUpdatedByUser());
 
-        userMap.put("never_expires", user.getNever_expires());
-        userMap.put("force_password_change", user.isForce_password_change());
+        userMap.put("never_expires", user.getNeverExpires());
+        userMap.put("force_password_change", user.isForcePasswordChange());
 
         // This is last because if we're going from locked to enabled then we need to reset the login failures.
         // And in this case we'll want to override any other setting for login_failures.
@@ -83,24 +83,24 @@ public final class UserMapper {
 
     public static UsersRecord map(User user){
         UsersRecord usersRecord = new UsersRecord();
-        usersRecord.setForcePasswordChange(user.isForce_password_change());
+        usersRecord.setForcePasswordChange(user.isForcePasswordChange());
         usersRecord.setComments(user.getComments());
-        usersRecord.setCreatedByUser(user.getCreated_by_user());
-        usersRecord.setCreatedOn(convertISO8601ToTimestamp(user.getCreated_on()));
+        usersRecord.setCreatedByUser(user.getCreatedByUser());
+        usersRecord.setCreatedOn(convertISO8601ToTimestamp(user.getCreatedOn()));
         usersRecord.setEmail(user.getEmail());
-        usersRecord.setFirstName(user.getFirst_name());
+        usersRecord.setFirstName(user.getFirstName());
         usersRecord.setId(user.getId());
-        usersRecord.setLastLogin(convertISO8601ToTimestamp(user.getLast_login()));
-        usersRecord.setLastName(user.getLast_name());
-        usersRecord.setLoginCount(user.getLogin_count());
-        usersRecord.setLoginFailures(user.getLogin_failures());
-        usersRecord.setNeverExpires(user.getNever_expires());
+        usersRecord.setLastLogin(convertISO8601ToTimestamp(user.getLastLogin()));
+        usersRecord.setLastName(user.getLastName());
+        usersRecord.setLoginCount(user.getLoginCount());
+        usersRecord.setLoginFailures(user.getLoginFailures());
+        usersRecord.setNeverExpires(user.getNeverExpires());
         usersRecord.setPasswordHash(user.generatePasswordHash());
         usersRecord.setReactivatedDate(convertISO8601ToTimestamp(user.getReactivatedDate()));
         usersRecord.setState(user.getState());
         usersRecord.setState(user.getState());
-        usersRecord.setUpdatedByUser(user.getUpdated_by_user());
-        usersRecord.setUpdatedOn(convertISO8601ToTimestamp(user.getUpdated_on()));
+        usersRecord.setUpdatedByUser(user.getUpdatedByUser());
+        usersRecord.setUpdatedOn(convertISO8601ToTimestamp(user.getUpdatedOn()));
         return usersRecord;
     }
 
@@ -110,25 +110,25 @@ public final class UserMapper {
         user.setState(usersRecord.getState());
         user.setComments(usersRecord.getComments());
         user.setId(usersRecord.getId());
-        user.setFirst_name(usersRecord.getFirstName());
-        user.setLast_name(usersRecord.getLastName());
-        user.setNever_expires(usersRecord.getNeverExpires());
-        user.setUpdated_by_user(usersRecord.getUpdatedByUser());
+        user.setFirstName(usersRecord.getFirstName());
+        user.setLastName(usersRecord.getLastName());
+        user.setNeverExpires(usersRecord.getNeverExpires());
+        user.setUpdatedByUser(usersRecord.getUpdatedByUser());
         if(usersRecord.getUpdatedOn() != null) {
-            user.setUpdated_on(toIso(usersRecord.getUpdatedOn()));
+            user.setUpdatedOn(toIso(usersRecord.getUpdatedOn()));
         }
-        user.setCreated_by_user(usersRecord.getCreatedByUser());
+        user.setCreatedByUser(usersRecord.getCreatedByUser());
         if(usersRecord.getCreatedOn() != null) {
-            user.setCreated_on(toIso(usersRecord.getCreatedOn()));
+            user.setCreatedOn(toIso(usersRecord.getCreatedOn()));
         }
         if(usersRecord.getLastLogin() != null) {
-            user.setLast_login(toIso(usersRecord.getLastLogin()));
+            user.setLastLogin(toIso(usersRecord.getLastLogin()));
         }
         if(usersRecord.getReactivatedDate() != null) {
             user.setReactivatedDate(toIso(usersRecord.getReactivatedDate()));
         }
-        user.setLogin_count(usersRecord.getLoginCount());
-        user.setLogin_failures(usersRecord.getLoginFailures());
+        user.setLoginCount(usersRecord.getLoginCount());
+        user.setLoginFailures(usersRecord.getLoginFailures());
         return user;
     }
 

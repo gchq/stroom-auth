@@ -49,8 +49,8 @@ export const useApi = (): Api => {
         last_name: user.last_name,
         comments: user.comments,
         state: user.state,
-        never_expires: user.never_expires,
-        force_password_change: user.force_password_change
+        neverExpires: user.neverExpires,
+        forcePasswordChange: user.forcePasswordChange
       })
     });
   }, []);
@@ -65,8 +65,8 @@ export const useApi = (): Api => {
         last_name: user.last_name,
         comments: user.comments,
         state: user.state,
-        never_expires: user.never_expires,
-        force_password_change: user.force_password_change
+        neverExpires: user.neverExpires,
+        forcePasswordChange: user.forcePasswordChange
       })
     });
   }, []);

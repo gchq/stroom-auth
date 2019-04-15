@@ -107,22 +107,22 @@ public final class UserMapperTest {
         assertThat(mapped.getId()).isEqualTo(orig.getId());
         assertThat(mapped.getReactivatedDate()).isEqualTo(orig.getReactivatedDate());
         assertThat(mapped.getState()).isEqualTo(orig.getState());
-        assertThat(mapped.getCreated_on()).isEqualTo(orig.getCreated_on());
-        assertThat(mapped.getUpdated_on()).isEqualTo(orig.getUpdated_on());
-        assertThat(mapped.getLogin_failures()).isEqualTo(orig.getLogin_failures());
+        assertThat(mapped.getCreatedOn()).isEqualTo(orig.getCreatedOn());
+        assertThat(mapped.getUpdatedOn()).isEqualTo(orig.getUpdatedOn());
+        assertThat(mapped.getLoginFailures()).isEqualTo(orig.getLoginFailures());
         assertThat(mapped.getEmail()).isEqualTo(orig.getEmail());
-        assertThat(mapped.getLast_login()).isEqualTo(orig.getLast_login());
-        assertThat(mapped.getLogin_count()).isEqualTo(orig.getLogin_count());
+        assertThat(mapped.getLastLogin()).isEqualTo(orig.getLastLogin());
+        assertThat(mapped.getLoginCount()).isEqualTo(orig.getLoginCount());
         //TODO Add get password last change to the POJO
 //        assertThat(mapped.getPasswordLastChanged()).isEqualTo(orig.get());
         assertThat(mapped.getComments()).isEqualTo(orig.getComments());
-        assertThat(mapped.getCreated_by_user()).isEqualTo(orig.getCreated_by_user());
-        assertThat(mapped.getFirst_name()).isEqualTo(orig.getFirst_name());
-        assertThat(mapped.getLast_name()).isEqualTo(orig.getLast_name());
-        assertThat(mapped.getNever_expires()).isEqualTo(orig.getNever_expires());
+        assertThat(mapped.getCreatedByUser()).isEqualTo(orig.getCreatedByUser());
+        assertThat(mapped.getFirstName()).isEqualTo(orig.getFirstName());
+        assertThat(mapped.getLastName()).isEqualTo(orig.getLastName());
+        assertThat(mapped.getNeverExpires()).isEqualTo(orig.getNeverExpires());
         // NB: We don't need to check password hash mapping
-//        assertThat(mapped.getPassword_hash()).isNotNull();
-        assertThat(mapped.getUpdated_by_user()).isEqualTo(orig.getUpdated_by_user());
+//        assertThat(mapped.getPasswordHash()).isNotNull();
+        assertThat(mapped.getUpdatedByUser()).isEqualTo(orig.getUpdatedByUser());
     }
 
     @Test
@@ -145,43 +145,43 @@ public final class UserMapperTest {
         user.setEmail("new email");
         usersRecord.setEmail("new email");
 
-        user.setPassword_hash("new hash");
+        user.setPasswordHash("new hash");
         usersRecord.setPasswordHash(user.generatePasswordHash());
 
         user.setState(DISABLED.getStateText());
         usersRecord.setState(DISABLED.getStateText());
 
-        user.setFirst_name("new first name");
+        user.setFirstName("new first name");
         usersRecord.setFirstName("new first name");
 
-        user.setLast_name("new last name");
+        user.setLastName("new last name");
         usersRecord.setLastName("new last name");
 
         user.setComments("new comments");
         usersRecord.setComments("new comments");
 
-        user.setLogin_failures(3);
+        user.setLoginFailures(3);
         usersRecord.setLoginFailures(3);
 
-        user.setLogin_count(5);
+        user.setLoginCount(5);
         usersRecord.setLoginCount(5);
 
-        user.setLast_login("2017-01-01T00:00:00");
+        user.setLastLogin("2017-01-01T00:00:00");
         usersRecord.setLastLogin(isoToTimestamp("2017-01-01T00:00:00.000"));
 
-        user.setUpdated_on("2017-01-02T00:00:00");
+        user.setUpdatedOn("2017-01-02T00:00:00");
         usersRecord.setUpdatedOn(isoToTimestamp("2017-01-02T00:00:00"));
 
-        user.setUpdated_by_user("New updating user");
+        user.setUpdatedByUser("New updating user");
         usersRecord.setUpdatedByUser("New updating user");
 
-        user.setCreated_on("2017-01-03T00:00:00");
+        user.setCreatedOn("2017-01-03T00:00:00");
         usersRecord.setCreatedOn(isoToTimestamp("2017-01-03T00:00:00"));
 
-        user.setCreated_by_user("New creating user");
+        user.setCreatedByUser("New creating user");
         usersRecord.setCreatedByUser("New creating user");
 
-        user.setNever_expires(false);
+        user.setNeverExpires(false);
         usersRecord.setNeverExpires(false);
 
         user.setReactivatedDate("2019-01-01T10:10:10");

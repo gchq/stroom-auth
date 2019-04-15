@@ -31,7 +31,7 @@ import UserFields from "./UserFields";
 import { UserValidationSchema, validateAsync } from "../validation";
 import { useUsers } from "../api";
 import { useConfig } from 'src/startup/config';
-import { useAuthenticationContext } from 'src/startup/Authentication';
+import { useAuthenticationContext } from 'src/startup/authentication';
 
 const UserEditForm = () => {
   const { updateUser, fetchUser, user } = useUsers();
@@ -57,8 +57,8 @@ const UserEditForm = () => {
       password: "",
       verifyPassword: "",
       comments: user.comments || "",
-      never_expires: user.never_expires || false,
-      force_password_change: user.force_password_change || false
+      neverExpires: user.neverExpires || false,
+      forcePasswordChange: user.forcePasswordChange || false
     };
 
     const handleBack = (isPristine: boolean) => {

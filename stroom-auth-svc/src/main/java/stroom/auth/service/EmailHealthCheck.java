@@ -22,8 +22,8 @@ public class EmailHealthCheck extends HealthCheck {
         if (emailConfig.isAllowPasswordResets()) {
             try {
                 User dummyUser = new User("dummy_email@dummydummydummydummy.abc", "Dummy password");
-                dummyUser.setFirst_name("Dummy first name");
-                dummyUser.setLast_name("Dummy last name");
+                dummyUser.setFirstName("Dummy first name");
+                dummyUser.setLastName("Dummy last name");
                 emailSender.send(dummyUser, "Dummy token");
             } catch (Exception ex) {
                 return Result.unhealthy(ex);

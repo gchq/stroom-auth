@@ -338,7 +338,7 @@ public class UserDao_IT extends Database_IT {
         User user = new User();
         user.setEmail(email);
         user.setState(status);
-        user.setNever_expires(neverExpires);
+        user.setNeverExpires(neverExpires);
         user.setReactivatedDate(reactivatedDate);
         userDao.create(user, "UserDao_IT");
         User newUser = userDao.get(email).get();

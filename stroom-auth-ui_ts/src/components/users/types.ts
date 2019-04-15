@@ -11,12 +11,12 @@ export interface User {
   created_on?: any;
   email: string;
   first_name: string;
-  force_password_change: boolean;
+  forcePasswordChange: boolean;
   id?: string;
   last_login?: any;
   last_name: string;
   login_count?: number;
-  never_expires?: boolean;
+  neverExpires?: boolean;
   state: string;
   updated_by_user?: any;
   updated_on?: any;

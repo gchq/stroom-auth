@@ -29,7 +29,7 @@ import { NewUserValidationSchema, validateAsync } from "../validation";
 import { User } from "../types";
 import { useUsers } from "../api";
 import { useConfig } from 'src/startup/config';
-import { useAuthenticationContext } from 'src/startup/Authentication';
+import { useAuthenticationContext } from 'src/startup/authentication';
 
 // If we don't pass initialValues to Formik then they won't be controlled
 // and we'll get console errors when they're used.
@@ -41,7 +41,7 @@ const initialValues = {
   password: "",
   verifyPassword: "",
   comments: "",
-  force_password_change: true
+  forcePasswordChange: true
 };
 
 const UserCreateForm = ({ }) => {
