@@ -95,10 +95,10 @@ public class TokenDao {
             orderDirection = "asc";
         }
 
-        Field userEmail = tokenOwnerUsers.EMAIL.as("user_email");
+        Field userEmail = tokenOwnerUsers.EMAIL.as("userEmail");
         // Special cases
         Optional<SortField> orderByField;
-        if (orderBy != null && orderBy.equals("user_email")) {
+        if (orderBy != null && orderBy.equals("userEmail")) {
             // Why is this a special case? Because the property on the target table is 'email' but the param is 'user_email'
             // 'user_email' is a clearer param
             if (orderDirection.equals("asc")) {
@@ -376,37 +376,15 @@ public class TokenDao {
         // We might be ordering by TOKENS or USERS or TOKEN_TYPES - we join and select on all
         SortField orderByField;
         if (orderBy != null) {
-            // We have an orderBy...
-            if (TOKENS.field(orderBy) != null) {
-                //... and this orderBy is from TOKENS...
-                if (Strings.isNullOrEmpty(orderDirection)) {
-                    // ... but we don't have an orderDirection
-                    orderByField = TOKENS.field(orderBy).asc();
-                } else {
-                    // ... and we do have an order direction
-                    orderByField = orderDirection.toLowerCase().equals("asc") ? TOKENS.field(orderBy).asc() : TOKENS.field(orderBy).desc();
-                }
-            } else if (USERS.field(orderBy) != null) {
-                //... and this orderBy is from USERS
-                if (Strings.isNullOrEmpty(orderDirection)) {
-                    //... but we don't have an orderDirection
-                    orderByField = USERS.field(orderBy).asc();
-                } else {
-                    // ... and we do have an order direction
-                    orderByField = orderDirection.toLowerCase().equals("asc") ? USERS.field(orderBy).asc() : USERS.field(orderBy).desc();
-                }
-            } else if (TOKEN_TYPES.field(orderBy) != null) {
-                //... and this orderBy is from TOKEN_TYPES
-                if (Strings.isNullOrEmpty(orderDirection)) {
-                    //... but we don't have an orderDirection
-                    orderByField = TOKEN_TYPES.field(orderBy).asc();
-                } else {
-                    // ... and we do have an order direction
-                    orderByField = orderDirection.toLowerCase().equals("asc") ? TOKEN_TYPES.field(orderBy).asc() : TOKEN_TYPES.field(orderBy).desc();
-                }
-            } else {
-                // ... but we couldn't match it to anything
-                return Optional.empty();
+            switch(orderBy){
+                case "userEmail":
+                    orderByField = orderDirection.equals("asc") ? USERS.EMAIL.asc() : USERS.EMAIL.desc();
+                    break;
+                case "enabled":
+                    orderByField = orderDirection.equals("asc") ? TOKENS.ENABLED.asc() : TOKENS.ENABLED.desc();
+                    break;
+                case "issuedOn":
+                default:  orderByField = orderDirection.equals("asc") ? TOKENS.ISSUED_ON.asc() : TOKENS.ISSUED_ON.desc();
             }
         } else {
             // We don't have an orderBy so we'll use the default ordering

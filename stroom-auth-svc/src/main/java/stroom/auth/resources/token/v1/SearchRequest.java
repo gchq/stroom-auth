@@ -38,8 +38,8 @@ public class SearchRequest {
 
     @Nullable
     @Pattern(
-            regexp = "^enabled$|^user_email$|^issued_by_user$|^token$|^token_type$|^updated_by_user$|^expires_on$|^issued_on$|^updated_on$",
-            message = "orderBy must be one of: 'enabled', 'user_email', 'issued_by_user', 'token', 'token_type', 'updated_by_user', 'expires_on', 'issued_on', 'updated_on'")
+            regexp = "^enabled$|^userEmail$|^issueByUser$|^token$|^tokenType$|^updatedByUser$|^expiresOn$|^issuedOn$|^updatedOn$",
+            message = "orderBy must be one of: 'enabled', 'userEmail', 'issuedByUser', 'token', 'tokenType', 'updatedByUser', 'expiresOn', 'issuedOn', 'updatedOn'")
     @ApiModelProperty(value = "The property by which to order the results.", required = false)
     private String orderBy;
 

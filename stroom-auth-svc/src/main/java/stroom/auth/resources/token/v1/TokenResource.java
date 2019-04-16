@@ -123,9 +123,9 @@ public class TokenResource {
         if (filters != null) {
             for (String key : filters.keySet()) {
                 switch (key) {
-                    case "expires_on":
-                    case "issued_on":
-                    case "updated_on":
+                    case "expiresOn":
+                    case "issuedOn":
+                    case "updatedOn":
                         return Response.status(Response.Status.BAD_REQUEST).entity("Filtering by date is not supported.").build();
                 }
             }
