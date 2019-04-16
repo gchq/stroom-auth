@@ -435,7 +435,7 @@ public final class UserResource {
                 update,
                 "Toggle whether a token is enabled or not.");
 
-        Response response = Response.status(Response.Status.OK).build();
+        Response response = Response.status(Response.Status.NO_CONTENT).build();
         return response;
     }
 
