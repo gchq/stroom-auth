@@ -170,7 +170,7 @@ public class TokenResource {
 
         event.logging.Object object = new event.logging.Object();
         object.setId("NewToken");
-        object.setName(token.getToken_type());
+        object.setName(token.getTokenType());
         ObjectOutcome objectOutcome = new ObjectOutcome();
         objectOutcome.getObjects().add(object);
         stroomEventLoggingService.create(
@@ -241,7 +241,7 @@ public class TokenResource {
                 objectOutcome,
                 "Delete a token by ID");
 
-        return Response.status(Response.Status.OK).entity("Deleted token").build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @ApiOperation(
@@ -371,7 +371,7 @@ public class TokenResource {
 
         if(updatingUser.isPresent()) {
             tokenDao.enableOrDisableToken(tokenId, enabled, updatingUser.get());
-            return Response.status(Response.Status.OK).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
         else {
             LOGGER.error("Unable to find the user that we just authenticated!");

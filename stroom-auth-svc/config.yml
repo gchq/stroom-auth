@@ -140,5 +140,5 @@ passwordIntegrityChecks:
   forcePasswordChangeOnFirstLogin: ${FORCE_PASSWORD_CHANGE_ON_FIRST_LOGIN:-true}
   # There is an effective regex here: https://stackoverflow.com/questions/3802192/regexp-java-for-password-validation
   # That regex won't work when pasted directly into this YAML.
-  minimumPasswordLength: ${MINIMUM_PASSWORD_LENGTH:-8}
+  minimumPasswordLength: ${MINIMUM_PASSWORD_LENGTH:-1}
   passwordComplexityRegex: ${PASSWORD_COMPLEXITY_REGEX:-.*}

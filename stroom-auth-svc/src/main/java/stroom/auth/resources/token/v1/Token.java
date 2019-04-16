@@ -31,31 +31,31 @@ public class Token {
     private int id;
 
     @Nullable
-    private String user_email;
+    private String userEmail;
 
     @Nullable
-    private String token_type;
+    private String tokenType;
 
     @Nullable
     private String token;
 
     @Nullable
-    private String expires_on;
+    private String expiresOn;
 
     @Nullable
-    private String issued_on;
+    private String issuedOn;
 
     @Nullable
-    private String issued_by_user;
+    private String issuedByUser;
 
     @Nullable
     private boolean enabled;
 
     @Nullable
-    private String updated_on;
+    private String updatedOn;
 
     @Nullable
-    private String updated_by_user;
+    private String updatedByUser;
 
     @Nullable
     public int getId() {
@@ -67,21 +67,21 @@ public class Token {
     }
 
     @Nullable
-    public String getUser_email() {
-        return user_email;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser_email(@Nullable String user_email) {
-        this.user_email = user_email;
+    public void setUserEmail(@Nullable String userEmail) {
+        this.userEmail = userEmail;
     }
 
     @Nullable
-    public String getToken_type() {
-        return token_type;
+    public String getTokenType() {
+        return tokenType;
     }
 
-    public void setToken_type(@Nullable String token_type) {
-        this.token_type = token_type;
+    public void setTokenType(@Nullable String tokenType) {
+        this.tokenType = tokenType;
     }
 
     @Nullable
@@ -94,30 +94,30 @@ public class Token {
     }
 
     @Nullable
-    public String getExpires_on() {
-        return expires_on;
+    public String getExpiresOn() {
+        return expiresOn;
     }
 
-    public void setExpires_on(@Nullable String expires_on) {
-        this.expires_on = expires_on;
-    }
-
-    @Nullable
-    public String getIssued_on() {
-        return issued_on;
-    }
-
-    public void setIssued_on(@Nullable String issued_on) {
-        this.issued_on = issued_on;
+    public void setExpiresOn(@Nullable String expiresOn) {
+        this.expiresOn = expiresOn;
     }
 
     @Nullable
-    public String getIssued_by_user() {
-        return issued_by_user;
+    public String getIssuedOn() {
+        return issuedOn;
     }
 
-    public void setIssued_by_user(@Nullable String issued_by_user) {
-        this.issued_by_user = issued_by_user;
+    public void setIssuedOn(@Nullable String issuedOn) {
+        this.issuedOn = issuedOn;
+    }
+
+    @Nullable
+    public String getIssuedByUser() {
+        return issuedByUser;
+    }
+
+    public void setIssuedByUser(@Nullable String issuedByUser) {
+        this.issuedByUser = issuedByUser;
     }
 
     @Nullable
@@ -130,21 +130,21 @@ public class Token {
     }
 
     @Nullable
-    public String getUpdated_on() {
-        return updated_on;
+    public String getUpdatedOn() {
+        return updatedOn;
     }
 
-    public void setUpdated_on(@Nullable String updated_on) {
-        this.updated_on = updated_on;
+    public void setUpdatedOn(@Nullable String updatedOn) {
+        this.updatedOn = updatedOn;
     }
 
     @Nullable
-    public String getUpdated_by_user() {
-        return updated_by_user;
+    public String getUpdateByUser() {
+        return updatedByUser;
     }
 
-    public void setUpdated_by_user(@Nullable String updated_by_user) {
-        this.updated_by_user = updated_by_user;
+    public void setUpdatedByUser(@Nullable String updatedByUser) {
+        this.updatedByUser = updatedByUser;
     }
 
     public enum TokenType {
@@ -231,15 +231,15 @@ public class Token {
         public Token build() {
             Token token = new Token();
             token.setId(id);
-            token.setUser_email(userEmail);
-            token.setToken_type(tokenType);
+            token.setUserEmail(userEmail);
+            token.setTokenType(tokenType);
             token.setToken(this.token);
-            token.setExpires_on(expiresOn);
-            token.setIssued_on(issuedOn);
-            token.setIssued_by_user(issuedByUser);
+            token.setExpiresOn(expiresOn);
+            token.setIssuedOn(issuedOn);
+            token.setIssuedByUser(issuedByUser);
             token.setEnabled(enabled);
-            token.setUpdated_on(updatedOn);
-            token.setUpdated_by_user(updatedByUser);
+            token.setUpdatedOn(updatedOn);
+            token.setUpdatedByUser(updatedByUser);
             return token;
         }
     }

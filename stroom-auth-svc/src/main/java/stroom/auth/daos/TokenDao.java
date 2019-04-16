@@ -443,14 +443,14 @@ public class TokenDao {
                     case "enabled":
                         condition = TOKENS.ENABLED.eq(Boolean.valueOf(filters.get(key)));
                         break;
-                    case "expires_on":
+                    case "expiresOn":
                         throw new UnsupportedFilterException(unsupportedFilterMessage + key);
-                    case "user_email":
+                    case "userEmail":
                         condition = tokenOwnerUsers.EMAIL.contains(filters.get(key));
                         break;
-                    case "issued_on":
+                    case "issuedOn":
                         throw new UnsupportedFilterException(unsupportedFilterMessage + key);
-                    case "issued_by_user":
+                    case "issuedByUser":
                         condition = issueingUsers.EMAIL.contains(filters.get(key));
                         break;
                     case "token":
@@ -459,15 +459,15 @@ public class TokenDao {
                         // fastest way to find the token.
                         condition = TOKENS.TOKEN.contains(filters.get(key));
                         break;
-                    case "token_type":
+                    case "tokenType":
                         condition = TOKEN_TYPES.TOKEN_TYPE.contains(filters.get(key));
                         break;
-                    case "updated_by_user":
+                    case "updatedByUser":
                         condition = updatingUsers.EMAIL.contains(filters.get(key));
                         break;
-                    case "updated_on":
+                    case "updatedOn":
                         throw new UnsupportedFilterException(unsupportedFilterMessage + key);
-                    case "user_id":
+                    case "userId":
                         throw new UnsupportedFilterException(unsupportedFilterMessage + key);
                     default:
                         throw new UnsupportedFilterException(unknownFilterMessage + key);

@@ -95,7 +95,7 @@ public class TokenVerifier {
             return Optional.empty();
         }
         LOGGER.debug("Looks like this token is fine.");
-        return Optional.of(tokenRecord.get().getUser_email());
+        return Optional.of(tokenRecord.get().getUserEmail());
     }
 
     public JwtConsumer getJwtConsumer(){
