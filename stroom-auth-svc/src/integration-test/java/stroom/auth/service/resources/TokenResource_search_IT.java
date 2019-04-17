@@ -32,6 +32,7 @@ import stroom.auth.service.api.model.User;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,7 +57,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         stroom.auth.service.api.model.SearchRequest searchRequest = new stroom.auth.service.api.model.SearchRequest();
         searchRequest.setPage(0);
         searchRequest.setLimit(10);
-        searchRequest.setOrderBy("expires_on");
+        searchRequest.setOrderBy("expiresOn");
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(searchRequest);
 
         assertThat(response.getData().getTokens().size()).isGreaterThan(0);
@@ -109,7 +110,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(new stroom.auth.service.api.model.SearchRequest()
                 .page(0)
                 .limit(5)
-                .orderBy("token_type"));
+                .orderBy("tokenType"));
 
         Token.TokenType expectedType = API;
         assertThat(response.getData().getTokens().size()).isEqualTo(5);
@@ -135,7 +136,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
                 new stroom.auth.service.api.model.SearchRequest()
                         .page(0)
                         .limit(5)
-                        .orderBy("token_type")
+                        .orderBy("tokenType")
                         .orderDirection("asc"));
 
         Token.TokenType expectedType = API;
@@ -176,14 +177,13 @@ public class TokenResource_search_IT extends TokenResource_IT {
                 new stroom.auth.service.api.model.SearchRequest()
                         .page(0)
                         .limit(5)
-                        .orderBy("token_type")
+                        .orderBy("tokenType")
                         .orderDirection("desc"));
-
-        assertThat(response.getData().getTokens().size()).isEqualTo(5);
+        List<stroom.auth.service.api.model.Token> tokens = response.getData().getTokens();
+        assertThat(tokens.size()).isEqualTo(5);
         assertThat(response.getStatusCode()).isEqualTo(200);
 
-        response.getData().getTokens().forEach(result ->
-                assertThat(result.getTokenType()).isEqualTo(USER.getText()));
+        tokens.forEach(result -> assertThat(result.getTokenType()).isEqualTo(USER.getText()));
     }
 
     @Test
@@ -207,27 +207,27 @@ public class TokenResource_search_IT extends TokenResource_IT {
         assertOrderByValidity("BAD", false, idToken);
         assertOrderByValidity("enabledd", false, idToken);
         assertOrderByValidity("aenabled", false, idToken);
-        assertOrderByValidity("user_emaila", false, idToken);
-        assertOrderByValidity("auser_email", false, idToken);
-        assertOrderByValidity("issued_by_usera", false, idToken);
-        assertOrderByValidity("jissued_by_user", false, idToken);
+        assertOrderByValidity("userEmaila", false, idToken);
+        assertOrderByValidity("auserEmail", false, idToken);
+        assertOrderByValidity("issuedByUsera", false, idToken);
+        assertOrderByValidity("jissuedByUser", false, idToken);
         assertOrderByValidity("tokene", false, idToken);
         assertOrderByValidity("etoken", false, idToken);
-        assertOrderByValidity("token_typea", false, idToken);
-        assertOrderByValidity("otoken_type", false, idToken);
-        assertOrderByValidity("updated_by_userj", false, idToken);
-        assertOrderByValidity("qupdated_by_user", false, idToken);
+        assertOrderByValidity("tokenTypea", false, idToken);
+        assertOrderByValidity("otokenType", false, idToken);
+        assertOrderByValidity("updatedByUserj", false, idToken);
+        assertOrderByValidity("qupdatedByUser", false, idToken);
 
         // Valid orderBy values
         assertOrderByValidity("enabled", true, idToken);
-        assertOrderByValidity("user_email", true, idToken);
-        assertOrderByValidity("issued_by_user", true, idToken);
+        assertOrderByValidity("userEmail", true, idToken);
+        assertOrderByValidity("issuedByUser", true, idToken);
         assertOrderByValidity("token", true, idToken);
-        assertOrderByValidity("token_type", true, idToken);
-        assertOrderByValidity("updated_by_user", true, idToken);
-        assertOrderByValidity("expires_on", true, idToken);
-        assertOrderByValidity("issued_on", true, idToken);
-        assertOrderByValidity("updated_on", true, idToken);
+        assertOrderByValidity("tokenType", true, idToken);
+        assertOrderByValidity("updatedByUser", true, idToken);
+        assertOrderByValidity("expiresOn", true, idToken);
+        assertOrderByValidity("issuedOn", true, idToken);
+        assertOrderByValidity("updatedOn", true, idToken);
     }
 
     @Test
@@ -264,11 +264,11 @@ public class TokenResource_search_IT extends TokenResource_IT {
         ApiResponse<SearchResponse> response = apiKeyApiClient.searchWithHttpInfo(
                 new stroom.auth.service.api.model.SearchRequest()
                         .filters(new HashMap() {{
-                            put("user_email", "user1");
+                            put("userEmail", "user1");
                         }})
                         .page(0)
                         .limit(10)
-                        .orderBy("expires_on"));
+                        .orderBy("expiresOn"));
 
         int expectedNumberOfTokens = 9; // 3 users should match the filter and they'll have 3 tokens each (API, USER, EMAIL_RESET)
         assertThat(response.getData().getTokens().size()).isEqualTo(expectedNumberOfTokens);
@@ -280,16 +280,16 @@ public class TokenResource_search_IT extends TokenResource_IT {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         assertFilterValidity("bad", false, idToken);
-        assertFilterValidity("expires_on", false, idToken);
-        assertFilterValidity("issued_on", false, idToken);
-        assertFilterValidity("updated_on", false, idToken);
+        assertFilterValidity("expiresOn", false, idToken);
+        assertFilterValidity("issuedOn", false, idToken);
+        assertFilterValidity("updatedOn", false, idToken);
 
         assertFilterValidity("enabled", true, idToken);
-        assertFilterValidity("user_email", true, idToken);
-        assertFilterValidity("issued_by_user", true, idToken);
+        assertFilterValidity("userEmail", true, idToken);
+        assertFilterValidity("issuedByUser", true, idToken);
         assertFilterValidity("token", true, idToken);
-        assertFilterValidity("token_type", true, idToken);
-        assertFilterValidity("updated_by_user", true, idToken);
+        assertFilterValidity("tokenType", true, idToken);
+        assertFilterValidity("updatedByUser", true, idToken);
     }
 
     private void assertOrderDirectionValidity(String orderDirection, boolean isValid, String idToken) throws Exception {
@@ -330,7 +330,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
                             }})
                             .page(0)
                             .limit(10)
-                            .orderBy("expires_on"));
+                            .orderBy("expiresOn"));
         } catch (ApiException e) {
             if (isValid) {
                 fail("Request should have been valid");

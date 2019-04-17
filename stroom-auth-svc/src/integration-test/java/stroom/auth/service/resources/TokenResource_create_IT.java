@@ -16,6 +16,7 @@
 
 package stroom.auth.service.resources;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.jose4j.lang.JoseException;
 import org.junit.Ignore;
@@ -28,6 +29,8 @@ import stroom.auth.service.api.model.CreateTokenRequest;
 import stroom.auth.service.api.model.Token;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -42,6 +45,13 @@ public class TokenResource_create_IT extends TokenResource_IT {
         String idToken = AuthenticationFlowHelper.authenticateAsAdmin();
 
         ApiKeyApi apiKeyApiClient = SwaggerHelper.newApiKeyApiClient(idToken);
+
+        Set<String> foos = new HashSet<>();
+        foos.add("Manage Users");
+        foos.add("Administrator");
+       ObjectMapper mapper = new ObjectMapper();
+       String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(foos);
+       System.out.println(json);
 
         CreateTokenRequest createTokenRequest = new CreateTokenRequest();
         createTokenRequest.setUserEmail("admin");

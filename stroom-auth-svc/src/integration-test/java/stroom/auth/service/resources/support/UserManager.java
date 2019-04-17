@@ -66,6 +66,10 @@ public class UserManager {
         return (List<User>) userListMapper().fromJson(body);
     }
 
+    public final User deserialiseUser(String body) throws IOException {
+        return (User) userMapper().fromJson(body);
+    }
+
     public final String serialiseUser(User user) {
         return new Moshi.Builder().build().adapter(User.class).toJson(user);
     }
@@ -74,6 +78,13 @@ public class UserManager {
         Moshi moshi = new Moshi.Builder().build();
         ParameterizedType type = Types.newParameterizedType(List.class, User.class);
         JsonAdapter<List<User>> jsonAdapter = moshi.adapter(type);
+        return jsonAdapter;
+    }
+
+    private JsonAdapter userMapper() {
+        Moshi moshi = new Moshi.Builder().build();
+        ParameterizedType type = Types.newParameterizedType(User.class);
+        JsonAdapter<User> jsonAdapter = moshi.adapter(type);
         return jsonAdapter;
     }
 

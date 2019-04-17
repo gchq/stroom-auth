@@ -51,6 +51,7 @@ public final class UserMapperTest {
         usersRecord.setCreatedByUser("creating user");
         usersRecord.setNeverExpires(true);
         usersRecord.setReactivatedDate(new Timestamp(System.currentTimeMillis()));
+        usersRecord.setForcePasswordChange(true);
 
         User user = getUsers().getRight();
 
@@ -70,6 +71,7 @@ public final class UserMapperTest {
         assertThat(updatedRecord.getCreatedOn()).isEqualTo(UserMapper.convertISO8601ToTimestamp("2017-01-03T00:00:00"));
         assertThat(updatedRecord.getCreatedByUser()).isEqualTo("New creating user");
         assertThat(updatedRecord.getNeverExpires()).isEqualTo(false);
+        assertThat(updatedRecord.getForcePasswordChange()).isEqualTo(true);
         // NB: We don't need to map reactivate_date because it's set by this method anyway.
 //        assertThat(updatedRecord.getReactivatedDate()).isEqualTo("2018-01-01T10:10:10");
     }
@@ -97,6 +99,7 @@ public final class UserMapperTest {
         // NB: We don't assert that the password has is equal because this is generated. We just assert it's not null.
         assertThat(mapped.getPasswordHash()).isNotNull();
         assertThat(mapped.getUpdatedByUser()).isEqualTo(orig.getUpdatedByUser());
+        assertThat(mapped.getForcePasswordChange()).isEqualTo(orig.getForcePasswordChange());
     }
 
     @Test
@@ -123,6 +126,7 @@ public final class UserMapperTest {
         // NB: We don't need to check password hash mapping
 //        assertThat(mapped.getPasswordHash()).isNotNull();
         assertThat(mapped.getUpdatedByUser()).isEqualTo(orig.getUpdatedByUser());
+        assertThat(mapped.isForcePasswordChange()).isEqualTo(orig.isForcePasswordChange());
     }
 
     @Test
@@ -131,7 +135,7 @@ public final class UserMapperTest {
         // To make it pass you'll need to updated the count, below.
         // It exists to remind you to add a mapping in UserMapper.
         // The count is one more than the number in UserRecord, because it has a 'password' property.
-        int currentNumberOfPropertiesOnUser = 17;
+        int currentNumberOfPropertiesOnUser = 18;
         assertThat(User.class.getDeclaredFields().length).isEqualTo(currentNumberOfPropertiesOnUser);
     }
 
@@ -186,6 +190,9 @@ public final class UserMapperTest {
 
         user.setReactivatedDate("2019-01-01T10:10:10");
         usersRecord.setReactivatedDate(isoToTimestamp("2019-01-01T10:10:10"));
+
+        user.setForcePasswordChange(true);
+        usersRecord.setForcePasswordChange(true);
 
         return new ImmutablePair(usersRecord, user);
     }

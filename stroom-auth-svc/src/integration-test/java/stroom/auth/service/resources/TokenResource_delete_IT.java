@@ -49,7 +49,7 @@ public class TokenResource_delete_IT extends TokenResource_IT {
         assertThat(newApiKeyJws).isNotNull();
 
         ApiResponse<String> deleteResponse = apiKeyApiClient.delete_0WithHttpInfo(newApiKeyId.getId());
-        assertThat(deleteResponse.getStatusCode()).isEqualTo(200);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(204);
 
         // Check that the token we just created has been saved.
         try {

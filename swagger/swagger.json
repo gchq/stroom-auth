@@ -52,12 +52,12 @@
         "parameters" : [ {
           "name" : "scope",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "response_type",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "client_id",
@@ -72,10 +72,15 @@
         }, {
           "name" : "nonce",
           "in" : "query",
-          "required" : true,
+          "required" : false,
           "type" : "string"
         }, {
           "name" : "state",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "prompt",
           "in" : "query",
           "required" : false,
           "type" : "string"
@@ -170,6 +175,32 @@
         }
       }
     },
+    "/authentication/v1/isPasswordValid" : {
+      "post" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Returns the length and complexity rules.",
+        "description" : "",
+        "operationId" : "isPasswordValid",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "passwordValidationRequest",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PasswordValidationRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        }
+      }
+    },
     "/authentication/v1/logout" : {
       "get" : {
         "tags" : [ "Authentication" ],
@@ -178,9 +209,38 @@
         "operationId" : "logout",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "redirect_url",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
         "responses" : {
           "default" : {
             "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/authentication/v1/needsPasswordChange" : {
+      "get" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Check if a user's password needs changing.",
+        "description" : "",
+        "operationId" : "needsPasswordChange",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "boolean"
+            }
           }
         }
       }
@@ -197,6 +257,32 @@
           "in" : "path",
           "required" : true,
           "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/authentication/v1/resetPassword" : {
+      "post" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Reset an authenticated user's password.",
+        "description" : "",
+        "operationId" : "resetPassword",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "changePasswordRequest",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/ResetPasswordRequest"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -502,6 +588,29 @@
         }
       }
     },
+    "/user/v1/search" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Search for a user by email.",
+        "description" : "",
+        "operationId" : "searchUsers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
     "/user/v1/{id}" : {
       "get" : {
         "tags" : [ "User" ],
@@ -584,17 +693,17 @@
       "type" : "object",
       "required" : [ "email", "newPassword", "oldPassword" ],
       "properties" : {
-        "email" : {
+        "newPassword" : {
           "type" : "string",
-          "description" : "The email address of the user we're changing the password for."
+          "description" : "The new password."
         },
         "oldPassword" : {
           "type" : "string",
           "description" : "The old password."
         },
-        "newPassword" : {
+        "email" : {
           "type" : "string",
-          "description" : "The new password."
+          "description" : "The email address of the user we're changing the password for."
         }
       },
       "description" : "A request to change a user's password."
@@ -645,6 +754,35 @@
         }
       }
     },
+    "PasswordValidationRequest" : {
+      "type" : "object",
+      "required" : [ "email", "newPassword" ],
+      "properties" : {
+        "oldPassword" : {
+          "type" : "string",
+          "description" : "THe user's old password"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "The user's email address."
+        },
+        "newPassword" : {
+          "type" : "string",
+          "description" : "The new password for the user."
+        }
+      },
+      "description" : "A request to validate a user's password."
+    },
+    "ResetPasswordRequest" : {
+      "type" : "object",
+      "required" : [ "newPassword" ],
+      "properties" : {
+        "newPassword" : {
+          "type" : "string",
+          "description" : "The new password."
+        }
+      }
+    },
     "SearchRequest" : {
       "type" : "object",
       "required" : [ "limit", "page" ],
@@ -662,7 +800,7 @@
         "orderBy" : {
           "type" : "string",
           "description" : "The property by which to order the results.",
-          "pattern" : "^enabled$|^user_email$|^issued_by_user$|^token$|^token_type$|^updated_by_user$|^expires_on$|^issued_on$|^updated_on$"
+          "pattern" : "^enabled$|^userEmail$|^issueByUser$|^token$|^tokenType$|^updatedByUser$|^expiresOn$|^issuedOn$|^updatedOn$"
         },
         "orderDirection" : {
           "type" : "string",
@@ -705,31 +843,31 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "user_email" : {
+        "userEmail" : {
           "type" : "string"
         },
-        "token_type" : {
+        "tokenType" : {
           "type" : "string"
         },
         "token" : {
           "type" : "string"
         },
-        "expires_on" : {
+        "expiresOn" : {
           "type" : "string"
         },
-        "issued_on" : {
+        "issuedOn" : {
           "type" : "string"
         },
-        "issued_by_user" : {
+        "issuedByUser" : {
           "type" : "string"
         },
         "enabled" : {
           "type" : "boolean"
         },
-        "updated_on" : {
+        "updatedOn" : {
           "type" : "string"
         },
-        "updated_by_user" : {
+        "updateByUser" : {
           "type" : "string"
         }
       }
@@ -741,10 +879,10 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first_name" : {
+        "firstName" : {
           "type" : "string"
         },
-        "last_name" : {
+        "lastName" : {
           "type" : "string"
         },
         "comments" : {
@@ -759,30 +897,39 @@
         "password" : {
           "type" : "string"
         },
-        "password_hash" : {
+        "passwordHash" : {
           "type" : "string"
         },
-        "login_failures" : {
+        "loginFailures" : {
           "type" : "integer",
           "format" : "int32"
         },
-        "login_count" : {
+        "loginCount" : {
           "type" : "integer",
           "format" : "int32"
         },
-        "last_login" : {
+        "lastLogin" : {
           "type" : "string"
         },
-        "updated_on" : {
+        "updatedOn" : {
           "type" : "string"
         },
-        "updated_by_user" : {
+        "updatedByUser" : {
           "type" : "string"
         },
-        "created_on" : {
+        "createdOn" : {
           "type" : "string"
         },
-        "created_by_user" : {
+        "createdByUser" : {
+          "type" : "string"
+        },
+        "neverExpires" : {
+          "type" : "boolean"
+        },
+        "forcePasswordChange" : {
+          "type" : "boolean"
+        },
+        "reactivatedDate" : {
           "type" : "string"
         }
       }

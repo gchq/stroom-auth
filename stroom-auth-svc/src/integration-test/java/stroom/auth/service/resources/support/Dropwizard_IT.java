@@ -30,9 +30,11 @@ import stroom.auth.service.App;
 import java.io.IOException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
 public abstract class Dropwizard_IT extends Database_IT {
 
@@ -88,10 +90,15 @@ public abstract class Dropwizard_IT extends Database_IT {
 
     @Before
     public void before(){
-        stubFor(post(urlEqualTo("/api/authorisation/v1/canManageUsers"))
+        stubFor(get(urlEqualTo("/api/appPermissions/v1/byName/admin"))
                 .willReturn(aResponse()
-                        .withHeader("Content-Type", "text/plain")
-                        .withBody("Mock approval for authorisation")
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("[\"Manager Users\", \"Administrator\"]")
+                        .withStatus(200)));
+        stubFor(get(urlPathMatching("/api/appPermissions/v1/byName/userEmail.*"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("[\"Some Permission\"]")
                         .withStatus(200)));
     }
 }

@@ -383,6 +383,9 @@ public class TokenDao {
                 case "enabled":
                     orderByField = orderDirection.equals("asc") ? TOKENS.ENABLED.asc() : TOKENS.ENABLED.desc();
                     break;
+                case "tokenType":
+                    orderByField = orderDirection.equals("asc") ? TOKEN_TYPES.TOKEN_TYPE.asc() : TOKEN_TYPES.TOKEN_TYPE.desc();
+                    break;
                 case "issuedOn":
                 default:  orderByField = orderDirection.equals("asc") ? TOKENS.ISSUED_ON.asc() : TOKENS.ISSUED_ON.desc();
             }

@@ -8,8 +8,11 @@ Method | HTTP request | Description
 [**getIdToken**](AuthenticationApi.md#getIdToken) | **GET** /authentication/v1/idToken | Convert a previously provided access code into an ID token
 [**handleAuthenticationRequest**](AuthenticationApi.md#handleAuthenticationRequest) | **GET** /authentication/v1/authenticate | Submit an OpenId AuthenticationRequest.
 [**handleLogin**](AuthenticationApi.md#handleLogin) | **POST** /authentication/v1/authenticate | Handle a login request made using username and password credentials.
+[**isPasswordValid**](AuthenticationApi.md#isPasswordValid) | **POST** /authentication/v1/isPasswordValid | Returns the length and complexity rules.
 [**logout**](AuthenticationApi.md#logout) | **GET** /authentication/v1/logout | Log a user out of their session
+[**needsPasswordChange**](AuthenticationApi.md#needsPasswordChange) | **GET** /authentication/v1/needsPasswordChange | Check if a user&#39;s password needs changing.
 [**resetEmail**](AuthenticationApi.md#resetEmail) | **GET** /authentication/v1/reset/{email} | Reset a user account using an email address.
+[**resetPassword**](AuthenticationApi.md#resetPassword) | **POST** /authentication/v1/resetPassword | Reset an authenticated user&#39;s password.
 [**verifyToken**](AuthenticationApi.md#verifyToken) | **GET** /authentication/v1/verify/{token} | Verify the authenticity and current-ness of a JWS token.
 [**welcome**](AuthenticationApi.md#welcome) | **GET** /authentication/v1 | A welcome message.
 
@@ -108,7 +111,7 @@ No authorization required
 
 <a name="handleAuthenticationRequest"></a>
 # **handleAuthenticationRequest**
-> String handleAuthenticationRequest(clientId, redirectUrl, nonce, scope, responseType, state)
+> String handleAuthenticationRequest(scope, responseType, clientId, redirectUrl, nonce, state, prompt)
 
 Submit an OpenId AuthenticationRequest.
 
@@ -122,14 +125,15 @@ Submit an OpenId AuthenticationRequest.
 
 
 AuthenticationApi apiInstance = new AuthenticationApi();
+String scope = "scope_example"; // String | 
+String responseType = "responseType_example"; // String | 
 String clientId = "clientId_example"; // String | 
 String redirectUrl = "redirectUrl_example"; // String | 
 String nonce = "nonce_example"; // String | 
-String scope = "scope_example"; // String | 
-String responseType = "responseType_example"; // String | 
 String state = "state_example"; // String | 
+String prompt = "prompt_example"; // String | 
 try {
-    String result = apiInstance.handleAuthenticationRequest(clientId, redirectUrl, nonce, scope, responseType, state);
+    String result = apiInstance.handleAuthenticationRequest(scope, responseType, clientId, redirectUrl, nonce, state, prompt);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling AuthenticationApi#handleAuthenticationRequest");
@@ -141,12 +145,13 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **scope** | **String**|  |
+ **responseType** | **String**|  |
  **clientId** | **String**|  |
  **redirectUrl** | **String**|  |
- **nonce** | **String**|  |
- **scope** | **String**|  | [optional]
- **responseType** | **String**|  | [optional]
+ **nonce** | **String**|  | [optional]
  **state** | **String**|  | [optional]
+ **prompt** | **String**|  | [optional]
 
 ### Return type
 
@@ -206,9 +211,54 @@ No authorization required
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+<a name="isPasswordValid"></a>
+# **isPasswordValid**
+> Boolean isPasswordValid(body)
+
+Returns the length and complexity rules.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.AuthenticationApi;
+
+
+AuthenticationApi apiInstance = new AuthenticationApi();
+PasswordValidationRequest body = new PasswordValidationRequest(); // PasswordValidationRequest | passwordValidationRequest
+try {
+    Boolean result = apiInstance.isPasswordValid(body);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling AuthenticationApi#isPasswordValid");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**PasswordValidationRequest**](PasswordValidationRequest.md)| passwordValidationRequest | [optional]
+
+### Return type
+
+**Boolean**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 <a name="logout"></a>
 # **logout**
-> logout()
+> logout(redirectUrl)
 
 Log a user out of their session
 
@@ -222,8 +272,9 @@ Log a user out of their session
 
 
 AuthenticationApi apiInstance = new AuthenticationApi();
+String redirectUrl = "redirectUrl_example"; // String | 
 try {
-    apiInstance.logout();
+    apiInstance.logout(redirectUrl);
 } catch (ApiException e) {
     System.err.println("Exception when calling AuthenticationApi#logout");
     e.printStackTrace();
@@ -231,7 +282,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **redirectUrl** | **String**|  | [optional]
 
 ### Return type
 
@@ -244,6 +298,51 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="needsPasswordChange"></a>
+# **needsPasswordChange**
+> Boolean needsPasswordChange(email)
+
+Check if a user&#39;s password needs changing.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.AuthenticationApi;
+
+
+AuthenticationApi apiInstance = new AuthenticationApi();
+String email = "email_example"; // String | 
+try {
+    Boolean result = apiInstance.needsPasswordChange(email);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling AuthenticationApi#needsPasswordChange");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **email** | **String**|  | [optional]
+
+### Return type
+
+**Boolean**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="resetEmail"></a>
@@ -277,6 +376,51 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **email** | **String**|  |
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="resetPassword"></a>
+# **resetPassword**
+> String resetPassword(body)
+
+Reset an authenticated user&#39;s password.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.AuthenticationApi;
+
+
+AuthenticationApi apiInstance = new AuthenticationApi();
+ResetPasswordRequest body = new ResetPasswordRequest(); // ResetPasswordRequest | changePasswordRequest
+try {
+    String result = apiInstance.resetPassword(body);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling AuthenticationApi#resetPassword");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**ResetPasswordRequest**](ResetPasswordRequest.md)| changePasswordRequest | [optional]
 
 ### Return type
 

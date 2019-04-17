@@ -68,3 +68,11 @@ SELECT t.id, tt.token_type, u.email, t.expires_on, t.comments
 FROM token_types AS tt, users AS u, tokens AS t 
 WHERE tt.id=t.token_type_id AND u.id=t.user_id; 
 ```
+
+
+## Re-generating the api client
+If any of the models change, e.g. User, Token, then the Swagger clients should be updated. Do this as follows:
+```
+./gradlew generatedSwaggerDocumentation
+./gradlew generateSwaggerApi
+```

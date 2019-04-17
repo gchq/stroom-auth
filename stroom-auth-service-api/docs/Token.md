@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **issuedByUser** | **String** |  |  [optional]
 **enabled** | **Boolean** |  |  [optional]
 **updatedOn** | **String** |  |  [optional]
-**updatedByUser** | **String** |  |  [optional]
+**updateByUser** | **String** |  |  [optional]
 
 
 

@@ -19,21 +19,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * A request to change a user&#39;s password.
+ * ResetPasswordRequest
  */
-@ApiModel(description = "A request to change a user's password.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-04-17T11:44:44.052+01:00")
-public class ChangePasswordRequest {
+public class ResetPasswordRequest {
   @SerializedName("newPassword")
   private String newPassword = null;
 
-  @SerializedName("oldPassword")
-  private String oldPassword = null;
-
-  @SerializedName("email")
-  private String email = null;
-
-  public ChangePasswordRequest newPassword(String newPassword) {
+  public ResetPasswordRequest newPassword(String newPassword) {
     this.newPassword = newPassword;
     return this;
   }
@@ -51,42 +44,6 @@ public class ChangePasswordRequest {
     this.newPassword = newPassword;
   }
 
-  public ChangePasswordRequest oldPassword(String oldPassword) {
-    this.oldPassword = oldPassword;
-    return this;
-  }
-
-   /**
-   * The old password.
-   * @return oldPassword
-  **/
-  @ApiModelProperty(example = "null", required = true, value = "The old password.")
-  public String getOldPassword() {
-    return oldPassword;
-  }
-
-  public void setOldPassword(String oldPassword) {
-    this.oldPassword = oldPassword;
-  }
-
-  public ChangePasswordRequest email(String email) {
-    this.email = email;
-    return this;
-  }
-
-   /**
-   * The email address of the user we're changing the password for.
-   * @return email
-  **/
-  @ApiModelProperty(example = "null", required = true, value = "The email address of the user we're changing the password for.")
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -96,26 +53,22 @@ public class ChangePasswordRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ChangePasswordRequest changePasswordRequest = (ChangePasswordRequest) o;
-    return Objects.equals(this.newPassword, changePasswordRequest.newPassword) &&
-        Objects.equals(this.oldPassword, changePasswordRequest.oldPassword) &&
-        Objects.equals(this.email, changePasswordRequest.email);
+    ResetPasswordRequest resetPasswordRequest = (ResetPasswordRequest) o;
+    return Objects.equals(this.newPassword, resetPasswordRequest.newPassword);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(newPassword, oldPassword, email);
+    return Objects.hash(newPassword);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ChangePasswordRequest {\n");
+    sb.append("class ResetPasswordRequest {\n");
     
     sb.append("    newPassword: ").append(toIndentedString(newPassword)).append("\n");
-    sb.append("    oldPassword: ").append(toIndentedString(oldPassword)).append("\n");
-    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("}");
     return sb.toString();
   }

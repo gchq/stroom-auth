@@ -21,37 +21,37 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Token
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-12-08T08:24:32.610Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-04-17T11:44:44.052+01:00")
 public class Token {
   @SerializedName("id")
   private Integer id = null;
 
-  @SerializedName("user_email")
+  @SerializedName("userEmail")
   private String userEmail = null;
 
-  @SerializedName("token_type")
+  @SerializedName("tokenType")
   private String tokenType = null;
 
   @SerializedName("token")
   private String token = null;
 
-  @SerializedName("expires_on")
+  @SerializedName("expiresOn")
   private String expiresOn = null;
 
-  @SerializedName("issued_on")
+  @SerializedName("issuedOn")
   private String issuedOn = null;
 
-  @SerializedName("issued_by_user")
+  @SerializedName("issuedByUser")
   private String issuedByUser = null;
 
   @SerializedName("enabled")
   private Boolean enabled = null;
 
-  @SerializedName("updated_on")
+  @SerializedName("updatedOn")
   private String updatedOn = null;
 
-  @SerializedName("updated_by_user")
-  private String updatedByUser = null;
+  @SerializedName("updateByUser")
+  private String updateByUser = null;
 
   public Token id(Integer id) {
     this.id = id;
@@ -215,22 +215,22 @@ public class Token {
     this.updatedOn = updatedOn;
   }
 
-  public Token updatedByUser(String updatedByUser) {
-    this.updatedByUser = updatedByUser;
+  public Token updateByUser(String updateByUser) {
+    this.updateByUser = updateByUser;
     return this;
   }
 
    /**
-   * Get updatedByUser
-   * @return updatedByUser
+   * Get updateByUser
+   * @return updateByUser
   **/
   @ApiModelProperty(example = "null", value = "")
-  public String getUpdatedByUser() {
-    return updatedByUser;
+  public String getUpdateByUser() {
+    return updateByUser;
   }
 
-  public void setUpdatedByUser(String updatedByUser) {
-    this.updatedByUser = updatedByUser;
+  public void setUpdateByUser(String updateByUser) {
+    this.updateByUser = updateByUser;
   }
 
 
@@ -252,12 +252,12 @@ public class Token {
         Objects.equals(this.issuedByUser, token.issuedByUser) &&
         Objects.equals(this.enabled, token.enabled) &&
         Objects.equals(this.updatedOn, token.updatedOn) &&
-        Objects.equals(this.updatedByUser, token.updatedByUser);
+        Objects.equals(this.updateByUser, token.updateByUser);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, userEmail, tokenType, token, expiresOn, issuedOn, issuedByUser, enabled, updatedOn, updatedByUser);
+    return Objects.hash(id, userEmail, tokenType, token, expiresOn, issuedOn, issuedByUser, enabled, updatedOn, updateByUser);
   }
 
 
@@ -275,7 +275,7 @@ public class Token {
     sb.append("    issuedByUser: ").append(toIndentedString(issuedByUser)).append("\n");
     sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
     sb.append("    updatedOn: ").append(toIndentedString(updatedOn)).append("\n");
-    sb.append("    updatedByUser: ").append(toIndentedString(updatedByUser)).append("\n");
+    sb.append("    updateByUser: ").append(toIndentedString(updateByUser)).append("\n");
     sb.append("}");
     return sb.toString();
   }

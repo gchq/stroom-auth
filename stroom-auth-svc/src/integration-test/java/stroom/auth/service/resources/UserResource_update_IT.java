@@ -16,13 +16,15 @@
 
 package stroom.auth.service.resources;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
-import stroom.auth.resources.user.v1.User;
+//import stroom.auth.resources.user.v1.User;
 import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.UserApi;
 import stroom.auth.service.api.model.ChangePasswordRequest;
+import stroom.auth.service.api.model.User;
 import stroom.auth.service.resources.support.Dropwizard_IT;
 
 import java.util.UUID;
@@ -33,31 +35,41 @@ public final class UserResource_update_IT extends Dropwizard_IT {
     @Test
     public final void update_user() throws Exception {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
+        ObjectMapper mapper = new ObjectMapper();
 
+        // Create the user
+        String email = "update_user_" + UUID.randomUUID().toString();
         ApiResponse<Integer> response = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
-                .email("update_user_" + UUID.randomUUID().toString())
+                .email(email)
+                .state("enabled")
+                .comments("Some comments")
                 .password("password"));
+        int id = response.getData();
 
-        User user = userManager.deserialiseUsers(userApi.getUser(response.getData())).get(0);
+        // Get the full user and update
+        String users = userApi.getUser(id);
+        User user = mapper.readValue(users, User.class);
+        user.setComments("Different comments");
+        userApi.updateUser(user.getId(), user);
 
-        user.setEmail("new_email_" + UUID.randomUUID().toString());
+        // Get the user again
+        String updatedUserJson = userApi.getUser(id);
+        User updatedUser = mapper.readValue(updatedUserJson, User.class);
 
-        userApi.updateUser(response.getData(), new stroom.auth.service.api.model.User()
-            .id(user.getId())
-            .email(user.getEmail()));
-
-        User updatedUser = userManager.deserialiseUsers(userApi.getUser(response.getData())).get(0);
-
+        // Verify the update
         assertThat(updatedUser.getEmail()).isEqualTo(user.getEmail());
     }
 
     @Test
     public final void update_self_basic_user() throws Exception {
         UserApi userApi = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAsAdmin());
+        ObjectMapper mapper = new ObjectMapper();
 
+        // Create the user
         String userEmailA = "update_user_" + UUID.randomUUID().toString();
         int userEmailAId = userApi.createUserWithHttpInfo(new stroom.auth.service.api.model.User()
                 .email(userEmailA)
+                .state("enabled")
                 .password("password"))
                 .getData();
 
@@ -70,16 +82,18 @@ public final class UserResource_update_IT extends Dropwizard_IT {
                 .oldPassword("password")
                 .newPassword("password"));
 
-        User userA = userManager.deserialiseUsers(userApi.getUser(userEmailAId)).get(0);
+        // Get the full user and update
+        String userJson = userApi.getUser(userEmailAId);
+        User userA = mapper.readValue(userJson, User.class);
         userA.setComments("Updated user");
+        userApi.updateUser(userEmailAId, userA);
+
+        // Get the user again
         UserApi userApiA = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAs(userEmailA, "password"));
-        ApiResponse<String> userUpdateResponse = userApiA.updateUserWithHttpInfo(userEmailAId, new stroom.auth.service.api.model.User()
-                .id(userA.getId())
-                .comments(userA.getComments()));
+        String updatedUserJson = userApiA.getUser(userEmailAId);
+        User updatedUser = mapper.readValue(updatedUserJson, User.class);
 
-        assertThat(userUpdateResponse.getStatusCode()).isEqualTo(200);
-
-        User updatedUser = userManager.deserialiseUsers(userApi.getUser(userEmailAId)).get(0);
+        //Verify the update
         assertThat(updatedUser.getComments()).isEqualTo("Updated user");
     }
 }

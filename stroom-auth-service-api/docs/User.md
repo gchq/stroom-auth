@@ -19,6 +19,9 @@ Name | Type | Description | Notes
 **updatedByUser** | **String** |  |  [optional]
 **createdOn** | **String** |  |  [optional]
 **createdByUser** | **String** |  |  [optional]
+**neverExpires** | **Boolean** |  |  [optional]
+**forcePasswordChange** | **Boolean** |  |  [optional]
+**reactivatedDate** | **String** |  |  [optional]
 
 
 

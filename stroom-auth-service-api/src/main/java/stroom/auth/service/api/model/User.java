@@ -21,15 +21,15 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * User
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-12-08T08:24:32.610Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-04-17T11:44:44.052+01:00")
 public class User {
   @SerializedName("id")
   private Integer id = null;
 
-  @SerializedName("first_name")
+  @SerializedName("firstName")
   private String firstName = null;
 
-  @SerializedName("last_name")
+  @SerializedName("lastName")
   private String lastName = null;
 
   @SerializedName("comments")
@@ -44,29 +44,38 @@ public class User {
   @SerializedName("password")
   private String password = null;
 
-  @SerializedName("password_hash")
+  @SerializedName("passwordHash")
   private String passwordHash = null;
 
-  @SerializedName("login_failures")
+  @SerializedName("loginFailures")
   private Integer loginFailures = null;
 
-  @SerializedName("login_count")
+  @SerializedName("loginCount")
   private Integer loginCount = null;
 
-  @SerializedName("last_login")
+  @SerializedName("lastLogin")
   private String lastLogin = null;
 
-  @SerializedName("updated_on")
+  @SerializedName("updatedOn")
   private String updatedOn = null;
 
-  @SerializedName("updated_by_user")
+  @SerializedName("updatedByUser")
   private String updatedByUser = null;
 
-  @SerializedName("created_on")
+  @SerializedName("createdOn")
   private String createdOn = null;
 
-  @SerializedName("created_by_user")
+  @SerializedName("createdByUser")
   private String createdByUser = null;
+
+  @SerializedName("neverExpires")
+  private Boolean neverExpires = null;
+
+  @SerializedName("forcePasswordChange")
+  private Boolean forcePasswordChange = null;
+
+  @SerializedName("reactivatedDate")
+  private String reactivatedDate = null;
 
   public User id(Integer id) {
     this.id = id;
@@ -338,6 +347,60 @@ public class User {
     this.createdByUser = createdByUser;
   }
 
+  public User neverExpires(Boolean neverExpires) {
+    this.neverExpires = neverExpires;
+    return this;
+  }
+
+   /**
+   * Get neverExpires
+   * @return neverExpires
+  **/
+  @ApiModelProperty(example = "null", value = "")
+  public Boolean getNeverExpires() {
+    return neverExpires;
+  }
+
+  public void setNeverExpires(Boolean neverExpires) {
+    this.neverExpires = neverExpires;
+  }
+
+  public User forcePasswordChange(Boolean forcePasswordChange) {
+    this.forcePasswordChange = forcePasswordChange;
+    return this;
+  }
+
+   /**
+   * Get forcePasswordChange
+   * @return forcePasswordChange
+  **/
+  @ApiModelProperty(example = "null", value = "")
+  public Boolean getForcePasswordChange() {
+    return forcePasswordChange;
+  }
+
+  public void setForcePasswordChange(Boolean forcePasswordChange) {
+    this.forcePasswordChange = forcePasswordChange;
+  }
+
+  public User reactivatedDate(String reactivatedDate) {
+    this.reactivatedDate = reactivatedDate;
+    return this;
+  }
+
+   /**
+   * Get reactivatedDate
+   * @return reactivatedDate
+  **/
+  @ApiModelProperty(example = "null", value = "")
+  public String getReactivatedDate() {
+    return reactivatedDate;
+  }
+
+  public void setReactivatedDate(String reactivatedDate) {
+    this.reactivatedDate = reactivatedDate;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -362,12 +425,15 @@ public class User {
         Objects.equals(this.updatedOn, user.updatedOn) &&
         Objects.equals(this.updatedByUser, user.updatedByUser) &&
         Objects.equals(this.createdOn, user.createdOn) &&
-        Objects.equals(this.createdByUser, user.createdByUser);
+        Objects.equals(this.createdByUser, user.createdByUser) &&
+        Objects.equals(this.neverExpires, user.neverExpires) &&
+        Objects.equals(this.forcePasswordChange, user.forcePasswordChange) &&
+        Objects.equals(this.reactivatedDate, user.reactivatedDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, firstName, lastName, comments, email, state, password, passwordHash, loginFailures, loginCount, lastLogin, updatedOn, updatedByUser, createdOn, createdByUser);
+    return Objects.hash(id, firstName, lastName, comments, email, state, password, passwordHash, loginFailures, loginCount, lastLogin, updatedOn, updatedByUser, createdOn, createdByUser, neverExpires, forcePasswordChange, reactivatedDate);
   }
 
 
@@ -391,6 +457,9 @@ public class User {
     sb.append("    updatedByUser: ").append(toIndentedString(updatedByUser)).append("\n");
     sb.append("    createdOn: ").append(toIndentedString(createdOn)).append("\n");
     sb.append("    createdByUser: ").append(toIndentedString(createdByUser)).append("\n");
+    sb.append("    neverExpires: ").append(toIndentedString(neverExpires)).append("\n");
+    sb.append("    forcePasswordChange: ").append(toIndentedString(forcePasswordChange)).append("\n");
+    sb.append("    reactivatedDate: ").append(toIndentedString(reactivatedDate)).append("\n");
     sb.append("}");
     return sb.toString();
   }
