@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v1.0-beta.32] - 2019-05-08
+
+- Move stroom-auth-ui to stroom-ui
+
 * Issue **#91**: Allow an admin to specify that a user must change password at next login
 
 * Issue **#107**: Remove the 'password has been reset, prepare for redirection' page
@@ -228,7 +232,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.31...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.32...master
+[v1.0-beta.32]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.31...v1.0-beta.32
 [v1.0-beta.31]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.30...v1.0-beta.31
 [v1.0-beta.30]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.29...v1.0-beta.30
 [v1.0-beta.29]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.28...v1.0-beta.29
