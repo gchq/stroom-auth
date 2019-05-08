@@ -7,7 +7,6 @@ source docker_args.sh
 source docker_lib.sh
 
 readonly OPERATION=$_arg_operation
-readonly MODULE=$_arg_module
 readonly TAG=$_arg_tag
 
 setup_echo_colours() {
@@ -33,54 +32,17 @@ main() {
 
     case $OPERATION in
         build)
-            echo -e "${GREEN}Building ${BLUE}${MODULE}${GREEN} with tag ${BLUE}${TAG}${NC}"
-            case $MODULE in
-                ui)
-                    build_ui
-                ;;
-                service)
-                    build_service
-                ;;
-                all)
-                    build_ui
-                    build_service
-                ;;
-            esac
+            echo -e "${GREEN}Building with tag ${BLUE}${TAG}${NC}"
+            build_service
         ;;
         push)
-            echo -e "${GREEN}Pushing ${BLUE}${MODULE}${GREEN} with tag ${BLUE}${TAG}${NC}"
-            case $MODULE in
-                ui)
-                    push_ui
-                ;;
-                service)
-                    push_service
-                ;;
-                all)
-                    push_ui
-                    push_service
-                ;;
-            esac
+            echo -e "${GREEN}Pushing with tag ${BLUE}${TAG}${NC}"
+            push_service
         ;;
         publish)
-            echo -e "${GREEN}Building and pushing ${BLUE}${MODULE}${GREEN} with tag ${BLUE}${TAG}${NC}"
-            case $MODULE in
-                ui)
-                    build_ui
-                    push_ui
-                ;;
-                service)
-                    build_service
-                    push_service
-                ;;
-                all)
-                    build_ui
-                    push_ui
-
-                    build_service
-                    push_service
-                ;;
-            esac
+            echo -e "${GREEN}Building and pushing with tag ${BLUE}${TAG}${NC}"
+            build_service
+            push_service
         ;;
     esac
 }

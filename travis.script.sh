@@ -16,9 +16,6 @@ source docker_lib.sh
 readonly AUTH_SERVICE_REPO="gchq/stroom-auth-service"
 readonly AUTH_SERVICE_CONTEXT_ROOT="stroom-auth-svc/docker/."
 
-readonly AUTH_UI_REPO="gchq/stroom-auth-ui"
-readonly AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
-
 # This is a whitelist of branches to produce docker builds for
 readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^[0-9]+\.[0-9]+$)'
 
@@ -96,16 +93,6 @@ do_gradle_build() {
     ./gradlew -Pversion=$TRAVIS_TAG clean build shadowJar ${extra_build_args}
 }
 
-prep_ui_build() {
-    pushd ${AUTH_UI_CONTEXT_ROOT}
-    echo -e "Building UI from $(pwd)" 
-    mkdir -p work
-    cp ../package.json work/
-    cp -r ../src work/
-    cp -r ../public work/
-    popd
-}    
-
 do_docker_build() {
     # Don't do a docker build for pull requests
     if [ "$do_docker_build" = true ] && [ "$TRAVIS_PULL_REQUEST" = "false" ] ; then
@@ -118,10 +105,6 @@ do_docker_build() {
         echo -e "Building docker images for both UI and the service."
 
         echo -e "Preparing for service docker build"
-        prep_ui_build 
-        release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
-
-        echo -e "Preparing for ui docker build"
         prep_service_build 
         release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
     fi
