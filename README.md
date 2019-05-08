@@ -7,12 +7,6 @@ In Stroom 6.0 the responsibility for user identities moved from the Stroom core 
 ## Releasing to DockerHub
 You can release an image to DockerHub by pushing a tag to GitHub. GitHub will tell Travis to build, and pass it the tag. Our CI build script, `travis.script.sh`, will do the build and push the image. It will do this for every push to master and it will do it for _certain_ tags. 
 
-There are two images built in this repo: one for the service and one for the UI. These have separate release cycles, so one could be on `v1.0-beta.1` and one could be on `v1.0-beta.5`. This complicates the build slightly. If you want to release a tagged version you need to add a prefix to the tag, so Travis can detect whether it's for the UI or for the service. This prefix has to be in the right format to work. The formats are:
- - For a UI build prefix the tag with `ui_`, e.g. `ui_v1.0-beta.6`.
- - For a service build prefix the tag with `service_`, e.g. `service_v1.0-beta.7`.
-
-Travis will strip the prefix when it builds the docker image. The end result is that DockerHub has sensible tags, e.g. `gchq/stroom-auth-ui:v1.0-beta.5` instead of `gchq/stroom-auth-ui:ui_v1.0-beta.5`. GitHub will retain the tag you pushed, i.e. the one with the prefix.
-
 ## stroom-auth-svc
 A service that accepts HTTP requests for authentication, and returns JWS tokens.
 
