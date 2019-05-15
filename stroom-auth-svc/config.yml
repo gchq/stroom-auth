@@ -96,11 +96,11 @@ token:
 
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- .*\((.*)\)} # This is the Java regex pattern used to capture the ID from the CN.
 certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The pattern above must identify the group with the sid.loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5001/login}
-loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5001/login}
-changePasswordUrl: ${CHANGE_PASSWORD_URL:-http://<IP_ADDRESS>:5001/changepassword}
-unauthorisedUrl: ${UNAUTHORISED_URL:-http://<IP_ADDRESS>:5001/unauthorised}
-stroomUrl: ${STROOM_UI:- http://<IP_ADDRESS>:8099}
-advertisedHost: ${ADVERTISED_HTTP_HOST:- http://<IP_ADDRESS>}
+loginUrl: ${AUTH_UI:- https://<IP_ADDRESS>:9446/login}
+changePasswordUrl: ${CHANGE_PASSWORD_URL:-https://<IP_ADDRESS>:9446/changepassword}
+unauthorisedUrl: ${UNAUTHORISED_URL:-https://<IP_ADDRESS>:9446/unauthorised}
+stroomUrl: ${STROOM_UI:- https://<IP_ADDRESS>/stroom/ui}
+advertisedHost: ${ADVERTISED_HTTP_HOST:- https://<IP_ADDRESS>}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 month
 
