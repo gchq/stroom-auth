@@ -21,7 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import stroom.auth.daos.UserMapper;
 import stroom.auth.resources.user.v1.User;
-import stroom.db.auth.tables.records.UsersRecord;
+import stroom.auth.db.tables.records.UsersRecord;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

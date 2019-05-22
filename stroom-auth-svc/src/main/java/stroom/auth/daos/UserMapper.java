@@ -21,7 +21,7 @@ package stroom.auth.daos;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import stroom.auth.resources.user.v1.User;
-import stroom.db.auth.tables.records.UsersRecord;
+import stroom.auth.db.tables.records.UsersRecord;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;

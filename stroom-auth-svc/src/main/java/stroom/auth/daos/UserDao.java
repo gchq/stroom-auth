@@ -33,8 +33,8 @@ import stroom.auth.config.Config;
 import stroom.auth.exceptions.BadRequestException;
 import stroom.auth.exceptions.NoSuchUserException;
 import stroom.auth.resources.user.v1.User;
-import stroom.db.auth.Tables;
-import stroom.db.auth.tables.records.UsersRecord;
+import stroom.auth.db.Tables;
+import stroom.auth.db.tables.records.UsersRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static stroom.db.auth.Tables.USERS;
+import static stroom.auth.db.Tables.USERS;
 
 @Singleton
 public class UserDao {
