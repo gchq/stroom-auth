@@ -63,6 +63,11 @@ public final class App extends Application<Config> {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(App.class);
 
     public static final String SESSION_COOKIE_NAME = "authSessionId";
+
+    // This is the schema/database name used for jooq code generation and in integration tests.
+    // Runtime schema mapping is used to allow us to run with a different DB/schema name
+    //private static final String INTERNAL_DB_NAME = "auth";
+
     private Injector injector;
 
     public static void main(String[] args) throws Exception {
@@ -77,14 +82,12 @@ public final class App extends Application<Config> {
         public JooqFactory getJooqFactory(Config configuration) {
             return configuration.getJooqFactory();
         }
-
     };
 
     private final FlywayBundle flywayBundle = new FlywayBundle<Config>() {
         public DataSourceFactory getDataSourceFactory(Config config) {
             return config.getDataSourceFactory();
         }
-
 
         public FlywayFactory getFlywayFactory(Config config) {
             return config.getFlywayFactory();
@@ -104,6 +107,11 @@ public final class App extends Application<Config> {
 
         // The first thing to do is set up Guice
         Configuration jooqConfig = this.jooqBundle.getConfiguration();
+
+        // We only have one schema so don't qualify tables with their schema else we can't
+        // use a different db name in the connection url
+        jooqConfig.settings().setRenderSchema(false);
+
         injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
 
         // We need the database before we need most other things
@@ -120,6 +128,19 @@ public final class App extends Application<Config> {
         configureCors(environment);
         schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
     }
+
+//    private void configureDatabaseName(final Config config, final Configuration jooqConfig) {
+//        if (! INTERNAL_DB_NAME.equals(config.getDatabaseName())) {
+//            LOGGER.info("Mapping configured database name [{}] to internal name [{}] in jooq",
+//                    config.getDatabaseName(), INTERNAL_DB_NAME);
+//
+//            jooqConfig.settings()
+//                    .withRenderMapping(new RenderMapping()
+//                            .withSchemata(new MappedSchema()
+//                                    .withInput(INTERNAL_DB_NAME)
+//                                    .withOutput(config.getDatabaseName())));
+//        }
+//    }
 
     private void waitForDatabaseConnection(final Config config) {
         DataSourceFactory dataSourceFactory = config.getDataSourceFactory();
