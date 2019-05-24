@@ -64,10 +64,6 @@ public final class App extends Application<Config> {
 
     public static final String SESSION_COOKIE_NAME = "authSessionId";
 
-    // This is the schema/database name used for jooq code generation and in integration tests.
-    // Runtime schema mapping is used to allow us to run with a different DB/schema name
-    //private static final String INTERNAL_DB_NAME = "auth";
-
     private Injector injector;
 
     public static void main(String[] args) throws Exception {
@@ -128,19 +124,6 @@ public final class App extends Application<Config> {
         configureCors(environment);
         schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
     }
-
-//    private void configureDatabaseName(final Config config, final Configuration jooqConfig) {
-//        if (! INTERNAL_DB_NAME.equals(config.getDatabaseName())) {
-//            LOGGER.info("Mapping configured database name [{}] to internal name [{}] in jooq",
-//                    config.getDatabaseName(), INTERNAL_DB_NAME);
-//
-//            jooqConfig.settings()
-//                    .withRenderMapping(new RenderMapping()
-//                            .withSchemata(new MappedSchema()
-//                                    .withInput(INTERNAL_DB_NAME)
-//                                    .withOutput(config.getDatabaseName())));
-//        }
-//    }
 
     private void waitForDatabaseConnection(final Config config) {
         DataSourceFactory dataSourceFactory = config.getDataSourceFactory();
@@ -233,5 +216,3 @@ public final class App extends Application<Config> {
     }
 
 }
-
-
