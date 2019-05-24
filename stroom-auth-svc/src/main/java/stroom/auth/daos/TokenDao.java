@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.TokenBuilder;
 import stroom.auth.TokenBuilderFactory;
-import stroom.auth.config.TokenConfig;
+import stroom.auth.db.tables.Users;
 import stroom.auth.exceptions.BadRequestException;
 import stroom.auth.exceptions.NoSuchUserException;
 import stroom.auth.exceptions.UnsupportedFilterException;
@@ -45,7 +45,6 @@ import stroom.auth.resources.token.v1.SearchRequest;
 import stroom.auth.resources.token.v1.SearchResponse;
 import stroom.auth.resources.token.v1.Token;
 import stroom.auth.resources.user.v1.User;
-import stroom.db.auth.tables.Users;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,9 +55,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static stroom.db.auth.Tables.TOKENS;
-import static stroom.db.auth.Tables.TOKEN_TYPES;
-import static stroom.db.auth.Tables.USERS;
+import static stroom.auth.db.Tables.TOKENS;
+import static stroom.auth.db.Tables.TOKEN_TYPES;
+import static stroom.auth.db.Tables.USERS;
 
 @Singleton
 public class TokenDao {

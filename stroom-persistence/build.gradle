@@ -49,13 +49,22 @@ if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
                     name = 'org.jooq.codegen.JavaGenerator'
                     database {
                         name = 'org.jooq.meta.mysql.MySQLDatabase'
+                        inputSchema = 'auth'
                         // Add anything you want included in generation below
                         includes = 'users|tokens|token_types|json_web_key'
                         // We don't want to include flyway versioning
                         excludes = 'schema_version'
+
+                        forcedTypes {
+                            // Force TINYINT to Booelan rather than Byte
+                            forcedType {
+                                name = 'BOOLEAN'
+                                types = '(?i:TINYINT)'
+                            }
+                        }
                     }
                     target {
-                        packageName = 'stroom.db'
+                        packageName = 'stroom.auth.db'
                         directory = 'src/main/java'
                     }
                 }

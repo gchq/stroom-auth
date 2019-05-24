@@ -8,8 +8,8 @@ import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.jwk.RsaJwkGenerator;
 import org.jose4j.lang.JoseException;
-import stroom.db.auth.Tables;
-import stroom.db.auth.tables.records.JsonWebKeyRecord;
+import stroom.auth.db.Tables;
+import stroom.auth.db.tables.records.JsonWebKeyRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

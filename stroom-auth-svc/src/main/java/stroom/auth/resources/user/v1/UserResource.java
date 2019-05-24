@@ -44,7 +44,7 @@ import stroom.auth.daos.UserDao;
 import stroom.auth.daos.UserMapper;
 import stroom.auth.service.eventlogging.StroomEventLoggingService;
 import stroom.auth.service.security.ServiceUser;
-import stroom.db.auth.tables.records.UsersRecord;
+import stroom.auth.db.tables.records.UsersRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -63,7 +63,7 @@ import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-import static stroom.db.auth.Tables.USERS;
+import static stroom.auth.db.Tables.USERS;
 
 @Singleton
 @Path("/user/v1")

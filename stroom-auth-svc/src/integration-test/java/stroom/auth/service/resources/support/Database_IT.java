@@ -17,9 +17,9 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-import static stroom.db.auth.Tables.TOKENS;
-import static stroom.db.auth.Tables.TOKEN_TYPES;
-import static stroom.db.auth.Tables.USERS;
+import static stroom.auth.db.Tables.TOKENS;
+import static stroom.auth.db.Tables.TOKEN_TYPES;
+import static stroom.auth.db.Tables.USERS;
 
 /**
  * A belt and braces approach to cleaning the database. It's not an expensive operation and doing it before

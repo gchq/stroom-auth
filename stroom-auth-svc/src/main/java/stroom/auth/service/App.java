@@ -63,6 +63,7 @@ public final class App extends Application<Config> {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(App.class);
 
     public static final String SESSION_COOKIE_NAME = "authSessionId";
+
     private Injector injector;
 
     public static void main(String[] args) throws Exception {
@@ -77,14 +78,12 @@ public final class App extends Application<Config> {
         public JooqFactory getJooqFactory(Config configuration) {
             return configuration.getJooqFactory();
         }
-
     };
 
     private final FlywayBundle flywayBundle = new FlywayBundle<Config>() {
         public DataSourceFactory getDataSourceFactory(Config config) {
             return config.getDataSourceFactory();
         }
-
 
         public FlywayFactory getFlywayFactory(Config config) {
             return config.getFlywayFactory();
@@ -104,6 +103,11 @@ public final class App extends Application<Config> {
 
         // The first thing to do is set up Guice
         Configuration jooqConfig = this.jooqBundle.getConfiguration();
+
+        // We only have one schema so don't qualify tables with their schema else we can't
+        // use a different db name in the connection url
+        jooqConfig.settings().setRenderSchema(false);
+
         injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
 
         // We need the database before we need most other things
@@ -212,5 +216,3 @@ public final class App extends Application<Config> {
     }
 
 }
-
-
