@@ -96,21 +96,21 @@ token:
 
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- .*\((.*)\)} # This is the Java regex pattern used to capture the ID from the CN.
 certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The pattern above must identify the group with the sid.loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5001/login}
-loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5001/login}
-changePasswordUrl: ${CHANGE_PASSWORD_URL:-http://<IP_ADDRESS>:5001/changepassword}
-unauthorisedUrl: ${UNAUTHORISED_URL:-http://<IP_ADDRESS>:5001/unauthorised}
-stroomUrl: ${STROOM_UI:- http://<IP_ADDRESS>:8099}
-advertisedHost: ${ADVERTISED_HTTP_HOST:- http://<IP_ADDRESS>}
+loginUrl: ${AUTH_UI:- https://<IP_ADDRESS>/login}
+changePasswordUrl: ${CHANGE_PASSWORD_URL:-https://<IP_ADDRESS>/changepassword}
+unauthorisedUrl: ${UNAUTHORISED_URL:-https://<IP_ADDRESS>/unauthorised}
+stroomUrl: ${STROOM_UI:- https://<IP_ADDRESS>}
+advertisedHost: ${ADVERTISED_HTTP_HOST:- https://<IP_ADDRESS>}
 failedLoginLockThreshold: ${FAILED_LOGIN_LOCK_THRESHOLD:- 3}
 sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 month
 
 # This is the path at which the authentication service may be found, i.e. when it's being reverse proxied
 # e.g. https://123.123.123.123/authenticationService/v1/postAuthenticationRedirect
-ownPath: ${OWN_PATH:-authenticationService}
+ownPath: ${OWN_PATH:-api/auth/authentication}
 
 appPermissionService:
-  url: ${STROOM_APP_PERMISSSIONS_SERVICE_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
-  canManageUsersPermission: ${STROOM_APP_PERMISSIONS_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
+  url: ${APP_PERMISSIONS_SERVICE_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
+  canManageUsersPermission: ${APP_PERMISSIONS_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
 #  groupsForUserPath: ${STROOM_APP_PERMISSIONS_SERVICE_GROUPS_FOR_USER_PATH:-/groupsForUserName}
 
 userService:
@@ -123,7 +123,7 @@ email:
   allowPasswordResets: ${ALLOW_PASSWORD_RESETS:- true}
   passwordResetSubject: ${EMAIL_RESET_SUBJECT:- Password reset for Stroom}
   passwordResetText: ${EMAIL_RESET_TEXT:- 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'}
-  passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>:5001/resetPassword/?token=%s'}
+  passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>/resetPassword/?token=%s'}
   passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 600}
   smtp:
     host: ${EMAIL_SMTP_HOST:- localhost}
