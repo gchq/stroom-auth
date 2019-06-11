@@ -134,7 +134,7 @@ public class AuthenticationFlowHelper {
 
         assertThat(authenticationRequestResponse.getStatus()).isEqualTo(303);// 303 = See Other
         StringBuilder redirectionPathBuilder = new StringBuilder();
-        redirectionPathBuilder.append("/login?error=login_required&state=&clientId=");
+        redirectionPathBuilder.append("/s/login?error=login_required&state=&clientId=");
         redirectionPathBuilder.append(CLIENT_ID);
         redirectionPathBuilder.append("&redirectUrl=http://fakedomain.com");
         String redirectionPath = redirectionPathBuilder.toString();
@@ -192,7 +192,7 @@ public class AuthenticationFlowHelper {
                 "http://localhost:8099%s?%s",
                 // 'authenticationService' refers to the public path in nginx -- the advertised host. But tests
                 // have no nginx so we need to refer to the configured path, which is 'authentication'.
-                postAuthenticationRedirectUrl.getPath().replaceAll("authenticationService", "authentication"),
+                postAuthenticationRedirectUrl.getPath().replaceAll("api/auth/authentication", "authentication"),
                 postAuthenticationRedirectUrl.getQuery());
 
         HttpResponse postAuthenticationRedirectResponse = null;
