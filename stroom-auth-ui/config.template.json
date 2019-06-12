@@ -1,10 +1,10 @@
 {
-  "authenticationServiceUrl": "http://IP_ADDRESS/authService/authentication/v1",
-  "userServiceUrl": "http://IP_ADDRESS:8099/user/v1",
-  "tokenServiceUrl": "http://IP_ADDRESS:8099/token/v1",
-  "authorisationServiceUrl": "http://IP_ADDRESS:8080/api/authorisation/v1",
-  "stroomUiUrl": "http://IP_ADDRESS:8080/stroom",
-  "advertisedUrl": "http://IP_ADDRESS:5000",
+  "authenticationServiceUrl": "https://IP_ADDRESS/api/auth/authentication/v1",
+  "userServiceUrl": "https://IP_ADDRESS/api/auth/user/v1",
+  "tokenServiceUrl": "https://IP_ADDRESS/api/auth/token/v1",
+  "authorisationServiceUrl": "https://IP_ADDRESS/api/authorisation/v1",
+  "stroomUiUrl": "https://IP_ADDRESS/stroom",
+  "advertisedUrl": "https://IP_ADDRESS",
   "appClientId": "stroom-accounts",
   "allowPasswordResets": true
 }
