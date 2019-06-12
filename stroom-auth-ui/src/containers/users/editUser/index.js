@@ -82,7 +82,7 @@ const enhance = compose(
   withHandlers({
     handleBack: ({setShowBackConfirmation, push}) => isPristine => {
       if (isPristine) {
-        push('/userSearch');
+        push('/s/userSearch');
       } else {
         setShowBackConfirmation(true);
       }
@@ -164,7 +164,7 @@ const UserEditForm = ({
                 <Button
                   className="toolbar-button-small secondary"
                   icon="times"
-                  onClick={() => push('/userSearch/')}>
+                  onClick={() => push('/s/userSearch/')}>
                   Cancel
                 </Button>
               </div>
@@ -172,7 +172,7 @@ const UserEditForm = ({
                 isOpen={showBackConfirmation}
                 onGoBack={() => {
                   setShowBackConfirmation(false);
-                  push('/userSearch');
+                  push('/s/userSearch');
                 }}
                 errors={errors}
                 onSaveAndGoBack={submitForm}

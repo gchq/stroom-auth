@@ -24,10 +24,10 @@ export function handleErrors (error, dispatch, token) {
     const now = new Date().getTime() / 1000
     const expiredToken = decodedToken.exp <= now
     if (expiredToken) {
-      dispatch(push('/unauthorised?reason=expired_token'))
+      dispatch(push('/s/unauthorised?reason=expired_token'))
     } else {
       // If it's not expired then that means this user is genuinely unauthorised
-      dispatch(push('/unauthorised'))
+      dispatch(push('/s/unauthorised'))
     }
   } else {
     // dispatch(errorAdd(error.status, error.message))

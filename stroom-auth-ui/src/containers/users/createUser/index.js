@@ -81,7 +81,7 @@ const UserCreateForm = ({
               <Button
                 className="primary toolbar-button-small"
                 icon="arrow-left"
-                onClick={() => push('/userSearch')}>
+                onClick={() => push('/s/userSearch')}>
                 Back
               </Button>
             </div>
@@ -103,7 +103,7 @@ const UserCreateForm = ({
               <Button
                 className="toolbar-button-small secondary"
                 icon="times"
-                onClick={() => push('/userSearch')}>
+                onClick={() => push('/s/userSearch')}>
                 Cancel
               </Button>
             </div>

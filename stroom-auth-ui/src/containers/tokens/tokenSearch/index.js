@@ -165,7 +165,7 @@ const TokenSearch = ({
       <div className="header">
         <Button
           className="toolbar-button-small primary"
-          onClick={() => push('/token/newApiToken')}
+          onClick={() => push('/s/token/newApiToken')}
           icon="plus">
           Create
         </Button>
@@ -183,7 +183,7 @@ const TokenSearch = ({
           <Button
             className="toolbar-button-small primary"
             disabled={noTokenSelected}
-            onClick={() => push(`/token/${selectedTokenRowId}`)}
+            onClick={() => push(`/s/token/${selectedTokenRowId}`)}
             icon="edit">
             View/edit
           </Button>

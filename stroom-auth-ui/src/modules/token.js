@@ -163,7 +163,7 @@ export const createToken = (email, setSubmitting) => {
       .then(getJsonBody)
       .then(newToken => {
         dispatch(toggleIsCreating());
-        dispatch(push(`/token/${newToken.id}`));
+        dispatch(push(`/s/token/${newToken.id}`));
         setSubmitting(false);
       })
       .catch(error => {

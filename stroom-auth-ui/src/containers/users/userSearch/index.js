@@ -184,7 +184,7 @@ const UserSearch = ({
       <div className="header">
         <Button
           className="toolbar-button-small primary"
-          onClick={() => push('/newUser')}
+          onClick={() => push('/s/newUser')}
           icon="plus">
           Create
         </Button>
@@ -200,7 +200,7 @@ const UserSearch = ({
         ) : (
           <Button
             className="toolbar-button-small primary"
-            onClick={() => push(`/user/${selectedUserRowId}`)}
+            onClick={() => push(`/s/user/${selectedUserRowId}`)}
             icon="edit">
             View/edit
           </Button>

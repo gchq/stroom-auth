@@ -212,7 +212,7 @@ export const saveChanges = editedUser => {
       .then(handleStatus)
       .then(() => {
         dispatch(saveUserBeingEdited(undefined));
-        dispatch(push('/userSearch'));
+        dispatch(push('/s/userSearch'));
         dispatch(toggleAlertVisibility('User has been updated'));
         dispatch(toggleIsSaving());
       })
@@ -294,7 +294,7 @@ const createAuthorisationUser = email => {
       .then(handleStatus)
       .then(newUserId => {
         dispatch(showCreateLoader(false));
-        dispatch(push('/userSearch'));
+        dispatch(push('/s/userSearch'));
         dispatch(toggleAlertVisibility('User has been created'));
         dispatch(toggleIsSaving());
       })
@@ -490,7 +490,7 @@ export const submitPasswordChangeRequest = (formData, {setSubmitting}) => {
       mode: 'cors',
     }).then(() => {
       setSubmitting(false);
-      dispatch(push('/confirmPasswordResetEmail'));
+      dispatch(push('/s/confirmPasswordResetEmail'));
     });
   };
 };

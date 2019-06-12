@@ -65,7 +65,7 @@ const TokenCreateForm = ({onSubmit, isCreating, push}) => {
                 <Button
                   icon="arrow-left"
                   className="primary toolbar-button-small"
-                  onClick={() => push('/tokens')}>
+                  onClick={() => push('/s/tokens')}>
                   Back
                 </Button>
             </div>

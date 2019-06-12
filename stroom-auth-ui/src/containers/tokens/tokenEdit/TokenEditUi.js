@@ -53,7 +53,7 @@ const TokenEditUi = props => {
       <div className="header">
         <button
           className="primary toolbar-button-small"
-          onClick={() => push('/tokens')}>
+          onClick={() => push('/s/tokens')}>
           <FontAwesomeIcon icon="arrow-left" /> Back
         </button>
       </div>
