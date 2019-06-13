@@ -48,7 +48,7 @@ function changeIdToken (idToken) {
 
 export const sendAuthenticationRequest = (referrer, uiUrl, appClientId, authenticationServiceUrl) => {
   return (dispatch, getState) => {
-    const redirectUrl = `${uiUrl}/handleAuthenticationResponse`
+    const redirectUrl = `${uiUrl}/s/handleAuthenticationResponse`
     const state = ''
 
     // Create nonce and store, and create nonce hash

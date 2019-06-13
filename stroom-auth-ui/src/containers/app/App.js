@@ -121,13 +121,13 @@ const App = ({
             {/* Routes requiring authentication */}
             <Route
               exact
-              path={'/s/userSearch'}
+              path={'/s/users'}
               render={() =>
                 isLoggedIn ? (
                   <UserSearch />
                 ) : (
                   <AuthenticationRequest
-                    referrer="/s/userSearch"
+                    referrer="/s/users"
                     uiUrl={advertisedUrl}
                     appClientId={appClientId}
                     authenticationServiceUrl={
