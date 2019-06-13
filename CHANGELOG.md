@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v6.0-beta.1] - 2019-01-13
+## [v6.0-beta.1] - 2019-05-13
 
 - Update paths for routing changes
 
