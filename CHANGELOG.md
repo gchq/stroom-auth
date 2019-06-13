@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v6.0-beta.1] - 2019-01-13
+
+- Update paths for routing changes
+
 ## [v1.0-beta.33] - 2019-05-24
 
 * Issue **#142**: Change jooq generation/configuration to allow differne DB name to be used.
@@ -263,7 +267,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.33...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.1...master
+[v6.0-beta.1]: https://github.com/gchq/stroom-auth/compare/v1.1-beta.33...v6.0-beta.1
 [v1.0-beta.33]: https://github.com/gchq/stroom-auth/compare/v1.1-beta.31...v1.0-beta.33
 [v1.0-beta.31]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.30...v1.0-beta.31
 [v1.0-beta.30]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.29...v1.0-beta.30
