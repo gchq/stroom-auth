@@ -164,7 +164,7 @@ const UserEditForm = ({
                 <Button
                   className="toolbar-button-small secondary"
                   icon="times"
-                  onClick={() => push('/s/userSearch/')}>
+                  onClick={() => push('/s/users/')}>
                   Cancel
                 </Button>
               </div>
@@ -172,7 +172,7 @@ const UserEditForm = ({
                 isOpen={showBackConfirmation}
                 onGoBack={() => {
                   setShowBackConfirmation(false);
-                  push('/s/userSearch');
+                  push('/s/users');
                 }}
                 errors={errors}
                 onSaveAndGoBack={submitForm}

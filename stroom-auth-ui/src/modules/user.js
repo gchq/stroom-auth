@@ -212,7 +212,7 @@ export const saveChanges = editedUser => {
       .then(handleStatus)
       .then(() => {
         dispatch(saveUserBeingEdited(undefined));
-        dispatch(push('/s/userSearch'));
+        dispatch(push('/s/users'));
         dispatch(toggleAlertVisibility('User has been updated'));
         dispatch(toggleIsSaving());
       })
@@ -294,7 +294,7 @@ const createAuthorisationUser = email => {
       .then(handleStatus)
       .then(newUserId => {
         dispatch(showCreateLoader(false));
-        dispatch(push('/s/userSearch'));
+        dispatch(push('/s/users'));
         dispatch(toggleAlertVisibility('User has been created'));
         dispatch(toggleIsSaving());
       })
