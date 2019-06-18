@@ -18,7 +18,7 @@ import React from 'react';
 import {Redirect} from 'react-router';
 
 const NewUser = () => {
-  return <Redirect to={'/user'} />;
+  return <Redirect to={'/s/user'} />;
 };
 
 export default NewUser;

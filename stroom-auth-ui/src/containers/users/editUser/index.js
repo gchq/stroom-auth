@@ -82,7 +82,7 @@ const enhance = compose(
   withHandlers({
     handleBack: ({setShowBackConfirmation, push}) => isPristine => {
       if (isPristine) {
-        push('/s/userSearch');
+        push('/s/users');
       } else {
         setShowBackConfirmation(true);
       }
