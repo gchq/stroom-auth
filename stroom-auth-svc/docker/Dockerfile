@@ -26,7 +26,7 @@
 
 # The JDK (rather than JRE) is required for the diagnostic tools like
 # jstat/jmap/jcmd/etc.
-FROM openjdk:8u191-jdk-alpine3.9 as stroom-base-stage
+FROM openjdk:8u212-jdk-alpine3.9 as stroom-base-stage
 
 WORKDIR /stroom-auth-service
 
