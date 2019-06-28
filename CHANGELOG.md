@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [v6.0-beta.4] - 2019-06-28
+
 * Issue **#149**: Remove config yaml from docker image
 
 
@@ -281,7 +284,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.3...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.4...master
+[v6.0-beta.4]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.3...v6.0-beta.4
 [v6.0-beta.3]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.2...v6.0-beta.3
 [v6.0-beta.2]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.1...v6.0-beta.2
 [v6.0-beta.1]: https://github.com/gchq/stroom-auth/compare/v1.1-beta.33...v6.0-beta.1
