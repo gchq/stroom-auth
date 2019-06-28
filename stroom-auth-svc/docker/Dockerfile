@@ -26,9 +26,11 @@
 
 # The JDK (rather than JRE) is required for the diagnostic tools like
 # jstat/jmap/jcmd/etc.
-FROM openjdk:8u191-jdk-alpine3.9 as stroom-base-stage
+FROM openjdk:8u212-jdk-alpine3.9 as stroom-base-stage
 
 WORKDIR /stroom-auth-service
+# RO bind mount for dropwizard yaml config
+VOLUME [ "/stroom-auth-service/config" ]
 
 # Volume for all application/access/user logs
 VOLUME [ "/stroom-auth-service/logs" ]
@@ -38,7 +40,7 @@ VOLUME [ "/stroom-auth-service/logs" ]
 ENTRYPOINT ["/sbin/tini", "--", "/stroom-auth-service/docker-entrypoint.sh"]
 
 # Run the app
-CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar stroom-auth-service-all.jar server config.yml"]
+CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar stroom-auth-service-all.jar server config/config.yml"]
 
 # curl is required for the docker healthcheck
 # su-exec required for running stroom as not-root user
@@ -55,6 +57,7 @@ RUN apk add --no-cache \
     addgroup -g 1000 -S auth && \
     adduser -u 1000 -S -s /bin/false -D -G auth auth && \
     mkdir -p /stroom-auth-service && \
+    mkdir -p /stroom-auth-service/config && \
     mkdir -p /stroom-auth-service/logs/access && \
     mkdir -p /stroom-auth-service/logs/user && \
     mkdir -p /stroom-auth-service/logs/app && \
@@ -63,7 +66,6 @@ RUN apk add --no-cache \
 # Copy all the artifacts required to run stroom-auth-service
 # In order of likelyhood to change, most staic first.
 COPY --chown=auth:auth ./*.sh /stroom-auth-service/
-COPY --chown=auth:auth ./build/config.yml /stroom-auth-service/
 COPY --chown=auth:auth ./build/stroom-auth-service-all.jar /stroom-auth-service/
 
 # Label the image so we can see what commit/tag it came from

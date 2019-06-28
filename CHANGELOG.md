@@ -6,17 +6,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#149**: Remove config yaml from docker image
+
+
 ## [v6.0-beta.3] - 2019-06-18
 
-- Update paths for routing changes
+* Update paths for routing changes
+
 
 ## [v6.0-beta.2] - 2019-06-18
 
-- Update paths for routing changes
+* Update paths for routing changes
+
 
 ## [v6.0-beta.1] - 2019-06-13
 
-- Update paths for routing changes
+* Update paths for routing changes
+
 
 ## [v1.0-beta.33] - 2019-05-24
 
@@ -35,7 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v1.0-beta.30] - 2019-03-25
 
-* Issue #140: Fix user deactivation that can occur soon after reactivation
+* Issue **#140**: Fix user deactivation that can occur soon after reactivation
 
 * Uplift base docker image to openjdk:8u191-jdk-alpine3.9, reverting back to JDK for access to diagnostic tools.
 
@@ -57,7 +63,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v1.0-beta.26] - 2019-01-15
 
-* Issue #126: Fix new API key page
+* Issue **#126**: Fix new API key page
 
 * Issue **#109**: Button on Change Password page does not disable when clicked
 
