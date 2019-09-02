@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+- Upgrade to Java 12 and Gradle 5.
+
 ## [v7.0-alpha.2] - 2019-09-02
 - Fix migration file naming so upgrading from 6.0 works.
 
