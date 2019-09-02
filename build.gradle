@@ -29,18 +29,19 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.4' apply false
+    id 'com.github.johnrengelman.shadow' version '4.0.3' apply false
     id 'com.benjaminsproule.swagger' version "0.1.4" apply false // Generates YAML/JSON from model
     id 'nu.studer.jooq' version '3.0.2' apply false
     id 'org.flywaydb.flyway' version '5.1.4'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.10.2'
+
+wrapper {
+    gradleVersion = '5.5.1'
 }
 
-if(JavaVersion.current() != JavaVersion.VERSION_1_8){
-    throw new GradleException("This build must be run with java 8")
+if (!JavaVersion.current().isJava12()) {
+    throw new GradleException("This build must be run with Java 12 (current = " + JavaVersion.current() + ")")
 }
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
