@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v7.0-beta.1] - 2019-09-11
+
 - Upgrade to Java 12 and Gradle 5.
 
-## [v7.0-alpha.2] - 2019-09-02
 - Fix migration file naming so upgrading from 6.0 works.
 
 ## [v7.0-alpha.1] - 2019-06-11
@@ -241,8 +242,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v7.0-alpha.2...master
-[v7.0-alpha.2]: https://github.com/gchq/stroom-auth/compare/v7.0-alpha.1...v7.0-alpha.2
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.1...master
+[v7.0-beta.1]: https://github.com/gchq/stroom-auth/compare/v7.0-alpha.1...v7.0-beta.1
 [v7.0-alpha.1]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.32...v7.0-alpha.1
 [v1.0-beta.32]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.31...v1.0-beta.32
 [v1.0-beta.31]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.30...v1.0-beta.31
