@@ -136,7 +136,7 @@ public class AuthenticationFlowHelper {
         StringBuilder redirectionPathBuilder = new StringBuilder();
         redirectionPathBuilder.append("/s/login?error=login_required&state=&clientId=");
         redirectionPathBuilder.append(CLIENT_ID);
-        redirectionPathBuilder.append("&redirectUrl=http://fakedomain.com");
+        redirectionPathBuilder.append("&redirectUrl=http%3A%2F%2Ffakedomain.com");
         String redirectionPath = redirectionPathBuilder.toString();
         URL location = new URL(authenticationRequestResponse.getHeaders().get("Location").get(0));
         String locationPath = location.getPath() + "?" + location.getQuery();
