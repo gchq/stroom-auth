@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#154**: Redirect URL is now encoded and params are guarded
+
 
 ## [v6.0-beta.4] - 2019-06-28
 
