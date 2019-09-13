@@ -24,35 +24,76 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#107**: Remove the 'password has been reset, prepare for redirection' page
 
+## [v6.0-beta.5] - 2019-09-12
+
+* Issue **#154**: Redirect URL is now encoded and params are guarded
+
+
+## [v6.0-beta.4] - 2019-06-28
+
+* Issue **#149**: Remove config yaml from docker image
+
+
+## [v6.0-beta.3] - 2019-06-18
+
+* Update paths for routing changes
+
+
+## [v6.0-beta.2] - 2019-06-18
+
+* Update paths for routing changes
+
+
+## [v6.0-beta.1] - 2019-06-13
+
+* Update paths for routing changes
+
+
+## [v1.0-beta.33] - 2019-05-24
+
+* Issue **#142**: Change jooq generation/configuration to allow differne DB name to be used.
+
+
+## v1.0-beta.32
+
+* No changes. Version skipped.
+
+
 ## [v1.0-beta.31] - 2019-03-25
 
 * FIx issue in an integration test
 
+
 ## [v1.0-beta.30] - 2019-03-25
 
-* Issue #140: Fix user deactivation that can occur soon after reactivation
+* Issue **#140**: Fix user deactivation that can occur soon after reactivation
 
 * Uplift base docker image to openjdk:8u191-jdk-alpine3.9, reverting back to JDK for access to diagnostic tools.
+
 
 ## [v1.0-beta.29] - 2019-02-05
 
 * Change service docker image base to openjdk:8u181-jre-alpine3.8
 
+
 ## [v1.0-beta.28] - 2019-02-05
 
 * Issue **#129**: Update authorisation user's status when authentication user's status is changed
+
 
 ## [v1.0-beta.27] - 2019-01-29
 
 * Improve logging
 
+
 ## [v1.0-beta.26] - 2019-01-15
 
-* Issue #126: Fix new API key page
+* Issue **#126**: Fix new API key page
 
 * Issue **#109**: Button on Change Password page does not disable when clicked
 
 * Issue **#67**: Clear out obsolete dependencies in `public`
+
 
 ## [v1.0-beta.25] - 2019-01-03
 
@@ -62,13 +103,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Make transform_user_extract.py Python 2.6 compatible and without dependencies 
 
+
 ## [v1.0-beta.24] - 2019-01-02
 
 * Issue **#123**: Disable authorisation users when an authentication user is deleted
 
+
 ## [v1.0-beta.23] - 2019-01-02
 
 * Issue **#124**: Add 5 -> 6 migration script
+
 
 ## [v1.0-beta.22] - 2018-12-21
 
@@ -81,6 +125,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Issue **#119** : Improve heading alignment
 
 * Issue **#118** : Improve logging
+
 
 ## [v1.0-beta.21] - 2018-12-19
 
@@ -95,6 +140,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Issue **#117** : Improve logging
 
 * Issue **#121** : Users with certificates should not be able to log in unless they have a user account
+
 
 ## [v1.0-beta.20] - 2018-12-18
 
@@ -112,9 +158,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#110** : Active PKI users are marked as Inactive in the Users tab
 
+
 ## [v1.0-beta.19]
 
 * Issue **#101** : Fix issue where 'account locked' message was only displayed once.
+
 
 ## [v1.0-beta.18]
 
@@ -126,9 +174,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Add GIT_TAG & GIT_COMMIT build args to service docker build in Travis.
 
+
 ## [v1.0-beta.17] - 2018-12-07
 
 * Issue **gchq/stroom/#937** : Add setting of container identity in extra_headers file to docker image.
+
 
 ## [v1.0-beta.16]
 
@@ -140,13 +190,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#93** : Fixed issue where re-creating a user caused an error
 
+
 ## [v1.0-beta.15]
 
 * Change logback archived logs to be gzip compressed
 
+
 ## [v1.0-beta.14]
 
 * Allow password resets by email to be enabled and disabled
+
 
 ## [v1.0-beta.13]
 
@@ -158,17 +211,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Add curl back into the service docker image
 
+
 ## [v1.0-beta.12]
 
 * Remove log sending process from service docker image
 
 * Add git_tag and git_commit labels to docker images
 
+
 ## [v1.0-beta.11]
 
 * Stop truncation of `logger` in logback console logs
 
 * Add colours to docker console logs
+
 
 ## [v1.0-beta.10]
 
@@ -184,17 +240,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Many UI and UX improvements
 
+
 ## [v1.0-beta.9]
 
 * Uplift service docker image base to openjdk:8u181-jdk-alpine3.8
+
 
 ## [v1.0-beta.8]
 
 * Downgrade to java 8 for compatibility with stroom v6
 
+
 ## [v1.0-beta.7]
 
 * Fix bintray upload
+
 
 ## [v1.0-beta.6]
 
@@ -216,15 +276,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Change logback logFormat to be consistent with stroom
 
+
 ## [v1.0-beta.5]
 
 * Add Java opts configuration to service docker build
+
 
 ## [v1.0-beta.4]
 
 * Refactor Dockerfiles - add non-root user, add tini/gosu, reduce image size
 
+
 ## [v1.0-beta.2]
+
 
 ## [v0.1-alpha.14]
 
@@ -245,6 +309,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [Unreleased]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.1...master
 [v7.0-beta.1]: https://github.com/gchq/stroom-auth/compare/v7.0-alpha.1...v7.0-beta.1
 [v7.0-alpha.1]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.32...v7.0-alpha.1
+[v6.0-beta.5]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.4...v6.0-beta.5
+[v6.0-beta.4]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.3...v6.0-beta.4
+[v6.0-beta.3]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.2...v6.0-beta.3
+[v6.0-beta.2]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.1...v6.0-beta.2
+[v6.0-beta.1]: https://github.com/gchq/stroom-auth/compare/v1.1-beta.33...v6.0-beta.1
+[v1.0-beta.33]: https://github.com/gchq/stroom-auth/compare/v1.1-beta.32...v1.0-beta.33
 [v1.0-beta.32]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.31...v1.0-beta.32
 [v1.0-beta.31]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.30...v1.0-beta.31
 [v1.0-beta.30]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.29...v1.0-beta.30

@@ -69,8 +69,6 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -247,14 +245,12 @@ public final class AuthenticationResource {
         // There's no session and there's no certificate so we'll send them to the login page
         else {
             LOGGER.debug("User has no session and no certificate - sending them to login.");
-            String failureParams = String.format(
-                    "?error=login_required&" +
-                            "state=%s&" +
-                            "clientId=%s&" +
-                            "redirectUrl=%s",
-                    state, clientId, redirectUrl);
-            String failureUrl = this.config.getLoginUrl() + failureParams;
-            responseBuilder = seeOther(new URI(failureUrl));
+            final UriBuilder uriBuilder = UriBuilder.fromUri(this.config.getLoginUrl())
+                    .queryParam("error", "login_required")
+                    .queryParam("state", state)
+                    .queryParam("clientId", clientId)
+                    .queryParam("redirectUrl", redirectUrl);
+            responseBuilder = seeOther(uriBuilder.build());
         }
 
         return responseBuilder.build();
@@ -565,11 +561,10 @@ public final class AuthenticationResource {
                 config.getPasswordIntegrityChecksConfig().isForcePasswordChangeOnFirstLogin());
 
         if (userNeedsToChangePassword) {
-            String redirectUrl = getPostAuthenticationCheckUrl(clientId);
-            String encodedRedirectUrl = URLEncoder.encode(redirectUrl, Charset.defaultCharset().name());
-            String changePasswordLocation = String.format("%s?&redirect_url=%s",
-                    this.config.getChangePasswordUrl(), encodedRedirectUrl);
-            URI changePasswordUri = UriBuilder.fromUri(changePasswordLocation).build();
+            final String redirectUrl = getPostAuthenticationCheckUrl(clientId);
+            final URI changePasswordUri = UriBuilder.fromUri(this.config.getChangePasswordUrl())
+                    .queryParam("redirect_url", redirectUrl)
+                    .build();
             return seeOther(changePasswordUri).build();
         } else {
             //TODO this method needs to take just a relying party
@@ -594,14 +589,12 @@ public final class AuthenticationResource {
     }
 
     private URI buildRedirectionUrl(String redirectUrl, String accessCode, String state) {
-        URI fullRedirectionUrl = UriBuilder
+        return UriBuilder
                 .fromUri(redirectUrl)
-                .queryParam("accessCode", accessCode)
-                .queryParam("state", state)
+                .replaceQueryParam("accessCode", accessCode)
+                .replaceQueryParam("state", state)
                 .build();
-        return fullRedirectionUrl;
     }
-
 
     private Optional<String> getIdFromCertificate(final String cn) {
         Pattern idExtractionPattern = Pattern.compile(this.config.getCertificateDnPattern());

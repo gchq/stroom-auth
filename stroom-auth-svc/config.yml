@@ -95,7 +95,7 @@ token:
   algorithm: ${JWS_ALGORITHM:- RS256}
 
 certificateDnPattern: ${CERTIFICATE_DN_PATTERN:- .*\((.*)\)} # This is the Java regex pattern used to capture the ID from the CN.
-certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The pattern above must identify the group with the sid.loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5001/login}
+certificateDnCaptureGroupIndex: ${CERTIFICATE_DN_CAPTURE_GROUP_INDEX:- 1} # The pattern above must identify the group with the sid.loginUrl: ${AUTH_UI:- http://<IP_ADDRESS>:5000/login}
 loginUrl: ${AUTH_UI:- https://<IP_ADDRESS>/s/login}
 changePasswordUrl: ${CHANGE_PASSWORD_URL:-https://<IP_ADDRESS>/s/changepassword}
 unauthorisedUrl: ${UNAUTHORISED_URL:-https://<IP_ADDRESS>/s/unauthorised}
@@ -123,7 +123,7 @@ email:
   allowPasswordResets: ${ALLOW_PASSWORD_RESETS:- true}
   passwordResetSubject: ${EMAIL_RESET_SUBJECT:- Password reset for Stroom}
   passwordResetText: ${EMAIL_RESET_TEXT:- 'A password reset has been requested for this email address. Please visit the following URL to reset your password: %s.'}
-  passwordResetUrl: ${EMAIL_RESET_URL:- 'http://<IP_ADDRESS>/s/resetPassword/?token=%s'}
+  passwordResetUrl: ${EMAIL_RESET_URL:- 'https://<IP_ADDRESS>/s/resetPassword/?token=%s'}
   passwordResetTokenValidityInMinutes: ${EMAIL_RESET_TOKEN_VALIDITY_IN_MINUTES:- 600}
   smtp:
     host: ${EMAIL_SMTP_HOST:- localhost}
