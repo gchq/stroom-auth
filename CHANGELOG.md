@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add fallback config.yml file into the docker image for running outside of a stack.
+
 
 ## [v6.0-beta.4] - 2019-06-28
 
