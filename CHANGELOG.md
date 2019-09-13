@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v7.0-beta.2] - 2019-09-13
+
+- Merge changes from 6.0
+
 ## [v7.0-beta.1] - 2019-09-11
 
 - Upgrade to Java 12 and Gradle 5.
