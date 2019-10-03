@@ -39,8 +39,9 @@ VOLUME [ "/stroom-auth-service/logs" ]
 # see https://github.com/krallin/tini/issues/8
 ENTRYPOINT ["/sbin/tini", "--", "/stroom-auth-service/docker-entrypoint.sh"]
 
-# Run the app
-CMD ["sh", "-c", "echo \"JAVA_OPTS: [${JAVA_OPTS}]\"; java ${JAVA_OPTS} -jar stroom-auth-service-all.jar server config/config.yml"]
+# start the app, the config file will either be supplied by a bind mount volume
+# or a fallback version baked into the image
+CMD ["./start.sh"]
 
 # curl is required for the docker healthcheck
 # su-exec required for running stroom as not-root user
@@ -58,6 +59,7 @@ RUN apk add --no-cache \
     adduser -u 1000 -S -s /bin/false -D -G auth auth && \
     mkdir -p /stroom-auth-service && \
     mkdir -p /stroom-auth-service/config && \
+    mkdir -p /stroom-auth-service/config-fallback && \
     mkdir -p /stroom-auth-service/logs/access && \
     mkdir -p /stroom-auth-service/logs/user && \
     mkdir -p /stroom-auth-service/logs/app && \
@@ -65,7 +67,13 @@ RUN apk add --no-cache \
 
 # Copy all the artifacts required to run stroom-auth-service
 # In order of likelyhood to change, most staic first.
+
 COPY --chown=auth:auth ./*.sh /stroom-auth-service/
+
+# This config file is a fallback for use in development 
+# (or when a stack with the config bind mount is not available)
+COPY --chown=auth:auth ./build/config.yml /stroom-auth-service/config-fallback/config.yml
+
 COPY --chown=auth:auth ./build/stroom-auth-service-all.jar /stroom-auth-service/
 
 # Label the image so we can see what commit/tag it came from
