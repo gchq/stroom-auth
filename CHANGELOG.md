@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v7.0-beta.3] - 2019-10-04
+
 * Add fallback config.yml file into the docker image for running outside of a stack.
 
 ## [v7.0-beta.2] - 2019-09-13
@@ -312,7 +314,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.2...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.3...master
+[v7.0-beta.3]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.2...v7.0-beta.3
 [v7.0-beta.2]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.1...v7.0-beta.2
 [v7.0-beta.1]: https://github.com/gchq/stroom-auth/compare/v7.0-alpha.1...v7.0-beta.1
 [v7.0-alpha.1]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.32...v7.0-alpha.1
