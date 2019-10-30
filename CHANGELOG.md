@@ -6,13 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add null pointer protection to AppPermissionsClient
+
+
 ## [v7.0-beta.3] - 2019-10-04
 
 * Add fallback config.yml file into the docker image for running outside of a stack.
 
+
 ## [v7.0-beta.2] - 2019-09-13
 
 - Merge changes from 6.0
+
 
 ## [v7.0-beta.1] - 2019-09-11
 
@@ -20,9 +25,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Fix migration file naming so upgrading from 6.0 works.
 
+
 ## [v7.0-alpha.1] - 2019-06-11
 
 - Update paths
+
 
 ## [v1.0-beta.32] - 2019-05-08
 
@@ -31,6 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Issue **#91**: Allow an admin to specify that a user must change password at next login
 
 * Issue **#107**: Remove the 'password has been reset, prepare for redirection' page
+
 
 ## [v6.0-beta.5] - 2019-09-12
 

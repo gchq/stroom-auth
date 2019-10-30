@@ -18,6 +18,7 @@
 
 package stroom.auth.clients;
 
+import org.eclipse.jetty.http.HttpStatus;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientResponse;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.Set;
 
 @Singleton
@@ -52,8 +54,14 @@ public class AppPermissionsClient {
                 .header("Authorization", "Bearer " + usersJws)
                 .get();
 
-        Set<String> groups = response.readEntity(new GenericType<Set<String>>(){});
-       return groups;
+        Set<String> groups = null;
+        if (response.getStatus() == HttpStatus.OK_200) {
+            groups = response.readEntity(new GenericType<Set<String>>(){});
+        } else {
+            LOGGER.error("Unable to get permissions for user {}. Response code was {} {}",
+                    userName, response.getStatus(), response.getStatusInfo().getReasonPhrase());
+        }
+       return groups == null ? Collections.emptySet() : groups;
     }
 
 }
