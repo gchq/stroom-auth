@@ -6,8 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-* Add null pointer protection to AppPermissionsClient
+* Issue **#161**: Tidy up duplicate API keys
 
+* Add null pointer protection to AppPermissionsClient
 
 ## [v7.0-beta.3] - 2019-10-04
 
