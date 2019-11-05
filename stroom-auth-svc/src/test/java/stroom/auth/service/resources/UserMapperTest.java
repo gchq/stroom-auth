@@ -24,12 +24,10 @@ import stroom.auth.resources.user.v1.User;
 import stroom.auth.db.tables.records.UsersRecord;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static stroom.auth.resources.user.v1.User.UserState.DISABLED;
-import static stroom.auth.resources.user.v1.User.UserState.ENABLED;
+import static stroom.auth.resources.user.v1.User.UserState.*;
 
 public final class UserMapperTest {
     @Test
@@ -123,6 +121,34 @@ public final class UserMapperTest {
         // NB: We don't need to check password hash mapping
 //        assertThat(mapped.getPassword_hash()).isNotNull();
         assertThat(mapped.getUpdated_by_user()).isEqualTo(orig.getUpdated_by_user());
+    }
+
+    @Test
+    public final void testBecomingEnabledFromDisabled() {
+        Pair<UsersRecord, User> users = getUsers();
+
+        users.getLeft().setState(DISABLED.getStateText());
+        users.getRight().setState(ENABLED.getStateText());
+
+        Instant now = Instant.now();
+        UsersRecord mapped = UserMapper.updateUserRecordWithUser(users.getRight(), users.getLeft(), Clock.fixed(now, ZoneId.systemDefault()) );
+        assertThat(mapped.getState()).isEqualTo(ENABLED.getStateText());
+        assertThat(mapped.getLastLogin().toInstant().getEpochSecond()).isEqualTo(now.getEpochSecond());
+        assertThat(mapped.getLoginFailures()).isEqualTo(0);
+    }
+
+    @Test
+    public final void testBecomingEnabledFromInactive() {
+        Pair<UsersRecord, User> users = getUsers();
+
+        users.getLeft().setState(INACTIVE.getStateText());
+        users.getRight().setState(ENABLED.getStateText());
+
+        Instant now = Instant.now();
+        UsersRecord mapped = UserMapper.updateUserRecordWithUser(users.getRight(), users.getLeft(), Clock.fixed(now, ZoneId.systemDefault()) );
+        assertThat(mapped.getState()).isEqualTo(ENABLED.getStateText());
+        assertThat(mapped.getLastLogin().toInstant().getEpochSecond()).isEqualTo(now.getEpochSecond());
+        assertThat(mapped.getLoginFailures()).isEqualTo(0);
     }
 
     @Test

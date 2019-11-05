@@ -67,10 +67,11 @@ public final class UserMapper {
         // This is last because if we're going from locked to enabled then we need to reset the login failures.
         // And in this case we'll want to override any other setting for login_failures.
         if (user.getState() != null) {
-            // Are we going from locked to active?
-            if(usersRecord.getState().equals(User.UserState.LOCKED.getStateText())
-            && user.getState().equalsIgnoreCase(User.UserState.ENABLED.getStateText())) {
+            // Is this user's state becoming enabled?
+            if(!usersRecord.getState().equals(User.UserState.ENABLED.getStateText())
+                && user.getState().equalsIgnoreCase(User.UserState.ENABLED.getStateText())) {
                 userMap.put("login_failures", 0);
+                userMap.put("last_login", clock.instant());
                 userMap.put("reactivated_date", clock.instant());
             }
             userMap.put("state", user.getState());
