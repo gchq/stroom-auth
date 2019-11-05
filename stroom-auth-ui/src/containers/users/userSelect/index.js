@@ -34,7 +34,9 @@ const loadOptions = (inputValue, callback, idToken, url) => {
   })
     .then(response => response.json())
     .then(body => {
-      const options = body.map(result => {
+      const options = body
+        .sort((userA, userB) => userA.email > userB.email ? 1 : -1)
+        .map(result => {
         return {value: result.id, label: result.email};
       });
       callback(options);
