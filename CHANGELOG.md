@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#125**: Make dates display as ISO 8601
+
 * Issue **#161**: Tidy up duplicate API keys
 
 ## [v6.0-beta.6] - 2019-09-13
