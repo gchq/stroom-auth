@@ -71,7 +71,7 @@ const enhance = compose(
 );
 
 function AsyncUserSelect(props) {
-  const {onChange, inputValue, setInputValue, idToken, userServiceUrl} = props;
+  const {onChange, setInputValue, idToken, userServiceUrl} = props;
 
   return (
     <AsyncSelect

@@ -23,6 +23,7 @@ import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
 import {compose, withState} from 'recompose';
 import {push} from 'react-router-redux';
+import * as moment from 'moment';
 
 import Button from '../../Button';
 import './TokenSearch.css';
@@ -33,8 +34,12 @@ import {
   changeSelectedRow,
   setEnabledStateOnToken,
 } from '../../../modules/tokenSearch';
-
 import {deleteSelectedToken} from '../../../modules/token';
+
+const DISPLAY_DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+moment.updateLocale("en", {
+  invalidDate: "No date"
+});
 
 function getColumnFormat(selectedTokenRowId, setEnabledStateOnToken) {
   return [
@@ -64,16 +69,16 @@ function getColumnFormat(selectedTokenRowId, setEnabledStateOnToken) {
     {
       Header: 'Expires on',
       accessor: 'expires_on',
-      Cell: row => formatDate(row.value),
+      Cell: row => moment(row.value).format(DISPLAY_DATE_TIME_FORMAT),
       Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
-      maxWidth: 165,
+      maxWidth: 195,
     },
     {
       Header: 'Issued on',
       accessor: 'issued_on',
-      Cell: row => formatDate(row.value),
+      Cell: row => moment(row.value).format(DISPLAY_DATE_TIME_FORMAT),
       Filter: ({filter, onChange}) => undefined, // Disable filtering by this column - how do we filter on dates?
-      maxWidth: 165,
+      maxWidth: 195,
     },
   ];
 }

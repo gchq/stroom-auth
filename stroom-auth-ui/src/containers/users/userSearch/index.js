@@ -23,6 +23,7 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
 import {push} from 'react-router-redux';
+import * as moment from 'moment';
 
 import Button from '../../Button';
 import './UserSearch.css';
@@ -121,8 +122,8 @@ function getColumnFormat(selectedUserRowId) {
     {
       Header: 'Last login',
       accessor: 'last_login',
-      Cell: row => formatDate(row.value),
-      maxWidth: 165,
+      Cell: row => moment(row.value).format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+      maxWidth: 195,
       filterable: false,
     },
     {
