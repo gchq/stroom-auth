@@ -20,7 +20,6 @@ import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import dateFormat from 'dateformat';
 import {compose, withState} from 'recompose';
 import {push} from 'react-router-redux';
 import * as moment from 'moment';
@@ -106,11 +105,6 @@ function getEnabledCellFilter(filter, onChange) {
       <option value="false">Disabled only</option>
     </select>
   );
-}
-
-function formatDate(dateString) {
-  const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
-  return dateString ? dateFormat(dateString, dateFormatString) : '';
 }
 
 const enhance = compose(

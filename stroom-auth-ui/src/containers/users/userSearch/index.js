@@ -21,7 +21,6 @@ import 'rc-checkbox/assets/index.css';
 import {compose, withProps, withState, lifecycle} from 'recompose';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import dateFormat from 'dateformat';
 import {push} from 'react-router-redux';
 import * as moment from 'moment';
 
@@ -88,11 +87,6 @@ function getStateCellFilter(filter, onChange) {
       <option value="disabled">Inactive only</option>
     </select>
   );
-}
-
-function formatDate(dateString) {
-  const dateFormatString = 'ddd mmm d yyyy, hh:MM:ss';
-  return dateString ? dateFormat(dateString, dateFormatString) : '';
 }
 
 function getColumnFormat(selectedUserRowId) {
