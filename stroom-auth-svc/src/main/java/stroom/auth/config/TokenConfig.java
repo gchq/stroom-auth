@@ -19,13 +19,9 @@
 package stroom.auth.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import org.jose4j.jwk.PublicJsonWebKey;
-import org.jose4j.lang.JoseException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.nio.charset.Charset;
 
 public class TokenConfig {
 
@@ -33,11 +29,6 @@ public class TokenConfig {
     @NotNull
     @JsonProperty
     private int minutesUntilExpirationForUserToken;
-
-    @Valid
-    @NotNull
-    @JsonProperty
-    private int minutesUntilExpirationForApiToken;
 
     @Valid
     @NotNull
@@ -65,14 +56,6 @@ public class TokenConfig {
 
     public void setMinutesUntilExpirationForUserToken(int minutesUntilExpirationForUserToken) {
         this.minutesUntilExpirationForUserToken = minutesUntilExpirationForUserToken;
-    }
-
-    public int getMinutesUntilExpirationForApiToken() {
-        return minutesUntilExpirationForApiToken;
-    }
-
-    public void setMinutesUntilExpirationForApiToken(int minutesUntilExpirationForApiToken) {
-        this.minutesUntilExpirationForApiToken = minutesUntilExpirationForApiToken;
     }
 
     public int getMinutesUntilExpirationForEmailResetToken() {
