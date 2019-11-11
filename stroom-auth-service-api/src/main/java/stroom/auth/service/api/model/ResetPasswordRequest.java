@@ -13,15 +13,15 @@
 
 package stroom.auth.service.api.model;
 
-import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Objects;
 
 /**
  * ResetPasswordRequest
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-04-17T11:44:44.052+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-11T12:01:59.457Z")
 public class ResetPasswordRequest {
   @SerializedName("newPassword")
   private String newPassword = null;

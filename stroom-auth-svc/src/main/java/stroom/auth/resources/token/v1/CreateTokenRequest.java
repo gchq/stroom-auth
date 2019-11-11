@@ -41,8 +41,8 @@ public class CreateTokenRequest {
     @ApiModelProperty(value = "The type of token to create: e.g. user, api, or email_reset.", required = true)
     private String tokenType;
 
-    @NotNull
-    @ApiModelProperty
+    @Nullable
+    @ApiModelProperty(value = "The expiry date for an API key.")
     private Date expiryDate;
 
     @Nullable
@@ -62,6 +62,14 @@ public class CreateTokenRequest {
         this.tokenType = tokenType;
         this.enabled = enabled;
         this.comments = comments;
+    }
+
+    public CreateTokenRequest(String userEmail, String tokenType, boolean enabled, String comments, Date expiryDate) {
+        this.userEmail = userEmail;
+        this.tokenType = tokenType;
+        this.enabled = enabled;
+        this.comments = comments;
+        this.expiryDate = expiryDate;
     }
 
     public Optional<Token.TokenType> getParsedTokenType() {
@@ -100,6 +108,7 @@ public class CreateTokenRequest {
         this.comments = comments;
     }
 
+    @Nullable
     public Date getExpiryDate() {
         return expiryDate;
     }

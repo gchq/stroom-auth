@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  * A request to change a user&#39;s password.
  */
 @ApiModel(description = "A request to change a user's password.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-04-17T11:44:44.052+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-11T12:01:59.457Z")
 public class ChangePasswordRequest {
   @SerializedName("newPassword")
   private String newPassword = null;

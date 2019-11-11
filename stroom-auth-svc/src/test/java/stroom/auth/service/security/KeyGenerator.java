@@ -16,6 +16,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import stroom.auth.TokenBuilder;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +35,13 @@ public class KeyGenerator {
     public void tokenBuilder() throws JoseException {
         TokenBuilder builder = new TokenBuilder();
         PublicJsonWebKey jwk = RsaJsonWebKey.Factory.newPublicJwk(JWK);
-        String key = builder.subject("admin").expirationInMinutes(30).issuer("stroom").algorithm("RS256").privateVerificationKey(jwk.getPrivateKey()).build();
+        String key = builder
+                .subject("admin")
+                .expiryDate(Instant.now().plusSeconds(1800))
+                .issuer("stroom")
+                .algorithm("RS256")
+                .privateVerificationKey(jwk.getPrivateKey())
+                .build();
         LOGGER.info(key);
     }
 

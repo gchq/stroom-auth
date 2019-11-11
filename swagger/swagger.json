@@ -721,6 +721,11 @@
           "description" : "The type of token to create: e.g. user, api, or email_reset.",
           "pattern" : "^user$|^api$|^email_reset$"
         },
+        "expiryDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "The expiry date for an API key."
+        },
         "comments" : {
           "type" : "string",
           "description" : "Comments about the token."

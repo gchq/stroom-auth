@@ -13,22 +13,27 @@
 
 package stroom.auth.service.api.model;
 
-import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.joda.time.DateTime;
+
+import java.util.Objects;
 
 /**
  * A request to create a token.
  */
 @ApiModel(description = "A request to create a token.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-04-17T11:44:44.052+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-11T12:01:59.457Z")
 public class CreateTokenRequest {
   @SerializedName("userEmail")
   private String userEmail = null;
 
   @SerializedName("tokenType")
   private String tokenType = null;
+
+  @SerializedName("expiryDate")
+  private DateTime expiryDate = null;
 
   @SerializedName("comments")
   private String comments = null;
@@ -100,6 +105,24 @@ public class CreateTokenRequest {
     this.tokenType = tokenType;
   }
 
+  public CreateTokenRequest expiryDate(DateTime expiryDate) {
+    this.expiryDate = expiryDate;
+    return this;
+  }
+
+   /**
+   * The expiry date for an API key.
+   * @return expiryDate
+  **/
+  @ApiModelProperty(example = "null", value = "The expiry date for an API key.")
+  public DateTime getExpiryDate() {
+    return expiryDate;
+  }
+
+  public void setExpiryDate(DateTime expiryDate) {
+    this.expiryDate = expiryDate;
+  }
+
   public CreateTokenRequest comments(String comments) {
     this.comments = comments;
     return this;
@@ -166,6 +189,7 @@ public class CreateTokenRequest {
     CreateTokenRequest createTokenRequest = (CreateTokenRequest) o;
     return Objects.equals(this.userEmail, createTokenRequest.userEmail) &&
         Objects.equals(this.tokenType, createTokenRequest.tokenType) &&
+        Objects.equals(this.expiryDate, createTokenRequest.expiryDate) &&
         Objects.equals(this.comments, createTokenRequest.comments) &&
         Objects.equals(this.enabled, createTokenRequest.enabled) &&
         Objects.equals(this.parsedTokenType, createTokenRequest.parsedTokenType);
@@ -173,7 +197,7 @@ public class CreateTokenRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(userEmail, tokenType, comments, enabled, parsedTokenType);
+    return Objects.hash(userEmail, tokenType, expiryDate, comments, enabled, parsedTokenType);
   }
 
 
@@ -184,6 +208,7 @@ public class CreateTokenRequest {
     
     sb.append("    userEmail: ").append(toIndentedString(userEmail)).append("\n");
     sb.append("    tokenType: ").append(toIndentedString(tokenType)).append("\n");
+    sb.append("    expiryDate: ").append(toIndentedString(expiryDate)).append("\n");
     sb.append("    comments: ").append(toIndentedString(comments)).append("\n");
     sb.append("    enabled: ").append(toIndentedString(enabled)).append("\n");
     sb.append("    parsedTokenType: ").append(toIndentedString(parsedTokenType)).append("\n");

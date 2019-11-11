@@ -17,9 +17,7 @@
 package stroom.auth.service.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.jose4j.lang.JoseException;
-import org.junit.Ignore;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
@@ -28,7 +26,6 @@ import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.model.CreateTokenRequest;
 import stroom.auth.service.api.model.Token;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,6 +54,7 @@ public class TokenResource_create_IT extends TokenResource_IT {
         createTokenRequest.setUserEmail("admin");
         createTokenRequest.setTokenType("api");
         createTokenRequest.setEnabled(false);
+        createTokenRequest.setExpiryDate(DateTime.now().plusMinutes(30));
         createTokenRequest.setComments("Created by TokenResource_create_IT");
         Token newApiKeyId = apiKeyApiClient.create(createTokenRequest);
 
@@ -79,6 +77,7 @@ public class TokenResource_create_IT extends TokenResource_IT {
         createTokenRequest.setUserEmail("BAD_USER");
         createTokenRequest.setTokenType("api");
         createTokenRequest.setEnabled(false);
+        createTokenRequest.setExpiryDate(DateTime.now().plusMinutes(30));
         createTokenRequest.setComments("Created by TokenResource_create_IT");
         try {
             Token newApiKeyId = apiKeyApiClient.create(createTokenRequest);

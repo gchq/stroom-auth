@@ -16,9 +16,8 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.assertj.core.api.Condition;
-import org.jose4j.lang.JoseException;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.token.v1.Token;
@@ -30,7 +29,7 @@ import stroom.auth.service.api.model.CreateTokenRequest;
 import stroom.auth.service.api.model.SearchResponse;
 import stroom.auth.service.api.model.User;
 
-import java.io.IOException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -52,6 +51,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         CreateTokenRequest createTokenRequest = new CreateTokenRequest();
         createTokenRequest.setUserEmail("admin");
         createTokenRequest.setTokenType(API.getText());
+        createTokenRequest.setExpiryDate(DateTime.now().plusMinutes(30));
         apiKeyApiClient.create(createTokenRequest);
 
         stroom.auth.service.api.model.SearchRequest searchRequest = new stroom.auth.service.api.model.SearchRequest();
@@ -369,6 +369,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
     private stroom.auth.service.api.model.Token createToken(String userEmail, Token.TokenType tokenType, ApiKeyApi apiKeyApi) {
         CreateTokenRequest createTokenRequest = new CreateTokenRequest();
         createTokenRequest.setUserEmail(userEmail);
+        createTokenRequest.setExpiryDate(DateTime.now().plusMinutes(30));
         createTokenRequest.setTokenType(tokenType.getText());
         stroom.auth.service.api.model.Token token = null;
         try {

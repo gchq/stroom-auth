@@ -16,6 +16,7 @@
 
 package stroom.auth.service.resources;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
@@ -41,6 +42,7 @@ public class TokenResource_delete_IT extends TokenResource_IT {
         createTokenRequest.setTokenType("api");
         createTokenRequest.setEnabled(false);
         createTokenRequest.setComments("Created by TokenResource_create_IT");
+        createTokenRequest.setExpiryDate(DateTime.now().plusMinutes(30));
         Token newApiKeyId = apiKeyApiClient.create(createTokenRequest);
         assertThat(newApiKeyId).isNotNull();
 
@@ -76,11 +78,13 @@ public class TokenResource_delete_IT extends TokenResource_IT {
         CreateTokenRequest createTokenRequest1 = new CreateTokenRequest();
         createTokenRequest1.setTokenType("API");
         createTokenRequest1.setUserEmail(user1Email);
+        createTokenRequest1.setExpiryDate(DateTime.now().plusMinutes(30));
         Token key1Id = apiKeyApiClient.create(createTokenRequest1);
 
         CreateTokenRequest createTokenRequest2 = new CreateTokenRequest();
         createTokenRequest2.setTokenType("API");
         createTokenRequest2.setUserEmail(user1Email);
+        createTokenRequest2.setExpiryDate(DateTime.now().plusMinutes(30));
         Token key2Id = apiKeyApiClient.create(createTokenRequest2);
 
 
@@ -93,16 +97,19 @@ public class TokenResource_delete_IT extends TokenResource_IT {
         CreateTokenRequest createTokenRequest3 = new CreateTokenRequest();
         createTokenRequest3.setTokenType("API");
         createTokenRequest3.setUserEmail(user2Email);
+        createTokenRequest3.setExpiryDate(DateTime.now().plusMinutes(30));
         Token key3Id = apiKeyApiClient.create(createTokenRequest3);
 
         CreateTokenRequest createTokenRequest4 = new CreateTokenRequest();
         createTokenRequest4.setTokenType("API");
         createTokenRequest4.setUserEmail(user2Email);
+        createTokenRequest4.setExpiryDate(DateTime.now().plusMinutes(30));
         Token key4Id = apiKeyApiClient.create(createTokenRequest4);
 
         CreateTokenRequest createTokenRequest5 = new CreateTokenRequest();
         createTokenRequest5.setTokenType("API");
         createTokenRequest5.setUserEmail(user2Email);
+        createTokenRequest5.setExpiryDate(DateTime.now().plusMinutes(30));
         Token key5Id = apiKeyApiClient.create(createTokenRequest5);
 
 
