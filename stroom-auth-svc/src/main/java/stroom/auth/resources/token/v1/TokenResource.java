@@ -164,6 +164,7 @@ public class TokenResource {
         Token token = tokenDao.createToken(
                 tokenTypeToCreate.get(),
                 authenticatedServiceUser.getName(),
+                createTokenRequest.getExpiryDate().toInstant(),
                 createTokenRequest.getUserEmail(),
                 createTokenRequest.isEnabled(),
                 createTokenRequest.getComments());

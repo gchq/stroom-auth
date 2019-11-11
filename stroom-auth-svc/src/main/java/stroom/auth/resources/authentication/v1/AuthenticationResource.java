@@ -19,7 +19,6 @@
 package stroom.auth.resources.authentication.v1;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.collect.Lists;
 import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.sessions.Session;
 import io.swagger.annotations.Api;
@@ -27,7 +26,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.curator.shaded.com.google.common.base.Strings;
-import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.CertificateManager;
@@ -70,6 +68,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +78,6 @@ import java.util.regex.Pattern;
 import static javax.ws.rs.core.Response.ResponseBuilder;
 import static javax.ws.rs.core.Response.seeOther;
 import static javax.ws.rs.core.Response.status;
-import static stroom.auth.daos.UserDao.LoginResult.*;
 import static stroom.auth.resources.authentication.v1.PasswordValidator.validateAuthenticity;
 import static stroom.auth.resources.authentication.v1.PasswordValidator.validateComplexity;
 import static stroom.auth.resources.authentication.v1.PasswordValidator.validateLength;
@@ -581,10 +579,10 @@ public final class AuthenticationResource {
                 .nonce(nonce)
                 .state(state)
                 .authSessionId(authSessionId);
-        NumericDate expiresOn = tokenBuilder.expiresOn();
+        Instant expiresOn = tokenBuilder.getExpiryDate();
         String idToken = tokenBuilder.build();
 
-        tokenDao.createIdToken(idToken, subject, new Timestamp(expiresOn.getValueInMillis()));
+        tokenDao.createIdToken(idToken, subject, new Timestamp(expiresOn.toEpochMilli()));
         return idToken;
     }
 

@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Date;
 import java.util.Optional;
 
 @ApiModel(description = "A request to create a token.")
@@ -39,6 +40,10 @@ public class CreateTokenRequest {
             message = "tokenType must be one of: 'user', 'api', 'email_reset'")
     @ApiModelProperty(value = "The type of token to create: e.g. user, api, or email_reset.", required = true)
     private String tokenType;
+
+    @NotNull
+    @ApiModelProperty
+    private Date expiryDate;
 
     @Nullable
     @ApiModelProperty(value = "Comments about the token.")
@@ -93,5 +98,9 @@ public class CreateTokenRequest {
 
     public void setComments(@Nullable String comments) {
         this.comments = comments;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
     }
 }

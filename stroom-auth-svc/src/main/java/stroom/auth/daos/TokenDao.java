@@ -18,25 +18,13 @@
 
 package stroom.auth.daos;
 
-import com.google.common.base.Strings;
-import org.jooq.Condition;
-import org.jooq.Configuration;
-import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.Record;
-import org.jooq.Record1;
-import org.jooq.Record11;
-import org.jooq.Result;
-import org.jooq.SelectJoinStep;
-import org.jooq.SelectSelectStep;
-import org.jooq.SortField;
-import org.jooq.Table;
+import org.jooq.*;
 import org.jooq.impl.DSL;
-import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.TokenBuilder;
 import stroom.auth.TokenBuilderFactory;
+import stroom.auth.config.TokenConfig;
 import stroom.auth.db.tables.Users;
 import stroom.auth.exceptions.BadRequestException;
 import stroom.auth.exceptions.NoSuchUserException;
@@ -62,6 +50,7 @@ import static stroom.auth.db.Tables.USERS;
 @Singleton
 public class TokenDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenDao.class);
+    private final TokenConfig config;
 
     @Inject
     private Configuration jooqConfig;
@@ -74,6 +63,11 @@ public class TokenDao {
     @Inject
     private void init() {
         database = DSL.using(this.jooqConfig);
+    }
+
+    @Inject
+    public TokenDao(TokenConfig config){
+        this.config = config;
     }
 
     public SearchResponse searchTokens(SearchRequest searchRequest) {
@@ -146,8 +140,12 @@ public class TokenDao {
     }
 
     public String createEmailResetToken(String emailAddress) throws NoSuchUserException {
+        long timeToExpiryInSeconds = this.config.getMinutesUntilExpirationForEmailResetToken() * 60;
+
         return createToken(
-                Token.TokenType.EMAIL_RESET, "authenticationResourceUser",
+                Token.TokenType.EMAIL_RESET,
+                "authenticationResourceUser",
+                Instant.now().plusSeconds(timeToExpiryInSeconds),
                 emailAddress,
                 true, "Created for password reset")
                 .getToken();
@@ -187,22 +185,13 @@ public class TokenDao {
         return tokenRecord;
     }
 
-    public String createToken(String recipientUserEmail) throws NoSuchUserException {
-        return createToken(
-                Token.TokenType.USER,
-                "authenticationResource",
-                recipientUserEmail,
-                true,
-                "Created for username/password user")
-                .getToken();
-    }
-
     /**
      * Create a token for a specific user.
      */
     public Token createToken(
             Token.TokenType tokenType,
             String issuingUserEmail,
+            Instant expiryDateIfApiKey,
             String recipientUserEmail,
             boolean isEnabled,
             String comment) throws NoSuchUserException {
@@ -218,9 +207,11 @@ public class TokenDao {
         int recipientUserId = userRecord.get(USERS.ID);
 
         TokenBuilder tokenBuilder = tokenBuilderFactory
+                .expiryDateForApiKeys(expiryDateIfApiKey)
                 .newBuilder(tokenType)
                 .subject(recipientUserEmail);
-        NumericDate expiresOn = tokenBuilder.expiresOn();
+
+        Instant actualExpiryDate = tokenBuilder.getExpiryDate();
         String idToken = tokenBuilder.build();
 
         int issuingUserId = database
@@ -242,7 +233,7 @@ public class TokenDao {
                 .set(TOKENS.USER_ID, recipientUserId)
                 .set(TOKENS.TOKEN_TYPE_ID, tokenTypeId)
                 .set(TOKENS.TOKEN, idToken)
-                .set(TOKENS.EXPIRES_ON, new Timestamp(expiresOn.getValueInMillis()))
+                .set(TOKENS.EXPIRES_ON, new Timestamp(actualExpiryDate.toEpochMilli()))
                 .set(TOKENS.ISSUED_ON, Instant.now())
                 .set(TOKENS.ISSUED_BY_USER, issuingUserId)
                 .set(TOKENS.ENABLED, isEnabled)

@@ -25,13 +25,12 @@ import org.jose4j.lang.JoseException;
 import stroom.auth.resources.token.v1.Token.TokenType;
 
 import java.security.PrivateKey;
+import java.time.Instant;
 import java.util.Optional;
 
 public class TokenBuilder {
-    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TokenBuilder.class);
-
     private TokenType tokenType;
-    private Optional<Integer> expirationInMinutes = Optional.empty();
+    private Instant expiryDate;
     private String issuer;
     private byte[] secret;
     private String algorithm = "RS256";
@@ -49,11 +48,6 @@ public class TokenBuilder {
 
     public TokenBuilder tokenType(TokenType tokenType) {
         this.tokenType = tokenType;
-        return this;
-    }
-
-    public TokenBuilder expirationInMinutes(int expirationInMinutes) {
-        this.expirationInMinutes = Optional.of(expirationInMinutes);
         return this;
     }
 
@@ -87,6 +81,15 @@ public class TokenBuilder {
         return this;
     }
 
+    public TokenBuilder expiryDate(Instant expiryDate) {
+        this.expiryDate = expiryDate;
+        return this;
+    }
+
+    public Instant getExpiryDate(){
+        return this.expiryDate;
+    }
+
     /**
      * The authSessionId is needed for federated logout. It allows a back-channel (API) logout request from an RP
      * to this Identity Provider to contain the authSessionId. The IP then requests logout from all known RPs,
@@ -110,7 +113,7 @@ public class TokenBuilder {
 
     public String build() {
         JwtClaims claims = new JwtClaims();
-        expirationInMinutes.ifPresent(claims::setExpirationTimeMinutesInTheFuture);
+        claims.setExpirationTime(NumericDate.fromSeconds(expiryDate.getEpochSecond()));
         claims.setSubject(subject);
         claims.setIssuer(issuer);
         claims.setStringClaim("sid", authSessionId);
@@ -128,13 +131,6 @@ public class TokenBuilder {
         } catch (JoseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public NumericDate expiresOn() {
-        NumericDate numericDate = NumericDate.now();
-        float secondsOffset = expirationInMinutes.get() * 60;
-        numericDate.addSeconds((long)secondsOffset);
-        return numericDate;
     }
 
 }

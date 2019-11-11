@@ -24,12 +24,14 @@ import stroom.auth.resources.token.v1.Token.TokenType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Instant;
 
 @Singleton
 public class TokenBuilderFactory {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TokenBuilderFactory.class);
     private Config config;
     private TokenVerifier tokenVerifier;
+    private Instant expiryDateForApiKeys;
 
     @Inject
     public TokenBuilderFactory(Config config, TokenVerifier tokenVerifier) {
@@ -37,17 +39,28 @@ public class TokenBuilderFactory {
         this.tokenVerifier = tokenVerifier;
     }
 
+
+    public TokenBuilderFactory expiryDateForApiKeys(Instant expiryDate){
+       this.expiryDateForApiKeys = expiryDate;
+       return this;
+    }
+
     public TokenBuilder newBuilder(TokenType tokenType) {
         TokenBuilder tokenBuilder = new TokenBuilder();
         switch (tokenType) {
             case API:
-                tokenBuilder.expirationInMinutes(config.getTokenConfig().getMinutesUntilExpirationForApiToken());
+                if(expiryDateForApiKeys == null) {
+                    expiryDateForApiKeys = Instant.now().plusSeconds(config.getTokenConfig().getMinutesUntilExpirationForUserToken() * 60);
+                }
+                tokenBuilder.expiryDate(expiryDateForApiKeys);
                 break;
             case USER:
-                tokenBuilder.expirationInMinutes(config.getTokenConfig().getMinutesUntilExpirationForUserToken());
+                Instant expiryDateForLogin = Instant.now().plusSeconds(config.getTokenConfig().getMinutesUntilExpirationForUserToken() * 60);
+                tokenBuilder.expiryDate(expiryDateForLogin);
                 break;
             case EMAIL_RESET:
-                tokenBuilder.expirationInMinutes(config.getTokenConfig().getMinutesUntilExpirationForEmailResetToken());
+                Instant expiryDateForReset = Instant.now().plusSeconds(config.getTokenConfig().getMinutesUntilExpirationForEmailResetToken() * 60);
+                tokenBuilder.expiryDate(expiryDateForReset);
                 break;
             default:
                 String errorMessage = "Unknown token type:" + tokenType.toString();
