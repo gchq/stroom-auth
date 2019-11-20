@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Made session cookie `Secure` and `HttpOnly`.
+
 * Issue **#151**: Reset last login to prevent premature disabling of accounts
 
 * Issue **#125**: Make dates display as ISO 8601

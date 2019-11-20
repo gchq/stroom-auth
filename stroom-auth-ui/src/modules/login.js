@@ -156,19 +156,14 @@ export const login = (credentials, {setStatus, setSubmitting}) => {
     const clientId = state.login.clientId;
     const stroomUiUrl = state.config.stroomUiUrl;
 
-    // We need to post the sessionId in the credentials, otherwise the
-    // authenticationService will have no way of marking the session as valid.
-    const fullSessionId = Cookies.get('authSessionId');
-    let sessionId = fullSessionId;
-    if (fullSessionId.indexOf('.') > -1) {
-      sessionId = fullSessionId.slice(0, fullSessionId.indexOf('.'));
-    }
-
     // Call the authentication service to get a token.
     // If successful we re-direct to Stroom, otherwise we display a message.
     // It's essential we return the promise, otherwise any errors we get won't be handled.
     return (
       fetch(loginServiceUrl, {
+        // This option means we send the cookies along with the request, which means
+        // the auth service gets the sessionId.
+        credentials: "include",
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -178,7 +173,6 @@ export const login = (credentials, {setStatus, setSubmitting}) => {
         body: JSON.stringify({
           email,
           password,
-          sessionId,
           requestingClientId: clientId,
         }),
       })
