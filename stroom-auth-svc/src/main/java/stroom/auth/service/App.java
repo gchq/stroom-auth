@@ -56,6 +56,7 @@ import stroom.auth.util.db.DbUtil;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
+import javax.servlet.SessionCookieConfig;
 import java.util.EnumSet;
 import java.util.Timer;
 
@@ -123,6 +124,14 @@ public final class App extends Application<Config> {
         configureSessionHandling(environment);
         configureCors(environment);
         schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
+
+        // Ensure the session cookie that provides JSESSIONID is secure.
+        final SessionCookieConfig sessionCookieConfig = environment
+                .getApplicationContext()
+                .getServletContext()
+                .getSessionCookieConfig();
+        sessionCookieConfig.setSecure(true);
+        sessionCookieConfig.setHttpOnly(true);
     }
 
     private void waitForDatabaseConnection(final Config config) {
