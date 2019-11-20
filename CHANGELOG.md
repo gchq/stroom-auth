@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v6.0.25] - 2019-11-20
+
 * Made session cookie `Secure` and `HttpOnly`.
 
 * Issue **#151**: Reset last login to prevent premature disabling of accounts
@@ -301,7 +303,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.6...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.25...master
+[v6.0.25]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.6...v6.0.25
 [v6.0-beta.6]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.5...v6.0-beta.6
 [v6.0-beta.5]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.4...v6.0-beta.5
 [v6.0-beta.4]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.3...v6.0-beta.4
