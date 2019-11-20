@@ -271,20 +271,14 @@ public final class AuthenticationResource {
             @Session HttpSession httpSession,
             @Context @NotNull HttpServletRequest httpServletRequest,
             @ApiParam("Credentials") @NotNull Credentials credentials) throws URISyntaxException, UnsupportedEncodingException {
-        LOGGER.info("Received a login request for session " + credentials.getSessionId());
         String sessionId = httpSession.getId();
-        if (!Strings.isNullOrEmpty(credentials.getSessionId())) {
-            LOGGER.debug("There is a session ID in the request body so we'll use that instead of the one in the httpSession.");
-            sessionId = credentials.getSessionId();
-        }
-
-        Response noSessionResponse = status(422)
-                .entity("You have no session. Please make an AuthenticationRequest to the Authentication Service.")
-                .build();
+        LOGGER.info("Received a login request for session " + sessionId);
 
         Optional<stroom.auth.Session> optionalSession = sessionManager.get(sessionId);
         if (!optionalSession.isPresent()) {
-            return noSessionResponse;
+            return status(422)
+                    .entity("You have no session. Please make an AuthenticationRequest to the Authentication Service.")
+                    .build();
         }
         stroom.auth.Session session = optionalSession.get();
 
