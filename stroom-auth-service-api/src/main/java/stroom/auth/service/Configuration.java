@@ -13,7 +13,7 @@
 
 package stroom.auth.service;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-12-08T08:24:32.610Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-22T11:58:22.499Z")
 public class Configuration {
     private static ApiClient defaultApiClient = new ApiClient();
 

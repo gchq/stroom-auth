@@ -82,7 +82,7 @@ const App = ({
               path={'/s/handleAuthentication'}
               render={() => (
                 <HandleAuthenticationResponse
-                  authenticationServiceUrl={authenticationServiceUrl}
+                  authenticationServiceUrl={advertisedUrl}
                   authorisationServiceUrl={authorisationServiceUrl}
                 />
               )}
@@ -92,7 +92,7 @@ const App = ({
               path={'/s/handleAuthenticationResponse'}
               render={() => (
                 <HandleAuthenticationResponse
-                  authenticationServiceUrl={authenticationServiceUrl}
+                  authenticationServiceUrl={advertisedUrl}
                   authorisationServiceUrl={authorisationServiceUrl}
                 />
               )}

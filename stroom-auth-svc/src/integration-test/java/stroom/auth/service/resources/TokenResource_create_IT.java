@@ -16,9 +16,6 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.jose4j.lang.JoseException;
-import org.junit.Ignore;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
@@ -26,8 +23,6 @@ import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.model.CreateTokenRequest;
 import stroom.auth.service.api.model.Token;
-
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;

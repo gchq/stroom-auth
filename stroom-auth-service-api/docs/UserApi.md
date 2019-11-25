@@ -9,6 +9,7 @@ Method | HTTP request | Description
 [**getAll**](UserApi.md#getAll) | **GET** /user/v1 | Get all users.
 [**getUser**](UserApi.md#getUser) | **GET** /user/v1/{id} | Get a user by ID.
 [**readCurrentUser**](UserApi.md#readCurrentUser) | **GET** /user/v1/me | Get the details of the currently logged-in user.
+[**searchUsers**](UserApi.md#searchUsers) | **GET** /user/v1/search | Search for a user by email.
 [**updateUser**](UserApi.md#updateUser) | **PUT** /user/v1/{id} | Update a user.
 
 
@@ -215,6 +216,51 @@ try {
 
 ### Parameters
 This endpoint does not need any parameter.
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+<a name="searchUsers"></a>
+# **searchUsers**
+> String searchUsers(email)
+
+Search for a user by email.
+
+
+
+### Example
+```java
+// Import classes:
+//import stroom.auth.service.ApiException;
+//import stroom.auth.service.api.UserApi;
+
+
+UserApi apiInstance = new UserApi();
+String email = "email_example"; // String | 
+try {
+    String result = apiInstance.searchUsers(email);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling UserApi#searchUsers");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **email** | **String**|  | [optional]
 
 ### Return type
 

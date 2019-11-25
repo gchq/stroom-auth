@@ -19,48 +19,30 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * A request to change a user&#39;s password.
+ * A request to validate a user&#39;s password.
  */
-@ApiModel(description = "A request to change a user's password.")
+@ApiModel(description = "A request to validate a user's password.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-22T11:58:22.499Z")
-public class ChangePasswordRequest {
-  @SerializedName("newPassword")
-  private String newPassword = null;
-
+public class PasswordValidationRequest {
   @SerializedName("oldPassword")
   private String oldPassword = null;
 
   @SerializedName("email")
   private String email = null;
 
-  public ChangePasswordRequest newPassword(String newPassword) {
-    this.newPassword = newPassword;
-    return this;
-  }
+  @SerializedName("newPassword")
+  private String newPassword = null;
 
-   /**
-   * The new password.
-   * @return newPassword
-  **/
-  @ApiModelProperty(example = "null", required = true, value = "The new password.")
-  public String getNewPassword() {
-    return newPassword;
-  }
-
-  public void setNewPassword(String newPassword) {
-    this.newPassword = newPassword;
-  }
-
-  public ChangePasswordRequest oldPassword(String oldPassword) {
+  public PasswordValidationRequest oldPassword(String oldPassword) {
     this.oldPassword = oldPassword;
     return this;
   }
 
    /**
-   * The old password.
+   * THe user's old password
    * @return oldPassword
   **/
-  @ApiModelProperty(example = "null", required = true, value = "The old password.")
+  @ApiModelProperty(example = "null", value = "THe user's old password")
   public String getOldPassword() {
     return oldPassword;
   }
@@ -69,22 +51,40 @@ public class ChangePasswordRequest {
     this.oldPassword = oldPassword;
   }
 
-  public ChangePasswordRequest email(String email) {
+  public PasswordValidationRequest email(String email) {
     this.email = email;
     return this;
   }
 
    /**
-   * The email address of the user we're changing the password for.
+   * The user's email address.
    * @return email
   **/
-  @ApiModelProperty(example = "null", required = true, value = "The email address of the user we're changing the password for.")
+  @ApiModelProperty(example = "null", required = true, value = "The user's email address.")
   public String getEmail() {
     return email;
   }
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public PasswordValidationRequest newPassword(String newPassword) {
+    this.newPassword = newPassword;
+    return this;
+  }
+
+   /**
+   * The new password for the user.
+   * @return newPassword
+  **/
+  @ApiModelProperty(example = "null", required = true, value = "The new password for the user.")
+  public String getNewPassword() {
+    return newPassword;
+  }
+
+  public void setNewPassword(String newPassword) {
+    this.newPassword = newPassword;
   }
 
 
@@ -96,26 +96,26 @@ public class ChangePasswordRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ChangePasswordRequest changePasswordRequest = (ChangePasswordRequest) o;
-    return Objects.equals(this.newPassword, changePasswordRequest.newPassword) &&
-        Objects.equals(this.oldPassword, changePasswordRequest.oldPassword) &&
-        Objects.equals(this.email, changePasswordRequest.email);
+    PasswordValidationRequest passwordValidationRequest = (PasswordValidationRequest) o;
+    return Objects.equals(this.oldPassword, passwordValidationRequest.oldPassword) &&
+        Objects.equals(this.email, passwordValidationRequest.email) &&
+        Objects.equals(this.newPassword, passwordValidationRequest.newPassword);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(newPassword, oldPassword, email);
+    return Objects.hash(oldPassword, email, newPassword);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ChangePasswordRequest {\n");
+    sb.append("class PasswordValidationRequest {\n");
     
-    sb.append("    newPassword: ").append(toIndentedString(newPassword)).append("\n");
     sb.append("    oldPassword: ").append(toIndentedString(oldPassword)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    newPassword: ").append(toIndentedString(newPassword)).append("\n");
     sb.append("}");
     return sb.toString();
   }

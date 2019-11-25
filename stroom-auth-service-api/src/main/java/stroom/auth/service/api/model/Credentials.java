@@ -21,11 +21,8 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * Credentials
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-12-08T08:24:32.610Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-22T11:58:22.499Z")
 public class Credentials {
-  @SerializedName("sessionId")
-  private String sessionId = null;
-
   @SerializedName("requestingClientId")
   private String requestingClientId = null;
 
@@ -34,24 +31,6 @@ public class Credentials {
 
   @SerializedName("password")
   private String password = null;
-
-  public Credentials sessionId(String sessionId) {
-    this.sessionId = sessionId;
-    return this;
-  }
-
-   /**
-   * Get sessionId
-   * @return sessionId
-  **/
-  @ApiModelProperty(example = "null", value = "")
-  public String getSessionId() {
-    return sessionId;
-  }
-
-  public void setSessionId(String sessionId) {
-    this.sessionId = sessionId;
-  }
 
   public Credentials requestingClientId(String requestingClientId) {
     this.requestingClientId = requestingClientId;
@@ -117,15 +96,14 @@ public class Credentials {
       return false;
     }
     Credentials credentials = (Credentials) o;
-    return Objects.equals(this.sessionId, credentials.sessionId) &&
-        Objects.equals(this.requestingClientId, credentials.requestingClientId) &&
+    return Objects.equals(this.requestingClientId, credentials.requestingClientId) &&
         Objects.equals(this.email, credentials.email) &&
         Objects.equals(this.password, credentials.password);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sessionId, requestingClientId, email, password);
+    return Objects.hash(requestingClientId, email, password);
   }
 
 
@@ -134,7 +112,6 @@ public class Credentials {
     StringBuilder sb = new StringBuilder();
     sb.append("class Credentials {\n");
     
-    sb.append("    sessionId: ").append(toIndentedString(sessionId)).append("\n");
     sb.append("    requestingClientId: ").append(toIndentedString(requestingClientId)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");

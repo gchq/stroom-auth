@@ -69,20 +69,19 @@ export const sendAuthenticationRequest = (referrer, uiUrl, appClientId, authenti
   }
 }
 
-export const handleAuthenticationResponse = (accessCode, authenticationServiceUrl, authorisationServiceUrl) => {
+export const handleAuthenticationResponse = (accessCode, advertisedUrl, authorisationServiceUrl) => {
   return (dispatch) => {
-    const idTokenRequestUrl = `${authenticationServiceUrl}/idToken?accessCode=${accessCode}`
+    const idTokenRequestUrl = `${advertisedUrl}/api/authentication/v1/noauth/exchange`
 
-    // The cookie including the sessionId will be sent along with this request.
-    // The 'credentials' key makes this happen.
     fetch(idTokenRequestUrl, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      method: 'get',
-      credentials: 'include',
-      mode: 'cors'
+      method: 'post',
+      credentials: 'include', // Send cookies, i.e. the sessionId
+      mode: 'cors',
+      body: JSON.stringify({accessCode})
     })
     .then(response => response.text())
     .then(idToken => {

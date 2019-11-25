@@ -52,12 +52,12 @@
         "parameters" : [ {
           "name" : "scope",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "response_type",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "client_id",
@@ -72,10 +72,15 @@
         }, {
           "name" : "nonce",
           "in" : "query",
-          "required" : true,
+          "required" : false,
           "type" : "string"
         }, {
           "name" : "state",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "prompt",
           "in" : "query",
           "required" : false,
           "type" : "string"
@@ -148,23 +153,52 @@
       }
     },
     "/authentication/v1/idToken" : {
-      "get" : {
+      "post" : {
         "tags" : [ "Authentication" ],
         "summary" : "Convert a previously provided access code into an ID token",
         "description" : "",
         "operationId" : "getIdToken",
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "accessCode",
-          "in" : "query",
-          "required" : true,
-          "type" : "string"
+          "in" : "body",
+          "name" : "body",
+          "description" : "IdTokenRequest",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/IdTokenRequest"
+          }
         } ],
         "responses" : {
           "200" : {
             "description" : "successful operation",
             "schema" : {
               "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/authentication/v1/isPasswordValid" : {
+      "post" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Returns the length and complexity rules.",
+        "description" : "",
+        "operationId" : "isPasswordValid",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "passwordValidationRequest",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PasswordValidationRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "boolean"
             }
           }
         }
@@ -178,9 +212,38 @@
         "operationId" : "logout",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "redirect_url",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
         "responses" : {
           "default" : {
             "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/authentication/v1/needsPasswordChange" : {
+      "get" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Check if a user's password needs changing.",
+        "description" : "",
+        "operationId" : "needsPasswordChange",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "boolean"
+            }
           }
         }
       }
@@ -197,6 +260,32 @@
           "in" : "path",
           "required" : true,
           "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/authentication/v1/resetPassword" : {
+      "post" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Reset an authenticated user's password.",
+        "description" : "",
+        "operationId" : "resetPassword",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "changePasswordRequest",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/ResetPasswordRequest"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -502,6 +591,29 @@
         }
       }
     },
+    "/user/v1/search" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Search for a user by email.",
+        "description" : "",
+        "operationId" : "searchUsers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
     "/user/v1/{id}" : {
       "get" : {
         "tags" : [ "User" ],
@@ -584,17 +696,17 @@
       "type" : "object",
       "required" : [ "email", "newPassword", "oldPassword" ],
       "properties" : {
-        "email" : {
+        "newPassword" : {
           "type" : "string",
-          "description" : "The email address of the user we're changing the password for."
+          "description" : "The new password."
         },
         "oldPassword" : {
           "type" : "string",
           "description" : "The old password."
         },
-        "newPassword" : {
+        "email" : {
           "type" : "string",
-          "description" : "The new password."
+          "description" : "The email address of the user we're changing the password for."
         }
       },
       "description" : "A request to change a user's password."
@@ -631,9 +743,6 @@
       "type" : "object",
       "required" : [ "email", "password" ],
       "properties" : {
-        "sessionId" : {
-          "type" : "string"
-        },
         "requestingClientId" : {
           "type" : "string"
         },
@@ -642,6 +751,54 @@
         },
         "password" : {
           "type" : "string"
+        }
+      }
+    },
+    "IdTokenRequest" : {
+      "type" : "object",
+      "required" : [ "accessCode", "clientId", "clientSecret" ],
+      "properties" : {
+        "clientId" : {
+          "type" : "string",
+          "description" : "The client id. This is a string that uniquely identifies the client."
+        },
+        "clientSecret" : {
+          "type" : "string",
+          "description" : "The client's secret. This is a cryptographically random string that authenticates the client."
+        },
+        "accessCode" : {
+          "type" : "string",
+          "description" : "The access code to exchange for an id token. This will have been provided to the RP after successfully authenticating, or if they were already authenticated"
+        }
+      },
+      "description" : "A request to exchange an access code with an id token. This is the final step in the OpenID authentication flow and must be a back-channel call, i.e. the client secret should never be sent to a browser."
+    },
+    "PasswordValidationRequest" : {
+      "type" : "object",
+      "required" : [ "email", "newPassword" ],
+      "properties" : {
+        "oldPassword" : {
+          "type" : "string",
+          "description" : "THe user's old password"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "The user's email address."
+        },
+        "newPassword" : {
+          "type" : "string",
+          "description" : "The new password for the user."
+        }
+      },
+      "description" : "A request to validate a user's password."
+    },
+    "ResetPasswordRequest" : {
+      "type" : "object",
+      "required" : [ "newPassword" ],
+      "properties" : {
+        "newPassword" : {
+          "type" : "string",
+          "description" : "The new password."
         }
       }
     },
@@ -783,6 +940,12 @@
           "type" : "string"
         },
         "created_by_user" : {
+          "type" : "string"
+        },
+        "never_expires" : {
+          "type" : "boolean"
+        },
+        "reactivatedDate" : {
           "type" : "string"
         }
       }

@@ -117,6 +117,11 @@ public final class Config extends Configuration {
     @JsonProperty("ownPath")
     private String ownPath;
 
+
+    @NotNull
+    @JsonProperty("stroom")
+    private StroomConfig stroomConfig;
+
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
     }
@@ -204,5 +209,9 @@ public final class Config extends Configuration {
                 .findFirst()
                 .get();
         return port;
+    }
+
+    public StroomConfig getStroomConfig() {
+        return stroomConfig;
     }
 }

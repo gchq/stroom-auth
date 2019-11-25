@@ -139,3 +139,8 @@ passwordIntegrityChecks:
   # That regex won't work when pasted directly into this YAML.
   minimumPasswordLength: ${MINIMUM_PASSWORD_LENGTH:-8}
   passwordComplexityRegex: ${PASSWORD_COMPLEXITY_REGEX:-.*}
+
+stroom:
+  clientId: ${STROOM_CLIENT_ID:-PZnJr8kHRKqnlJRQThSI}
+  clientSecret: ${STROOM_CLIENT_SECRET:-OtzHiAWLj8QWcwO2IxXmqxpzE2pyg0pMKCghR2aU}
+  clientHost: ${STROOM_CLIENT_URI:-<IP_ADDRESS>}

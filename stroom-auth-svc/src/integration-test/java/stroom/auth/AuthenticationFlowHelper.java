@@ -38,6 +38,7 @@ import stroom.auth.service.App;
 import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.AuthenticationApi;
 import stroom.auth.service.api.model.Credentials;
+import stroom.auth.service.api.model.IdTokenRequest;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -54,7 +55,8 @@ import static org.assertj.core.api.Assertions.fail;
 public class AuthenticationFlowHelper {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AuthenticationFlowHelper.class);
 
-    private static final String CLIENT_ID = "integrationTestClient";
+    private static final String CLIENT_ID = "PZnJr8kHRKqnlJRQThSI";
+    private static final String CLIENT_SECRET = "OtzHiAWLj8QWcwO2IxXmqxpzE2pyg0pMKCghR2aU";
 
     public static String authenticateAsAdmin() throws JoseException, ApiException, URISyntaxException, IOException, UnirestException {
         return authenticateAs("admin", "admin");
@@ -225,8 +227,12 @@ public class AuthenticationFlowHelper {
         apiClient.setBasePath("http://localhost:8099");
         AuthenticationApi authenticationApi = new AuthenticationApi(apiClient);
         String idToken = null;
+        IdTokenRequest idTokenRequest = new IdTokenRequest()
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .accessCode(accessCode);
         try {
-            idToken = authenticationApi.getIdToken(accessCode);
+            idToken = authenticationApi.getIdToken(idTokenRequest);
         } catch (ApiException e) {
             fail("Request to exchange access code for id token failed!", e);
         }

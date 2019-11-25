@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * User
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-12-08T08:24:32.610Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-22T11:58:22.499Z")
 public class User {
   @SerializedName("id")
   private Integer id = null;
@@ -67,6 +67,12 @@ public class User {
 
   @SerializedName("created_by_user")
   private String createdByUser = null;
+
+  @SerializedName("never_expires")
+  private Boolean neverExpires = null;
+
+  @SerializedName("reactivatedDate")
+  private String reactivatedDate = null;
 
   public User id(Integer id) {
     this.id = id;
@@ -338,6 +344,42 @@ public class User {
     this.createdByUser = createdByUser;
   }
 
+  public User neverExpires(Boolean neverExpires) {
+    this.neverExpires = neverExpires;
+    return this;
+  }
+
+   /**
+   * Get neverExpires
+   * @return neverExpires
+  **/
+  @ApiModelProperty(example = "null", value = "")
+  public Boolean getNeverExpires() {
+    return neverExpires;
+  }
+
+  public void setNeverExpires(Boolean neverExpires) {
+    this.neverExpires = neverExpires;
+  }
+
+  public User reactivatedDate(String reactivatedDate) {
+    this.reactivatedDate = reactivatedDate;
+    return this;
+  }
+
+   /**
+   * Get reactivatedDate
+   * @return reactivatedDate
+  **/
+  @ApiModelProperty(example = "null", value = "")
+  public String getReactivatedDate() {
+    return reactivatedDate;
+  }
+
+  public void setReactivatedDate(String reactivatedDate) {
+    this.reactivatedDate = reactivatedDate;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -362,12 +404,14 @@ public class User {
         Objects.equals(this.updatedOn, user.updatedOn) &&
         Objects.equals(this.updatedByUser, user.updatedByUser) &&
         Objects.equals(this.createdOn, user.createdOn) &&
-        Objects.equals(this.createdByUser, user.createdByUser);
+        Objects.equals(this.createdByUser, user.createdByUser) &&
+        Objects.equals(this.neverExpires, user.neverExpires) &&
+        Objects.equals(this.reactivatedDate, user.reactivatedDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, firstName, lastName, comments, email, state, password, passwordHash, loginFailures, loginCount, lastLogin, updatedOn, updatedByUser, createdOn, createdByUser);
+    return Objects.hash(id, firstName, lastName, comments, email, state, password, passwordHash, loginFailures, loginCount, lastLogin, updatedOn, updatedByUser, createdOn, createdByUser, neverExpires, reactivatedDate);
   }
 
 
@@ -391,6 +435,8 @@ public class User {
     sb.append("    updatedByUser: ").append(toIndentedString(updatedByUser)).append("\n");
     sb.append("    createdOn: ").append(toIndentedString(createdOn)).append("\n");
     sb.append("    createdByUser: ").append(toIndentedString(createdByUser)).append("\n");
+    sb.append("    neverExpires: ").append(toIndentedString(neverExpires)).append("\n");
+    sb.append("    reactivatedDate: ").append(toIndentedString(reactivatedDate)).append("\n");
     sb.append("}");
     return sb.toString();
   }
