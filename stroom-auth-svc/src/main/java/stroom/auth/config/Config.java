@@ -117,8 +117,7 @@ public final class Config extends Configuration {
     @JsonProperty("ownPath")
     private String ownPath;
 
-
-    @NotNull
+    @Nullable
     @JsonProperty("stroom")
     private StroomConfig stroomConfig;
 

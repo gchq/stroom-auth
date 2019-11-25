@@ -5,6 +5,6 @@
   "authorisationServiceUrl": "https://IP_ADDRESS/api/authorisation/v1",
   "stroomUiUrl": "https://IP_ADDRESS/stroom",
   "advertisedUrl": "https://IP_ADDRESS",
-  "appClientId": "stroom-accounts",
+  "appClientId": "PZnJr8kHRKqnlJRQThSI",
   "allowPasswordResets": true
 }

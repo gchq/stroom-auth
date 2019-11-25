@@ -41,9 +41,15 @@ public class TokenBuilder {
     private Optional<String> state = Optional.empty();
     private PrivateKey privateVerificationKey;
     private String authSessionId;
+    private String clientId;
 
     public TokenBuilder subject(String subject) {
         this.subject = subject;
+        return this;
+    }
+
+    public TokenBuilder clientId(String clientId) {
+        this.clientId = clientId;
         return this;
     }
 
@@ -113,6 +119,7 @@ public class TokenBuilder {
         expirationInMinutes.ifPresent(claims::setExpirationTimeMinutesInTheFuture);
         claims.setSubject(subject);
         claims.setIssuer(issuer);
+        claims.setAudience(clientId);
         claims.setStringClaim("sid", authSessionId);
         nonce.ifPresent(nonce -> claims.setClaim("nonce", nonce));
         state.ifPresent(state -> claims.setClaim("state", state));

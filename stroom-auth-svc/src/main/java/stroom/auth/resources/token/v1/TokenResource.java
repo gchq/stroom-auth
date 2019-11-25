@@ -19,7 +19,6 @@
 package stroom.auth.resources.token.v1;
 
 import com.codahale.metrics.annotation.Timed;
-import event.logging.Data;
 import event.logging.Event;
 import event.logging.MultiObject;
 import event.logging.ObjectOutcome;
@@ -33,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.AuthorisationServiceClient;
 import stroom.auth.TokenVerifier;
+import stroom.auth.config.StroomConfig;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
 import stroom.auth.resources.user.v1.User;
@@ -70,6 +70,7 @@ public class TokenResource {
     private final UserDao userDao;
     private TokenVerifier tokenVerifier;
     private StroomEventLoggingService stroomEventLoggingService;
+    private StroomConfig stroomConfig;
     private final AuthorisationServiceClient authorisationServiceClient;
 
     @Inject
@@ -77,12 +78,14 @@ public class TokenResource {
                          final TokenDao tokenDao,
                          final UserDao userDao,
                          final TokenVerifier tokenVerifier,
-                         final StroomEventLoggingService stroomEventLoggingService) {
+                         final StroomEventLoggingService stroomEventLoggingService,
+                         final StroomConfig stroomConfig) {
         this.authorisationServiceClient = authorisationServiceClient;
         this.tokenDao = tokenDao;
         this.userDao = userDao;
         this.tokenVerifier = tokenVerifier;
         this.stroomEventLoggingService = stroomEventLoggingService;
+        this.stroomConfig = stroomConfig;
     }
 
     /**
@@ -165,6 +168,7 @@ public class TokenResource {
                 tokenTypeToCreate.get(),
                 authenticatedServiceUser.getName(),
                 createTokenRequest.getUserEmail(),
+                stroomConfig.getClientId(),
                 createTokenRequest.isEnabled(),
                 createTokenRequest.getComments());
 

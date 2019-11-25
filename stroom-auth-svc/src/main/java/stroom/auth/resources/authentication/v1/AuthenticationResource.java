@@ -408,7 +408,7 @@ public final class AuthenticationResource {
         stroomEventLoggingService.resetPassword(httpServletRequest, emailAddress);
         Optional<User> user = userDao.get(emailAddress);
         if (user.isPresent()) {
-            String resetToken = tokenDao.createEmailResetToken(emailAddress);
+            String resetToken = tokenDao.createEmailResetToken(emailAddress, config.getStroomConfig().getClientId());
             emailSender.send(user.get(), resetToken);
             Response response = status(Status.OK).build();
             return response;
@@ -572,6 +572,7 @@ public final class AuthenticationResource {
     private String createIdToken(String subject, String nonce, String state, String authSessionId) {
         TokenBuilder tokenBuilder = tokenBuilderFactory
                 .newBuilder(Token.TokenType.USER)
+                .clientId(config.getStroomConfig().getClientId())
                 .subject(subject)
                 .nonce(nonce)
                 .state(state)

@@ -145,10 +145,11 @@ public class TokenDao {
         return searchResponse;
     }
 
-    public String createEmailResetToken(String emailAddress) throws NoSuchUserException {
+    public String createEmailResetToken(String emailAddress, String clientId) throws NoSuchUserException {
         return createToken(
                 Token.TokenType.EMAIL_RESET, "authenticationResourceUser",
                 emailAddress,
+                clientId,
                 true, "Created for password reset")
                 .getToken();
     }
@@ -187,11 +188,12 @@ public class TokenDao {
         return tokenRecord;
     }
 
-    public String createToken(String recipientUserEmail) throws NoSuchUserException {
+    public String createToken(String recipientUserEmail, String clientId) throws NoSuchUserException {
         return createToken(
                 Token.TokenType.USER,
                 "authenticationResource",
                 recipientUserEmail,
+                clientId,
                 true,
                 "Created for username/password user")
                 .getToken();
@@ -204,6 +206,7 @@ public class TokenDao {
             Token.TokenType tokenType,
             String issuingUserEmail,
             String recipientUserEmail,
+            String clientId,
             boolean isEnabled,
             String comment) throws NoSuchUserException {
 
@@ -219,6 +222,7 @@ public class TokenDao {
 
         TokenBuilder tokenBuilder = tokenBuilderFactory
                 .newBuilder(tokenType)
+                .clientId(clientId)
                 .subject(recipientUserEmail);
         NumericDate expiresOn = tokenBuilder.expiresOn();
         String idToken = tokenBuilder.build();

@@ -30,7 +30,7 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.config.TokenConfig;
+import stroom.auth.config.Config;
 import stroom.auth.daos.JwkDao;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.resources.token.v1.Token;
@@ -44,7 +44,7 @@ import java.util.Optional;
 public class TokenVerifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenDao.class);
 
-    @Inject private TokenConfig tokenConfig;
+    @Inject private Config config;
     @Inject private TokenDao tokenDao;
     @Inject private JwkDao jwkDao;
 
@@ -62,13 +62,14 @@ public class TokenVerifier {
                 .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
                 .setRequireSubject() // the JWT must have a subject claim
                 .setVerificationKey(jwk.getPublicKey()) // verify the signature with the public key
+                .setExpectedAudience(config.getStroomConfig().getClientId())
                 .setJwsAlgorithmConstraints( // only allow the expected signature algorithm(s) in the given context
                         new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, // which is only RS256 here
                                 AlgorithmIdentifiers.RSA_USING_SHA256))
                 .setRelaxVerificationKeyValidation() // relaxes key length requirement
-                .setExpectedIssuer(tokenConfig.getJwsIssuer());
+                .setExpectedIssuer(config.getTokenConfig().getJwsIssuer());
 
-        if (tokenConfig.isRequireExpirationTime()) {
+        if (config.getTokenConfig().isRequireExpirationTime()) {
             builder = builder.setRequireExpirationTime();
         }
 
