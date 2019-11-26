@@ -139,7 +139,7 @@ public class TokenDao {
         return searchResponse;
     }
 
-    public String createEmailResetToken(String emailAddress) throws NoSuchUserException {
+    public String createEmailResetToken(String emailAddress, String clientId) throws NoSuchUserException {
         long timeToExpiryInSeconds = this.config.getMinutesUntilExpirationForEmailResetToken() * 60;
 
         return createToken(
@@ -147,6 +147,7 @@ public class TokenDao {
                 "authenticationResourceUser",
                 Instant.now().plusSeconds(timeToExpiryInSeconds),
                 emailAddress,
+                clientId,
                 true, "Created for password reset")
                 .getToken();
     }
@@ -185,6 +186,17 @@ public class TokenDao {
         return tokenRecord;
     }
 
+//    public String createToken(String recipientUserEmail, String clientId) throws NoSuchUserException {
+//        return createToken(
+//                Token.TokenType.USER,
+//                "authenticationResource",
+//                recipientUserEmail,
+//                clientId,
+//                true,
+//                "Created for username/password user")
+//                .getToken();
+//    }
+
     /**
      * Create a token for a specific user.
      */
@@ -193,6 +205,7 @@ public class TokenDao {
             String issuingUserEmail,
             Instant expiryDateIfApiKey,
             String recipientUserEmail,
+            String clientId,
             boolean isEnabled,
             String comment) throws NoSuchUserException {
 
@@ -209,6 +222,7 @@ public class TokenDao {
         TokenBuilder tokenBuilder = tokenBuilderFactory
                 .expiryDateForApiKeys(expiryDateIfApiKey)
                 .newBuilder(tokenType)
+                .clientId(clientId)
                 .subject(recipientUserEmail);
 
         Instant actualExpiryDate = tokenBuilder.getExpiryDate();

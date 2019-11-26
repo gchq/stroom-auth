@@ -17,17 +17,17 @@
 package stroom.auth.service.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashSet;
+import java.util.Set;
 import org.joda.time.DateTime;
 import org.junit.Test;
+
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.service.ApiException;
 import stroom.auth.service.ApiResponse;
 import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.model.CreateTokenRequest;
 import stroom.auth.service.api.model.Token;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;

@@ -5,7 +5,7 @@ All URIs are relative to *http://localhost:8080/*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**changePassword**](AuthenticationApi.md#changePassword) | **POST** /authentication/v1/changePassword | Change a user&#39;s password.
-[**getIdToken**](AuthenticationApi.md#getIdToken) | **GET** /authentication/v1/idToken | Convert a previously provided access code into an ID token
+[**getIdToken**](AuthenticationApi.md#getIdToken) | **POST** /authentication/v1/idToken | Convert a previously provided access code into an ID token
 [**handleAuthenticationRequest**](AuthenticationApi.md#handleAuthenticationRequest) | **GET** /authentication/v1/authenticate | Submit an OpenId AuthenticationRequest.
 [**handleLogin**](AuthenticationApi.md#handleLogin) | **POST** /authentication/v1/authenticate | Handle a login request made using username and password credentials.
 [**isPasswordValid**](AuthenticationApi.md#isPasswordValid) | **POST** /authentication/v1/isPasswordValid | Returns the length and complexity rules.
@@ -66,7 +66,7 @@ No authorization required
 
 <a name="getIdToken"></a>
 # **getIdToken**
-> String getIdToken(accessCode)
+> String getIdToken(body)
 
 Convert a previously provided access code into an ID token
 
@@ -80,9 +80,9 @@ Convert a previously provided access code into an ID token
 
 
 AuthenticationApi apiInstance = new AuthenticationApi();
-String accessCode = "accessCode_example"; // String | 
+IdTokenRequest body = new IdTokenRequest(); // IdTokenRequest | IdTokenRequest
 try {
-    String result = apiInstance.getIdToken(accessCode);
+    String result = apiInstance.getIdToken(body);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling AuthenticationApi#getIdToken");
@@ -94,7 +94,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **accessCode** | **String**|  |
+ **body** | [**IdTokenRequest**](IdTokenRequest.md)| IdTokenRequest | [optional]
 
 ### Return type
 

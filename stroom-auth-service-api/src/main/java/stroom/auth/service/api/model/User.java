@@ -13,15 +13,15 @@
 
 package stroom.auth.service.api.model;
 
-import com.google.gson.annotations.SerializedName;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.util.Objects;
+import com.google.gson.annotations.SerializedName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * User
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-11T12:01:59.457Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-26T10:17:08.903Z")
 public class User {
   @SerializedName("id")
   private Integer id = null;

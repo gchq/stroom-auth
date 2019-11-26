@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import stroom.auth.clients.AppPermissionsService;
 import stroom.auth.clients.UserServiceClient;
 import stroom.auth.TokenVerifier;
+import stroom.auth.config.StroomConfig;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
 import stroom.auth.resources.user.v1.User;
@@ -71,18 +72,21 @@ public class TokenResource {
     private AppPermissionsService appPermissionsService;
     private TokenVerifier tokenVerifier;
     private StroomEventLoggingService stroomEventLoggingService;
+    private StroomConfig stroomConfig;
 
     @Inject
     public TokenResource(final TokenDao tokenDao,
                          final UserDao userDao,
                          final AppPermissionsService appPermissionsService,
                          final TokenVerifier tokenVerifier,
-                         final StroomEventLoggingService stroomEventLoggingService) {
+                         final StroomEventLoggingService stroomEventLoggingService,
+                         final StroomConfig stroomConfig) {
         this.tokenDao = tokenDao;
         this.userDao = userDao;
         this.appPermissionsService = appPermissionsService;
         this.tokenVerifier = tokenVerifier;
         this.stroomEventLoggingService = stroomEventLoggingService;
+        this.stroomConfig = stroomConfig;
     }
 
     /**
@@ -166,6 +170,7 @@ public class TokenResource {
                 authenticatedServiceUser.getName(),
                 createTokenRequest.getExpiryDate().toInstant(),
                 createTokenRequest.getUserEmail(),
+                stroomConfig.getClientId(),
                 createTokenRequest.isEnabled(),
                 createTokenRequest.getComments());
 

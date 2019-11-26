@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v6.0.25-1] - 2019-11-25
+
+* Stop exchanging accessCode for idToken in UI, so that the client secret can be back-channel.
+
+## [v6.0.25] - 2019-11-20
+
+* Made session cookie `Secure` and `HttpOnly`.
+
 * Issue **#151**: Reset last login to prevent premature disabling of accounts
 
 * Issue **#125**: Make dates display as ISO 8601
@@ -332,6 +340,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [v7.0-beta.2]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.1...v7.0-beta.2
 [v7.0-beta.1]: https://github.com/gchq/stroom-auth/compare/v7.0-alpha.1...v7.0-beta.1
 [v7.0-alpha.1]: https://github.com/gchq/stroom-auth/compare/v1.0-beta.32...v7.0-alpha.1
+[v6.0.25-1]: https://github.com/gchq/stroom-auth/compare/v6.0.25...v6.0.25-1
+[v6.0.25]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.6...v6.0.25
+[v6.0-beta.6]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.5...v6.0-beta.6
 [v6.0-beta.5]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.4...v6.0-beta.5
 [v6.0-beta.4]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.3...v6.0-beta.4
 [v6.0-beta.3]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.2...v6.0-beta.3

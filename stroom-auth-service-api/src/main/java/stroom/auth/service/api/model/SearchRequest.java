@@ -13,19 +13,19 @@
 
 package stroom.auth.service.api.model;
 
+import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * A request for a search over tokens.
  */
 @ApiModel(description = "A request for a search over tokens.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-11T12:01:59.457Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-26T10:17:08.903Z")
 public class SearchRequest {
   @SerializedName("page")
   private Integer page = null;

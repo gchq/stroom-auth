@@ -121,6 +121,10 @@ public final class Config extends Configuration {
     @JsonProperty("appPermissionService")
     private AppPermissionServiceConfig appPermissionServiceConfig;
 
+    @Nullable
+    @JsonProperty("stroom")
+    private StroomConfig stroomConfig;
+
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
     }
@@ -214,4 +218,7 @@ public final class Config extends Configuration {
         return port;
     }
 
+    public StroomConfig getStroomConfig() {
+        return stroomConfig;
+    }
 }

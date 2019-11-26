@@ -27,6 +27,8 @@ public class RelyingParty {
     }
 
     private String clientId;
+    private String clientSecret;
+    private String clientUri;
     private String logoutUri;
     private String accessCode;
     private String idToken;
@@ -100,5 +102,13 @@ public class RelyingParty {
 
     public void setRedirectUrl(String redirectUrl) {
         this.redirectUrl = redirectUrl;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public String getClientUri() {
+        return clientUri;
     }
 }

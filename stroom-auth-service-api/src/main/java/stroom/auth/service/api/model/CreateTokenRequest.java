@@ -13,18 +13,17 @@
 
 package stroom.auth.service.api.model;
 
+import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.joda.time.DateTime;
 
-import java.util.Objects;
-
 /**
  * A request to create a token.
  */
 @ApiModel(description = "A request to create a token.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-11T12:01:59.457Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-11-26T10:17:08.903Z")
 public class CreateTokenRequest {
   @SerializedName("userEmail")
   private String userEmail = null;

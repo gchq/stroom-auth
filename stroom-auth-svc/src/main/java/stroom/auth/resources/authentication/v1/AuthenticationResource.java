@@ -372,25 +372,29 @@ public final class AuthenticationResource {
         return seeOther(new URI(postLogoutUrl)).build();
     }
 
-    /**
-     * This is one of two idToken endpoints. One a GET and one a POST. The GET is used
-     * by clients that send cookies, e.g. browsers and JavaScript.
-     * The POST is for other clients, e.g. Swagger.
-     */
-    @GET
+    @POST
     @Path("idToken")
     @Timed
     @ApiOperation(value = "Convert a previously provided access code into an ID token",
             response = String.class, tags = {"Authentication"})
-    public final Response getIdToken(@QueryParam("accessCode") @NotNull String accessCode) {
-        Optional<RelyingParty> relyingParty = this.sessionManager.getByAccessCode(accessCode);
+    public final Response getIdToken(@ApiParam("IdTokenRequest") @NotNull IdTokenRequest idTokenRequest,
+            @Context @NotNull HttpServletRequest httpServletRequest) {
+        Optional<RelyingParty> relyingParty = this.sessionManager.getByAccessCode(idTokenRequest.getAccessCode());
         if (!relyingParty.isPresent()) {
             return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
         }
-        String idToken = relyingParty.get().getIdToken();
-        relyingParty.get().forgetIdToken();
-        relyingParty.get().forgetAccessCode();
-        return Response.status(Status.OK).entity(idToken).build();
+
+        // See the comments in StroomConfig.
+        if(config.getStroomConfig().getClientId().equals(idTokenRequest.getClientId())
+            && config.getStroomConfig().getClientSecret().equals(idTokenRequest.getClientSecret()) ){
+            String idToken = relyingParty.get().getIdToken();
+            relyingParty.get().forgetIdToken();
+            relyingParty.get().forgetAccessCode();
+            return Response.status(Status.OK).entity(idToken).build();
+        }
+        else {
+            return Response.status(Status.UNAUTHORIZED).entity("Invalid client or access code").build();
+        }
     }
 
     @GET
@@ -405,7 +409,7 @@ public final class AuthenticationResource {
         stroomEventLoggingService.resetPassword(httpServletRequest, emailAddress);
         Optional<User> user = userDao.get(emailAddress);
         if (user.isPresent()) {
-            String resetToken = tokenDao.createEmailResetToken(emailAddress);
+            String resetToken = tokenDao.createEmailResetToken(emailAddress, config.getStroomConfig().getClientId());
             emailSender.send(user.get(), resetToken);
             Response response = status(Status.OK).build();
             return response;
@@ -569,6 +573,7 @@ public final class AuthenticationResource {
     private String createIdToken(String subject, String nonce, String state, String authSessionId) {
         TokenBuilder tokenBuilder = tokenBuilderFactory
                 .newBuilder(Token.TokenType.USER)
+                .clientId(config.getStroomConfig().getClientId())
                 .subject(subject)
                 .nonce(nonce)
                 .state(state)
