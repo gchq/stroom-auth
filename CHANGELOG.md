@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Stop exchanging accessCode for idToken in UI, so that the client secret can be back-channel.
 
+* Fix failing tests, caused by missing JWT expected audience.
+
 * Made session cookie `Secure` and `HttpOnly`.
 
 * Issue **#151**: Reset last login to prevent premature disabling of accounts

@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
-#Shell Colour constants for use in 'echo -e'
-RED='\033[1;31m'
-GREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[1;34m'
-NC='\033[0m' # No Color
+#shellcheck disable=SC2034
+{
+  #Shell Colour constants for use in 'echo -e'
+  RED='\033[1;31m'
+  GREEN='\033[1;32m'
+  YELLOW='\033[1;33m'
+  BLUE='\033[1;34m'
+  NC='\033[0m' # No Color
+}
 
 if [ "$(uname)" == "Darwin" ]; then
     # Code required to find IP address is different in MacOS
@@ -16,5 +19,5 @@ fi
 echo
 echo -e "Using IP ${GREEN}${ip}${NC} as the IP, as determined from the operating system"
 
-echo -e "Overwriting ${GREEN}~/.stroom.conf${NC} with a version templated from ${GREEN}./stroom.conf.template${NC}"
+echo -e "Overwriting ${GREEN}config.generated.yml${NC} with a version templated from ${GREEN}config.yml${NC}"
 sed "s/<IP_ADDRESS>/$ip/g" config.yml > config.generated.yml
