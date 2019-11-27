@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Fix failing tests, caused by missing JWT expected audience.
+
+
 ## [v6.0.25-1] - 2019-11-25
 
 * Stop exchanging accessCode for idToken in UI, so that the client secret can be back-channel.
+
 
 ## [v6.0.25] - 2019-11-20
 
@@ -19,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Issue **#125**: Make dates display as ISO 8601
 
 * Issue **#161**: Tidy up duplicate API keys
+
 
 ## [v6.0-beta.6] - 2019-09-13
 

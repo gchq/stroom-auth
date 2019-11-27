@@ -16,9 +16,7 @@
 
 package stroom.auth.service.resources;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.assertj.core.api.Condition;
-import org.jose4j.lang.JoseException;
 import org.junit.Test;
 import stroom.auth.AuthenticationFlowHelper;
 import stroom.auth.resources.token.v1.Token;
@@ -30,7 +28,6 @@ import stroom.auth.service.api.model.CreateTokenRequest;
 import stroom.auth.service.api.model.SearchResponse;
 import stroom.auth.service.api.model.User;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -333,7 +330,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
                             .orderBy("expires_on"));
         } catch (ApiException e) {
             if (isValid) {
-                fail("Request should have been valid");
+                fail("Request should have been valid", e);
             }
             Condition<Integer> invalidResponseCodes = new Condition<>(newLinkedHashSet(400, 422)::contains, "Invalid response codes");
             assertThat(e.getCode()).is(invalidResponseCodes);
@@ -360,7 +357,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
         try {
             userApi.createUserWithHttpInfo(user);
         } catch (ApiException e) {
-            fail("Unable to create a new user!");
+            fail("Unable to create a new user!", e);
         }
 
         return user;
@@ -375,7 +372,7 @@ public class TokenResource_search_IT extends TokenResource_IT {
             stroom.auth.service.api.model.Token id = apiKeyApi.create(createTokenRequest);
             token = apiKeyApi.read_0(id.getId());
         } catch (ApiException e) {
-            fail("Unable to create a new token!");
+            fail("Unable to create a new token!", e);
         }
         return token;
     }
