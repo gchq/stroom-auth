@@ -119,11 +119,15 @@ public class TokenBuilder {
 
     public String build() {
         JwtClaims claims = new JwtClaims();
-        claims.setExpirationTime(NumericDate.fromSeconds(expiryDate.getEpochSecond()));
+        if(expiryDate != null) {
+            claims.setExpirationTime(NumericDate.fromSeconds(expiryDate.getEpochSecond()));
+        }
         claims.setSubject(subject);
         claims.setIssuer(issuer);
         claims.setAudience(clientId);
-        claims.setStringClaim("sid", authSessionId);
+        if(authSessionId != null) {
+            claims.setStringClaim("sid", authSessionId);
+        }
         nonce.ifPresent(nonce -> claims.setClaim("nonce", nonce));
         state.ifPresent(state -> claims.setClaim("state", state));
 
