@@ -30,9 +30,9 @@ import io.swagger.annotations.ApiParam;
 import org.jose4j.jwk.JsonWebKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.auth.TokenVerifier;
 import stroom.auth.clients.AppPermissionsService;
 import stroom.auth.clients.UserServiceClient;
-import stroom.auth.TokenVerifier;
 import stroom.auth.config.StroomConfig;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
@@ -56,6 +56,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
@@ -164,11 +165,11 @@ public class TokenResource {
                     .entity("Unknown token type:" + createTokenRequest.getTokenType()).build();
         }
 
-
+        Instant expiryInstant = createTokenRequest.getExpiryDate() == null ? null : createTokenRequest.getExpiryDate().toInstant();
         Token token = tokenDao.createToken(
                 tokenTypeToCreate.get(),
                 authenticatedServiceUser.getName(),
-                createTokenRequest.getExpiryDate().toInstant(),
+                expiryInstant,
                 createTokenRequest.getUserEmail(),
                 stroomConfig.getClientId(),
                 createTokenRequest.isEnabled(),

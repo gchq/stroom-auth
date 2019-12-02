@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Improve user editing forms
+
+* Improve login UI
 
 ## [v7.0-beta.4] - 2019-11-27
 
