@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [v7.0-beta.5] - 2019-12-04
+
+* Update API keys to include aud
+
 * Improve user editing forms
 
 * Improve login UI
@@ -231,7 +236,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.4...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.5...master
+[v7.0-beta.5]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.4...v7.0-beta.5
 [v7.0-beta.4]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.3...v7.0-beta.4
 [v7.0-beta.3]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.2...v7.0-beta.3
 [v7.0-beta.2]: https://github.com/gchq/stroom-auth/compare/v7.0-beta.1...v7.0-beta.2
