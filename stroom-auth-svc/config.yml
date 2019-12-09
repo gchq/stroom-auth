@@ -108,9 +108,9 @@ sessionIdCookieMaxAge: ${SESSION_ID_COOKIE_MAX_AGE:- 2592000} # 2592000 = 1 mont
 # e.g. https://123.123.123.123/authenticationService/v1/postAuthenticationRedirect
 ownPath: ${OWN_PATH:-api/auth/authentication}
 
-appPermissionService:
-  url: ${APP_PERMISSIONS_SERVICE_URL:-http://<IP_ADDRESS>:8080/api/appPermissions/v1}
-  canManageUsersPermission: ${APP_PERMISSIONS_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
+authorisationService:
+  url: ${AUTHORISATION_SERVICE_URL:-http://<IP_ADDRESS>:8080/api/authorisation/v1}
+  canManageUsersPermission: ${AUTHORISATION_SERVICE_CAN_MANAGE_USERS_PERMISSION:- Manage Users}
 #  groupsForUserPath: ${STROOM_APP_PERMISSIONS_SERVICE_GROUPS_FOR_USER_PATH:-/groupsForUserName}
 
 userService:

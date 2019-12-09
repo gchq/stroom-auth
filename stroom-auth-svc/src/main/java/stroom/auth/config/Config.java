@@ -118,8 +118,8 @@ public final class Config extends Configuration {
     private String ownPath;
 
     @NotNull
-    @JsonProperty("appPermissionService")
-    private AppPermissionServiceConfig appPermissionServiceConfig;
+    @JsonProperty("authorisationService")
+    private AuthorisationServiceConfig authorisationServiceConfig;
 
     @Nullable
     @JsonProperty("stroom")
@@ -203,8 +203,8 @@ public final class Config extends Configuration {
         return ownPath;
     }
 
-    public AppPermissionServiceConfig getAppPermissionServiceConfig() {
-        return appPermissionServiceConfig;
+    public AuthorisationServiceConfig getAuthorisationServiceConfig() {
+        return authorisationServiceConfig;
     }
 
     private Integer getPort() {

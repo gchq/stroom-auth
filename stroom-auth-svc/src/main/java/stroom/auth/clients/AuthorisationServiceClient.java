@@ -29,39 +29,52 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.GenericType;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.Set;
 
 @Singleton
-public class AppPermissionsClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppPermissionsClient.class);
+public class AuthorisationServiceClient {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorisationServiceClient.class);
 
     private Config config;
     private Client authorisationService = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
 
     @Inject
-    public AppPermissionsClient(Config config) {
+    public AuthorisationServiceClient(Config config) {
         this.config = config;
     }
 
-    public Set<String> getPermissionNamesForUserName(String userName, String usersJws) {
-        String authorisationUrl = config.getAppPermissionServiceConfig().getUrl() + "/byName/" + userName;
+    public boolean hasPermission(String userName, String usersJws, String permission) {
+        String authorisationUrl = config.getAuthorisationServiceConfig().getUrl() + "/hasPermission/";
         Response response = authorisationService
                 .target(authorisationUrl)
                 .request()
                 .header("Authorization", "Bearer " + usersJws)
-                .get();
+                .post(Entity.entity(new UserPermissionRequest(permission),
+                        MediaType.APPLICATION_JSON_TYPE));
 
-        Set<String> groups = null;
-        if (response.getStatus() == HttpStatus.OK_200) {
-            groups = response.readEntity(new GenericType<Set<String>>(){});
-        } else {
-            LOGGER.error("Unable to get permissions for user {}. Response code was {} {}",
-                    userName, response.getStatus(), response.getStatusInfo().getReasonPhrase());
+        switch(response.getStatus()) {
+            case HttpStatus.OK_200:
+               return true;
+           case HttpStatus.UNAUTHORIZED_401:
+               return false;
+            default:
+                LOGGER.error("Unable to check permissions for user {}. Response code was {} {}",
+                        userName, response.getStatus(), response.getStatusInfo().getReasonPhrase());
+                return false;
         }
-       return groups == null ? Collections.emptySet() : groups;
     }
 
+    private class UserPermissionRequest {
+        private String permission;
+        public UserPermissionRequest(){}
+        public UserPermissionRequest(String permission){
+            this.permission = permission;
+        }
+
+        public String getPermission() {
+            return permission;
+        }
+    }
 }
