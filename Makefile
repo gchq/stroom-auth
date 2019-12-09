@@ -1,14 +1,12 @@
-.PHONY: swagger, config, snapshots
-
+.PHONY : swagger,config,snapshot,build,no-test
 swagger:
 	./gradlew generateSwaggerDocumentation generateSwaggerApi
 
 config:
 	cd stroom-auth-svc && ./config.yml.sh
 
-snapshots:
-	./docker.sh build ui dev-SNAPSHOT
-	./docker.sh build service dev-SNAPSHOT
+snapshot:
+	./docker.sh build local-SNAPSHOT
 
 build:
 	./gradlew clean build
