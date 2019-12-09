@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v6.0.27-1] - 2019-12-09
+
+* Fix ITs
+
 ## [v6.0.27] - 2019-12-09
 
 * Fix aud in JWTs
@@ -311,7 +315,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.27...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.27-1...master
+[v6.0.27-1]: https://github.com/gchq/stroom-auth/compare/v6.0.27...v6.0.27-1
 [v6.0.27]: https://github.com/gchq/stroom-auth/compare/v6.0.25-1...v6.0.27
 [v6.0.25-1]: https://github.com/gchq/stroom-auth/compare/v6.0.25...v6.0.25-1
 [v6.0.25]: https://github.com/gchq/stroom-auth/compare/v6.0-beta.6...v6.0.25
