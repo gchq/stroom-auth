@@ -259,12 +259,13 @@ public class AuthenticationFlowHelper {
                 .setRelaxVerificationKeyValidation() // relaxes key length requirement
                 .setExpectedAudience(CLIENT_ID)
                 .setExpectedIssuer("stroom")
+                .setExpectedAudience(CLIENT_ID)
                 .build();
         JwtClaims claims = null;
         try {
             claims = consumer.processToClaims(idToken);
         } catch (InvalidJwtException e) {
-            fail("Bad JWT returned from auth service");
+            fail("Bad JWT returned from auth service", e);
         }
         String nonceHash = (String) claims.getClaimsMap().get("nonce");
         assertThat(nonceHash).isEqualTo(nonce);
