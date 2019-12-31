@@ -46,6 +46,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -211,7 +212,7 @@ public class AuthenticationFlowHelper {
         String redirectUri = postAuthenticationRedirectResponse.getHeaders().get("Location").get(0);
         LOGGER.info("redirectUrl:{}", redirectUri);
 
-        List<NameValuePair> params = URLEncodedUtils.parse(new URI(redirectUri), "UTF-8");
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(redirectUri), StandardCharsets.UTF_8);
         String accessCode = params.stream()
                 .filter(pair -> pair.getName().equals("accessCode"))
                 .findFirst().orElseThrow(() -> new RuntimeException("No access code is present!"))
