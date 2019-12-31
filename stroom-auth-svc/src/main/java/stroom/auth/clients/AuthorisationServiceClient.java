@@ -46,7 +46,7 @@ public class AuthorisationServiceClient {
     }
 
     public boolean hasPermission(String userName, String usersJws, String permission) {
-        String authorisationUrl = config.getAuthorisationServiceConfig().getUrl() + "/hasPermission/";
+        String authorisationUrl = config.getAuthorisationServiceConfig().getUrl() + "/isAuthorised/";
         Response response = authorisationService
                 .target(authorisationUrl)
                 .request()
