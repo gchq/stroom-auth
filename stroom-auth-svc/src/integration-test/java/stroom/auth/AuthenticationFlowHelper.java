@@ -258,6 +258,7 @@ public class AuthenticationFlowHelper {
                 .setRequireSubject() // the JWT must have a subject claim
                 .setVerificationKey(jwk.getPublicKey()) // verify the signature with the public key
                 .setRelaxVerificationKeyValidation() // relaxes key length requirement
+                .setExpectedAudience(CLIENT_ID)
                 .setExpectedIssuer("stroom")
                 .setExpectedAudience(CLIENT_ID)
                 .build();
