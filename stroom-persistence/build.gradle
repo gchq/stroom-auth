@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 //plugins {
-    //id 'nu.studer.jooq' version '2.0.6'
+    //id 'nu.studer.jooq' version '3.0.3'
 //}
 apply plugin: 'nu.studer.jooq' 
 
@@ -26,6 +26,13 @@ dependencies {
     compile deps.jaxws_api
 
     jooqRuntime deps.mysql_connector_java
+
+    // The following are required to put JAXB on the JOOQ classpath for the purpose of JOOQ code generation in J9+.
+    // Later versions of the JOOQ Gradle plugin should make this unnecessary.
+    jooqRuntime 'javax.activation:activation:1.1.1'
+    jooqRuntime 'javax.xml.bind:jaxb-api:2.3.0'
+    jooqRuntime 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+    jooqRuntime 'com.sun.xml.bind:jaxb-impl:2.3.0.1'
 }
 
 def propNameJooqGeneration = 'jooqGeneration'
@@ -36,7 +43,7 @@ if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
     configure(project) {
         //configure jooq plugin to generate code
         jooq {
-            version = '3.11.7'
+            version = '3.11.9'
             edition = 'OSS'
             authdb(sourceSets.main) {
                 jdbc {
@@ -52,6 +59,7 @@ if (getPropertyOrDefault(propNameJooqGeneration, "false") == "true") {
                         inputSchema = 'auth'
                         // Add anything you want included in generation below
                         includes = 'users|tokens|token_types|json_web_key'
+
                         // We don't want to include flyway versioning
                         excludes = 'schema_version'
 

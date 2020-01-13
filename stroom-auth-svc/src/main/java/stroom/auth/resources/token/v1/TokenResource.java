@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiParam;
 import org.jose4j.jwk.JsonWebKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.auth.TokenVerifier;
+import stroom.auth.JwkCache;
 import stroom.auth.clients.AppPermissionsService;
 import stroom.auth.clients.UserServiceClient;
 import stroom.auth.config.StroomConfig;
@@ -68,24 +68,24 @@ import java.util.Optional;
 public class TokenResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenResource.class);
 
+    private final JwkCache jwkCache;
     private final TokenDao tokenDao;
     private final UserDao userDao;
-    private AppPermissionsService appPermissionsService;
-    private TokenVerifier tokenVerifier;
-    private StroomEventLoggingService stroomEventLoggingService;
-    private StroomConfig stroomConfig;
+    private final AppPermissionsService appPermissionsService;
+    private final StroomEventLoggingService stroomEventLoggingService;
+    private final StroomConfig stroomConfig;
 
     @Inject
-    public TokenResource(final TokenDao tokenDao,
-                         final UserDao userDao,
-                         final AppPermissionsService appPermissionsService,
-                         final TokenVerifier tokenVerifier,
-                         final StroomEventLoggingService stroomEventLoggingService,
-                         final StroomConfig stroomConfig) {
+    TokenResource(final JwkCache jwkCache,
+                  final TokenDao tokenDao,
+                  final UserDao userDao,
+                  final AppPermissionsService appPermissionsService,
+                  final StroomEventLoggingService stroomEventLoggingService,
+                  final StroomConfig stroomConfig) {
+        this.jwkCache = jwkCache;
         this.tokenDao = tokenDao;
         this.userDao = userDao;
         this.appPermissionsService = appPermissionsService;
-        this.tokenVerifier = tokenVerifier;
         this.stroomEventLoggingService = stroomEventLoggingService;
         this.stroomConfig = stroomConfig;
     }
@@ -376,11 +376,10 @@ public class TokenResource {
 
         Optional<User> updatingUser = userDao.get(authenticatedServiceUser.getName());
 
-        if(updatingUser.isPresent()) {
+        if (updatingUser.isPresent()) {
             tokenDao.enableOrDisableToken(tokenId, enabled, updatingUser.get());
             return Response.status(Response.Status.NO_CONTENT).build();
-        }
-        else {
+        } else {
             LOGGER.error("Unable to find the user that we just authenticated!");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -395,8 +394,8 @@ public class TokenResource {
     @Path("/publickey")
     @Timed
     public final Response getPublicKey(
-            @Context @NotNull HttpServletRequest httpServletRequest ) {
-        String jwkAsJson = tokenVerifier.getJwk().toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
+            @Context @NotNull HttpServletRequest httpServletRequest) {
+        String jwkAsJson = jwkCache.get().get(0).toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
 
         event.logging.Object object = new event.logging.Object();
         object.setName("PublicKey");

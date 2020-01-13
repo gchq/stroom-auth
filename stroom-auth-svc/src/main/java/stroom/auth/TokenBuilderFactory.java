@@ -29,27 +29,28 @@ import java.time.Instant;
 @Singleton
 public class TokenBuilderFactory {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TokenBuilderFactory.class);
-    private Config config;
-    private TokenVerifier tokenVerifier;
+
+    private final Config config;
+    private final JwkCache jwkCache;
+
     private Instant expiryDateForApiKeys;
 
     @Inject
-    public TokenBuilderFactory(Config config, TokenVerifier tokenVerifier) {
+    TokenBuilderFactory(final Config config, final JwkCache jwkCache) {
         this.config = config;
-        this.tokenVerifier = tokenVerifier;
+        this.jwkCache = jwkCache;
     }
 
-
-    public TokenBuilderFactory expiryDateForApiKeys(Instant expiryDate){
-       this.expiryDateForApiKeys = expiryDate;
-       return this;
+    public TokenBuilderFactory expiryDateForApiKeys(Instant expiryDate) {
+        this.expiryDateForApiKeys = expiryDate;
+        return this;
     }
 
     public TokenBuilder newBuilder(TokenType tokenType) {
         TokenBuilder tokenBuilder = new TokenBuilder();
         switch (tokenType) {
             case API:
-                if(expiryDateForApiKeys == null) {
+                if (expiryDateForApiKeys == null) {
                     expiryDateForApiKeys = Instant.now().plusSeconds(config.getTokenConfig().getMinutesUntilExpirationForUserToken() * 60);
                 }
                 tokenBuilder.expiryDate(expiryDateForApiKeys);
@@ -70,7 +71,7 @@ public class TokenBuilderFactory {
 
         tokenBuilder
                 .issuer(config.getTokenConfig().getJwsIssuer())
-                .privateVerificationKey(tokenVerifier.getJwk().getPrivateKey())
+                .privateVerificationKey(jwkCache.get().get(0).getPrivateKey())
                 .algorithm(config.getTokenConfig().getAlgorithm())
                 .tokenType(tokenType);
 

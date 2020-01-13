@@ -18,7 +18,6 @@
 
 package stroom.auth.clients;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.eclipse.jetty.http.HttpStatus;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientResponse;
@@ -31,9 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-import java.util.Objects;
 
 @Singleton
 public class UserServiceClient {
@@ -42,11 +39,11 @@ public class UserServiceClient {
     public static final String UNAUTHORISED_USER_MESSAGE = "This user is not authorised to access this resource";
     private static final String NOT_FOUND_404_MESSAGE = "Received a 404 when trying to access the authorisation service! I am unable to check authorisation so all requests will be rejected until this is fixed. Is the service location correctly configured? Is the service running? The URL I tried was: {}";
 
-    private UserServiceConfig config;
+    private final UserServiceConfig config;
     private Client authorisationService = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
 
     @Inject
-    public UserServiceClient(Config config) {
+    UserServiceClient(final Config config) {
         this.config = config.getUserServiceConfig();
     }
 
@@ -99,7 +96,7 @@ public class UserServiceClient {
 //        return isUserAuthorisedToManageUsers;
 //    }
 
-    public boolean setUserStatus(String usersJws, String user, boolean isEnabled){
+    public boolean setUserStatus(String usersJws, String user, boolean isEnabled) {
         String url = String.format("%s/%s/status?enabled=%s",
                 config.getUrl(),
                 user,

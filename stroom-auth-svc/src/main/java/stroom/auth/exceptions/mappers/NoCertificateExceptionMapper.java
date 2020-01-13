@@ -30,10 +30,11 @@ import java.net.URISyntaxException;
 
 public class NoCertificateExceptionMapper implements ExceptionMapper<NoCertificateException> {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(NoCertificateExceptionMapper.class);
-    private Config config;
+
+    private final Config config;
 
     @Inject
-    public NoCertificateExceptionMapper(Config config) {
+    NoCertificateExceptionMapper(final Config config) {
         this.config = config;
     }
 

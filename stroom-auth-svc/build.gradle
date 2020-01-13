@@ -60,6 +60,7 @@ run {
 dependencies {
     compile project(':stroom-persistence')
     compile project(':stroom-auth-service-api')
+    compile deps.caffeine
     compile deps.dropwizard_core
     compile deps.dropwizard_flyway
     compile deps.dropwizard_jooq

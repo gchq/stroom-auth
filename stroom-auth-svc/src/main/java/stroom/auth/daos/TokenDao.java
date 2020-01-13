@@ -18,10 +18,19 @@
 
 package stroom.auth.daos;
 
-import org.jooq.*;
+import org.jooq.Condition;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.Record;
+import org.jooq.Record1;
+import org.jooq.Record11;
+import org.jooq.Result;
+import org.jooq.SelectJoinStep;
+import org.jooq.SelectSelectStep;
+import org.jooq.SortField;
+import org.jooq.Table;
 import org.jooq.impl.DSL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import stroom.auth.TokenBuilder;
 import stroom.auth.TokenBuilderFactory;
 import stroom.auth.config.TokenConfig;
@@ -49,25 +58,15 @@ import static stroom.auth.db.Tables.USERS;
 
 @Singleton
 public class TokenDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TokenDao.class);
     private final TokenConfig config;
+    private final TokenBuilderFactory tokenBuilderFactory;
+    private final DSLContext database;
 
     @Inject
-    private Configuration jooqConfig;
-
-    @Inject
-    private TokenBuilderFactory tokenBuilderFactory;
-
-    private DSLContext database = null;
-
-    @Inject
-    private void init() {
-        database = DSL.using(this.jooqConfig);
-    }
-
-    @Inject
-    public TokenDao(TokenConfig config){
+    TokenDao(final Configuration jooqConfig, final TokenConfig config, final TokenBuilderFactory tokenBuilderFactory) {
         this.config = config;
+        this.tokenBuilderFactory = tokenBuilderFactory;
+        database = DSL.using(jooqConfig);
     }
 
     public SearchResponse searchTokens(SearchRequest searchRequest) {
@@ -84,7 +83,7 @@ public class TokenDao {
         Users updatingUsers = USERS.as("updatingUsers");
 
         // Use a default if there's no order direction specified in the request
-        if(orderDirection == null){
+        if (orderDirection == null) {
             orderDirection = "asc";
         }
 
@@ -305,7 +304,7 @@ public class TokenDao {
         Users tokenOwnerUsers = USERS.as("tokenOwnerUsers");
         Field userEmail = tokenOwnerUsers.EMAIL.as("user_email");
 
-         Record tokenResult = database.select(
+        Record tokenResult = database.select(
                 TOKENS.ID.as("id"),
                 TOKENS.ENABLED.as("enabled"),
                 TOKENS.EXPIRES_ON.as("expires_on"),
@@ -315,18 +314,18 @@ public class TokenDao {
                 TOKEN_TYPES.TOKEN_TYPE.as("token_type"),
                 TOKENS.UPDATED_ON.as("updated_on"),
                 TOKENS.USER_ID.as("user_id"))
-        .from(TOKENS
-                .join(TOKEN_TYPES)
-                .on(TOKENS.TOKEN_TYPE_ID.eq(TOKEN_TYPES.ID))
-                .join(tokenOwnerUsers)
-                .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID)))
-        .where(new Condition[]{TOKENS.TOKEN.eq(token)})
-                 .fetchOne();
+                .from(TOKENS
+                        .join(TOKEN_TYPES)
+                        .on(TOKENS.TOKEN_TYPE_ID.eq(TOKEN_TYPES.ID))
+                        .join(tokenOwnerUsers)
+                        .on(TOKENS.USER_ID.eq(tokenOwnerUsers.ID)))
+                .where(new Condition[]{TOKENS.TOKEN.eq(token)})
+                .fetchOne();
 
-         if(tokenResult == null){
-             return Optional.empty();
-         }
-         return Optional.of(tokenResult.into(Token.class));
+        if (tokenResult == null) {
+            return Optional.empty();
+        }
+        return Optional.of(tokenResult.into(Token.class));
     }
 
 
@@ -380,7 +379,7 @@ public class TokenDao {
         // We might be ordering by TOKENS or USERS or TOKEN_TYPES - we join and select on all
         SortField orderByField;
         if (orderBy != null) {
-            switch(orderBy){
+            switch (orderBy) {
                 case "userEmail":
                     orderByField = orderDirection.equals("asc") ? USERS.EMAIL.asc() : USERS.EMAIL.desc();
                     break;
@@ -391,7 +390,8 @@ public class TokenDao {
                     orderByField = orderDirection.equals("asc") ? TOKEN_TYPES.TOKEN_TYPE.asc() : TOKEN_TYPES.TOKEN_TYPE.desc();
                     break;
                 case "issuedOn":
-                default:  orderByField = orderDirection.equals("asc") ? TOKENS.ISSUED_ON.asc() : TOKENS.ISSUED_ON.desc();
+                default:
+                    orderByField = orderDirection.equals("asc") ? TOKENS.ISSUED_ON.asc() : TOKENS.ISSUED_ON.desc();
             }
         } else {
             // We don't have an orderBy so we'll use the default ordering

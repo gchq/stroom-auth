@@ -38,11 +38,11 @@ import java.util.Set;
 public class AppPermissionsClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppPermissionsClient.class);
 
-    private Config config;
-    private Client authorisationService = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
+    private final Config config;
+    private final Client authorisationService = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
 
     @Inject
-    public AppPermissionsClient(Config config) {
+    AppPermissionsClient(final Config config) {
         this.config = config;
     }
 

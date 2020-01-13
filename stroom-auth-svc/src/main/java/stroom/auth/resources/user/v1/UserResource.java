@@ -38,15 +38,13 @@ import org.jooq.Record13;
 import org.jooq.Result;
 import org.jooq.Table;
 import org.jooq.TableField;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import stroom.auth.clients.AppPermissionsService;
 import stroom.auth.clients.UserServiceClient;
 import stroom.auth.daos.UserDao;
 import stroom.auth.daos.UserMapper;
+import stroom.auth.db.tables.records.UsersRecord;
 import stroom.auth.service.eventlogging.StroomEventLoggingService;
 import stroom.auth.service.security.ServiceUser;
-import stroom.auth.db.tables.records.UsersRecord;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -72,20 +70,17 @@ import static stroom.auth.db.Tables.USERS;
 @Produces({"application/json"})
 @Api(description = "Stroom User API", tags = {"User"})
 public final class UserResource {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
-
-    private AppPermissionsService appPermissionsService;
-    private UserServiceClient userServiceClient;
-    private UserDao userDao;
-    private StroomEventLoggingService stroomEventLoggingService;
+    private final AppPermissionsService appPermissionsService;
+    private final UserServiceClient userServiceClient;
+    private final UserDao userDao;
+    private final StroomEventLoggingService stroomEventLoggingService;
 
     @Inject
     public UserResource(
-            @NotNull AppPermissionsService appPermissionsService,
-            @NotNull UserServiceClient userServiceClient,
-            UserDao userDao,
+            final @NotNull AppPermissionsService appPermissionsService,
+            final @NotNull UserServiceClient userServiceClient,
+            final UserDao userDao,
             final StroomEventLoggingService stroomEventLoggingService) {
-        super();
         this.appPermissionsService = appPermissionsService;
         this.userServiceClient = userServiceClient;
         this.userDao = userDao;
@@ -326,7 +321,6 @@ public final class UserResource {
     }
 
 
-
     @ApiOperation(
             value = "Get a user by ID.",
             response = String.class,
@@ -409,7 +403,7 @@ public final class UserResource {
             }
         }
 
-        if(!usersRecord.getState().equalsIgnoreCase(user.getState())) {
+        if (!usersRecord.getState().equalsIgnoreCase(user.getState())) {
             boolean isEnabled = user.getState().equals("enabled");
             userServiceClient.setUserStatus(authenticatedServiceUser.getJwt(), user.getEmail(), isEnabled);
         }

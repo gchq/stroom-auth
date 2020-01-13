@@ -41,7 +41,6 @@ import static event.logging.AuthenticateOutcomeReason.INCORRECT_USERNAME_OR_PASS
  * A service to allow other components to easily create Stroom logging events.
  */
 public class StroomEventLoggingService {
-
     private static final Logger AUDIT_LOGGER = LoggerFactory.getLogger("event-logger");
 
     private final StroomEventFactory stroomEventFactory;
@@ -49,54 +48,54 @@ public class StroomEventLoggingService {
     private final EventSerializer eventSerializer = new DefaultEventSerializer();
 
     @Inject
-    public StroomEventLoggingService(EventLoggingConfig config) {
+    StroomEventLoggingService(final EventLoggingConfig config) {
         stroomEventFactory = new StroomEventFactory(config);
     }
 
-    public void successfulLogin(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent("Logon",
+    public void successfulLogin(final HttpServletRequest request, final String usersEmail) {
+        final Event event = createAuthenticateEvent("Logon",
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User logged in successfully.");
         stroomEventFactory.log(event);
     }
 
-    public void failedLogin(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent("Logon",
+    public void failedLogin(final HttpServletRequest request, final String usersEmail) {
+        final Event event = createAuthenticateEvent("Logon",
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User attempted to log in but failed.");
-        AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
+        final AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
         authenticateOutcome.setReason(INCORRECT_USERNAME_OR_PASSWORD);
         event.getEventDetail().getAuthenticate().setOutcome(authenticateOutcome);
         stroomEventFactory.log(event);
     }
 
 
-    public void failedLoginBecause(final HttpServletRequest request, String usersEmail, String failedStatus) {
-        Event event = createAuthenticateEvent("Logon",
+    public void failedLoginBecause(final HttpServletRequest request, final String usersEmail, final String failedStatus) {
+        final Event event = createAuthenticateEvent("Logon",
                 request, usersEmail, AuthenticateAction.LOGON,
                 "User attempted to log in but failed because the account is " + failedStatus + ".");
-        AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
+        final AuthenticateOutcome authenticateOutcome = new AuthenticateOutcome();
         authenticateOutcome.setReason(ACCOUNT_LOCKED);
         event.getEventDetail().getAuthenticate().setOutcome(authenticateOutcome);
         stroomEventFactory.log(event);
     }
 
-    public void logout(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent("Logoff",
+    public void logout(final HttpServletRequest request, final String usersEmail) {
+        final Event event = createAuthenticateEvent("Logoff",
                 request, usersEmail, AuthenticateAction.LOGOFF,
                 "User logged off.");
         stroomEventFactory.log(event);
     }
 
-    public void resetPassword(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent("ResetPassword",
+    public void resetPassword(final HttpServletRequest request, final String usersEmail) {
+        final Event event = createAuthenticateEvent("ResetPassword",
                 request, usersEmail, AuthenticateAction.RESET_PASSWORD,
                 "User reset their password");
         stroomEventFactory.log(event);
     }
 
-    public void changePassword(final HttpServletRequest request, String usersEmail) {
-        Event event = createAuthenticateEvent("ChangePassword",
+    public void changePassword(final HttpServletRequest request, final String usersEmail) {
+        final Event event = createAuthenticateEvent("ChangePassword",
                 request, usersEmail, AuthenticateAction.CHANGE_PASSWORD,
                 "User changed their password.");
         stroomEventFactory.log(event);
@@ -104,12 +103,12 @@ public class StroomEventLoggingService {
 
 
     public void search(
-            String typeId,
-            HttpServletRequest request,
-            String usersEmail,
-            Search search,
-            String description){
-        Event.EventDetail eventDetail = new Event.EventDetail();
+            final String typeId,
+            final HttpServletRequest request,
+            final String usersEmail,
+            final Search search,
+            final String description) {
+        final Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setSearch(search);
         eventDetail.setTypeId(typeId);
         eventDetail.setDescription(description);
@@ -120,89 +119,88 @@ public class StroomEventLoggingService {
     }
 
     public void create(
-            String typeId,
-            HttpServletRequest request,
-            String usersEmail,
-            ObjectOutcome objectOutcome,
-            String description){
-        Event.EventDetail eventDetail = new Event.EventDetail();
+            final String typeId,
+            final HttpServletRequest request,
+            final String usersEmail,
+            final ObjectOutcome objectOutcome,
+            final String description) {
+        final Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setCreate(objectOutcome);
         eventDetail.setDescription(description);
         eventDetail.setTypeId(typeId);
-        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        final Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
         stroomEventFactory.log(event);
     }
 
     public void view(
-            String typeId,
-            HttpServletRequest request,
-            String usersEmail,
-            ObjectOutcome objectOutcome,
-            String description){
-        Event.EventDetail eventDetail = new Event.EventDetail();
+            final String typeId,
+            final HttpServletRequest request,
+            final String usersEmail,
+            final ObjectOutcome objectOutcome,
+            final String description) {
+        final Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setView(objectOutcome);
         eventDetail.setDescription(description);
         eventDetail.setTypeId(typeId);
-        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        final Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
         stroomEventFactory.log(event);
     }
 
     public void update(
-            String typeId,
-            HttpServletRequest request,
-            String usersEmail,
-            Event.EventDetail.Update update,
-            String description){
-        Event.EventDetail eventDetail = new Event.EventDetail();
+            final String typeId,
+            final HttpServletRequest request,
+            final String usersEmail,
+            final Event.EventDetail.Update update,
+            final String description) {
+        final Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setUpdate(update);
         eventDetail.setDescription(description);
         eventDetail.setTypeId(typeId);
-        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        final Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
         stroomEventFactory.log(event);
     }
 
     public void delete(
-            String typeId,
-            HttpServletRequest request,
-            String usersEmail,
-            ObjectOutcome objectOutcome,
-            String description){
-        Event.EventDetail eventDetail = new Event.EventDetail();
+            final String typeId,
+            final HttpServletRequest request,
+            final String usersEmail,
+            final ObjectOutcome objectOutcome,
+            final String description) {
+        final Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setDelete(objectOutcome);
         eventDetail.setDescription(description);
         eventDetail.setTypeId(typeId);
-        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        final Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
         stroomEventFactory.log(event);
     }
 
     public Event createAuthenticateEvent(
-            String typeId,
-            HttpServletRequest request,
-            String usersEmail,
-            AuthenticateAction authenticateAction,
-            String description){
-        User user = new User();
+            final String typeId,
+            final HttpServletRequest request,
+            final String usersEmail,
+            final AuthenticateAction authenticateAction,
+            final String description) {
+        final User user = new User();
         user.setId(usersEmail);
-        Event.EventDetail.Authenticate authenticate = new Event.EventDetail.Authenticate();
+        final Event.EventDetail.Authenticate authenticate = new Event.EventDetail.Authenticate();
         authenticate.setAction(authenticateAction);
         authenticate.setLogonType(AuthenticateLogonType.INTERACTIVE);
         authenticate.setUser(user);
-        Event.EventDetail eventDetail = new Event.EventDetail();
+        final Event.EventDetail eventDetail = new Event.EventDetail();
         eventDetail.setAuthenticate(authenticate);
         eventDetail.setDescription(description);
         eventDetail.setTypeId(typeId);
-        Event event = stroomEventFactory.createEvent(request, usersEmail);
+        final Event event = stroomEventFactory.createEvent(request, usersEmail);
         event.setEventDetail(eventDetail);
 
         return event;
     }
-
 }

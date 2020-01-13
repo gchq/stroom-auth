@@ -37,12 +37,12 @@ import javax.mail.Message;
 @Singleton
 public class EmailSender {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EmailSender.class);
-    private Config config;
+    private final Config config;
     private final ServerConfig serverConfig;
     private final TransportStrategy transportStrategy;
 
     @Inject
-    public EmailSender(Config config) {
+    EmailSender(final Config config) {
         this.config = config;
         final SmtpConfig smtpConfig = Preconditions.checkNotNull(config.getEmailConfig(),
                 "Missing 'email' section in config")

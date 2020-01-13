@@ -94,28 +94,28 @@ public final class AuthenticationResource {
     private static final String ACCOUNT_DISABLED_MESSAGE = "This account is disabled. Please contact your administrator";
     private static final String ACCOUNT_INACTIVE_MESSAGE = "This account is marked as inactive. Please contact your administrator";
 
-    private Config config;
+    private final Config config;
     private final Pattern dnPattern;
-    private TokenDao tokenDao;
-    private UserDao userDao;
-    private TokenVerifier tokenVerifier;
-    private SessionManager sessionManager;
-    private EmailSender emailSender;
-    private CertificateManager certificateManager;
-    private TokenBuilderFactory tokenBuilderFactory;
-    private StroomEventLoggingService stroomEventLoggingService;
+    private final TokenDao tokenDao;
+    private final UserDao userDao;
+    private final TokenVerifier tokenVerifier;
+    private final SessionManager sessionManager;
+    private final EmailSender emailSender;
+    private final CertificateManager certificateManager;
+    private final TokenBuilderFactory tokenBuilderFactory;
+    private final StroomEventLoggingService stroomEventLoggingService;
 
     @Inject
-    public AuthenticationResource(
-            @NotNull Config config,
-            TokenDao tokenDao,
-            UserDao userDao,
-            TokenVerifier tokenVerifier,
-            SessionManager sessionManager,
-            EmailSender emailSender,
-            CertificateManager certificateManager,
-            TokenBuilderFactory tokenBuilderFactory,
-            StroomEventLoggingService stroomEventLoggingService) {
+    AuthenticationResource(
+            final @NotNull Config config,
+            final TokenDao tokenDao,
+            final UserDao userDao,
+            final TokenVerifier tokenVerifier,
+            final SessionManager sessionManager,
+            final EmailSender emailSender,
+            final CertificateManager certificateManager,
+            final TokenBuilderFactory tokenBuilderFactory,
+            final StroomEventLoggingService stroomEventLoggingService) {
         this.config = config;
         this.dnPattern = Pattern.compile(config.getCertificateDnPattern());
         this.tokenDao = tokenDao;
@@ -127,7 +127,6 @@ public final class AuthenticationResource {
         this.tokenBuilderFactory = tokenBuilderFactory;
         this.stroomEventLoggingService = stroomEventLoggingService;
     }
-
 
     @GET
     @Path("/")
@@ -378,21 +377,20 @@ public final class AuthenticationResource {
     @ApiOperation(value = "Convert a previously provided access code into an ID token",
             response = String.class, tags = {"Authentication"})
     public final Response getIdToken(@ApiParam("IdTokenRequest") @NotNull IdTokenRequest idTokenRequest,
-            @Context @NotNull HttpServletRequest httpServletRequest) {
+                                     @Context @NotNull HttpServletRequest httpServletRequest) {
         Optional<RelyingParty> relyingParty = this.sessionManager.getByAccessCode(idTokenRequest.getAccessCode());
         if (!relyingParty.isPresent()) {
             return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
         }
 
         // See the comments in StroomConfig.
-        if(config.getStroomConfig().getClientId().equals(idTokenRequest.getClientId())
-            && config.getStroomConfig().getClientSecret().equals(idTokenRequest.getClientSecret()) ){
+        if (config.getStroomConfig().getClientId().equals(idTokenRequest.getClientId())
+                && config.getStroomConfig().getClientSecret().equals(idTokenRequest.getClientSecret())) {
             String idToken = relyingParty.get().getIdToken();
             relyingParty.get().forgetIdToken();
             relyingParty.get().forgetAccessCode();
             return Response.status(Status.OK).entity(idToken).build();
-        }
-        else {
+        } else {
             return Response.status(Status.UNAUTHORIZED).entity("Invalid client or access code").build();
         }
     }
@@ -452,12 +450,11 @@ public final class AuthenticationResource {
         validateComplexity(changePasswordRequest.getNewPassword(), config.getPasswordIntegrityChecksConfig().getPasswordComplexityRegex()).ifPresent(failedOn::add);
 
         final ChangePasswordResponseBuilder responseBuilder = ChangePasswordResponseBuilder.aChangePasswordResponse();
-        if (failedOn.size() == 0){
+        if (failedOn.size() == 0) {
             responseBuilder.withSuccess();
             stroomEventLoggingService.changePassword(httpServletRequest, changePasswordRequest.getEmail());
             userDao.changePassword(changePasswordRequest.getEmail(), changePasswordRequest.getNewPassword());
-        }
-        else {
+        } else {
             responseBuilder.withFailedOn(failedOn);
         }
 

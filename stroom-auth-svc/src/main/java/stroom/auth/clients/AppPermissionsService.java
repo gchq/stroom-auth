@@ -12,11 +12,10 @@ import java.util.Set;
 @Singleton
 public class AppPermissionsService {
     private final AppPermissionServiceConfig config;
-    private AppPermissionsClient appPermissionsClient;
+    private final AppPermissionsClient appPermissionsClient;
 
     @Inject
-    public AppPermissionsService( @NotNull AppPermissionsClient appPermissionsClient, @NotNull Config config ) {
-        super();
+    AppPermissionsService(final @NotNull AppPermissionsClient appPermissionsClient, final @NotNull Config config ) {
         this.appPermissionsClient = appPermissionsClient;
         this.config = config.getAppPermissionServiceConfig();
     }

@@ -31,8 +31,8 @@ buildscript {
 plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.3' apply false
     id 'com.benjaminsproule.swagger' version "0.1.4" apply false // Generates YAML/JSON from model
-    id 'nu.studer.jooq' version '3.0.2' apply false
-    id 'org.flywaydb.flyway' version '5.1.4'
+    id 'nu.studer.jooq' version '3.0.3' apply false
+    id 'org.flywaydb.flyway' version '5.2.4'
 }
 
 
@@ -78,6 +78,7 @@ ext.testVersions = [
 
 ext.deps = [
     bcrypt: 'de.svenkubiak:jBCrypt:0.4.1',
+    caffeine: "com.github.ben-manes.caffeine:caffeine:2.8.0",
     curator_client: "org.apache.curator:curator-client:$versions.curator",
     curator_framework: "org.apache.curator:curator-framework:$versions.curator",
     curator_recipies: "org.apache.curator:curator-recipes:$versions.curator",

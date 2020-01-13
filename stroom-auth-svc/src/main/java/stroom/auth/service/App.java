@@ -40,7 +40,6 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jooq.Configuration;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import stroom.auth.EmailSender;
-import stroom.auth.PasswordIntegrityCheckTask;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
 import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
@@ -48,6 +47,7 @@ import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
 import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
+import stroom.auth.resources.token.v1.JwkResource;
 import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
 import stroom.auth.service.security.ServiceUser;
@@ -170,6 +170,7 @@ public final class App extends Application<Config> {
 
     private void registerResources(Environment environment) {
         environment.jersey().register(injector.getInstance(AuthenticationResource.class));
+        environment.jersey().register(injector.getInstance(JwkResource.class));
         environment.jersey().register(injector.getInstance(UserResource.class));
         environment.jersey().register(injector.getInstance(TokenResource.class));
     }

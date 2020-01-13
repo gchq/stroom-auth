@@ -19,49 +19,42 @@
 package stroom.auth;
 
 import org.jose4j.jwa.AlgorithmConstraints;
-import org.jose4j.jwk.JsonWebKey;
-import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.auth.config.Config;
-import stroom.auth.daos.JwkDao;
 import stroom.auth.daos.TokenDao;
 import stroom.auth.resources.token.v1.Token;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Singleton
 public class TokenVerifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenDao.class);
 
-    @Inject private Config config;
-    @Inject private TokenDao tokenDao;
-    @Inject private JwkDao jwkDao;
-
-    private JwtConsumer consumer;
-    private PublicJsonWebKey jwk;
+    private final TokenDao tokenDao;
+    private final JwtConsumer consumer;
 
     @Inject
-    public void init() throws NoSuchAlgorithmException, JoseException {
-        jwk = jwkDao.readJwk();
+    TokenVerifier(final Config config, final TokenDao tokenDao) {
+        this.tokenDao = tokenDao;
 
-        String jwkPublicOnly = jwk.toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
-        String jwkPrivateOnly = jwk.toJson(JsonWebKey.OutputControlLevel.INCLUDE_PRIVATE);
+//        jwk = jwkDao.readJwk();
+//
+//        String jwkPublicOnly = jwk.get(0).toJson(JsonWebKey.OutputControlLevel.PUBLIC_ONLY);
+//        String jwkPrivateOnly = jwk.get(0).toJson(JsonWebKey.OutputControlLevel.INCLUDE_PRIVATE);
 
         JwtConsumerBuilder builder = new JwtConsumerBuilder()
                 .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
                 .setRequireSubject() // the JWT must have a subject claim
-                .setVerificationKey(jwk.getPublicKey()) // verify the signature with the public key
+//                .setVerificationKeyResolver(ne) ionKey(jwk.getPublicKey()) // verify the signature with the public key
                 .setExpectedAudience(config.getStroomConfig().getClientId())
                 .setJwsAlgorithmConstraints( // only allow the expected signature algorithm(s) in the given context
                         new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, // which is only RS256 here
@@ -96,14 +89,10 @@ public class TokenVerifier {
             return Optional.empty();
         }
         LOGGER.debug("Looks like this token is fine.");
-        return Optional.of(tokenRecord.get().getUserEmail());
+        return Optional.ofNullable(tokenRecord.get().getUserEmail());
     }
 
-    public JwtConsumer getJwtConsumer(){
+    public JwtConsumer getJwtConsumer() {
         return this.consumer;
-    }
-
-    public PublicJsonWebKey getJwk() {
-        return jwk;
     }
 }

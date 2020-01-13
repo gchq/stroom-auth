@@ -346,16 +346,13 @@ public class UserDao_IT extends Database_IT {
     }
 
     private static UserDao getUserDao(Connection conn){
-        DSLContext database = DSL.using(conn, SQLDialect.MYSQL);
+        final DSLContext database = DSL.using(conn, SQLDialect.MYSQL);
+
+        // We're doing tests against elapsed time so we need to be able to move the clock.
+        final Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
 
         // We don't care about most config for this test, so we'll pass in null
-        UserDao userDao = new UserDao(null);
-        userDao.setDatabase(database);
-        // We're doing tests against elapsed time so we need to be able to move the clock.
-        Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
-        userDao.setClock(clock);
-
-        return userDao;
+        return new UserDao(database, null, clock);
     }
 
     private static void setClockToDaysFromNow(UserDao userDao, int days){

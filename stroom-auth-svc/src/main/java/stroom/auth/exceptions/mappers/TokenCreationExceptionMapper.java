@@ -29,10 +29,11 @@ import java.net.URISyntaxException;
 
 public class TokenCreationExceptionMapper implements ExceptionMapper<TokenCreationException> {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(TokenCreationExceptionMapper.class);
-    private Config config;
+
+    private final Config config;
 
     @Inject
-    public TokenCreationExceptionMapper(Config config) {
+    TokenCreationExceptionMapper(final Config config) {
         this.config = config;
     }
 

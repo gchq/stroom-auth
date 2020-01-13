@@ -22,7 +22,6 @@ import org.jooq.Configuration;
 import stroom.auth.clients.UserServiceClient;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
-import stroom.auth.PasswordIntegrityCheckTask;
 import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
@@ -35,6 +34,7 @@ import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
 import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
+import stroom.auth.resources.token.v1.JwkResource;
 import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
 import stroom.auth.service.eventlogging.StroomEventLoggingService;
@@ -49,23 +49,24 @@ public final class Module extends AbstractModule {
     }
 
     protected void configure() {
-        bind(UserResource.class);
-        bind(AuthenticationResource.class);
-        bind(TokenResource.class);
-        bind(UserServiceClient.class);
-        bind(TokenDao.class);
-        bind(UserDao.class);
-        bind(JwkDao.class);
-        bind(TokenVerifier.class);
-        bind(EmailSender.class);
-        bind(CertificateManager.class);
-        bind(TokenBuilderFactory.class);
-        bind(StroomEventLoggingService.class);
-
-        bind(BadRequestExceptionMapper.class);
-        bind(TokenCreationExceptionMapper.class);
-        bind(UnsupportedFilterExceptionMapper.class);
-        bind(NoSuchUserExceptionMapper.class);
+//        bind(UserResource.class);
+//        bind(AuthenticationResource.class);
+//        bind(JwkResource.class);
+//        bind(TokenResource.class);
+//        bind(UserServiceClient.class);
+//        bind(TokenDao.class);
+//        bind(UserDao.class);
+//        bind(JwkDao.class);
+//        bind(TokenVerifier.class);
+//        bind(EmailSender.class);
+//        bind(CertificateManager.class);
+//        bind(TokenBuilderFactory.class);
+//        bind(StroomEventLoggingService.class);
+//
+//        bind(BadRequestExceptionMapper.class);
+//        bind(TokenCreationExceptionMapper.class);
+//        bind(UnsupportedFilterExceptionMapper.class);
+//        bind(NoSuchUserExceptionMapper.class);
     }
 
     @Provides
