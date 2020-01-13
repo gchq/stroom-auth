@@ -107,10 +107,9 @@ public final class UserResource_read_IT extends Dropwizard_IT {
                 .email(userEmailB)
                 .password("password"));
 
-        stubFor(post(urlEqualTo("/api/authorisation/v1/canManageUsers"))
+        stubFor(post(urlEqualTo("/api/authorisation/v1/isAuthorised/"))
                 .willReturn(aResponse()
-                        .withHeader("Content-Type", "text/plain")
-                        .withBody("Mock rejection for authorisation")
+                        .withHeader("Content-Type", "application/json")
                         .withStatus(401)));
 
         UserApi userApiA = SwaggerHelper.newUserApiClient(AuthenticationFlowHelper.authenticateAs(userEmailA, "password"));
