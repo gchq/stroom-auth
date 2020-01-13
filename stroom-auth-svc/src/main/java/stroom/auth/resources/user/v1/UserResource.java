@@ -38,7 +38,7 @@ import org.jooq.Record13;
 import org.jooq.Result;
 import org.jooq.Table;
 import org.jooq.TableField;
-import stroom.auth.clients.AppPermissionsService;
+import stroom.auth.clients.AuthorisationService;
 import stroom.auth.clients.UserServiceClient;
 import stroom.auth.daos.UserDao;
 import stroom.auth.daos.UserMapper;
@@ -70,18 +70,18 @@ import static stroom.auth.db.Tables.USERS;
 @Produces({"application/json"})
 @Api(description = "Stroom User API", tags = {"User"})
 public final class UserResource {
-    private final AppPermissionsService appPermissionsService;
+    private final AuthorisationService authorisationService;
     private final UserServiceClient userServiceClient;
     private final UserDao userDao;
     private final StroomEventLoggingService stroomEventLoggingService;
 
     @Inject
     public UserResource(
-            final @NotNull AppPermissionsService appPermissionsService,
+            final @NotNull AuthorisationService authorisationService,
             final @NotNull UserServiceClient userServiceClient,
             final UserDao userDao,
             final StroomEventLoggingService stroomEventLoggingService) {
-        this.appPermissionsService = appPermissionsService;
+        this.authorisationService = authorisationService;
         this.userServiceClient = userServiceClient;
         this.userDao = userDao;
         this.stroomEventLoggingService = stroomEventLoggingService;
@@ -102,7 +102,7 @@ public final class UserResource {
         Preconditions.checkNotNull(authenticatedServiceUser);
         Preconditions.checkNotNull(database);
 
-        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
+        if (!authorisationService.canManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -146,7 +146,7 @@ public final class UserResource {
         Preconditions.checkNotNull(authenticatedServiceUser);
         Preconditions.checkNotNull(database);
 
-        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
+        if (!authorisationService.canManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 
@@ -270,7 +270,7 @@ public final class UserResource {
         Preconditions.checkNotNull(authenticatedServiceUser);
         Preconditions.checkNotNull(database);
 
-        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), (authenticatedServiceUser.getJwt()))) {
+        if (!authorisationService.canManageUsers(authenticatedServiceUser.getName(), (authenticatedServiceUser.getJwt()))) {
             return Response
                     .status(Response.Status.UNAUTHORIZED)
                     .entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
@@ -353,7 +353,7 @@ public final class UserResource {
             String foundUserEmail = foundUserRecord.get(USERS.EMAIL);
             boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
             if (!isUserAccessingThemselves) {
-                if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
+                if (!authorisationService.canManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
                     return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
                 }
             }
@@ -398,7 +398,7 @@ public final class UserResource {
         String foundUserEmail = usersRecord.get(USERS.EMAIL);
         boolean isUserAccessingThemselves = authenticatedServiceUser.getName().equals(foundUserEmail);
         if (!isUserAccessingThemselves) {
-            if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
+            if (!authorisationService.canManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
             }
         }
@@ -450,7 +450,7 @@ public final class UserResource {
         Preconditions.checkNotNull(authenticatedServiceUser);
         Preconditions.checkNotNull(database);
 
-        if (!appPermissionsService.isAuthorisedToManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
+        if (!authorisationService.canManageUsers(authenticatedServiceUser.getName(), authenticatedServiceUser.getJwt())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(UserServiceClient.UNAUTHORISED_USER_MESSAGE).build();
         }
 

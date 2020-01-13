@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 
-public class AppPermissionServiceConfig {
+public class AuthorisationServiceConfig {
 
     @NotNull
     @JsonProperty
