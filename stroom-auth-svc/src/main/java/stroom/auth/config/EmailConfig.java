@@ -21,13 +21,15 @@ package stroom.auth.config;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 
+import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 
+@Singleton
 public class EmailConfig extends Configuration {
 
     @NotNull
     @JsonProperty("smtp")
-    private SmtpConfig smtpConfig;
+    private SmtpConfig smtpConfig = new SmtpConfig();
 
     @NotNull
     @JsonProperty

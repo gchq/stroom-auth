@@ -27,9 +27,11 @@ import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.server.DefaultServerFactory;
 
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+@Singleton
 public final class Config extends Configuration {
 
     @Valid
@@ -95,11 +97,11 @@ public final class Config extends Configuration {
 
     @Nullable
     @JsonProperty("email")
-    private EmailConfig emailConfig;
+    private EmailConfig emailConfig = new EmailConfig();
 
     @Nullable
     @JsonProperty("token")
-    private TokenConfig tokenConfig;
+    private TokenConfig tokenConfig = new TokenConfig();
 
     @Nullable
     @JsonProperty("sessionIdCookieMaxAge")
@@ -107,11 +109,11 @@ public final class Config extends Configuration {
 
     @NotNull
     @JsonProperty("userService")
-    private UserServiceConfig userServiceConfig;
+    private UserServiceConfig userServiceConfig = new UserServiceConfig();
 
     @NotNull
     @JsonProperty("passwordIntegrityChecks")
-    private PasswordIntegrityChecksConfig passwordIntegrityChecksConfig;
+    private PasswordIntegrityChecksConfig passwordIntegrityChecksConfig = new PasswordIntegrityChecksConfig();
 
     @NotNull
     @JsonProperty("ownPath")
@@ -119,11 +121,11 @@ public final class Config extends Configuration {
 
     @NotNull
     @JsonProperty("authorisationService")
-    private AuthorisationServiceConfig authorisationServiceConfig;
+    private AuthorisationServiceConfig authorisationServiceConfig = new AuthorisationServiceConfig();
 
     @Nullable
     @JsonProperty("stroom")
-    private StroomConfig stroomConfig;
+    private StroomConfig stroomConfig = new StroomConfig();
 
     public final DataSourceFactory getDataSourceFactory() {
         return this.dataSourceFactory;
