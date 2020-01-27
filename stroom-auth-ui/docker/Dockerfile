@@ -17,11 +17,15 @@
 
 
 # ~~~ builder stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Set unsafe-perm to stop errors in npm install, due, in part, to running
+# as root
 FROM node:8.12.0-alpine AS builder
 WORKDIR /root/app
 RUN apk add --no-cache \
-        git && \
-    npm install --global yarn
+      git && \
+      npm config set unsafe-perm true && \
+      npm install --global yarn
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
