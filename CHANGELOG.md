@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Fix missing aud in created tokens.
+
 ## [v6.0.27-1] - 2019-12-09
 
 * Fix ITs

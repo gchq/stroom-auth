@@ -23,10 +23,12 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.lang.JoseException;
 
+import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.nio.charset.Charset;
 
+@Singleton
 public class TokenConfig {
 
     @Valid
