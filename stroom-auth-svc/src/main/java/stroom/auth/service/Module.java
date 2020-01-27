@@ -73,26 +73,15 @@ public final class Module extends AbstractModule {
         bind(NoSuchUserExceptionMapper.class);
 
         // Bind all the config objects so they can be injected independently
+        bind(Config.class).toInstance(config);
         bind(StroomConfig.class).toInstance(config.getStroomConfig());
         bind(TokenConfig.class).toInstance(config.getTokenConfig());
         bind(AuthorisationServiceConfig.class).toInstance(config.getAuthorisationServiceConfig());
         bind(EmailConfig.class).toInstance(config.getEmailConfig());
         bind(PasswordIntegrityChecksConfig.class).toInstance(config.getPasswordIntegrityChecksConfig());
-    }
-
-    @Provides
-    public Config getConfig() {
-        return config;
-    }
-
-    @Provides
-    public TokenConfig getTokenConfig() {
-        return config.getTokenConfig();
-    }
-
-    @Provides
-    public Configuration getJooqConfig() {
-        return jooqConfig;
+        
+        // Bind the Jooq Configuration
+        bind(Configuration.class).toInstance(jooqConfig);
     }
 
     @Provides
