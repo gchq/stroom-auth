@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v6.0.27-4] - 2020-01-27
+
+* NO CHANGES (Build failure)
+
 ## [v6.0.27-3] - 2020-01-27
 
 * NO CHANGES (Build failure)
@@ -323,7 +327,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.27-3...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.27-4...master
+[v6.0.27-4]: https://github.com/gchq/stroom-auth/compare/v6.0.27-3...v6.0.27-4
 [v6.0.27-3]: https://github.com/gchq/stroom-auth/compare/v6.0.27-2...v6.0.27-3
 [v6.0.27-2]: https://github.com/gchq/stroom-auth/compare/v6.0.27-1...v6.0.27-2
 [v6.0.27-1]: https://github.com/gchq/stroom-auth/compare/v6.0.27...v6.0.27-1
