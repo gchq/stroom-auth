@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [v6.0.28] - 2020-02-25
+
 * Uplift mysql connector to 8.0.19 (works with server 5.6, 5.7 & 8)
 
 
@@ -337,7 +340,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.27-4...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.28...6.0
+[v6.0.28]: https://github.com/gchq/stroom-auth/compare/v6.0.27-4...v6.0.28
 [v6.0.27-4]: https://github.com/gchq/stroom-auth/compare/v6.0.27-3...v6.0.27-4
 [v6.0.27-3]: https://github.com/gchq/stroom-auth/compare/v6.0.27-2...v6.0.27-3
 [v6.0.27-2]: https://github.com/gchq/stroom-auth/compare/v6.0.27-1...v6.0.27-2
