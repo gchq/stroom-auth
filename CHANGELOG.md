@@ -6,14 +6,37 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [v6.0.28] - 2020-02-25
+
+* Uplift mysql connector to 8.0.19 (works with server 5.6, 5.7 & 8)
+
+
+## [v6.0.27-4] - 2020-01-27
+
+* NO CHANGES (Build failure)
+
+
+## [v6.0.27-3] - 2020-01-27
+
+* NO CHANGES (Build failure)
+
+
+## [v6.0.27-2] - 2020-01-27
+
+* Fix missing aud in created tokens.
+
+
 ## [v6.0.27-1] - 2019-12-09
 
 * Fix ITs
+
 
 ## [v6.0.27] - 2019-12-09
 
 * Fix aud in JWTs
 * Fix failing tests, caused by missing JWT expected audience.
+
 
 ## [v6.0.25-1] - 2019-11-25
 
@@ -318,7 +341,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.27-1...master
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.28...6.0
+[v6.0.28]: https://github.com/gchq/stroom-auth/compare/v6.0.27-4...v6.0.28
+[v6.0.27-4]: https://github.com/gchq/stroom-auth/compare/v6.0.27-3...v6.0.27-4
+[v6.0.27-3]: https://github.com/gchq/stroom-auth/compare/v6.0.27-2...v6.0.27-3
+[v6.0.27-2]: https://github.com/gchq/stroom-auth/compare/v6.0.27-1...v6.0.27-2
 [v6.0.27-1]: https://github.com/gchq/stroom-auth/compare/v6.0.27...v6.0.27-1
 [v6.0.27]: https://github.com/gchq/stroom-auth/compare/v6.0.25-1...v6.0.27
 [v6.0.25-1]: https://github.com/gchq/stroom-auth/compare/v6.0.25...v6.0.25-1

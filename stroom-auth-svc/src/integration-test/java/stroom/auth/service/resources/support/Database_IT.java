@@ -28,7 +28,7 @@ import static stroom.auth.db.Tables.USERS;
 public abstract class Database_IT {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Database_IT.class);
 
-    protected static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    protected static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     protected static final String DATABASE_NAME = "auth";
     protected static final String JDBC_USER = "authuser";
     protected static final String JDBC_PASSWORD = "stroompassword1";

@@ -20,7 +20,7 @@ readonly AUTH_UI_REPO="gchq/stroom-auth-ui"
 readonly AUTH_UI_CONTEXT_ROOT="stroom-auth-ui/docker/."
 
 # This is a whitelist of branches to produce docker builds for
-readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^[0-9]+\.[0-9]+$)'
+readonly BRANCH_WHITELIST_REGEX='(^dev$|^master$|^[0-9]+\.[0-9]+.*$)'
 
 # Tags matching this regex will trigger a bintray release
 readonly RELEASE_VERSION_REGEX='^v[0-9]+\.[0-9]+.*$'

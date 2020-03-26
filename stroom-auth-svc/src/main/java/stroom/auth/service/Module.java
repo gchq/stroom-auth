@@ -25,7 +25,12 @@ import stroom.auth.EmailSender;
 import stroom.auth.PasswordIntegrityCheckTask;
 import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
+import stroom.auth.config.AuthorisationServiceConfig;
 import stroom.auth.config.Config;
+import stroom.auth.config.EmailConfig;
+import stroom.auth.config.PasswordIntegrityChecksConfig;
+import stroom.auth.config.SmtpConfig;
+import stroom.auth.config.StroomConfig;
 import stroom.auth.config.TokenConfig;
 import stroom.auth.daos.JwkDao;
 import stroom.auth.daos.TokenDao;
@@ -66,21 +71,17 @@ public final class Module extends AbstractModule {
         bind(TokenCreationExceptionMapper.class);
         bind(UnsupportedFilterExceptionMapper.class);
         bind(NoSuchUserExceptionMapper.class);
-    }
 
-    @Provides
-    public Config getConfig() {
-        return config;
-    }
-
-    @Provides
-    public TokenConfig getTokenConfig() {
-        return config.getTokenConfig();
-    }
-
-    @Provides
-    public Configuration getJooqConfig() {
-        return jooqConfig;
+        // Bind all the config objects so they can be injected independently
+        bind(Config.class).toInstance(config);
+        bind(StroomConfig.class).toInstance(config.getStroomConfig());
+        bind(TokenConfig.class).toInstance(config.getTokenConfig());
+        bind(AuthorisationServiceConfig.class).toInstance(config.getAuthorisationServiceConfig());
+        bind(EmailConfig.class).toInstance(config.getEmailConfig());
+        bind(PasswordIntegrityChecksConfig.class).toInstance(config.getPasswordIntegrityChecksConfig());
+        
+        // Bind the Jooq Configuration
+        bind(Configuration.class).toInstance(jooqConfig);
     }
 
     @Provides
