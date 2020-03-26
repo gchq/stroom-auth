@@ -80,11 +80,7 @@ export const validateAsync = (values, idToken, url) => {
 
         // Do password checks
         if (values.password !== undefined && values.password !== '') {
-          if (
-            values.verifyPassword !== undefined &&
-            values.verifyPassword !== '' &&
-            values.password !== values.verifyPassword
-          ) {
+          if (values.password !== values.verifyPassword) {
             errors.verifyPassword = 'Passwords do not match';
           }
         }
