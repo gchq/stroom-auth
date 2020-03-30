@@ -146,7 +146,13 @@ public class UserDao {
 
         // If the password is wrong we need to increment the failed login count,
         // check if we need to locked the account, and save.
-        user.setLoginFailures(user.getLoginFailures() + 1);
+        if(user.getLoginFailures() != null) {
+            user.setLoginFailures(user.getLoginFailures() + 1);
+        }
+        else {
+            user.setLoginFailures(1);
+        }
+
         boolean shouldLock = user.getLoginFailures() >= this.config.getFailedLoginLockThreshold();
 
         if (shouldLock) {

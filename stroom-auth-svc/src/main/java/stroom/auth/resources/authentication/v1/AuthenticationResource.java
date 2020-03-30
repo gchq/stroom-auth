@@ -409,7 +409,7 @@ public final class AuthenticationResource {
         if (user.isPresent()) {
             String resetToken = tokenDao.createEmailResetToken(emailAddress, config.getStroomConfig().getClientId());
             emailSender.send(user.get(), resetToken);
-            Response response = status(Status.OK).build();
+            Response response = status(Status.NO_CONTENT).build();
             return response;
         } else {
             return status(Status.NOT_FOUND).entity("User does not exist").build();

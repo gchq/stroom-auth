@@ -27,8 +27,6 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import stroom.auth.service.App;
 
-import java.io.IOException;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -94,6 +92,10 @@ public abstract class Dropwizard_IT extends Database_IT {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody("[\"Manager Users\", \"Administrator\"]")
+                        .withStatus(200)));
+        stubFor(post(urlEqualTo("/api/authorisation/v1/isAuthorised/"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
                         .withStatus(200)));
         stubFor(get(urlPathMatching("/api/appPermissions/v1/byName/userEmail.*"))
                 .willReturn(aResponse()

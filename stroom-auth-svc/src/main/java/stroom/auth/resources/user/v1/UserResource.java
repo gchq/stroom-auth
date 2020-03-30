@@ -469,7 +469,7 @@ public final class UserResource {
                 objectOutcome,
                 "Delete a user by ID");
 
-        Response response = Response.status(Response.Status.OK).build();
+        Response response = Response.status(Response.Status.NO_CONTENT).build();
         return response;
     }
 
