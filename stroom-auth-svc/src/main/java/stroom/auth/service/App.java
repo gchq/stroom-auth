@@ -47,6 +47,7 @@ import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
 import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
 import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
 import stroom.auth.resources.authentication.v1.AuthenticationResource;
+import stroom.auth.resources.authentication.v1.LoginResource;
 import stroom.auth.resources.token.v1.JwkResource;
 import stroom.auth.resources.token.v1.TokenResource;
 import stroom.auth.resources.user.v1.UserResource;
@@ -109,7 +110,7 @@ public final class App extends Application<Config> {
         // use a different db name in the connection url
         jooqConfig.settings().setRenderSchema(false);
 
-        injector = Guice.createInjector(new stroom.auth.service.Module(config, jooqConfig));
+        injector = Guice.createInjector(new stroom.auth.service.Module(config, environment, jooqConfig));
 
         // We need the database before we need most other things
         migrate(config, environment);
@@ -122,16 +123,9 @@ public final class App extends Application<Config> {
         registerExceptionMappers(environment);
         registerHealthChecks(environment, injector.getInstance(EmailSender.class), config);
         configureSessionHandling(environment);
+        configureSessionCookie(environment, config.getSessionCookieConfig());
         configureCors(environment);
         schedulePasswordChecks(config, injector.getInstance(PasswordIntegrityCheckTask.class));
-
-        // Ensure the session cookie that provides JSESSIONID is secure.
-        final SessionCookieConfig sessionCookieConfig = environment
-                .getApplicationContext()
-                .getServletContext()
-                .getSessionCookieConfig();
-        sessionCookieConfig.setSecure(true);
-        sessionCookieConfig.setHttpOnly(true);
     }
 
     private void waitForDatabaseConnection(final Config config) {
@@ -159,6 +153,17 @@ public final class App extends Application<Config> {
         environment.jersey().register(SessionFactoryProvider.class);
     }
 
+    private static void configureSessionCookie(final Environment environment, final stroom.auth.config.SessionCookieConfig config) {
+        // Ensure the session cookie that provides JSESSIONID is secure.
+        final SessionCookieConfig sessionCookieConfig = environment
+                .getApplicationContext()
+                .getServletContext()
+                .getSessionCookieConfig();
+        sessionCookieConfig.setSecure(config.isSecure());
+        sessionCookieConfig.setHttpOnly(config.isHttpOnly());
+        // TODO : Add `SameSite=Strict` when supported by JEE
+    }
+
     public void initialize(Bootstrap bootstrap) {
         // This allows us to use templating in the YAML configuration.
         bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
@@ -171,6 +176,7 @@ public final class App extends Application<Config> {
     private void registerResources(Environment environment) {
         environment.jersey().register(injector.getInstance(AuthenticationResource.class));
         environment.jersey().register(injector.getInstance(JwkResource.class));
+        environment.jersey().register(injector.getInstance(LoginResource.class));
         environment.jersey().register(injector.getInstance(UserResource.class));
         environment.jersey().register(injector.getInstance(TokenResource.class));
     }

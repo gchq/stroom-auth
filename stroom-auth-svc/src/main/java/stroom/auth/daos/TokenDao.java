@@ -78,7 +78,7 @@ public class TokenDao {
         Map<String, String> filters = searchRequest.getFilters();
 
         // We need these aliased tables because we're joining tokens to users twice.
-        Users issueingUsers = USERS.as("issueingUsers");
+        Users issuingUsers = USERS.as("issuingUsers");
         Users tokenOwnerUsers = USERS.as("tokenOwnerUsers");
         Users updatingUsers = USERS.as("updatingUsers");
 
@@ -106,11 +106,11 @@ public class TokenDao {
         }
 
         Optional<List<Condition>> conditions;
-        conditions = getConditions(filters, issueingUsers, tokenOwnerUsers, updatingUsers);
+        conditions = getConditions(filters, issuingUsers, tokenOwnerUsers, updatingUsers);
 
         int offset = limit * page;
         SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> selectFrom =
-                TokenDao.getSelectFrom(database, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
+                TokenDao.getSelectFrom(database, issuingUsers, tokenOwnerUsers, updatingUsers, userEmail);
 
         Result<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>> results =
                 selectFrom
@@ -125,7 +125,7 @@ public class TokenDao {
         SelectSelectStep<Record1<Integer>> selectCount =
                 database.selectCount();
         SelectJoinStep<Record11<Integer, Boolean, Timestamp, String, Timestamp, String, String, String, String, Timestamp, Integer>>
-                fromCount = TokenDao.getFrom(selectCount, issueingUsers, tokenOwnerUsers, updatingUsers, userEmail);
+                fromCount = TokenDao.getFrom(selectCount, issuingUsers, tokenOwnerUsers, updatingUsers, userEmail);
         int count = fromCount
                 .where(conditions.get())
                 .fetchOne(0, int.class);

@@ -294,7 +294,7 @@ public class AuthenticationApi {
         return call;
     }
     /* Build call for handleAuthenticationRequest */
-    private com.squareup.okhttp.Call handleAuthenticationRequestCall(String scope, String responseType, String clientId, String redirectUrl, String nonce, String state, String prompt, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call handleAuthenticationRequestCall(String scope, String responseType, String clientId, String redirectUri, String nonce, String state, String prompt, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
@@ -302,19 +302,19 @@ public class AuthenticationApi {
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         if (scope != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "scope", scope));
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", OIDC.SCOPE, scope));
         if (responseType != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "response_type", responseType));
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", OIDC.RESPONSE_TYPE, responseType));
         if (clientId != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "client_id", clientId));
-        if (redirectUrl != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "redirect_url", redirectUrl));
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", OIDC.CLIENT_ID, clientId));
+        if (redirectUri != null)
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", OIDC.REDIRECT_URI, redirectUri));
         if (nonce != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "nonce", nonce));
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", OIDC.NONCE, nonce));
         if (state != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "state", state));
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", OIDC.STATE, state));
         if (prompt != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "prompt", prompt));
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", OIDC.PROMPT, prompt));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -349,7 +349,7 @@ public class AuthenticationApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call handleAuthenticationRequestValidateBeforeCall(String scope, String responseType, String clientId, String redirectUrl, String nonce, String state, String prompt, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call handleAuthenticationRequestValidateBeforeCall(String scope, String responseType, String clientId, String redirectUri, String nonce, String state, String prompt, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'scope' is set
         if (scope == null) {
@@ -367,12 +367,12 @@ public class AuthenticationApi {
         }
         
         // verify the required parameter 'redirectUrl' is set
-        if (redirectUrl == null) {
-            throw new ApiException("Missing the required parameter 'redirectUrl' when calling handleAuthenticationRequest(Async)");
+        if (redirectUri == null) {
+            throw new ApiException("Missing the required parameter 'redirectUri' when calling handleAuthenticationRequest(Async)");
         }
         
         
-        com.squareup.okhttp.Call call = handleAuthenticationRequestCall(scope, responseType, clientId, redirectUrl, nonce, state, prompt, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = handleAuthenticationRequestCall(scope, responseType, clientId, redirectUri, nonce, state, prompt, progressListener, progressRequestListener);
         return call;
 
         
@@ -693,7 +693,7 @@ public class AuthenticationApi {
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         if (redirectUrl != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "redirect_url", redirectUrl));
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", "redirect_uri", redirectUrl));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 

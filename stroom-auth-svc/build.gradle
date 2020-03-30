@@ -61,6 +61,7 @@ dependencies {
     compile project(':stroom-persistence')
     compile project(':stroom-auth-service-api')
     compile deps.caffeine
+    compile deps.dropwizard_client
     compile deps.dropwizard_core
     compile deps.dropwizard_flyway
     compile deps.dropwizard_jooq
@@ -71,7 +72,6 @@ dependencies {
     compile deps.jose4j
     compile deps.guice
     compile deps.slf4j
-    compile deps.shiro_core
     compile deps.flyway_core
     compile deps.curator_service_discovery
     compile deps.simple_java_mail

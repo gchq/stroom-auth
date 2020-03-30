@@ -21,10 +21,9 @@ package stroom.auth.config;
 import com.bendb.dropwizard.jooq.JooqFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.flyway.FlywayFactory;
-import io.dropwizard.jetty.HttpConnectorFactory;
-import io.dropwizard.server.DefaultServerFactory;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -46,6 +45,14 @@ public final class Config extends Configuration {
     @NotNull
     @JsonProperty("jooq")
     private JooqFactory jooqFactory = new JooqFactory();
+
+    @Valid
+    @NotNull
+    @JsonProperty("sessionCookie")
+    private SessionCookieConfig sessionCookieConfig = new SessionCookieConfig();
+
+    @JsonProperty("jerseyClient")
+    private JerseyClientConfiguration jerseyClientConfig = new JerseyClientConfiguration();
 
     @Valid
     @NotNull
@@ -105,6 +112,8 @@ public final class Config extends Configuration {
     @JsonProperty("sessionIdCookieMaxAge")
     private int sessionIdCookieMaxAge;
 
+    private OpenIdConfig openIdConfig = new OpenIdConfig();
+
     @NotNull
     @JsonProperty("userService")
     private UserServiceConfig userServiceConfig;
@@ -137,6 +146,18 @@ public final class Config extends Configuration {
         return this.jooqFactory;
     }
 
+    public SessionCookieConfig getSessionCookieConfig() {
+        return sessionCookieConfig;
+    }
+
+    public JerseyClientConfiguration getJerseyClientConfiguration() {
+        return jerseyClientConfig;
+    }
+
+    public void setJerseyClientConfiguration(final JerseyClientConfiguration jerseyClientConfig) {
+        this.jerseyClientConfig = jerseyClientConfig;
+    }
+
     public final String getCertificateDnPattern() {
         return this.certificateDnPattern;
     }
@@ -155,14 +176,6 @@ public final class Config extends Configuration {
 
     public final String getAdvertisedHost() {
         return this.advertisedHost;
-    }
-
-    public final Integer getHttpPort() {
-        return getPort();
-    }
-
-    public final Integer getHttpsPort() {
-        return getPort();
     }
 
     public EmailConfig getEmailConfig() {
@@ -186,6 +199,16 @@ public final class Config extends Configuration {
         return sessionIdCookieMaxAge;
     }
 
+    @JsonProperty("openId")
+    public OpenIdConfig getOpenIdConfig() {
+        return openIdConfig;
+    }
+
+    public void setOpenIdConfig(final OpenIdConfig openIdConfig) {
+        this.openIdConfig = openIdConfig;
+    }
+
+
     @Nullable
     public String getUnauthorisedUrl() {
         return unauthorisedUrl;
@@ -205,17 +228,6 @@ public final class Config extends Configuration {
 
     public AuthorisationServiceConfig getAuthorisationServiceConfig() {
         return authorisationServiceConfig;
-    }
-
-    private Integer getPort() {
-        DefaultServerFactory serverFactory = (DefaultServerFactory) this.getServerFactory();
-        Integer port = serverFactory.getApplicationConnectors().stream()
-                .filter(connectorFactory -> connectorFactory instanceof HttpConnectorFactory)
-                .map(connectorFactory -> (HttpConnectorFactory) connectorFactory)
-                .map(HttpConnectorFactory::getPort)
-                .findFirst()
-                .get();
-        return port;
     }
 
     public StroomConfig getStroomConfig() {

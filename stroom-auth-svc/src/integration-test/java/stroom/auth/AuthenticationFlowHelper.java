@@ -37,6 +37,7 @@ import stroom.auth.service.ApiException;
 import stroom.auth.service.App;
 import stroom.auth.service.api.ApiKeyApi;
 import stroom.auth.service.api.AuthenticationApi;
+import stroom.auth.service.api.OIDC;
 import stroom.auth.service.api.model.Credentials;
 import stroom.auth.service.api.model.IdTokenRequest;
 
@@ -109,13 +110,12 @@ public class AuthenticationFlowHelper {
         // 1. Don't use Swagger client - Swagger client will always accept and act on redirects
         // 2. Tweak Unirest configuration to disable its redirect handling.
         StringBuilder authenticationRequestParams = new StringBuilder();
-        authenticationRequestParams.append("?scope=openid");
-        authenticationRequestParams.append("&response_type=code");
-        authenticationRequestParams.append("&client_id=");
-        authenticationRequestParams.append(CLIENT_ID);
-        authenticationRequestParams.append("&redirect_url=http://fakedomain.com");
-        authenticationRequestParams.append("&state=");
-        authenticationRequestParams.append("&nonce=");
+        authenticationRequestParams.append("?" + OIDC.SCOPE + "=openid");
+        authenticationRequestParams.append("&" + OIDC.RESPONSE_TYPE + "=" + OIDC.CODE);
+        authenticationRequestParams.append("&" + OIDC.CLIENT_ID + "=" + CLIENT_ID);
+        authenticationRequestParams.append("&" + OIDC.REDIRECT_URI + "=http://fakedomain.com");
+        authenticationRequestParams.append("&" + OIDC.STATE + "=");
+        authenticationRequestParams.append("&" + OIDC.NONCE + "=");
         authenticationRequestParams.append(nonce);
         String authenticationRequestUrl =
                 "http://localhost:8099/authentication/v1/authenticate" + authenticationRequestParams;

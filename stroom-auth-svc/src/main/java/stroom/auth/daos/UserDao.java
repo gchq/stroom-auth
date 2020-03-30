@@ -176,7 +176,7 @@ public class UserDao {
                 .selectFrom(USERS)
                 .where(USERS.EMAIL.eq(email)).fetchOptional();
 
-        return userQuery.map(usersRecord -> UserMapper.map(usersRecord));
+        return userQuery.map(UserMapper::map);
     }
 
     public void changePassword(String email, String newPassword) {

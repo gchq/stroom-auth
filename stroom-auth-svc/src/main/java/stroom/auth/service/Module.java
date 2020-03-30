@@ -18,74 +18,32 @@ package stroom.auth.service;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import io.dropwizard.setup.Environment;
 import org.jooq.Configuration;
-import stroom.auth.clients.UserServiceClient;
-import stroom.auth.CertificateManager;
-import stroom.auth.EmailSender;
-import stroom.auth.TokenBuilderFactory;
-import stroom.auth.TokenVerifier;
 import stroom.auth.config.Config;
 import stroom.auth.config.TokenConfig;
-import stroom.auth.daos.JwkDao;
-import stroom.auth.daos.TokenDao;
 import stroom.auth.daos.UserDao;
-import stroom.auth.exceptions.mappers.BadRequestExceptionMapper;
-import stroom.auth.exceptions.mappers.NoSuchUserExceptionMapper;
-import stroom.auth.exceptions.mappers.TokenCreationExceptionMapper;
-import stroom.auth.exceptions.mappers.UnsupportedFilterExceptionMapper;
-import stroom.auth.resources.authentication.v1.AuthenticationResource;
-import stroom.auth.resources.token.v1.JwkResource;
-import stroom.auth.resources.token.v1.TokenResource;
-import stroom.auth.resources.user.v1.UserResource;
-import stroom.auth.service.eventlogging.StroomEventLoggingService;
 
 public final class Module extends AbstractModule {
-    private Config config;
-    private Configuration jooqConfig;
+    private final Config config;
+    private final Environment environment;
+    private final Configuration jooqConfig;
 
-    public Module(Config config, Configuration jooqConfig) {
+    public Module(final Config config, final Environment environment, final Configuration jooqConfig) {
         this.config = config;
+        this.environment = environment;
         this.jooqConfig = jooqConfig;
     }
 
     protected void configure() {
-//        bind(UserResource.class);
-//        bind(AuthenticationResource.class);
-//        bind(JwkResource.class);
-//        bind(TokenResource.class);
-//        bind(UserServiceClient.class);
-//        bind(TokenDao.class);
-//        bind(UserDao.class);
-//        bind(JwkDao.class);
-//        bind(TokenVerifier.class);
-//        bind(EmailSender.class);
-//        bind(CertificateManager.class);
-//        bind(TokenBuilderFactory.class);
-//        bind(StroomEventLoggingService.class);
-//
-//        bind(BadRequestExceptionMapper.class);
-//        bind(TokenCreationExceptionMapper.class);
-//        bind(UnsupportedFilterExceptionMapper.class);
-//        bind(NoSuchUserExceptionMapper.class);
+        bind(Config.class).toInstance(config);
+        bind(Environment.class).toInstance(environment);
+        bind(Configuration.class).toInstance(jooqConfig);
+        bind(TokenConfig.class).toInstance(config.getTokenConfig());
     }
 
     @Provides
-    public Config getConfig() {
-        return config;
-    }
-
-    @Provides
-    public TokenConfig getTokenConfig() {
-        return config.getTokenConfig();
-    }
-
-    @Provides
-    public Configuration getJooqConfig() {
-        return jooqConfig;
-    }
-
-    @Provides
-    public PasswordIntegrityCheckTask getPasswordIntegrityCheckTask(Config config, UserDao userDao){
+    public PasswordIntegrityCheckTask getPasswordIntegrityCheckTask(Config config, UserDao userDao) {
         return new PasswordIntegrityCheckTask(config.getPasswordIntegrityChecksConfig(), userDao);
     }
 }

@@ -22,21 +22,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Session {
-    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Session.class);
-
-    private String sessionId;
+public class AuthenticationSession {
     private boolean isAuthenticated;
     private String userEmail;
     private Map<String, RelyingParty> relyingParties = new HashMap<>();
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
 
     public boolean isAuthenticated() {
         return isAuthenticated;

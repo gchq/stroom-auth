@@ -1,4 +1,4 @@
-<component name="ProjectRunConfigurationManager">
+ <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="config.yml.sh" type="BashConfigurationType" factoryName="Bash">
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="INTERPRETER_PATH" value="/bin/bash" />

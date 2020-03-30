@@ -28,10 +28,11 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.curator.shaded.com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.auth.AuthenticationSession;
 import stroom.auth.CertificateManager;
 import stroom.auth.EmailSender;
+import stroom.auth.service.api.OIDC;
 import stroom.auth.RelyingParty;
-import stroom.auth.SessionManager;
 import stroom.auth.TokenBuilder;
 import stroom.auth.TokenBuilderFactory;
 import stroom.auth.TokenVerifier;
@@ -99,7 +100,6 @@ public final class AuthenticationResource {
     private final TokenDao tokenDao;
     private final UserDao userDao;
     private final TokenVerifier tokenVerifier;
-    private final SessionManager sessionManager;
     private final EmailSender emailSender;
     private final CertificateManager certificateManager;
     private final TokenBuilderFactory tokenBuilderFactory;
@@ -111,7 +111,6 @@ public final class AuthenticationResource {
             final TokenDao tokenDao,
             final UserDao userDao,
             final TokenVerifier tokenVerifier,
-            final SessionManager sessionManager,
             final EmailSender emailSender,
             final CertificateManager certificateManager,
             final TokenBuilderFactory tokenBuilderFactory,
@@ -121,7 +120,6 @@ public final class AuthenticationResource {
         this.tokenDao = tokenDao;
         this.userDao = userDao;
         this.tokenVerifier = tokenVerifier;
-        this.sessionManager = sessionManager;
         this.emailSender = emailSender;
         this.certificateManager = certificateManager;
         this.tokenBuilderFactory = tokenBuilderFactory;
@@ -147,35 +145,39 @@ public final class AuthenticationResource {
     public final Response handleAuthenticationRequest(
             @Session HttpSession httpSession,
             @Context @NotNull HttpServletRequest httpServletRequest,
-            @QueryParam("scope") @NotNull String scope,
-            @QueryParam("response_type") @NotNull String responseType,
-            @QueryParam("client_id") @NotNull String clientId,
-            @QueryParam("redirect_url") @NotNull String redirectUrl,
-            @QueryParam("nonce") @Nullable String nonce,
-            @QueryParam("state") @Nullable String state,
-            @QueryParam("prompt") @Nullable String prompt) throws URISyntaxException {
+            @QueryParam(OIDC.SCOPE) @NotNull String scope,
+            @QueryParam(OIDC.RESPONSE_TYPE) @NotNull String responseType,
+            @QueryParam(OIDC.CLIENT_ID) @NotNull String clientId,
+            @QueryParam(OIDC.REDIRECT_URI) @NotNull String redirectUri,
+            @QueryParam(OIDC.NONCE) @Nullable String nonce,
+            @QueryParam(OIDC.STATE) @Nullable String state,
+            @QueryParam(OIDC.PROMPT) @Nullable String prompt) {
         boolean isAuthenticated = false;
         String sessionId = httpSession.getId();
 
         LOGGER.info("Received an AuthenticationRequest for session " + sessionId);
 
         // We need to make sure our understanding of the session is correct
-        Optional<stroom.auth.Session> optionalSession = sessionManager.get(sessionId);
-        if (optionalSession.isPresent()) {
-            // If we have an authenticated session then the user is logged in
-            isAuthenticated = optionalSession.get().isAuthenticated();
-        } else {
-            // If we've not created a session then we need to create a new, unauthenticated one
-            optionalSession = Optional.of(sessionManager.create(sessionId));
-            optionalSession.get().setAuthenticated(false);
-        }
+        final AuthenticationSession authenticationSession = AuthenticationSessionUtil.create(httpServletRequest.getSession(true));
+        isAuthenticated = authenticationSession.isAuthenticated();
 
+//        Optional<AuthenticationSession> optionalSession = httpServletRequest.getSession(false);
+//        if (optionalSession.isPresent()) {
+//            // If we have an authenticated session then the user is logged in
+//            isAuthenticated = optionalSession.get().isAuthenticated();
+//        } else {
+//            // If we've not created a session then we need to create a new, unauthenticated one
+//            optionalSession = Optional.of(authenticationSessionUtil.create(sessionId));
+//            optionalSession.get().setAuthenticated(false);
+//        }
+
+        // TODO: @66 Do something about checking nonce values to protect against replay attacks.
 
         // We need to make sure we record this relying party against this session
-        RelyingParty relyingParty = optionalSession.get().getOrCreateRelyingParty(clientId);
+        final RelyingParty relyingParty = authenticationSession.getOrCreateRelyingParty(clientId);
         relyingParty.setNonce(nonce);
         relyingParty.setState(state);
-        relyingParty.setRedirectUrl(redirectUrl);
+        relyingParty.setRedirectUrl(redirectUri);
 
 
         // Now we can check if we're logged in somehow (session or certs) and build the response accordingly
@@ -192,12 +194,12 @@ public final class AuthenticationResource {
         // Check for an authenticated session
         if (isAuthenticated) {
             LOGGER.debug("User has a session, sending them to the RP");
-            String accessCode = SessionManager.createAccessCode();
+            String accessCode = AuthenticationSessionUtil.createAccessCode();
             relyingParty.setAccessCode(accessCode);
-            String subject = optionalSession.get().getUserEmail();
+            String subject = authenticationSession.getUserEmail();
             String idToken = createIdToken(subject, nonce, state, sessionId);
             relyingParty.setIdToken(idToken);
-            responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
+            responseBuilder = seeOther(buildRedirectionUrl(redirectUri, accessCode, state));
         }
         // Check for a certificate
         else if (loginUsingCertificate) {
@@ -210,22 +212,23 @@ public final class AuthenticationResource {
                 LOGGER.error(errorMessage);
                 responseBuilder = status(Status.FORBIDDEN).entity(errorMessage);
             } else {
-                String subject = optionalSubject.get();
-                if (!userDao.exists(subject)) {
+                final String subject = optionalSubject.get();
+                final Optional<User> optionalUser = userDao.get(subject);
+                if (!optionalUser.isPresent()) {
                     LOGGER.debug("The user identified by the certificate does not exist in the auth database.");
                     // There's no user so we can't let them have access.
                     responseBuilder = seeOther(UriBuilder.fromUri(this.config.getUnauthorisedUrl()).build());
                 } else {
-                    User user = userDao.get(subject).get();
-                    if (user.getState().equals(User.UserState.ENABLED.getStateText())) {
+                    final User user = optionalUser.get();
+                    if (User.UserState.ENABLED.getStateText().equals(user.getState())) {
                         LOGGER.info("Logging user in using DN with subject {}", subject);
-                        optionalSession.get().setAuthenticated(true);
-                        optionalSession.get().setUserEmail(subject);
-                        String accessCode = SessionManager.createAccessCode();
+                        authenticationSession.setAuthenticated(true);
+                        authenticationSession.setUserEmail(subject);
+                        String accessCode = AuthenticationSessionUtil.createAccessCode();
                         relyingParty.setAccessCode(accessCode);
                         String idToken = createIdToken(subject, nonce, state, sessionId);
                         relyingParty.setIdToken(idToken);
-                        responseBuilder = seeOther(buildRedirectionUrl(redirectUrl, accessCode, state));
+                        responseBuilder = seeOther(buildRedirectionUrl(redirectUri, accessCode, state));
                         stroomEventLoggingService.successfulLogin(httpServletRequest, subject);
                         // Reset last access, login failures, etc...
                         userDao.recordSuccessfulLogin(subject);
@@ -246,7 +249,7 @@ public final class AuthenticationResource {
                     .queryParam("error", "login_required")
                     .queryParam("state", state)
                     .queryParam("clientId", clientId)
-                    .queryParam("redirectUrl", redirectUrl);
+                    .queryParam("redirectUrl", redirectUri);
             responseBuilder = seeOther(uriBuilder.build());
         }
 
@@ -273,13 +276,7 @@ public final class AuthenticationResource {
         String sessionId = httpSession.getId();
         LOGGER.info("Received a login request for session " + sessionId);
 
-        Optional<stroom.auth.Session> optionalSession = sessionManager.get(sessionId);
-        if (!optionalSession.isPresent()) {
-            return status(422)
-                    .entity("You have no session. Please make an AuthenticationRequest to the Authentication Service.")
-                    .build();
-        }
-        stroom.auth.Session session = optionalSession.get();
+        final AuthenticationSession authenticationSession = AuthenticationSessionUtil.create(httpSession);
 
         // Check the credentials
         UserDao.LoginResult loginResult = userDao.areCredentialsValid(credentials.getEmail(), credentials.getPassword());
@@ -299,7 +296,7 @@ public final class AuthenticationResource {
                             .entity(new LoginResponse(false, INVALID_CREDENTIALS_MESSAGE, null)).build();
                 }
             case GOOD_CREDENTIALS:
-                String redirectionUrl = processSuccessfulLogin(session, credentials, sessionId);
+                String redirectionUrl = processSuccessfulLogin(authenticationSession, credentials, sessionId);
                 stroomEventLoggingService.successfulLogin(httpServletRequest, credentials.getEmail());
                 return status(Status.OK)
                         .entity(new LoginResponse(true, "", redirectionUrl))
@@ -355,18 +352,17 @@ public final class AuthenticationResource {
     public final Response logout(
             @Session HttpSession httpSession,
             @Context @NotNull HttpServletRequest httpServletRequest,
-            @QueryParam("redirect_url") @Nullable String redirectUrl) throws URISyntaxException {
+            @QueryParam("redirect_uri") @Nullable String redirectUri) throws URISyntaxException {
         String sessionId = httpSession.getId();
 
-        sessionManager.get(sessionId).ifPresent(session -> {
-            stroomEventLoggingService.logout(httpServletRequest, session.getUserEmail());
-        });
+        AuthenticationSession authenticationSession = AuthenticationSessionUtil.create(httpSession);
+            stroomEventLoggingService.logout(httpServletRequest, authenticationSession.getUserEmail());
 
-        sessionManager.logout(sessionId);
+            httpSession.invalidate();
 
         // If we have a redirect URL then we'll use that, otherwise we'll go to the advertised host.
         final String postLogoutUrl =
-                Strings.isNullOrEmpty(redirectUrl) ? this.config.getAdvertisedHost() : redirectUrl;
+                Strings.isNullOrEmpty(redirectUri) ? this.config.getAdvertisedHost() : redirectUri;
 
         return seeOther(new URI(postLogoutUrl)).build();
     }
@@ -376,19 +372,23 @@ public final class AuthenticationResource {
     @Timed
     @ApiOperation(value = "Convert a previously provided access code into an ID token",
             response = String.class, tags = {"Authentication"})
-    public final Response getIdToken(@ApiParam("IdTokenRequest") @NotNull IdTokenRequest idTokenRequest,
+    public final Response getIdToken(
+            @Session HttpSession httpSession,
+            @ApiParam("IdTokenRequest") @NotNull IdTokenRequest idTokenRequest,
                                      @Context @NotNull HttpServletRequest httpServletRequest) {
-        Optional<RelyingParty> relyingParty = this.sessionManager.getByAccessCode(idTokenRequest.getAccessCode());
-        if (!relyingParty.isPresent()) {
+        AuthenticationSession authenticationSession = AuthenticationSessionUtil.create(httpSession);
+
+        RelyingParty relyingParty = authenticationSession.getRelyingParty(idTokenRequest.getClientId());
+        if (idTokenRequest.getAccessCode() == null || !idTokenRequest.getAccessCode().equals(relyingParty.getAccessCode())) {
             return Response.status(Status.UNAUTHORIZED).entity("Invalid access code").build();
         }
 
         // See the comments in StroomConfig.
         if (config.getStroomConfig().getClientId().equals(idTokenRequest.getClientId())
                 && config.getStroomConfig().getClientSecret().equals(idTokenRequest.getClientSecret())) {
-            String idToken = relyingParty.get().getIdToken();
-            relyingParty.get().forgetIdToken();
-            relyingParty.get().forgetAccessCode();
+            String idToken = relyingParty.getIdToken();
+            relyingParty.forgetIdToken();
+            relyingParty.forgetAccessCode();
             return Response.status(Status.OK).entity(idToken).build();
         } else {
             return Response.status(Status.UNAUTHORIZED).entity("Invalid client or access code").build();
@@ -543,8 +543,7 @@ public final class AuthenticationResource {
     public final Response postAuthenticationRedirect(
             @Session HttpSession httpSession,
             @QueryParam("clientId") @NotNull String clientId) throws UnsupportedEncodingException {
-        String httpSessionId = httpSession.getId();
-        stroom.auth.Session session = this.sessionManager.get(httpSessionId).get();
+        AuthenticationSession session = AuthenticationSessionUtil.create(httpSession);
         RelyingParty relyingParty = session.getRelyingParty(clientId);
 
         String username = session.getUserEmail();
@@ -556,7 +555,7 @@ public final class AuthenticationResource {
         if (userNeedsToChangePassword) {
             final String redirectUrl = getPostAuthenticationCheckUrl(clientId);
             final URI changePasswordUri = UriBuilder.fromUri(this.config.getChangePasswordUrl())
-                    .queryParam("redirect_url", redirectUrl)
+                    .queryParam("redirect_uri", redirectUrl)
                     .build();
             return seeOther(changePasswordUri).build();
         } else {
@@ -585,7 +584,7 @@ public final class AuthenticationResource {
     private URI buildRedirectionUrl(String redirectUrl, String accessCode, String state) {
         return UriBuilder
                 .fromUri(redirectUrl)
-                .replaceQueryParam("accessCode", accessCode)
+                .replaceQueryParam("code", accessCode)
                 .replaceQueryParam("state", state)
                 .build();
     }
@@ -609,16 +608,16 @@ public final class AuthenticationResource {
         }
     }
 
-    private String processSuccessfulLogin(final stroom.auth.Session session,
+    private String processSuccessfulLogin(final AuthenticationSession session,
                                           final Credentials credentials,
-                                          final String sessionId) throws UnsupportedEncodingException {
+                                          final String sessionId) {
         // Make sure the session is authenticated and ready for use
         session.setAuthenticated(false);
         session.setUserEmail(credentials.getEmail());
 
         //The relying party is the client making this request - now that we've authenticated for them we
         // can create the access code and id token.
-        String accessCode = SessionManager.createAccessCode();
+        String accessCode = AuthenticationSessionUtil.createAccessCode();
         RelyingParty relyingParty = session.getRelyingParty(credentials.getRequestingClientId());
         relyingParty.setAccessCode(accessCode);
         String idToken = createIdToken(credentials.getEmail(), relyingParty.getNonce(), relyingParty.getState(), sessionId);
