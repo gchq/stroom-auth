@@ -3,13 +3,16 @@
 #exit script on any error
 set -e
 
-#Shell Colour constants for use in 'echo -e'
-#e.g.  echo -e "My message ${GREEN}with just this text in green${NC}"
-RED='\033[1;31m'
-GREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[1;34m'
-NC='\033[0m' # No Colour 
+# shellcheck disable=SC2034
+{
+    #Shell Colour constants for use in 'echo -e'
+    #e.g.  echo -e "My message ${GREEN}with just this text in green${NC}"
+    RED='\033[1;31m'
+    GREEN='\033[1;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[1;34m'
+    NC='\033[0m' # No Colour 
+}
 
 source docker_lib.sh
 
@@ -32,7 +35,7 @@ snapshot_floating_tag=""
 major_ver_floating_tag=""
 minor_ver_floating_tag=""
 do_docker_build=false
-extra_build_args=""
+extra_build_args=()
 
 echo_travis_env_vars() {
     # Dump all the travis env vars to the console for debugging
@@ -68,7 +71,14 @@ extract_build_vars() {
 
         if [[ "$TRAVIS_TAG" =~ ${RELEASE_VERSION_REGEX} ]]; then
             echo "This is a release version so add gradle arg for publishing libs to Bintray"
-            extra_build_args="bintrayUpload"
+            # GPG sign the artifacts, publish to nexus then close and release
+            # the staging repo to the public nexus repo and on to central
+            extra_build_args=( 
+                "signMavenJavaPublication"
+                "publishToSonatype"
+                #"closeSonatypeStagingRepository"
+                "closeAndReleaseSonatypeStagingRepository"
+            )
         fi
     elif [[ "$TRAVIS_BRANCH" =~ $BRANCH_WHITELIST_REGEX ]]; then
         echo -e "This is a white-listed branch build"
@@ -88,12 +98,17 @@ echo_build_vars() {
     echo -e "major ver floating docker tag: [${GREEN}${major_ver_floating_tag}${NC}]"
     echo -e "minor ver floating docker tag: [${GREEN}${minor_ver_floating_tag}${NC}]"
     echo -e "do_docker_build:               [${GREEN}${do_docker_build}${NC}]"
-    echo -e "extra_build_args:              [${GREEN}${extra_build_args}${NC}]"
+    echo -e "extra_build_args:              [${GREEN}${extra_build_args[*]}${NC}]"
 }
 
 do_gradle_build() {
     # If -pversion is not set, the build will use a default
-    ./gradlew -Pversion=$TRAVIS_TAG clean build shadowJar ${extra_build_args}
+    ./gradlew \
+        -Pversion="${TRAVIS_TAG}" \
+        clean \
+        build \
+        shadowJar \
+        "${extra_build_args[@]}"
 }
 
 prep_ui_build() {
@@ -112,18 +127,29 @@ do_docker_build() {
         # TODO - the major and minor floating tags assume that the release builds are all done in strict sequence
         # If say the build for v6.0.1 is re-run after the build for v6.0.2 has run then v6.0-LATEST will point to v6.0.1
         # which is incorrect, hopefully this course of events is unlikely to happen
-        all_docker_tags="${version_fixed_tag} ${snapshot_floating_tag} ${major_ver_floating_tag} ${minor_ver_floating_tag}"
-        echo -e "all_docker_tags: [${GREEN}${all_docker_tags}${NC}]"
+        all_docker_tags=(
+            "${version_fixed_tag}"
+            "${snapshot_floating_tag}"
+            "${major_ver_floating_tag}"
+            "${minor_ver_floating_tag}"
+        )
+        echo -e "all_docker_tags: [${GREEN}${all_docker_tags[*]}${NC}]"
 
         echo -e "Building docker images for both UI and the service."
 
         echo -e "Preparing for service docker build"
         prep_ui_build 
-        release_to_docker_hub "${AUTH_UI_REPO}" "${AUTH_UI_CONTEXT_ROOT}" ${all_docker_tags}
+        release_to_docker_hub \
+            "${AUTH_UI_REPO}" \
+            "${AUTH_UI_CONTEXT_ROOT}" \
+            "${all_docker_tags[@]}"
 
         echo -e "Preparing for ui docker build"
         prep_service_build 
-        release_to_docker_hub "${AUTH_SERVICE_REPO}" "${AUTH_SERVICE_CONTEXT_ROOT}" ${all_docker_tags}
+        release_to_docker_hub \
+            "${AUTH_SERVICE_REPO}" \
+            "${AUTH_SERVICE_CONTEXT_ROOT}" \
+            "${all_docker_tags[@]}"
     fi
 }
 
@@ -137,32 +163,34 @@ release_to_docker_hub() {
     #shift the the args so we can loop round the open ended list of tags, $1 is now the first tag
     shift 2
 
-    all_tag_args=""
+    all_tag_args=()
 
     for tag_version_part in "$@"; do
         if [ "x${tag_version_part}" != "x" ]; then
-            all_tag_args="${all_tag_args} --tag=${docker_repo}:${tag_version_part}"
+            all_tag_args+=("--tag=${docker_repo}:${tag_version_part}")
         fi
     done
 
-    echo -e "Building a docker image with tags: ${GREEN}${all_tag_args}${NC}"
+    echo -e "Building a docker image with tags: ${GREEN}${all_tag_args[*]}${NC}"
     echo -e "docker_repo:  [${GREEN}${docker_repo}${NC}]"
     echo -e "context_root: [${GREEN}${context_root}${NC}]"
 
     # If we have a TRAVIS_TAG (git tag) then use that, else use the floating tag
     docker build \
-        ${all_tag_args} \
-        --build-arg GIT_COMMIT=${TRAVIS_COMMIT} \
-        --build-arg GIT_TAG=${TRAVIS_TAG:-${snapshot_floating_tag}} \
-        ${context_root}
+        "${all_tag_args[@]}" \
+        --build-arg GIT_COMMIT="${TRAVIS_COMMIT}" \
+        --build-arg GIT_TAG="${TRAVIS_TAG:-${snapshot_floating_tag}}" \
+        "${context_root}"
 
     echo -e "Logging in to Docker"
 
     #The username and password are configured in the travis gui
-    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin >/dev/null 2>&1
+    echo "$DOCKER_PASSWORD" \
+        | docker login -u "$DOCKER_USERNAME" --password-stdin >/dev/null 2>&1
 
-    echo -e "Pushing the docker image to ${GREEN}${docker_repo}${NC} with tags: ${GREEN}${all_tag_args}${NC}"
-    docker push ${docker_repo} >/dev/null 2>&1
+    echo -e "Pushing the docker image to ${GREEN}${docker_repo}${NC}" \
+        "with tags: ${GREEN}${all_tag_args[*]}${NC}"
+    docker push "${docker_repo}" >/dev/null 2>&1
 
     echo -e "Logging out of Docker"
     docker logout >/dev/null 2>&1
@@ -178,3 +206,4 @@ main() {
 }
 
 main "$@"
+# vim: set tabstop=4 shiftwidth=4 expandtab:
