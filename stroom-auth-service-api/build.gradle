@@ -1,5 +1,7 @@
 apply plugin: 'com.github.johnrengelman.shadow' 
 
+project.ext.pomDescription = "API for the authentication flow calls when authenticating with stroom-auth"
+
 shadowJar {
     // Allows us to build fat jars with lots of files
     zip64 true
@@ -73,11 +75,11 @@ shadowJar {
 //sourceCompatibility = JavaVersion.VERSION_1_8
 //targetCompatibility = JavaVersion.VERSION_1_8
 
-install {
-    repositories.mavenInstaller {
-        pom.artifactId = 'stroom-auth-swagger-java-client'
-    }
-}
+//install {
+    //repositories.mavenInstaller {
+        //pom.artifactId = 'stroom-auth-swagger-java-client'
+    //}
+//}
 
 task execute(type:JavaExec) {
    main = System.getProperty('mainClass')
