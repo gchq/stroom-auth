@@ -117,7 +117,6 @@ prep_ui_build() {
     echo -e "Building UI from $(pwd)" 
     mkdir -p work
     cp ../package.json work/
-    cp ../package-lock.json work/
     cp ../yarn.lock work/
     cp -r ../src work/
     cp -r ../public work/
