@@ -85,9 +85,10 @@ extract_build_vars() {
         # This is a branch we want to create a floating snapshot docker image for
         snapshot_floating_tag="${TRAVIS_BRANCH}-SNAPSHOT"
         do_docker_build=true
+        VERSION="${TRAVIS_BRANCH}-SNAPSHOT"
     else
         # No tag so use the branch name as the version, e.g. dev
-        VERSION="${TRAVIS_BRANCH}"
+        VERSION="${TRAVIS_BRANCH}-SNAPSHOT"
     fi
 }
 
