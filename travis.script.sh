@@ -76,8 +76,8 @@ extract_build_vars() {
             extra_build_args=( 
                 "signMavenJavaPublication"
                 "publishToSonatype"
-                "closeSonatypeStagingRepository"
-                #"closeAndReleaseSonatypeStagingRepository"
+                #"closeSonatypeStagingRepository"
+                "closeAndReleaseSonatypeStagingRepository"
             )
         fi
     elif [[ "$TRAVIS_BRANCH" =~ $BRANCH_WHITELIST_REGEX ]]; then
