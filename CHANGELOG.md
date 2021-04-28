@@ -6,9 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v6.0.29] - 2021-04-27
 
-* Change Maven group ID to `uk.gov.gchq.stroom.auth`.
+## [v6.0.29] - 2021-04-28
+
+* Change Maven group ID to `uk.gov.gchq.stroom.auth` for published libs.
+
+* Uplift node version (10) used in build.
+
+* Change auth-ui docker image base to `nginx:1.20.0-alpine`
 
 
 ## [v6.0.28] - 2020-02-25
