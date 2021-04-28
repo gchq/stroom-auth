@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v6.0.31] - 2021-04-28
 
+* Update github token in travis build
+
+
+## [v6.0.31] - 2021-04-28
+
 * Add maven group configuration to root build.
 
 
@@ -359,7 +364,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#85** : Focus on username field when the login page loads
 
-[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.31...6.0
+[Unreleased]: https://github.com/gchq/stroom-auth/compare/v6.0.32...6.0
+[v6.0.32]: https://github.com/gchq/stroom-auth/compare/v6.0.31...v6.0.32
 [v6.0.31]: https://github.com/gchq/stroom-auth/compare/v6.0.30...v6.0.31
 [v6.0.30]: https://github.com/gchq/stroom-auth/compare/v6.0.29...v6.0.30
 [v6.0.29]: https://github.com/gchq/stroom-auth/compare/v6.0.28...v6.0.29
