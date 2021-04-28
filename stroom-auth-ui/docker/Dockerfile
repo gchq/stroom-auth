@@ -20,12 +20,10 @@
 
 # Set unsafe-perm to stop errors in npm install, due, in part, to running
 # as root
-FROM node:8.12.0-alpine AS builder
+FROM node:10.24.1-alpine3.11 AS builder
 WORKDIR /root/app
 RUN apk add --no-cache \
-      git && \
-      npm config set unsafe-perm true && \
-      npm install --global yarn
+      git
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -51,7 +49,7 @@ RUN yarn build
 
 
 # ~~~ Final stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-FROM nginx:1.13.8-alpine
+FROM nginx:1.20.0-alpine
 WORKDIR /root/app
 
 # Set tini as entrypoint
