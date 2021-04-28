@@ -28,6 +28,7 @@ ver="$1"
 cd "$(dirname "$0")"
 mkdir -p work
 cp ../package.json work/
+cp ../yarn.lock work/
 cp -r ../src work/
 cp -r ../public work/
 
