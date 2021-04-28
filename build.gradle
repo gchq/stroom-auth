@@ -138,8 +138,12 @@ ext.testDeps = [
     mockito: 'org.mockito:mockito-core:2.23.0',
 ]
 
-
 ext.isReleaseBuild = !versions.stroomAuth.endsWith('SNAPSHOT')
+def mavenGroupId = 'uk.gov.gchq.stroom.auth'
+
+// Configure maven coordinates
+group = mavenGroupId
+version = versions.stroomAuth
 
 if (isReleaseBuild) {
     println "This is a release build for maven version [${versions.stroomAuth}]"
@@ -327,7 +331,7 @@ configure(projectsToBePublished) { publishedProject ->
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
-    group = 'uk.gov.gchq.stroom.auth'
+    group = mavenGroupId
     version = versions.stroomAuth
 
     //for java plugin
