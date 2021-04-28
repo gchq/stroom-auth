@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v6.0.31] - 2021-04-28
+## [v6.0.32] - 2021-04-28
 
 * Update github token in travis build
 
