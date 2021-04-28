@@ -33,7 +33,10 @@ RUN apk add --no-cache \
 # ~~~ Dependencies stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 FROM builder AS dependencies
 COPY work/package.json package.json
-RUN yarn install
+COPY work/package-lock.json package-lock.json
+COPY work/yarn.lock yarn.lock
+# Use lockfile for repeatable builds
+RUN yarn --frozen-lockfile install
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
