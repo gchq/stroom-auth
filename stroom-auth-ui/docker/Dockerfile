@@ -33,6 +33,9 @@ RUN apk add --no-cache \
 # ~~~ Dependencies stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 FROM builder AS dependencies
 COPY work/package.json package.json
+COPY work/yarn.lock yarn.lock
+# Use lockfile for repeatable builds
+#RUN yarn --frozen-lockfile install
 RUN yarn install
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -49,7 +52,7 @@ RUN yarn build
 
 
 # ~~~ Final stage ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-FROM nginx:1.13.8-alpine
+FROM nginx:1.21.6-alpine
 WORKDIR /root/app
 
 # Set tini as entrypoint
